@@ -1,0 +1,129 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#071427"><title>Django Zero to Hero | ARTHA Gurukul</title><link rel="stylesheet" href="../assets/style.css"></head><body data-track="django"><a class="skip" href="#content">Skip to lessons</a><header class="top"><a class="brand" href="../index.html">✦ ARTHA <span>GURUKUL</span></a><nav><a href="../index.html#courses">Course Catalog</a><a href="../books/index.html">Reference Books</a><a href="../index.html#featured">Projects</a></nav><button class="icon-btn" onclick="window.print()" type="button" aria-label="Print lesson notes">Print</button></header>
+ <section class="hero"><div class="hero-inner" style="min-height:280px;padding-top:46px;padding-bottom:40px"><div class="eyebrow">New · Expanded guided track · 15 lessons</div><h1>Django Zero to Hero</h1><p class="intro">Editorial CMS + Organization-Aware REST API. Plain Hinglish explanations + labs + debugging + production design.</p><div class="diagram"><span class="node">Browser / HTTPS</span><span class="arrow">→</span><span class="node">Django URL router</span><span class="arrow">→</span><span class="node">View + permissions</span><span class="arrow">→</span><span class="node">ORM / Postgres</span><span class="arrow">→</span><span class="node">Template or REST JSON</span></div><div class="actions"><a href="../projects/django_cms/index.html" class="btn">Open executable project README</a><a href="#content" class="btn outline">Read the lessons</a></div></div></section>
+ <main class="book-layout" id="content"><aside class="book-toc"><div class="eyebrow">Your progress</div><div class="progress"><span id="progress-fill"></span></div><p class="small" id="progress-label">0/15 lessons complete</p><h2>Table of contents</h2><div class="toc"><a href="#01-what-is-django-framework-ka-big-picture">01 · What is Django? Framework ka big picture</a><a href="#02-python-and-virtualenv-prerequisites">02 · Python and virtualenv prerequisites</a><a href="#03-project-and-app-separation">03 · Project and app separation</a><a href="#04-views-urls-and-templates">04 · Views, URLs and templates</a><a href="#05-models-migrations-primary-keys-and-relations">05 · Models, migrations, primary keys and relations</a><a href="#06-django-orm-querysets-and-performance">06 · Django ORM, QuerySets and performance</a><a href="#07-forms-validation-and-csrf">07 · Forms, validation and CSRF</a><a href="#08-authentication-groups-and-object-permissions">08 · Authentication, groups and object permissions</a><a href="#09-django-admin-and-editorial-workflow">09 · Django Admin and editorial workflow</a><a href="#10-static-media-files-uploads-and-storage">10 · Static/media files, uploads and storage</a><a href="#11-django-rest-framework-and-versioned-apis">11 · Django REST Framework and versioned APIs</a><a href="#12-automated-tests-factories-and-coverage">12 · Automated tests, factories and coverage</a><a href="#13-security-settings-and-background-work">13 · Security settings and background work</a><a href="#14-performance-caching-and-reliability">14 · Performance, caching and reliability</a><a href="#15-container-deployment-and-enterprise-acceptance">15 · Container deployment and enterprise acceptance</a><a href="#knowledge-check">Knowledge check</a></div><p class="small">Practice one chapter at a time, and confirm with real output.</p></aside><article class="book-prose track-prose"><p class="source-note">This guided course includes working local project code and a production architecture roadmap. Local starter is an educational demonstration, not a security-certified enterprise deployment.</p><h1 id="django-zero-to-hero-enterprise-cms-rest-apis">Django Zero to Hero: Enterprise CMS + REST APIs</h1>
+<p><strong>Target project:</strong> editorial CMS with registration, article drafts, approver workflow, organization-aware permissions and an analytics view. Starter demo is under <code>../projects/django_cms/</code>. We use SQLite locally to keep labs light; PostgreSQL, Redis and infrastructure are production design extensions, not already-deployed components.</p>
+<h2 id="01-what-is-django-framework-ka-big-picture">01 · What is Django? Framework ka big picture</h2><button aria-pressed="false" class="complete" data-module="0" type="button">□ Mark lesson complete</button>
+<p>Framework is ready-made architecture for common web work. Flask starts small and lets you choose components. Django includes ORM, authentication, admin, migrations, templates and security defaults. MTV stands for Model (data), Template (view rendering), View (request handling): Django's terminology is not identical to classical MVC, but roles are comparable.</p>
+<pre><code class="language-text">Browser → URL router → View → Model/ORM → DB
+                         ↓
+                    Template HTML
+</code></pre>
+<p><strong>Lab:</strong> List responsibilities of URL, view, model, template and admin. Explain who checks permissions. The framework doesn't eliminate application-specific security work.</p>
+<h2 id="02-python-and-virtualenv-prerequisites">02 · Python and virtualenv prerequisites</h2><button aria-pressed="false" class="complete" data-module="1" type="button">□ Mark lesson complete</button>
+<p>Install Python 3, create a venv, choose dependency versions deliberately. Use <code>pip freeze</code> only after you understand what is installed. Pin dependencies for reproducible deployments and track security updates.</p>
+<pre><code class="language-bash">python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install 'Django&gt;=5.2,&lt;6'
+python -m django --version
+</code></pre>
+<p><strong>Lab:</strong> Run <code>django-admin startproject school .</code>; inspect <code>manage.py</code>, <code>settings.py</code>, <code>urls.py</code>, <code>asgi.py</code>, <code>wsgi.py</code>. <code>runserver</code> is for development, not public production serving.</p>
+<h2 id="03-project-and-app-separation">03 · Project and app separation</h2><button aria-pressed="false" class="complete" data-module="2" type="button">□ Mark lesson complete</button>
+<p>Django <em>project</em> is the full site configuration; an <em>app</em> is one focused subsystem. e.g. <code>accounts</code>, <code>articles</code>, <code>analytics</code>. Overly fragmented apps create coupling; a monolith with clear modules is fine. <code>INSTALLED_APPS</code> activates app models/templates. Check <code>ALLOWED_HOSTS</code>, deployment settings and <code>SECRET_KEY</code> from environment.</p>
+<pre><code class="language-text">enterprise_cms/
+  manage.py
+  core/settings.py
+  core/urls.py
+  articles/models.py
+  articles/views.py
+  articles/admin.py
+  articles/tests.py
+  templates/
+</code></pre>
+<p><strong>Lab:</strong> Create an app named <code>articles</code>; add to <code>INSTALLED_APPS</code> and connect <code>path('articles/',include('articles.urls'))</code>.</p>
+<h2 id="04-views-urls-and-templates">04 · Views, URLs and templates</h2><button aria-pressed="false" class="complete" data-module="3" type="button">□ Mark lesson complete</button>
+<p>URL patterns dispatch to function/class-based views. Views must handle both valid and invalid input. Templates render HTML with escaping enabled; never trust raw rich-text output. Use named URLs with <code>reverse()</code> and <code>{% url %}</code> so refactors don't break hardcoded paths.</p>
+<pre><code class="language-python">from django.http import HttpResponse
+from django.urls import path
+
+def hello(request):
+    return HttpResponse("Namaste from Django")
+urlpatterns = [path("hello/", hello, name="hello")]
+</code></pre>
+<p><strong>Lab:</strong> Build Home and About. Use base template with <code>{% block content %}</code> and reusable navigation. Test keyboard and mobile viewport.</p>
+<h2 id="05-models-migrations-primary-keys-and-relations">05 · Models, migrations, primary keys and relations</h2><button aria-pressed="false" class="complete" data-module="4" type="button">□ Mark lesson complete</button>
+<p>Models define shape; migrations version schema changes. <code>Article.author</code> uses foreign key so database can maintain integrity. Django's SQL engine supports transactions; use them for multi-write operations that must succeed/fail together.</p>
+<pre><code class="language-python">class Article(models.Model):
+    title = models.CharField(max_length=180)
+    body = models.TextField()
+    author = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.PROTECT)
+    status = models.CharField(max_length=16,default="draft")
+</code></pre>
+<pre><code class="language-bash">python manage.py makemigrations
+python manage.py migrate
+</code></pre>
+<p><strong>Lab:</strong> Create three articles in <code>python manage.py shell</code>; filter <code>status='draft'</code>. Explain why changing a model without migration fails.</p>
+<h2 id="06-django-orm-querysets-and-performance">06 · Django ORM, QuerySets and performance</h2><button aria-pressed="false" class="complete" data-module="5" type="button">□ Mark lesson complete</button>
+<p>QuerySet is a lazy database query description. <code>filter</code>, <code>exclude</code>, <code>order_by</code>, <code>annotate</code> compose SQL. <code>select_related</code> for single-valued joins and <code>prefetch_related</code> for many-to-many reduce N+1. Index on common filters but verify with database query plans.</p>
+<pre><code class="language-python">Article.objects.filter(status="published").select_related("author").order_by("-created_at")[:20]
+</code></pre>
+<p><strong>Lab:</strong> Compare SQL query count on list view with vs without <code>select_related</code>. Avoid pulling entire dataset into Python for sums that SQL can calculate.</p>
+<h2 id="07-forms-validation-and-csrf">07 · Forms, validation and CSRF</h2><button aria-pressed="false" class="complete" data-module="6" type="button">□ Mark lesson complete</button>
+<p><code>ModelForm</code> maps model fields into form validation, but authorization is separate. Validate input at boundary and enforce invariants at model/database layer. Django's CSRF middleware helps browser form submissions; include <code>{% csrf_token %}</code>. Escaped text prevents simple HTML injection, but rich text/upload policies require extra design.</p>
+<pre><code class="language-html">&lt;form method="post"&gt;{% csrf_token %}
+  {{ form.as_p }}
+  &lt;button type="submit"&gt;Save draft&lt;/button&gt;
+&lt;/form&gt;
+</code></pre>
+<p><strong>Lab:</strong> Add form errors for empty title; test forged POST without CSRF as a client configured to enforce checks. Learn why <code>GET</code> should not mutate state.</p>
+<h2 id="08-authentication-groups-and-object-permissions">08 · Authentication, groups and object permissions</h2><button aria-pressed="false" class="complete" data-module="7" type="button">□ Mark lesson complete</button>
+<p>Django provides users, sessions, password hashing, permissions. <code>@login_required</code> confirms logged-in status but not editing rights. Ensure post owner or assigned editor can edit an article. With multiple organizations, check tenant membership and scope every query to that tenant.</p>
+<pre><code class="language-python">from django.core.exceptions import PermissionDenied
+if article.author_id != request.user.id and not request.user.has_perm("articles.change_article"):
+    raise PermissionDenied
+</code></pre>
+<p><strong>Lab:</strong> Create two users, one editor; verify author cannot edit another user's draft and anonymous visitor cannot access author dashboard. <strong>Enterprise:</strong> design OIDC SSO and central role mapping before deployment.</p>
+<h2 id="09-django-admin-and-editorial-workflow">09 · Django Admin and editorial workflow</h2><button aria-pressed="false" class="complete" data-module="8" type="button">□ Mark lesson complete</button>
+<p>Admin is powerful internal staff interface, not a substitute for custom client-facing UI. Restrict it to staff, apply search/filter fields, permissions and audit logging. Editorial lifecycle: draft → submitted → approved → published → archived. Rules should reside in service/model layer, not only a disabled button.</p>
+<pre><code class="language-text">Author → Draft → Review Queue → Editor Approval → Public Article
+                                  ↘ Reject → Author revision
+</code></pre>
+<p><strong>Lab:</strong> Add a status filter to ArticleAdmin. Test publishing attempt from a non-editor (must fail server-side).</p>
+<h2 id="10-static-media-files-uploads-and-storage">10 · Static/media files, uploads and storage</h2><button aria-pressed="false" class="complete" data-module="9" type="button">□ Mark lesson complete</button>
+<p>Static assets are app-controlled CSS/JS. Media uploads are untrusted data. Restrict extension, MIME type, max size, and where files are served; never execute uploaded code. For scale, use object storage with private access, signed URLs and malware inspection as appropriate.</p>
+<pre><code class="language-python">STATIC_URL = "static/"
+MEDIA_URL = "media/"  # dev only; separate secure serving in production
+</code></pre>
+<p><strong>Lab:</strong> Sketch a safe flow for author profile picture upload. Identify size limits, storage permissions, filename normalization and abuse controls.</p>
+<h2 id="11-django-rest-framework-and-versioned-apis">11 · Django REST Framework and versioned APIs</h2><button aria-pressed="false" class="complete" data-module="10" type="button">□ Mark lesson complete</button>
+<p>DRF serializers define validation and wire format, viewsets handle HTTP operations, permission classes control access. Pagination is essential for lists, throttling supplements (but doesn't replace) perimeter controls, and filtersets must respect tenant scope.</p>
+<pre><code class="language-python">from rest_framework import serializers
+class ArticleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Article
+        fields = ["id","title","status","created_at"]
+        read_only_fields = ["id","created_at"]
+</code></pre>
+<p><strong>Lab:</strong> Design <code>GET /api/v1/articles/</code>, <code>POST /api/v1/articles/</code>, <code>PATCH /api/v1/articles/&lt;id&gt;/</code>. Define 400, 401, 403, 404 in API contract. No API endpoint should expose another tenant's drafts.</p>
+<h2 id="12-automated-tests-factories-and-coverage">12 · Automated tests, factories and coverage</h2><button aria-pressed="false" class="complete" data-module="11" type="button">□ Mark lesson complete</button>
+<p>Django <code>TestCase</code> provides isolated DB transactions. Test business rules (unauthorized edit blocked), not just URL 200. Add tests for validation, wrong-tenant lookups, workflow transitions, migrations and queries. CI should run format, unit/integration tests, dependency audit and migration checks.</p>
+<pre><code class="language-python">from django.test import TestCase
+from django.urls import reverse
+class HomepageTests(TestCase):
+    def test_home_loads(self):
+        result = self.client.get(reverse("home"))
+        self.assertEqual(result.status_code,200)
+</code></pre>
+<p><strong>Lab:</strong> Run <code>python manage.py test</code>, then intentionally break a permission and watch the regression test fail. Production datasets should not be copied into local dev tests.</p>
+<h2 id="13-security-settings-and-background-work">13 · Security settings and background work</h2><button aria-pressed="false" class="complete" data-module="12" type="button">□ Mark lesson complete</button>
+<p><code>DEBUG=False</code> is mandatory publicly, but not sufficient: valid <code>ALLOWED_HOSTS</code>, HTTPS, HSTS after validating certificate/proxy setup, secure cookies, CSRF trusted origins, CSP, rate-limits, secret storage and dependency reviews. Long-running actions belong in workers; Celery + Redis is a common architecture.</p>
+<pre><code class="language-text">Nginx HTTPS → Gunicorn/Django → Postgres
+                       ↓
+                  Redis Queue → Worker
+                       ↓
+                 Monitoring &amp; Alerts
+</code></pre>
+<p><strong>Lab:</strong> Record what data each component handles. No passwords or session tokens in logs. Test that production refuses invalid Host headers.</p>
+<h2 id="14-performance-caching-and-reliability">14 · Performance, caching and reliability</h2><button aria-pressed="false" class="complete" data-module="13" type="button">□ Mark lesson complete</button>
+<p>Measure before optimization: p95 latency, database query count, cache hit rate, error rate. Django caching supports various backends; cache keys must include user/organization/permission context where response differs. Add indexes after observing slow queries. Load tests need representative data and safe staging environment.</p>
+<p><strong>Lab:</strong> Define SLO e.g. 99.9% successful read requests measured monthly, and specify how failures are counted. Create a dashboard for 5xx rate, DB pool saturation, task queue age and backups.</p>
+<h2 id="15-container-deployment-and-enterprise-acceptance">15 · Container deployment and enterprise acceptance</h2><button aria-pressed="false" class="complete" data-module="14" type="button">□ Mark lesson complete</button>
+<p>Local <code>runserver</code> and SQLite demonstrate functionality. Production likely: immutable image, environment configuration, Gunicorn/ASGI worker selection, Postgres migrations, object storage, Redis, secrets manager, TLS proxy, audit, metrics, backups and restore drills. Database migration is a release step with rollback plan, not something to blindly run from every container.</p>
+<pre><code class="language-bash"># local starter, from the project folder
+python -m pip install -r requirements.txt
+python manage.py migrate
+python manage.py test
+python manage.py runserver 127.0.0.1:8000
+</code></pre>
+<p><strong>Enterprise checklist:</strong> object-level authorization; tenant isolation; audit events; accessibility; tests; CI; migrations; backup restore; incident playbook; dependency scanning; performance SLO; rate limiting; privacy and retention policies.</p>
+<p><strong>Interview defense:</strong> MTV vs MVC, QuerySet laziness, <code>select_related</code> vs <code>prefetch_related</code>, CSRF, authentication vs authorization, WSGI vs ASGI, migrations, admin risks, DRF serializer permissions, cache invalidation.</p>
+<h2 id="knowledge-check">Knowledge check</h2><p>Choose one answer per question. Results stay on this page; they do not need internet.</p><div class="quiz" data-answer="0"><h3>Q1. Django Model kis kaam aata hai?</h3><button type="button" data-option="0">Data schema / relations</button><button type="button" data-option="1">DNS lookup</button><button type="button" data-option="2">CSS</button><p class="answer" aria-live="polite"></p></div><div class="quiz" data-answer="1"><h3>Q2. Object-level permission kahan check karna chahiye?</h3><button type="button" data-option="0">Only disabled button mein</button><button type="button" data-option="1">Server-side view/service</button><button type="button" data-option="2">Never</button><p class="answer" aria-live="polite"></p></div><div class="quiz" data-answer="1"><h3>Q3. Production mein DEBUG kaisa ho?</h3><button type="button" data-option="0">True</button><button type="button" data-option="1">False</button><button type="button" data-option="2">Random</button><p class="answer" aria-live="polite"></p></div><div class="quiz" data-answer="0"><h3>Q4. N+1 query fix for foreign key reads?</h3><button type="button" data-option="0">select_related</button><button type="button" data-option="1">sleep(10)</button><button type="button" data-option="2">redirect</button><p class="answer" aria-live="polite"></p></div><div class="quiz" data-answer="0"><h3>Q5. CSRF helps protect which common surface?</h3><button type="button" data-option="0">State-changing browser form requests</button><button type="button" data-option="1">Postgres file corruption</button><button type="button" data-option="2">Images</button><p class="answer" aria-live="polite"></p></div><div class="quiz" data-answer="0"><h3>Q6. Schema update ko track kya karta hai?</h3><button type="button" data-option="0">Migrations</button><button type="button" data-option="1">Template footer</button><button type="button" data-option="2">Static CSS</button><p class="answer" aria-live="polite"></p></div><p class="callout"><strong>Portfolio tip:</strong> Run project locally, capture test outputs, then explain architecture, risk, recovery and cost tradeoffs in a README. You should be able to defend each choice in an interview.</p></article></main><footer>ARTHA Gurukul · Offline course with interactive checklists and quizzes</footer><script src="../assets/track.js"></script></body></html>

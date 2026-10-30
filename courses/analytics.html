@@ -1,0 +1,118 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#071427"><title>Python Data Analytics Zero to Enterprise | ARTHA Gurukul</title><link rel="stylesheet" href="../assets/style.css"></head><body data-track="analytics"><a class="skip" href="#content">Skip to lessons</a><header class="top"><a class="brand" href="../index.html">✦ ARTHA <span>GURUKUL</span></a><nav><a href="../index.html#courses">Course Catalog</a><a href="../books/index.html">Reference Books</a><a href="../index.html#featured">Projects</a></nav><button class="icon-btn" onclick="window.print()" type="button" aria-label="Print lesson notes">Print</button></header>
+ <section class="hero"><div class="hero-inner" style="min-height:280px;padding-top:46px;padding-bottom:40px"><div class="eyebrow">New · Expanded guided track · 16 lessons</div><h1>Python Data Analytics Zero to Enterprise</h1><p class="intro">Pandas, SQL, KPI, ETL + Dashboard Studio. Plain Hinglish explanations + labs + debugging + production design.</p><div class="diagram"><span class="node">CSV / Database</span><span class="arrow">→</span><span class="node">Data contracts</span><span class="arrow">→</span><span class="node">Pandas / SQL</span><span class="arrow">→</span><span class="node">KPIs / reports</span><span class="arrow">→</span><span class="node">Dashboard + tests</span></div><div class="actions"><a href="../projects/analytics/index.html" class="btn">Open executable project README</a><a href="#content" class="btn outline">Read the lessons</a></div></div></section>
+ <main class="book-layout" id="content"><aside class="book-toc"><div class="eyebrow">Your progress</div><div class="progress"><span id="progress-fill"></span></div><p class="small" id="progress-label">0/16 lessons complete</p><h2>Table of contents</h2><div class="toc"><a href="#01-what-is-data-analytics">01 · What is data analytics?</a><a href="#02-python-virtualenv-and-data-structures">02 · Python, virtualenv and data structures</a><a href="#03-csv-json-excel-sql-and-data-types">03 · CSV, JSON, Excel, SQL and data types</a><a href="#04-numpy-arrays-and-vectorization">04 · NumPy: arrays and vectorization</a><a href="#05-pandas-series-dataframe-indexing">05 · Pandas: Series, DataFrame, indexing</a><a href="#06-data-cleaning-and-validation">06 · Data cleaning and validation</a><a href="#07-transformations-joins-and-groupby">07 · Transformations, joins and groupby</a><a href="#08-sql-for-analysts">08 · SQL for analysts</a><a href="#09-exploratory-data-analysis-and-statistics">09 · Exploratory Data Analysis and statistics</a><a href="#10-visualization-storytelling-and-accessibility">10 · Visualization, storytelling and accessibility</a><a href="#11-business-kpis-and-semantic-definitions">11 · Business KPIs and semantic definitions</a><a href="#12-etl-elt-pipelines-and-orchestration">12 · ETL/ELT pipelines and orchestration</a><a href="#13-dashboard-with-python-and-streamlit">13 · Dashboard with Python and Streamlit</a><a href="#14-analytics-testing-privacy-and-governance">14 · Analytics testing, privacy and governance</a><a href="#15-forecasting-experiments-and-causal-humility">15 · Forecasting, experiments and causal humility</a><a href="#16-enterprise-capstone-and-career-portfolio">16 · Enterprise capstone and career portfolio</a><a href="#knowledge-check">Knowledge check</a></div><p class="small">Practice one chapter at a time, and confirm with real output.</p></aside><article class="book-prose track-prose"><p class="source-note">This guided course includes working local project code and a production architecture roadmap. Local starter is an educational demonstration, not a security-certified enterprise deployment.</p><h1 id="python-data-analytics-zero-to-enterprise">Python Data Analytics: Zero to Enterprise</h1>
+<p><strong>Project:</strong> Analytics Enterprise Studio: CSV/SQL ingestion, quality checks, reproducible Pandas transformations, KPIs, saved reports, visualizations and a lightweight dashboard. Offline exercises use tiny synthetic datasets, no paid cloud requirement. Executable starter under <code>../projects/analytics/</code>.</p>
+<h2 id="01-what-is-data-analytics">01 · What is data analytics?</h2><button aria-pressed="false" class="complete" data-module="0" type="button">□ Mark lesson complete</button>
+<p>Data = observations. Analytics turns records into decisions. A business asks "What changed, why, and what should we do?" Descriptive analytics <em>what happened</em>, diagnostic <em>why</em>, predictive <em>what may happen</em>, prescriptive <em>what action is worth testing</em>. Never confuse correlation with causation.</p>
+<pre><code class="language-text">Business Question → Source → Quality Check → Transformation → KPI → Visualization → Decision
+</code></pre>
+<p><strong>Lab:</strong> Ask "Is revenue growing?" Define revenue in currency, accounting period, refunds treatment, timezone and whether to use order date or payment date. Without a data contract, dashboards can disagree.</p>
+<h2 id="02-python-virtualenv-and-data-structures">02 · Python, virtualenv and data structures</h2><button aria-pressed="false" class="complete" data-module="1" type="button">□ Mark lesson complete</button>
+<p>Python variables hold values; lists group items; dicts map column names to records. <code>for</code>, <code>if</code>, functions and exceptions automate repetitive processing. A virtual environment isolates packages. Learn <code>Path</code>, <code>datetime</code> and logging before large data projects.</p>
+<pre><code class="language-bash">python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install pandas numpy matplotlib pytest
+</code></pre>
+<pre><code class="language-python">sales=[{"amount":120},{"amount":80}]
+assert sum(row["amount"] for row in sales)==200
+</code></pre>
+<p><strong>Lab:</strong> Make <code>mean_amount()</code> function and define behavior for empty input. Distinguish reproducible code from manual spreadsheet edits.</p>
+<h2 id="03-csv-json-excel-sql-and-data-types">03 · CSV, JSON, Excel, SQL and data types</h2><button aria-pressed="false" class="complete" data-module="2" type="button">□ Mark lesson complete</button>
+<p>A CSV is lines of values, but commas, quotes, encodings, decimals and dates can be tricky. CSV has no built-in schema or reliable type metadata. Database adds SQL types, constraints and indexes. Choose types intentionally (integer order counts, decimal currency, timezone-aware timestamps).</p>
+<pre><code class="language-python">import pandas as pd
+df=pd.read_csv("data/orders.csv",dtype={"order_id":"string"})
+print(df.dtypes)
+print(df.head())
+</code></pre>
+<p><strong>Lab:</strong> Preserve leading zeros in IDs; parse dates with explicit formats. Inspect nulls and malformed rows. For money, prefer integer minor units or <code>Decimal</code> where precision matters.</p>
+<h2 id="04-numpy-arrays-and-vectorization">04 · NumPy: arrays and vectorization</h2><button aria-pressed="false" class="complete" data-module="3" type="button">□ Mark lesson complete</button>
+<p>NumPy stores homogeneous arrays and applies operations efficiently. Vectorization reduces Python loops for numerical work. Broadcasting allows arrays with compatible shapes to combine. Shape mismatch and NaNs create subtle bugs.</p>
+<pre><code class="language-python">import numpy as np
+prices=np.array([100,250,400])
+quantities=np.array([2,1,3])
+revenue=prices*quantities
+print(revenue,revenue.sum())
+</code></pre>
+<p><strong>Lab:</strong> Compute mean, median, percentiles. Explain why skewed income distributions make mean misleading.</p>
+<h2 id="05-pandas-series-dataframe-indexing">05 · Pandas: Series, DataFrame, indexing</h2><button aria-pressed="false" class="complete" data-module="4" type="button">□ Mark lesson complete</button>
+<p>DataFrame tabular structure hai, where rows observations and columns fields. <code>loc</code> selects labels; <code>iloc</code> selects positions. Use explicit column assignment rather than chained assignment. Avoid assuming every string is clean.</p>
+<pre><code class="language-python">df["net_amount"] = df["quantity"] * df["unit_price"] - df["discount"]
+paid = df.loc[df["status"].eq("paid"), ["order_id","net_amount"]]
+</code></pre>
+<p><strong>Lab:</strong> Filter paid orders and sort by <code>net_amount</code>. Verify row count before and after filtering.</p>
+<h2 id="06-data-cleaning-and-validation">06 · Data cleaning and validation</h2><button aria-pressed="false" class="complete" data-module="5" type="button">□ Mark lesson complete</button>
+<p>Missing values, duplicates, invalid dates, negative prices, inconsistent category labels and wrong currencies can wreck KPIs. Define a contract first: mandatory columns, type checks, unique business IDs, acceptable range and rejection rules. Keep raw input immutable and save bad-row reports.</p>
+<pre><code class="language-python">required={"order_id","quantity","unit_price","status","order_date"}
+missing=required-set(df.columns)
+if missing: raise ValueError(f"Missing columns: {sorted(missing)}")
+if df["order_id"].duplicated().any(): raise ValueError("Duplicate order IDs")
+</code></pre>
+<p><strong>Lab:</strong> Inject duplicate, null and negative values into sample input. Pipeline should fail clearly or quarantine rows under documented policy. Never silently drop all invalid rows.</p>
+<h2 id="07-transformations-joins-and-groupby">07 · Transformations, joins and groupby</h2><button aria-pressed="false" class="complete" data-module="6" type="button">□ Mark lesson complete</button>
+<p>Data transformation changes shape but should preserve traceability. <code>groupby</code> aggregates, <code>merge</code> joins tables. Joins can multiply rows unexpectedly when key isn't unique. Always test before/after totals and row counts.</p>
+<pre><code class="language-python">result=(df.groupby("region",as_index=False)
+          .agg(orders=("order_id","nunique"), revenue=("net_amount","sum")))
+</code></pre>
+<p><strong>Lab:</strong> Merge orders with product dimension and detect duplicate product keys. Why is <code>nunique(order_id)</code> different from row count for line items?</p>
+<h2 id="08-sql-for-analysts">08 · SQL for analysts</h2><button aria-pressed="false" class="complete" data-module="7" type="button">□ Mark lesson complete</button>
+<p>SQL works close to data and handles joins/aggregations at scale. Understand <code>WHERE</code> before aggregation, <code>HAVING</code> after, window functions, CTEs and execution plans. Never build SQL queries with untrusted strings; parameterize values.</p>
+<pre><code class="language-sql">SELECT region, COUNT(DISTINCT order_id) AS orders,
+       SUM(quantity * unit_price - discount) AS revenue
+FROM orders WHERE status='paid'
+GROUP BY region ORDER BY revenue DESC;
+</code></pre>
+<p><strong>Lab:</strong> Compare Pandas and SQL aggregation on the same dataset; numbers must match after null/refund rules.</p>
+<h2 id="09-exploratory-data-analysis-and-statistics">09 · Exploratory Data Analysis and statistics</h2><button aria-pressed="false" class="complete" data-module="8" type="button">□ Mark lesson complete</button>
+<p>EDA tests assumptions: distributions, missingness, trends, outliers and relationships. Calculate mean, median, standard deviation, quantiles; confidence intervals give uncertainty. A small sample can produce unstable conclusions. Multiple comparisons and selection bias matter.</p>
+<pre><code class="language-python">print(df["net_amount"].describe(percentiles=[.25,.5,.9,.95]))
+print(df.isna().mean().sort_values(ascending=False))
+</code></pre>
+<p><strong>Lab:</strong> Draw histogram of order values, identify long tail. Do not delete outliers just because they look unusual: could be real wholesale sales or a data bug.</p>
+<h2 id="10-visualization-storytelling-and-accessibility">10 · Visualization, storytelling and accessibility</h2><button aria-pressed="false" class="complete" data-module="9" type="button">□ Mark lesson complete</button>
+<p>Charts are tools for asking questions. Trend over time → line; comparisons → bars; distribution → histogram; relationship → scatter. Start axes honestly, label units, expose sample size and filters, avoid rainbow palettes that harm accessibility. Chart should be readable without hover.</p>
+<pre><code class="language-python">import matplotlib.pyplot as plt
+series=df.groupby(df["order_date"].dt.to_period("M"))["net_amount"].sum()
+series.index=series.index.astype(str)
+ax=series.plot(kind="bar",title="Monthly paid revenue")
+ax.set_ylabel("Revenue (example units)")
+plt.tight_layout();plt.savefig("report.png",dpi=140)
+</code></pre>
+<p><strong>Lab:</strong> Same data as misleading truncated-axis plot and honest labeled plot; describe why one can exaggerate trends.</p>
+<h2 id="11-business-kpis-and-semantic-definitions">11 · Business KPIs and semantic definitions</h2><button aria-pressed="false" class="complete" data-module="10" type="button">□ Mark lesson complete</button>
+<p>KPI is a measurable business rule. Examples: gross sales, net sales after refunds, active customers, average order value (AOV = revenue / number of paid orders), retention, funnel conversion. Define population and time window to avoid metric drift. Store definitions next to code.</p>
+<pre><code class="language-text">Paid events → Net sales = sum(valid paid amounts) - refunds
+Paid orders → AOV = net sales / count(distinct paid order_id)
+New customers → count(customers with first successful order in window)
+</code></pre>
+<p><strong>Lab:</strong> Add currency and tax policy to README. Ask "Does cancellation count?" If someone can't reproduce a KPI, it isn't enterprise-ready.</p>
+<h2 id="12-etl-elt-pipelines-and-orchestration">12 · ETL/ELT pipelines and orchestration</h2><button aria-pressed="false" class="complete" data-module="11" type="button">□ Mark lesson complete</button>
+<p>ETL is Extract → Transform → Load. ELT loads raw data first then models it. Good pipeline has schema checks, idempotency, checkpoints, retry rules, lineage and data quality alerts. Partition by event date when practical; reprocessing should not double-count.</p>
+<pre><code class="language-text">CSV / API / DB → Raw storage → Schema/quality gate → Clean canonical model
+                                              ↓
+                             Aggregations → Dashboard + Reports
+</code></pre>
+<p><strong>Lab:</strong> Run starter CLI twice with same input. Ensure results are stable and outputs replaced deterministically. Record source filename, run time, record count and validation failures.</p>
+<h2 id="13-dashboard-with-python-and-streamlit">13 · Dashboard with Python and Streamlit</h2><button aria-pressed="false" class="complete" data-module="12" type="button">□ Mark lesson complete</button>
+<p>A dashboard combines metrics, filters, charts and drill-down. Streamlit is good for fast internal prototypes; production requires authentication, authorization, deployment and secure data access. Caching must not expose one user's data to another.</p>
+<pre><code class="language-python">import streamlit as st
+st.title("Sales Operations Dashboard")
+st.metric("Paid orders", int((df["status"]=="paid").sum()))
+st.bar_chart(df.groupby("region")["net_amount"].sum())
+</code></pre>
+<p><strong>Lab:</strong> Run <code>streamlit run dashboard.py</code> in starter. Make region filter. Verify filtered KPI denominator is consistent.</p>
+<h2 id="14-analytics-testing-privacy-and-governance">14 · Analytics testing, privacy and governance</h2><button aria-pressed="false" class="complete" data-module="13" type="button">□ Mark lesson complete</button>
+<p>Unit-test calculation functions with tiny known examples; use contract tests for schema, nulls, uniqueness, referential integrity and boundaries. Enterprise needs access control, PII masking, retention rules, audit trail, lineage, reproducible reports and incident response.</p>
+<pre><code class="language-python">def test_aov():
+    total=300; paid_orders=3
+    assert total/paid_orders==100
+</code></pre>
+<p><strong>Lab:</strong> Make a test that fails for duplicate order IDs. Include a reconciliation check between raw paid amounts and output totals.</p>
+<h2 id="15-forecasting-experiments-and-causal-humility">15 · Forecasting, experiments and causal humility</h2><button aria-pressed="false" class="complete" data-module="14" type="button">□ Mark lesson complete</button>
+<p>Time series forecasting estimates future values with uncertainty. Train/test split must follow time order; random splits can leak future information. Measure MAE/MAPE carefully (MAPE fails with zero denominators); compare against a simple naive baseline. Experiments require randomization and guardrail metrics. Correlation doesn't prove a campaign caused sales to rise.</p>
+<p><strong>Lab:</strong> Forecast next week's sales using 7-day moving average, calculate MAE on a held-out period, compare to last-week baseline. State limitations in plain English.</p>
+<h2 id="16-enterprise-capstone-and-career-portfolio">16 · Enterprise capstone and career portfolio</h2><button aria-pressed="false" class="complete" data-module="15" type="button">□ Mark lesson complete</button>
+<p>Build <strong>Analytics Enterprise Studio</strong>: ingest sales CSV + dimension lookup → reject bad input → validate schema → derive monetary metrics → aggregate by day/region/category → generate CSV and PNG report → optional Streamlit UI → pytest suite → document metric definitions.</p>
+<p><strong>Definition of done:</strong> reproducible virtualenv; one command generates reports; bad inputs rejected; sample dataset included; tests pass; dashboard demonstrates filters; no real personal data; documented dependency versions and rollback.</p>
+<p><strong>Enterprise expansion:</strong> schedule with Airflow/Prefect; warehouse tables and dbt models; SLA + alerting; SSO/RBAC; data catalog/lineage; encrypted storage; column-level policies; historical backfills; dashboards as code; performance tuning; backup and restore. Treat these as planned architecture—not functionality the starter currently implements.</p>
+<p><strong>Interview defense:</strong> missing values vs zero, join cardinality, pandas vs SQL, vectorization, data leakage, SCD type 2, OLTP vs OLAP, KPI semantics, ETL retries, AOV, data quality tests, sampling and confidence intervals.</p>
+<h2 id="knowledge-check">Knowledge check</h2><p>Choose one answer per question. Results stay on this page; they do not need internet.</p><div class="quiz" data-answer="0"><h3>Q1. Why validate duplicate order IDs?</h3><button type="button" data-option="0">Avoid accidental double-counting</button><button type="button" data-option="1">Improve monitor color</button><button type="button" data-option="2">Change timezone</button><p class="answer" aria-live="polite"></p></div><div class="quiz" data-answer="0"><h3>Q2. AOV means?</h3><button type="button" data-option="0">Revenue divided by paid order count</button><button type="button" data-option="1">Order count times 100</button><button type="button" data-option="2">Random average</button><p class="answer" aria-live="polite"></p></div><div class="quiz" data-answer="0"><h3>Q3. Join on duplicate dimension keys may?</h3><button type="button" data-option="0">Multiply rows incorrectly</button><button type="button" data-option="1">Automatically remove errors</button><button type="button" data-option="2">Create encryption</button><p class="answer" aria-live="polite"></p></div><div class="quiz" data-answer="0"><h3>Q4. For time series train/test split?</h3><button type="button" data-option="0">Respect chronological order</button><button type="button" data-option="1">Always shuffle dates</button><button type="button" data-option="2">Ignore test data</button><p class="answer" aria-live="polite"></p></div><div class="quiz" data-answer="0"><h3>Q5. When business KPIs disagree, first check?</h3><button type="button" data-option="0">Metric definitions and filters</button><button type="button" data-option="1">Theme color</button><button type="button" data-option="2">Font size</button><p class="answer" aria-live="polite"></p></div><div class="quiz" data-answer="0"><h3>Q6. Why keep raw input immutable?</h3><button type="button" data-option="0">Auditability and repeatable transformations</button><button type="button" data-option="1">To increase disk only</button><button type="button" data-option="2">Not important</button><p class="answer" aria-live="polite"></p></div><p class="callout"><strong>Portfolio tip:</strong> Run project locally, capture test outputs, then explain architecture, risk, recovery and cost tradeoffs in a README. You should be able to defend each choice in an interview.</p></article></main><footer>ARTHA Gurukul · Offline course with interactive checklists and quizzes</footer><script src="../assets/track.js"></script></body></html>

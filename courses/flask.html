@@ -1,0 +1,132 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#071427"><title>Flask Zero to Hero | ARTHA Gurukul</title><link rel="stylesheet" href="../assets/style.css"></head><body data-track="flask"><a class="skip" href="#content">Skip to lessons</a><header class="top"><a class="brand" href="../index.html">✦ ARTHA <span>GURUKUL</span></a><nav><a href="../index.html#courses">Course Catalog</a><a href="../books/index.html">Reference Books</a><a href="../index.html#featured">Projects</a></nav><button class="icon-btn" onclick="window.print()" type="button" aria-label="Print lesson notes">Print</button></header>
+ <section class="hero"><div class="hero-inner" style="min-height:280px;padding-top:46px;padding-bottom:40px"><div class="eyebrow">New · Expanded guided track · 15 lessons</div><h1>Flask Zero to Hero</h1><p class="intro">Production-minded Blogging Website + Analytics Dashboard. Plain Hinglish explanations + labs + debugging + production design.</p><div class="diagram"><span class="node">Browser / HTTPS</span><span class="arrow">→</span><span class="node">Flask Blueprints</span><span class="arrow">→</span><span class="node">Auth / Blog / KPI</span><span class="arrow">→</span><span class="node">Database</span><span class="arrow">→</span><span class="node">Logs + metrics</span></div><div class="actions"><a href="../projects/flask_blog/index.html" class="btn">Open executable project README</a><a href="#content" class="btn outline">Read the lessons</a></div></div></section>
+ <main class="book-layout" id="content"><aside class="book-toc"><div class="eyebrow">Your progress</div><div class="progress"><span id="progress-fill"></span></div><p class="small" id="progress-label">0/15 lessons complete</p><h2>Table of contents</h2><div class="toc"><a href="#01-web-ka-foundation-browser-request-aur-response">01 · Web ka foundation: browser, request aur response</a><a href="#02-python-basics-for-flask">02 · Python basics for Flask</a><a href="#03-your-first-route-and-html-template">03 · Your first route and HTML template</a><a href="#04-project-structure-and-app-factory">04 · Project structure and app factory</a><a href="#05-sql-database-orm-migrations">05 · SQL database, ORM, migrations</a><a href="#06-accounts-password-hashes-and-sessions">06 · Accounts, password hashes and sessions</a><a href="#07-blogging-crud-and-editorial-safety">07 · Blogging CRUD and editorial safety</a><a href="#08-responsive-templates-design-and-accessibility">08 · Responsive templates, design and accessibility</a><a href="#09-dashboard-real-business-kpis">09 · Dashboard: real business KPIs</a><a href="#10-json-apis-filters-pagination">10 · JSON APIs, filters, pagination</a><a href="#11-automated-testing-and-code-quality">11 · Automated testing and code quality</a><a href="#12-security-and-observability">12 · Security and observability</a><a href="#13-async-jobs-caching-and-scaling">13 · Async jobs, caching and scaling</a><a href="#14-deployment-docker-postgres-reverse-proxy-and-ci-cd">14 · Deployment: Docker, Postgres, reverse proxy and CI/CD</a><a href="#15-enterprise-capstone-and-interview-defense">15 · Enterprise capstone and interview defense</a><a href="#knowledge-check">Knowledge check</a></div><p class="small">Practice one chapter at a time, and confirm with real output.</p></aside><article class="book-prose track-prose"><p class="source-note">This guided course includes working local project code and a production architecture roadmap. Local starter is an educational demonstration, not a security-certified enterprise deployment.</p><h1 id="flask-zero-to-hero-blogging-website-enterprise-dashboard">Flask Zero to Hero: Blogging Website + Enterprise Dashboard</h1>
+<p><strong>Outcome:</strong> zero knowledge se secure blog aur operations dashboard tak. Pehle SQLite local lab, phir production PostgreSQL/Redis/worker architecture. Flask project starter <code>../projects/flask_blog/</code> mein hai. <strong>Production-ready architecture discussion</strong> does not mean this demo is audited for real customer traffic.</p>
+<h2 id="01-web-ka-foundation-browser-request-aur-response">01 · Web ka foundation: browser, request aur response</h2><button aria-pressed="false" class="complete" data-module="0" type="button">□ Mark lesson complete</button>
+<p>Socho browser ek customer hai, Flask restaurant ka waiter hai, database kitchen hai. Browser URL bhejta hai, server route choose karta hai, data read/write karta hai, aur HTML/JSON response deta hai. HTTP methods: <code>GET</code> read, <code>POST</code> create/action, <code>PUT/PATCH</code> update, <code>DELETE</code> delete. <code>200</code> success, <code>201</code> created, <code>302</code> redirect, <code>400</code> bad input, <code>401</code> unauthenticated, <code>403</code> forbidden, <code>404</code> absent, <code>500</code> server exception.</p>
+<p><strong>Workflow:</strong> Browser → HTTPS reverse proxy → Flask route → service/model → database → HTML / JSON response. A successful browser page load does not prove the API is safe or authorized.</p>
+<pre><code class="language-bash">mkdir flask-lab &amp;&amp; cd flask-lab
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install flask
+python -c "import flask; print('Flask installed')"
+</code></pre>
+<p><strong>Mini lab:</strong> Ek diagram banao: visitor login, creates post, reader opens post. Har arrow par HTTP method likho. <strong>Interview:</strong> framework request lifecycle kya hota hai?</p>
+<h2 id="02-python-basics-for-flask">02 · Python basics for Flask</h2><button aria-pressed="false" class="complete" data-module="1" type="button">□ Mark lesson complete</button>
+<p>Variables = labelled boxes. Functions = reusable recipes. Dictionary = key/value record; list = ordered collection. Exception handling converts errors into controlled outcomes. Modules split growing programs into maintainable components. Python f-strings output formatting ke liye hain, SQL query banane ke liye nahi.</p>
+<pre><code class="language-python">posts = [{"id": 1, "title": "Hello", "published": True}]
+def visible_titles(items):
+    return [p["title"] for p in items if p["published"]]
+print(visible_titles(posts))
+</code></pre>
+<p><strong>Lab:</strong> <code>slugify()</code> function likho jo title ko normalized URL segment banaye; duplicate slugs aur Unicode ke edge cases note karo. <strong>Why:</strong> maintainable apps mein functions need predictable input/output and tests.</p>
+<h2 id="03-your-first-route-and-html-template">03 · Your first route and HTML template</h2><button aria-pressed="false" class="complete" data-module="2" type="button">□ Mark lesson complete</button>
+<p>Flask ke <code>@app.get</code> decorator se URL path function se map hota hai. Jinja template separates presentation from logic. <code>{{ value }}</code> autoescapes common HTML text contexts; unsafe HTML ko <code>|safe</code> mat lagao jab tak sanitized aur trusted na ho.</p>
+<pre><code class="language-python">from flask import Flask, render_template_string
+app = Flask(__name__)
+@app.get("/")
+def home():
+    return render_template_string("&lt;h1&gt;Namaste {{ topic }}&lt;/h1&gt;", topic="Flask")
+if __name__ == "__main__":
+    app.run(debug=True)  # DEV ONLY; never expose debugger to the internet
+</code></pre>
+<p><strong>Lab:</strong> <code>/about</code> aur <code>/health</code> routes add karo. Run <code>flask --app app run</code> and <code>curl -i http://127.0.0.1:5000/health</code>. <strong>Troubleshooting:</strong> <code>404</code> route missing, <code>500</code> exception, <code>Connection refused</code> service not started.</p>
+<h2 id="04-project-structure-and-app-factory">04 · Project structure and app factory</h2><button aria-pressed="false" class="complete" data-module="3" type="button">□ Mark lesson complete</button>
+<p>Enterprise code single 2000-line file nahi hota. <code>create_app()</code> pattern tests aur different environment configuration ko possible banata hai. Models data rules handle karte hain; views HTTP ke saath deal karte hain; templates UI ko render karte hain; services business rules encapsulate karte hain.</p>
+<pre><code class="language-text">app/
+  __init__.py        # create_app, extensions, blueprint registration
+  models.py          # User/Post tables
+  auth.py            # register, login, logout
+  blog.py            # publish, edit, list
+  dashboard.py       # operations metrics
+  templates/         # autoescaped HTML
+  static/            # CSS / JS
+config.py            # environment config
+run.py                # development entrypoint
+tests/                # pytest integration tests
+</code></pre>
+<p><strong>Lab:</strong> Starter project ko local Python virtualenv mein run karo. Har file ka purpose apne shabdon mein explain karo.</p>
+<h2 id="05-sql-database-orm-migrations">05 · SQL database, ORM, migrations</h2><button aria-pressed="false" class="complete" data-module="4" type="button">□ Mark lesson complete</button>
+<p>SQL table mein rows records hote hain. ORM object ko database records se map karta hai, but query design aur migrations still important hain. Foreign key <code>post.author_id</code> user se relation banati hai; unique constraint duplicate emails rokta hai. Indexed fields faster lookups dete hain but writes cost karte hain.</p>
+<pre><code class="language-python">class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(180), nullable=False)
+    body = db.Column(db.Text, nullable=False)
+    author_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+</code></pre>
+<p><strong>Why:</strong> create tables with <code>db.create_all()</code> works for a demo; real schema changes need Alembic/Flask-Migrate migration review, backups and rollback testing. <strong>Lab:</strong> one user, two posts, SQL join. Explain N+1 queries.</p>
+<h2 id="06-accounts-password-hashes-and-sessions">06 · Accounts, password hashes and sessions</h2><button aria-pressed="false" class="complete" data-module="5" type="button">□ Mark lesson complete</button>
+<p>Password plaintext mein store nahi karna. Werkzeug hash+salt based functions use karna; sessions mein only minimal identity; login protected views should check authorization for <em>specific resource</em>. An authenticated user is not automatically an admin.</p>
+<pre><code class="language-python">from werkzeug.security import generate_password_hash, check_password_hash
+hash_value = generate_password_hash("example-only-not-a-real-password")
+assert check_password_hash(hash_value,"example-only-not-a-real-password")
+</code></pre>
+<p><strong>Lab:</strong> signup → login → protected dashboard → logout. Check wrong password and absent session. <strong>Security:</strong> CSRF protection for browser forms, HTTPS, secure cookies, rate limits and email verification need explicit production integration; demo does not implement every control.</p>
+<h2 id="07-blogging-crud-and-editorial-safety">07 · Blogging CRUD and editorial safety</h2><button aria-pressed="false" class="complete" data-module="6" type="button">□ Mark lesson complete</button>
+<p>CRUD = Create, Read, Update, Delete. Content owner should edit only own posts; editor/admin can have a reviewed policy. Draft → reviewed → published workflow reduces accidental publication. For markdown or rich-text editors, sanitize HTML. Inputs require length limits; SQLAlchemy query parameters avoid raw SQL injection.</p>
+<pre><code class="language-text">POST /posts       → authenticate → validate → persist → redirect
+GET  /posts/&lt;id&gt;   → published? → render → cache policy
+POST /posts/&lt;id&gt;/edit → owner or admin? → validate → update
+</code></pre>
+<p><strong>Lab:</strong> publish two posts, edit your own, attempt another user's edit (must return 403), and test long title. <strong>Interview:</strong> IDOR/BOLA kya hai?</p>
+<h2 id="08-responsive-templates-design-and-accessibility">08 · Responsive templates, design and accessibility</h2><button aria-pressed="false" class="complete" data-module="7" type="button">□ Mark lesson complete</button>
+<p>UI ka goal sirf color nahi: mobile viewport, keyboard navigation, readable text contrast, semantic headings, error messages, labels for form fields. Jinja base templates shared header/footer reduce duplication. HTML form submissions should show validation errors without leaking secrets.</p>
+<pre><code class="language-html">&lt;form method="post"&gt;
+  &lt;label for="title"&gt;Article title&lt;/label&gt;
+  &lt;input id="title" name="title" required maxlength="180"&gt;
+  &lt;button type="submit"&gt;Publish&lt;/button&gt;
+&lt;/form&gt;
+</code></pre>
+<p><strong>Lab:</strong> mobile width 360px and desktop width 1280px test karo. Keyboard-only login and nav verify karo.</p>
+<h2 id="09-dashboard-real-business-kpis">09 · Dashboard: real business KPIs</h2><button aria-pressed="false" class="complete" data-module="8" type="button">□ Mark lesson complete</button>
+<p>Dashboard is a decision surface. Example metrics: published posts, active authors, last-7-day posts, drafts awaiting review. Definition ke bina KPI misleading ho sakta hai. SQL aggregation DB mein calculate karna usually row-by-row Python iteration se better hota hai.</p>
+<pre><code class="language-python">from sqlalchemy import func
+post_count = db.session.query(func.count(Post.id)).scalar()
+recent = Post.query.filter(Post.created_at &gt;= window_start).count()
+</code></pre>
+<p><strong>Flow:</strong> transaction tables → validated SQL aggregation → service layer → dashboard JSON/HTML → chart. <strong>Lab:</strong> 10 seeded posts, two authors, 3 drafts; manually expected metrics compute karo and compare. Never show private user data across tenants.</p>
+<h2 id="10-json-apis-filters-pagination">10 · JSON APIs, filters, pagination</h2><button aria-pressed="false" class="complete" data-module="9" type="button">□ Mark lesson complete</button>
+<p><code>/api/posts</code> list endpoints need filters, pagination, stable sorting and documented errors. Avoid returning huge collections to browsers. API keys should not live in frontend JavaScript; enforce auth+permissions server side.</p>
+<pre><code class="language-python">@app.get("/api/health")
+def api_health():
+    return {"status":"ok","version":"1"}, 200
+</code></pre>
+<p><strong>Lab:</strong> <code>curl -s http://127.0.0.1:5000/api/health</code>. Then design <code>GET /api/posts?page=1&amp;page_size=20</code> with <code>page_size</code> upper bound. <strong>Interview:</strong> API versioning and idempotency kya hain?</p>
+<h2 id="11-automated-testing-and-code-quality">11 · Automated testing and code quality</h2><button aria-pressed="false" class="complete" data-module="10" type="button">□ Mark lesson complete</button>
+<p>Unit test one function; integration test Flask route + test DB; end-to-end test browser flow. A green test suite is evidence, not proof of complete security. Use isolated test database and factories. Test happy and unhappy paths: forbidden access, missing fields, duplicate email, XSS display, invalid input.</p>
+<pre><code class="language-python">def test_health(client):
+    response = client.get('/api/health')
+    assert response.status_code == 200
+    assert response.json['status'] == 'ok'
+</code></pre>
+<p><strong>Lab:</strong> Run <code>pytest -q</code> in the starter project. Add a regression test for an authorization bug before fixing it. Avoid tests which accidentally connect to real production services.</p>
+<h2 id="12-security-and-observability">12 · Security and observability</h2><button aria-pressed="false" class="complete" data-module="11" type="button">□ Mark lesson complete</button>
+<p>Trust boundaries: browser is untrusted; app validates each request; database secrets server-side only. Production protections include form CSRF, session-cookie <code>Secure</code>/<code>HttpOnly</code>/<code>SameSite</code>, rate limiting, CSP, log redaction, upload type/size limits, dependencies scanning and backups.</p>
+<pre><code class="language-text">Browser → Reverse proxy + TLS → Flask / WSGI → PostgreSQL
+                                     ↓
+                             structured app logs
+                                     ↓
+                              alerts + dashboard
+</code></pre>
+<p><strong>Lab:</strong> Add request ID to logs, test 404/403/500 paths and make sure passwords/tokens never appear in logs. <strong>Why:</strong> observability helps incident response without collecting unnecessary personal data.</p>
+<h2 id="13-async-jobs-caching-and-scaling">13 · Async jobs, caching and scaling</h2><button aria-pressed="false" class="complete" data-module="12" type="button">□ Mark lesson complete</button>
+<p>Emails, image processing, notifications, report exports should not block request threads. Production option: Flask → Redis broker → Celery worker. Redis cache can accelerate read-heavy endpoints, but invalidation on edit/publish matters. Use timeouts, retries with backoff, idempotent task keys, and dead-letter strategy.</p>
+<pre><code class="language-text">HTTP POST → Validate → Database commit → Outbox event → Worker
+                                        ↓
+                                    Email / jobs
+</code></pre>
+<p><strong>Lab:</strong> Design an idempotent report task with status <code>queued/running/succeeded/failed</code>; do not run real outbound emails by default. <strong>Interview:</strong> Why an HTTP request should not wait 60 seconds for a background task?</p>
+<h2 id="14-deployment-docker-postgres-reverse-proxy-and-ci-cd">14 · Deployment: Docker, Postgres, reverse proxy and CI/CD</h2><button aria-pressed="false" class="complete" data-module="13" type="button">□ Mark lesson complete</button>
+<p>Local demo SQLite sufficient. Production needs a proper WSGI server (Gunicorn on Linux), HTTPS termination, Postgres with migrations, secret injection, structured logs, health checks, backups, dependency pinning and automated tests. Do not use <code>app.run(debug=True)</code> publicly. Dockerfile should use a non-root user and minimized runtime image.</p>
+<pre><code class="language-bash"># Development only, from starter project:
+python -m pip install -r requirements.txt
+python run.py
+python -m pytest -q
+# Production architecture: proxy TLS → gunicorn → Flask → PostgreSQL
+</code></pre>
+<p><strong>Production acceptance checklist:</strong> feature tests pass; unauthorized writes denied; CSRF enforced; rate-limit configured; DB migration reproducible; backups restored in staging; logs/alerts working; load test meets SLO; rollback documented; no hardcoded secrets.</p>
+<h2 id="15-enterprise-capstone-and-interview-defense">15 · Enterprise capstone and interview defense</h2><button aria-pressed="false" class="complete" data-module="14" type="button">□ Mark lesson complete</button>
+<p>Build <strong>FlaskPress + OpsView</strong>: author roles, drafts, published blog, editor approval, analytics dashboard and read-only metrics API. Enterprise extensions: organizations/tenants with explicit tenant-scoped queries, audit events, Redis/Celery, migrations, caching, object storage uploads, SSO/OIDC, CI/CD, monitoring, backups and incident runbooks.</p>
+<p><strong>Definition of done (learning edition):</strong> installation documented; app starts; login works; author CRUD ownership tested; metrics correct; sample tests pass; no secrets committed. <strong>Definition of done (real enterprise):</strong> security review, restore test, accessibility checks, performance baselines, production deployment and ongoing operations.</p>
+<p><strong>Interview practice:</strong> Explain Blueprints vs app factory, session vs JWT, ORM N+1, CSRF vs XSS, RBAC vs ABAC, horizontal scaling, DB migrations, idempotency, observability and incident rollback.</p>
+<h2 id="knowledge-check">Knowledge check</h2><p>Choose one answer per question. Results stay on this page; they do not need internet.</p><div class="quiz" data-answer="0"><h3>Q1. Flask app factory useful kyon hai?</h3><button type="button" data-option="0">Tests, config and app instances isolate karna</button><button type="button" data-option="1">Passwords remove karna</button><button type="button" data-option="2">HTTP disable karna</button><p class="answer" aria-live="polite"></p></div><div class="quiz" data-answer="1"><h3>Q2. User logged in hai. Can they edit any post?</h3><button type="button" data-option="0">Yes</button><button type="button" data-option="1">Only if resource authorization allows</button><button type="button" data-option="2">Always admin</button><p class="answer" aria-live="polite"></p></div><div class="quiz" data-answer="2"><h3>Q3. Public deployment mein Flask debugger?</h3><button type="button" data-option="0">Enabled</button><button type="button" data-option="1">Only if behind CDN</button><button type="button" data-option="2">Must be disabled</button><p class="answer" aria-live="polite"></p></div><div class="quiz" data-answer="0"><h3>Q4. Dashboard revenue KPI needs what?</h3><button type="button" data-option="0">A documented definition and validated source</button><button type="button" data-option="1">Only colorful charts</button><button type="button" data-option="2">No tests</button><p class="answer" aria-live="polite"></p></div><div class="quiz" data-answer="1"><h3>Q5. Slow image processing should run where?</h3><button type="button" data-option="0">Inside every request</button><button type="button" data-option="1">Queued worker with retry/idempotency</button><button type="button" data-option="2">HTML template</button><p class="answer" aria-live="polite"></p></div><div class="quiz" data-answer="0"><h3>Q6. What does migration tooling handle?</h3><button type="button" data-option="0">Database schema evolution</button><button type="button" data-option="1">CSS styling</button><button type="button" data-option="2">Browser history</button><p class="answer" aria-live="polite"></p></div><p class="callout"><strong>Portfolio tip:</strong> Run project locally, capture test outputs, then explain architecture, risk, recovery and cost tradeoffs in a README. You should be able to defend each choice in an interview.</p></article></main><footer>ARTHA Gurukul · Offline course with interactive checklists and quizzes</footer><script src="../assets/track.js"></script></body></html>
