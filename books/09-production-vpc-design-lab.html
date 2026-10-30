@@ -1,0 +1,2764 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Production AWS VPC Design Lab | ARTHA Gurukul</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><a class="brand" href="../index.html">✦ ARTHA GURUKUL</a><nav><a href="../index.html#courses">All Courses</a><a href="index.html">Source Library</a></nav></header><main class="book-layout"><aside class="book-toc"><div class="eyebrow">Original material · offline copy</div><h2>Production AWS VPC Design Lab</h2><a href="../index.html">⌂ Course library</a><div class="toc"><a href="#chapter-9-production-vpc-design-lab">CHAPTER 9 --- PRODUCTION VPC DESIGN LAB</a><a href="#9-1-chapter-objective">9.1 Chapter Objective</a><a href="#9-2-what-you-will-build">9.2 What You Will Build</a><a href="#9-3-production-requirement">9.3 Production Requirement</a><a href="#9-4-step-1-identify-network-tiers">9.4 Step 1 --- Identify Network Tiers</a><a href="#9-5-why-separate-tiers">9.5 Why Separate Tiers?</a><a href="#9-6-step-2-choose-vpc-cidr">9.6 Step 2 --- Choose VPC CIDR</a><a href="#9-7-cidr-capacity">9.7 CIDR Capacity</a><a href="#9-8-step-3-subnet-plan">9.8 Step 3 --- Subnet Plan</a><a href="#9-9-why-leave-address-gaps">9.9 Why Leave Address Gaps?</a><a href="#9-10-availability-zone-design">9.10 Availability Zone Design</a><a href="#9-11-failure-domain-principle">9.11 Failure-Domain Principle</a><a href="#9-12-step-4-internet-gateway">9.12 Step 4 --- Internet Gateway</a><a href="#9-13-public-route-table">9.13 Public Route Table</a><a href="#9-14-what-makes-these-public-subnets">9.14 What Makes These Public Subnets?</a><a href="#9-15-step-5-nat-architecture">9.15 Step 5 --- NAT Architecture</a><a href="#9-16-nat-placement">9.16 NAT Placement</a><a href="#9-17-why-one-nat-per-az">9.17 Why One NAT Per AZ?</a><a href="#9-18-application-route-table-a">9.18 Application Route Table A</a><a href="#9-19-application-route-table-b">9.19 Application Route Table B</a><a href="#9-20-database-route-tables">9.20 Database Route Tables</a><a href="#9-21-network-path-summary">9.21 Network Path Summary</a><a href="#9-22-step-6-application-load-balancer">9.22 Step 6 --- Application Load Balancer</a><a href="#9-23-alb-listener">9.23 ALB Listener</a><a href="#9-24-target-group">9.24 Target Group</a><a href="#9-25-health-check-design">9.25 Health Check Design</a><a href="#9-26-security-group-architecture">9.26 Security Group Architecture</a><a href="#9-27-alb-security-group">9.27 ALB Security Group</a><a href="#9-28-application-security-group">9.28 Application Security Group</a><a href="#9-29-database-security-group">9.29 Database Security Group</a><a href="#9-30-why-security-group-references-matter">9.30 Why Security Group References Matter</a><a href="#9-31-egress-rules">9.31 Egress Rules</a><a href="#9-32-step-7-network-acl-strategy">9.32 Step 7 --- Network ACL Strategy</a><a href="#9-33-nacl-reminder">9.33 NACL Reminder</a><a href="#9-34-ephemeral-port-reminder">9.34 Ephemeral Port Reminder</a><a href="#9-35-step-8-database-subnet-group">9.35 Step 8 --- Database Subnet Group</a><a href="#9-36-database-public-accessibility">9.36 Database Public Accessibility</a><a href="#9-37-database-dns">9.37 Database DNS</a><a href="#9-38-step-9-administrative-access">9.38 Step 9 --- Administrative Access</a><a href="#9-39-systems-manager-pattern">9.39 Systems Manager Pattern</a><a href="#9-40-no-public-ssh">9.40 No Public SSH</a><a href="#9-41-step-10-vpc-endpoints">9.41 Step 10 --- VPC Endpoints</a><a href="#9-42-s3-gateway-endpoint">9.42 S3 Gateway Endpoint</a><a href="#9-43-interface-endpoints">9.43 Interface Endpoints</a><a href="#9-44-endpoint-security-group">9.44 Endpoint Security Group</a><a href="#9-45-endpoint-policy">9.45 Endpoint Policy</a><a href="#9-46-step-11-dns">9.46 Step 11 --- DNS</a><a href="#9-47-public-application-dns">9.47 Public Application DNS</a><a href="#9-48-step-12-vpc-flow-logs">9.48 Step 12 --- VPC Flow Logs</a><a href="#9-49-flow-log-use-cases">9.49 Flow Log Use Cases</a><a href="#9-50-logging-architecture">9.50 Logging Architecture</a><a href="#9-51-step-13-tags">9.51 Step 13 --- Tags</a><a href="#9-52-step-14-create-architecture-diagram">9.52 Step 14 --- Create Architecture Diagram</a><a href="#9-53-final-architecture-diagram">9.53 Final Architecture Diagram</a><a href="#9-54-security-group-matrix">9.54 Security Group Matrix</a><a href="#9-55-route-table-matrix">9.55 Route Table Matrix</a><a href="#public">Public</a><a href="#app-a">App-A</a><a href="#app-b">App-B</a><a href="#database">Database</a><a href="#9-56-packet-flow-1-user-to-application">9.56 Packet Flow 1 --- User to Application</a><a href="#9-57-packet-flow-2-application-to-database">9.57 Packet Flow 2 --- Application to Database</a><a href="#9-58-packet-flow-3-application-to-internet">9.58 Packet Flow 3 --- Application to Internet</a><a href="#9-59-packet-flow-4-application-to-s3">9.59 Packet Flow 4 --- Application to S3</a><a href="#9-60-packet-flow-5-admin-to-instance">9.60 Packet Flow 5 --- Admin to Instance</a><a href="#9-61-cli-lab-prerequisites">9.61 CLI Lab --- Prerequisites</a><a href="#9-62-set-lab-variables">9.62 Set Lab Variables</a><a href="#9-63-create-vpc">9.63 Create VPC</a><a href="#9-64-tag-vpc">9.64 Tag VPC</a><a href="#9-65-enable-dns-attributes">9.65 Enable DNS Attributes</a><a href="#9-66-discover-availability-zones">9.66 Discover Availability Zones</a><a href="#9-67-create-public-subnet-a">9.67 Create Public Subnet A</a><a href="#9-68-create-public-subnet-b">9.68 Create Public Subnet B</a><a href="#9-69-create-application-subnet-a">9.69 Create Application Subnet A</a><a href="#9-70-create-application-subnet-b">9.70 Create Application Subnet B</a><a href="#9-71-create-database-subnets">9.71 Create Database Subnets</a><a href="#9-72-verify-subnets">9.72 Verify Subnets</a><a href="#9-73-create-internet-gateway">9.73 Create Internet Gateway</a><a href="#9-74-create-public-route-table">9.74 Create Public Route Table</a><a href="#9-75-associate-public-subnets">9.75 Associate Public Subnets</a><a href="#9-76-verify-public-routes">9.76 Verify Public Routes</a><a href="#9-77-allocate-elastic-ip-for-nat-a">9.77 Allocate Elastic IP for NAT-A</a><a href="#9-78-allocate-elastic-ip-for-nat-b">9.78 Allocate Elastic IP for NAT-B</a><a href="#9-79-create-nat-a">9.79 Create NAT-A</a><a href="#9-80-create-nat-b">9.80 Create NAT-B</a><a href="#9-81-wait-for-nat-gateways">9.81 Wait for NAT Gateways</a><a href="#9-82-create-app-route-table-a">9.82 Create App Route Table A</a><a href="#9-83-create-app-route-table-b">9.83 Create App Route Table B</a><a href="#9-84-create-database-route-table">9.84 Create Database Route Table</a><a href="#9-85-verify-all-route-tables">9.85 Verify All Route Tables</a><a href="#9-86-create-alb-security-group">9.86 Create ALB Security Group</a><a href="#9-87-allow-https-to-alb">9.87 Allow HTTPS to ALB</a><a href="#9-88-create-application-security-group">9.88 Create Application Security Group</a><a href="#9-89-create-database-security-group">9.89 Create Database Security Group</a><a href="#9-90-verify-security-groups">9.90 Verify Security Groups</a><a href="#9-91-create-db-subnet-group">9.91 Create DB Subnet Group</a><a href="#9-92-s3-gateway-endpoint">9.92 S3 Gateway Endpoint</a><a href="#9-93-verify-vpc-endpoint">9.93 Verify VPC Endpoint</a><a href="#9-94-interface-endpoint-design">9.94 Interface Endpoint Design</a><a href="#9-95-interface-endpoint-pattern">9.95 Interface Endpoint Pattern</a><a href="#9-96-flow-logs-iam-requirement">9.96 Flow Logs IAM Requirement</a><a href="#9-97-create-log-group-example">9.97 Create Log Group Example</a><a href="#9-98-flow-log-creation-concept">9.98 Flow Log Creation Concept</a><a href="#9-99-deploy-application-instances">9.99 Deploy Application Instances</a><a href="#9-100-verify-instance-addressing">9.100 Verify Instance Addressing</a><a href="#9-101-application-listener">9.101 Application Listener</a><a href="#9-102-linux-route-verification">9.102 Linux Route Verification</a><a href="#9-103-dns-verification">9.103 DNS Verification</a><a href="#9-104-test-outbound-internet">9.104 Test Outbound Internet</a><a href="#9-105-test-s3-endpoint">9.105 Test S3 Endpoint</a><a href="#9-106-never-use-static-access-keys-on-ec2">9.106 Never Use Static Access Keys on EC2</a><a href="#9-107-create-load-balancer-conceptually">9.107 Create Load Balancer Conceptually</a><a href="#9-108-create-target-group">9.108 Create Target Group</a><a href="#9-109-https-listener">9.109 HTTPS Listener</a><a href="#9-110-target-health">9.110 Target Health</a><a href="#9-111-troubleshooting-unhealthy-target">9.111 Troubleshooting Unhealthy Target</a><a href="#9-112-production-validation-checklist">9.112 Production Validation Checklist</a><a href="#9-113-failure-test-1-break-app-security-group">9.113 Failure Test 1 --- Break App Security Group</a><a href="#9-114-failure-test-2-wrong-health-port">9.114 Failure Test 2 --- Wrong Health Port</a><a href="#9-115-failure-test-3-wrong-private-route">9.115 Failure Test 3 --- Wrong Private Route</a><a href="#9-116-failure-test-4-nat-failure-simulation">9.116 Failure Test 4 --- NAT Failure Simulation</a><a href="#9-117-failure-test-5-database-sg">9.117 Failure Test 5 --- Database SG</a><a href="#9-118-failure-test-6-application-process-down">9.118 Failure Test 6 --- Application Process Down</a><a href="#9-119-failure-test-7-dns-failure">9.119 Failure Test 7 --- DNS Failure</a><a href="#9-120-failure-test-8-nacl-return-traffic">9.120 Failure Test 8 --- NACL Return Traffic</a><a href="#9-121-incident-1-website-down">9.121 Incident 1 --- Website Down</a><a href="#9-122-incident-2-one-az-is-unhealthy">9.122 Incident 2 --- One AZ Is Unhealthy</a><a href="#9-123-incident-3-app-cannot-reach-database">9.123 Incident 3 --- App Cannot Reach Database</a><a href="#9-124-incident-4-app-cannot-download-packages">9.124 Incident 4 --- App Cannot Download Packages</a><a href="#9-125-incident-5-s3-works-but-internet-does-not">9.125 Incident 5 --- S3 Works but Internet Does Not</a><a href="#9-126-incident-6-flow-log-accept-but-app-fails">9.126 Incident 6 --- Flow Log ACCEPT but App Fails</a><a href="#9-127-incident-7-connection-refused">9.127 Incident 7 --- Connection Refused</a><a href="#9-128-incident-8-timeout">9.128 Incident 8 --- Timeout</a><a href="#9-129-incident-9-wrong-route-table-association">9.129 Incident 9 --- Wrong Route Table Association</a><a href="#9-130-incident-10-wrong-security-group-attached">9.130 Incident 10 --- Wrong Security Group Attached</a><a href="#9-131-incident-11-endpoint-dns-failure">9.131 Incident 11 --- Endpoint DNS Failure</a><a href="#9-132-incident-12-nat-cost-spike">9.132 Incident 12 --- NAT Cost Spike</a><a href="#9-133-incident-13-single-nat-dependency">9.133 Incident 13 --- Single NAT Dependency</a><a href="#9-134-incident-14-database-accidentally-public">9.134 Incident 14 --- Database Accidentally Public</a><a href="#9-135-incident-15-public-ip-on-application">9.135 Incident 15 --- Public IP on Application</a><a href="#9-136-security-review">9.136 Security Review</a><a href="#9-137-availability-review">9.137 Availability Review</a><a href="#9-138-cost-review">9.138 Cost Review</a><a href="#9-139-cost-optimization-questions">9.139 Cost Optimization Questions</a><a href="#9-140-terraform-readiness">9.140 Terraform Readiness</a><a href="#9-141-terraform-resource-preview">9.141 Terraform Resource Preview</a><a href="#9-142-terraform-subnet-preview">9.142 Terraform Subnet Preview</a><a href="#9-143-terraform-route-preview">9.143 Terraform Route Preview</a><a href="#9-144-cleanup-warning">9.144 Cleanup Warning</a><a href="#9-145-cleanup-order">9.145 Cleanup Order</a><a href="#9-146-verify-before-delete">9.146 Verify Before Delete</a><a href="#9-147-production-change-control-principle">9.147 Production Change-Control Principle</a><a href="#9-148-network-change-example">9.148 Network Change Example</a><a href="#9-149-troubleshooting-decision-tree">9.149 Troubleshooting Decision Tree</a><a href="#9-150-osi-inspired-incident-thinking">9.150 OSI-Inspired Incident Thinking</a><a href="#9-151-interview-question-design-a-production-vpc">9.151 Interview Question --- Design a Production VPC</a><a href="#9-152-interview-question-why-not-put-ec2-in-public-subnet">9.152 Interview Question --- Why Not Put EC2 in Public Subnet?</a><a href="#9-153-interview-question-why-nat">9.153 Interview Question --- Why NAT?</a><a href="#9-154-interview-question-why-two-nat-gateways">9.154 Interview Question --- Why Two NAT Gateways?</a><a href="#9-155-interview-question-why-no-nat-for-database">9.155 Interview Question --- Why No NAT for Database?</a><a href="#9-156-interview-question-sg-vs-nacl-in-this-architecture">9.156 Interview Question --- SG vs NACL in This Architecture</a><a href="#9-157-interview-question-how-does-alb-reach-private-ec2">9.157 Interview Question --- How Does ALB Reach Private EC2?</a><a href="#9-158-interview-question-how-do-private-instances-reach-s3-without-nat">9.158 Interview Question --- How Do Private Instances Reach S3 Without NAT?</a><a href="#9-159-interview-question-how-would-you-remove-ssh">9.159 Interview Question --- How Would You Remove SSH?</a><a href="#9-160-senior-scenario-entire-site-down">9.160 Senior Scenario --- Entire Site Down</a><a href="#9-161-senior-scenario-only-az-a-fails">9.161 Senior Scenario --- Only AZ-A Fails</a><a href="#9-162-senior-scenario-db-failover">9.162 Senior Scenario --- DB Failover</a><a href="#9-163-senior-scenario-secret-retrieval-fails">9.163 Senior Scenario --- Secret Retrieval Fails</a><a href="#9-164-senior-scenario-accessdenied-from-s3">9.164 Senior Scenario --- AccessDenied from S3</a><a href="#9-165-senior-scenario-could-not-resolve-host">9.165 Senior Scenario --- Could not resolve host</a><a href="#9-166-senior-scenario-connection-timed-out">9.166 Senior Scenario --- Connection timed out</a><a href="#9-167-senior-scenario-connection-refused">9.167 Senior Scenario --- Connection refused</a><a href="#9-168-senior-scenario-tls-certificate-error">9.168 Senior Scenario --- TLS Certificate Error</a><a href="#9-169-senior-scenario-http-502-from-alb">9.169 Senior Scenario --- HTTP 502 from ALB</a><a href="#9-170-senior-scenario-http-504">9.170 Senior Scenario --- HTTP 504</a><a href="#9-171-security-hardening-checklist">9.171 Security Hardening Checklist</a><a href="#9-172-reliability-checklist">9.172 Reliability Checklist</a><a href="#9-173-observability-checklist">9.173 Observability Checklist</a><a href="#9-174-architecture-review-questions">9.174 Architecture Review Questions</a><a href="#9-175-complete-troubleshooting-workflow">9.175 Complete Troubleshooting Workflow</a><a href="#9-176-what-this-lab-teaches">9.176 What This Lab Teaches</a><a href="#9-177-quick-revision">9.177 Quick Revision</a><a href="#9-178-chapter-summary">9.178 Chapter Summary</a><a href="#9-179-references">9.179 References</a><a href="#next-chapter">NEXT CHAPTER</a><a href="#chapter-10-infrastructure-as-code">CHAPTER 10 --- INFRASTRUCTURE AS CODE</a></div></aside><article class="book-prose"><p class="source-note">Historical course notes converted into searchable offline HTML. Some content may be a draft; exercises requiring cloud accounts need credentials and may incur costs.</p><h1 id="chapter-9-production-vpc-design-lab"><strong>CHAPTER 9 --- PRODUCTION VPC DESIGN LAB</strong></h1>
+<p><strong>Page: 237--282</strong></p>
+<hr/>
+<h2 id="9-1-chapter-objective"><strong>9.1 Chapter Objective</strong></h2>
+<p>This chapter converts AWS VPC theory into a complete production-style
+network design.</p>
+<p>You will design a highly available three-tier AWS network containing:</p>
+<pre><code class="language-text">Internet
+   |
+   v
+Application Load Balancer
+   |
+   v
+Private Application Tier
+   |
+   v
+Private Database Tier
+</code></pre>
+<p>The environment will span two Availability Zones and include controlled
+outbound connectivity, private AWS service access, logging, DNS,
+security controls, validation, failure testing, and troubleshooting
+exercises.</p>
+<hr/>
+<h1 id="9-2-what-you-will-build"><strong>9.2 What You Will Build</strong></h1>
+<p>Target architecture:</p>
+<pre><code class="language-text">                              INTERNET
+                                  |
+                                  v
+                         Internet Gateway
+                                  |
+                                  v
+                    Application Load Balancer
+                         /               \
+                        /                 \
+                       v                   v
+               Public Subnet A       Public Subnet B
+                10.60.1.0/24          10.60.2.0/24
+                       |                   |
+                    NAT-A               NAT-B
+                       |                   |
+                       v                   v
+                App Subnet A         App Subnet B
+               10.60.11.0/24        10.60.12.0/24
+                       |                   |
+                       +---------+---------+
+                                 |
+                                 v
+                         Application Tier
+                                 |
+                                 v
+                    +------------+------------+
+                    |                         |
+                    v                         v
+              DB Subnet A               DB Subnet B
+             10.60.21.0/24             10.60.22.0/24
+                    \                         /
+                     \                       /
+                      +------ Database -----+
+</code></pre>
+<p>Additional controls:</p>
+<pre><code class="language-text">VPC Flow Logs
+VPC Endpoints
+Route 53 / VPC DNS
+Security Groups
+Network ACL strategy
+Systems Manager access
+CloudWatch logging
+Tagging
+Failure testing
+</code></pre>
+<hr/>
+<h1 id="9-3-production-requirement"><strong>9.3 Production Requirement</strong></h1>
+<p>Assume a company is deploying:</p>
+<pre><code class="language-text">Customer-facing web application
+</code></pre>
+<p>Requirements:</p>
+<pre><code class="language-text">1. Application must be reachable over HTTPS.
+
+2. Application servers must not have public IP addresses.
+
+3. Database must never be directly internet-facing.
+
+4. Architecture must survive failure of one application instance.
+
+5. Application tier must span two Availability Zones.
+
+6. Database architecture must support Multi-AZ deployment.
+
+7. Private application servers need controlled outbound access.
+
+8. Application servers must access selected AWS services privately where practical.
+
+9. Administrative access should not require public SSH exposure.
+
+10. Network activity must be observable.
+
+11. Infrastructure must be suitable for later Terraform automation.
+
+12. Network boundaries must follow least privilege.
+</code></pre>
+<hr/>
+<h1 id="9-4-step-1-identify-network-tiers"><strong>9.4 Step 1 --- Identify Network Tiers</strong></h1>
+<p>We need three logical tiers:</p>
+<pre><code class="language-text">PUBLIC TIER
+PRIVATE APPLICATION TIER
+PRIVATE DATABASE TIER
+</code></pre>
+<p>Purpose:</p>
+<pre><code class="language-text">Public Tier
+=
+Internet-facing entry points and NAT infrastructure
+
+Application Tier
+=
+Private compute
+
+Database Tier
+=
+Private data services
+</code></pre>
+<hr/>
+<h1 id="9-5-why-separate-tiers"><strong>9.5 Why Separate Tiers?</strong></h1>
+<p>Do not place everything in one subnet.</p>
+<p>Poor architecture:</p>
+<pre><code class="language-text">Internet
+   |
+   v
+EC2 + Database + Admin Tools
+same public subnet
+</code></pre>
+<p>Better:</p>
+<pre><code class="language-text">Internet
+   |
+   v
+ALB
+   |
+   v
+Private Application
+   |
+   v
+Private Database
+</code></pre>
+<p>Each tier has a different exposure requirement.</p>
+<hr/>
+<h1 id="9-6-step-2-choose-vpc-cidr"><strong>9.6 Step 2 --- Choose VPC CIDR</strong></h1>
+<p>We choose:</p>
+<pre><code class="language-text">10.60.0.0/16
+</code></pre>
+<p>This provides a large address pool for the lab.</p>
+<p>Before using this in a real company, verify that it does not overlap:</p>
+<pre><code class="language-text">Other VPCs
+On-premises networks
+VPN networks
+Partner networks
+Future regions
+Transit networks
+</code></pre>
+<hr/>
+<h1 id="9-7-cidr-capacity"><strong>9.7 CIDR Capacity</strong></h1>
+<p>A <code>/16</code> contains:</p>
+<pre><code class="language-text">65,536 IPv4 addresses
+</code></pre>
+<p>We do not create one giant subnet.</p>
+<p>We divide it into smaller subnets according to:</p>
+<pre><code class="language-text">Tier
+Availability Zone
+Growth
+Operational purpose
+</code></pre>
+<hr/>
+<h1 id="9-8-step-3-subnet-plan"><strong>9.8 Step 3 --- Subnet Plan</strong></h1>
+<p>Use six <code>/24</code> subnets.</p>
+<p>Tier          AZ-A              AZ-B</p>
+<hr/>
+<p>Public        <code>10.60.1.0/24</code> <code>10.60.2.0/24</code>
+Application   <code>10.60.11.0/24</code> <code>10.60.12.0/24</code>
+Database      <code>10.60.21.0/24</code> <code>10.60.22.0/24</code></p>
+<p>This layout is easy to understand operationally.</p>
+<hr/>
+<h1 id="9-9-why-leave-address-gaps"><strong>9.9 Why Leave Address Gaps?</strong></h1>
+<p>Notice:</p>
+<pre><code class="language-text">Public:
+1, 2
+
+Application:
+11, 12
+
+Database:
+21, 22
+</code></pre>
+<p>This is intentional.</p>
+<p>It leaves conceptual space for future expansion:</p>
+<pre><code class="language-text">10.60.3.0/24
+10.60.13.0/24
+10.60.23.0/24
+</code></pre>
+<p>A clean IP plan makes infrastructure easier to operate.</p>
+<hr/>
+<h1 id="9-10-availability-zone-design"><strong>9.10 Availability Zone Design</strong></h1>
+<p>We use two AZs.</p>
+<p>Example:</p>
+<pre><code class="language-text">AZ-A
+AZ-B
+</code></pre>
+<p>Do not hard-code assumptions that another AWS account's named
+<code>ap-south-1a</code> represents the same physical Availability Zone as yours.</p>
+<p>AWS maps AZ names per account.</p>
+<p>For cross-account designs, AZ IDs can provide a more consistent
+reference.</p>
+<hr/>
+<h1 id="9-11-failure-domain-principle"><strong>9.11 Failure-Domain Principle</strong></h1>
+<p>Architecture:</p>
+<pre><code class="language-text">AZ-A
+ |
+ +--&gt; Public-A
+ +--&gt; App-A
+ +--&gt; DB-A
+
+AZ-B
+ |
+ +--&gt; Public-B
+ +--&gt; App-B
+ +--&gt; DB-B
+</code></pre>
+<p>If one AZ has a major problem, the second AZ provides another failure
+domain.</p>
+<p>But application and database design must also support failover.</p>
+<hr/>
+<h1 id="9-12-step-4-internet-gateway"><strong>9.12 Step 4 --- Internet Gateway</strong></h1>
+<p>Create and attach an Internet Gateway:</p>
+<pre><code class="language-text">Internet
+   |
+   v
+IGW
+   |
+   v
+VPC
+</code></pre>
+<p>The IGW is required for the public IPv4 internet path in this
+architecture.</p>
+<hr/>
+<h1 id="9-13-public-route-table"><strong>9.13 Public Route Table</strong></h1>
+<p>Public subnets need a route:</p>
+<pre><code class="language-text">Destination        Target
+
+10.60.0.0/16       local
+0.0.0.0/0          Internet Gateway
+</code></pre>
+<p>Associate:</p>
+<pre><code class="language-text">Public-A
+Public-B
+</code></pre>
+<p>with the public route table.</p>
+<hr/>
+<h1 id="9-14-what-makes-these-public-subnets"><strong>9.14 What Makes These Public Subnets?</strong></h1>
+<p>The route:</p>
+<pre><code class="language-text">0.0.0.0/0 -&gt; IGW
+</code></pre>
+<p>is the key routing characteristic.</p>
+<p>But an EC2 instance would additionally need suitable public addressing
+and security controls for direct IPv4 internet connectivity.</p>
+<p>Subnet naming alone does nothing.</p>
+<hr/>
+<h1 id="9-15-step-5-nat-architecture"><strong>9.15 Step 5 --- NAT Architecture</strong></h1>
+<p>Private application instances may need outbound connectivity for
+activities such as:</p>
+<pre><code class="language-text">Package repositories
+External APIs
+Software updates
+Third-party services
+</code></pre>
+<p>For this lab:</p>
+<pre><code class="language-text">App-A -&gt; NAT-A
+App-B -&gt; NAT-B
+</code></pre>
+<hr/>
+<h1 id="9-16-nat-placement"><strong>9.16 NAT Placement</strong></h1>
+<p>NAT Gateways belong in public subnets for this internet-egress
+architecture.</p>
+<pre><code class="language-text">Public-A
+   |
+   v
+NAT-A
+
+Public-B
+   |
+   v
+NAT-B
+</code></pre>
+<p>Each NAT Gateway uses a public Elastic IP.</p>
+<hr/>
+<h1 id="9-17-why-one-nat-per-az"><strong>9.17 Why One NAT Per AZ?</strong></h1>
+<p>Possible low-cost design:</p>
+<pre><code class="language-text">App-A ----\
+           &gt; NAT-A
+App-B ----/
+</code></pre>
+<p>Problem:</p>
+<pre><code class="language-text">NAT-A/AZ-A dependency
+Cross-AZ traffic from B
+Potential additional transfer cost
+</code></pre>
+<p>More resilient design:</p>
+<pre><code class="language-text">App-A -&gt; NAT-A
+App-B -&gt; NAT-B
+</code></pre>
+<hr/>
+<h1 id="9-18-application-route-table-a"><strong>9.18 Application Route Table A</strong></h1>
+<pre><code class="language-text">Destination        Target
+
+10.60.0.0/16       local
+0.0.0.0/0          NAT-A
+</code></pre>
+<p>Associate:</p>
+<pre><code class="language-text">App-A
+</code></pre>
+<hr/>
+<h1 id="9-19-application-route-table-b"><strong>9.19 Application Route Table B</strong></h1>
+<pre><code class="language-text">Destination        Target
+
+10.60.0.0/16       local
+0.0.0.0/0          NAT-B
+</code></pre>
+<p>Associate:</p>
+<pre><code class="language-text">App-B
+</code></pre>
+<hr/>
+<h1 id="9-20-database-route-tables"><strong>9.20 Database Route Tables</strong></h1>
+<p>Database subnets should not automatically receive internet access merely
+because it is convenient.</p>
+<p>A restrictive design may contain:</p>
+<pre><code class="language-text">10.60.0.0/16 -&gt; local
+</code></pre>
+<p>plus only other explicitly required private routes.</p>
+<p>Do not automatically add:</p>
+<pre><code class="language-text">0.0.0.0/0 -&gt; NAT
+</code></pre>
+<p>unless the database architecture genuinely requires it.</p>
+<hr/>
+<h1 id="9-21-network-path-summary"><strong>9.21 Network Path Summary</strong></h1>
+<p>Internet inbound:</p>
+<pre><code class="language-text">Internet
+   |
+   v
+IGW
+   |
+   v
+ALB
+   |
+   v
+Private App
+</code></pre>
+<p>Application outbound:</p>
+<pre><code class="language-text">App
+ |
+ v
+NAT
+ |
+ v
+IGW
+ |
+ v
+Internet
+</code></pre>
+<p>Application to database:</p>
+<pre><code class="language-text">App
+ |
+ v
+VPC local route
+ |
+ v
+Database
+</code></pre>
+<hr/>
+<h1 id="9-22-step-6-application-load-balancer"><strong>9.22 Step 6 --- Application Load Balancer</strong></h1>
+<p>Use an internet-facing ALB across:</p>
+<pre><code class="language-text">Public-A
+Public-B
+</code></pre>
+<p>Architecture:</p>
+<pre><code class="language-text">Internet
+   |
+   v
+ALB
+  / \
+ /   \
+v     v
+App-A App-B
+</code></pre>
+<p>The ALB is the public application entry point.</p>
+<p>The application instances remain private.</p>
+<hr/>
+<h1 id="9-23-alb-listener"><strong>9.23 ALB Listener</strong></h1>
+<p>Production:</p>
+<pre><code class="language-text">HTTPS : 443
+</code></pre>
+<p>Common pattern:</p>
+<pre><code class="language-text">HTTP : 80
+      |
+      v
+Redirect
+      |
+      v
+HTTPS : 443
+</code></pre>
+<p>TLS certificates can be managed using AWS Certificate Manager where
+appropriate.</p>
+<hr/>
+<h1 id="9-24-target-group"><strong>9.24 Target Group</strong></h1>
+<p>ALB forwards traffic to a target group.</p>
+<p>Example:</p>
+<pre><code class="language-text">Protocol:
+HTTP
+
+Port:
+8080
+
+Health check:
+GET /health
+</code></pre>
+<p>Targets:</p>
+<pre><code class="language-text">App-A instance
+App-B instance
+</code></pre>
+<hr/>
+<h1 id="9-25-health-check-design"><strong>9.25 Health Check Design</strong></h1>
+<p>Do not make health checks meaningless.</p>
+<p>Weak:</p>
+<pre><code class="language-text">GET /
+</code></pre>
+<p>which always returns:</p>
+<pre><code class="language-text">200
+</code></pre>
+<p>even if dependencies are broken.</p>
+<p>A useful health endpoint should reflect the intended health semantics
+without making every optional dependency a reason to remove the
+instance.</p>
+<hr/>
+<h1 id="9-26-security-group-architecture"><strong>9.26 Security Group Architecture</strong></h1>
+<p>Create separate Security Groups:</p>
+<pre><code class="language-text">ALB-SG
+APP-SG
+DB-SG
+</code></pre>
+<p>Flow:</p>
+<pre><code class="language-text">Internet
+   |
+   | 443
+   v
+ALB-SG
+   |
+   | 8080
+   v
+APP-SG
+   |
+   | 5432
+   v
+DB-SG
+</code></pre>
+<hr/>
+<h1 id="9-27-alb-security-group"><strong>9.27 ALB Security Group</strong></h1>
+<p>Inbound:</p>
+<pre><code class="language-text">TCP 443
+Source: approved internet range
+</code></pre>
+<p>For a public website this may be:</p>
+<pre><code class="language-text">0.0.0.0/0
+</code></pre>
+<p>and, if IPv6 is enabled:</p>
+<pre><code class="language-text">::/0
+</code></pre>
+<p>according to requirements.</p>
+<p>Administrative ports should not be exposed here.</p>
+<hr/>
+<h1 id="9-28-application-security-group"><strong>9.28 Application Security Group</strong></h1>
+<p>Inbound:</p>
+<pre><code class="language-text">TCP 8080
+Source:
+ALB-SG
+</code></pre>
+<p>Not:</p>
+<pre><code class="language-text">TCP 8080
+0.0.0.0/0
+</code></pre>
+<p>The application accepts traffic from the load balancer, not from the
+entire internet.</p>
+<hr/>
+<h1 id="9-29-database-security-group"><strong>9.29 Database Security Group</strong></h1>
+<p>For PostgreSQL:</p>
+<pre><code class="language-text">TCP 5432
+Source:
+APP-SG
+</code></pre>
+<p>For MySQL:</p>
+<pre><code class="language-text">TCP 3306
+Source:
+APP-SG
+</code></pre>
+<p>Use only the database engine port actually required.</p>
+<hr/>
+<h1 id="9-30-why-security-group-references-matter"><strong>9.30 Why Security Group References Matter</strong></h1>
+<p>Suppose application instances scale:</p>
+<pre><code class="language-text">2
+4
+10
+30
+</code></pre>
+<p>Their private IPs change.</p>
+<p>A rule based on:</p>
+<pre><code class="language-text">Source = APP-SG
+</code></pre>
+<p>continues to express architectural identity.</p>
+<p>You do not need to constantly update IP lists.</p>
+<hr/>
+<h1 id="9-31-egress-rules"><strong>9.31 Egress Rules</strong></h1>
+<p>Do not forget outbound traffic.</p>
+<p>Examples:</p>
+<pre><code class="language-text">ALB -&gt; application
+Application -&gt; database
+Application -&gt; HTTPS services
+Application -&gt; DNS
+</code></pre>
+<p>Security Group egress should reflect operational requirements.</p>
+<p>Overly restrictive egress without understanding dependencies can break
+workloads.</p>
+<hr/>
+<h1 id="9-32-step-7-network-acl-strategy"><strong>9.32 Step 7 --- Network ACL Strategy</strong></h1>
+<p>For many workloads:</p>
+<pre><code class="language-text">Security Groups
+</code></pre>
+<p>provide the primary workload access control.</p>
+<p>NACLs can remain simple unless subnet-level deny/guardrail requirements
+exist.</p>
+<p>Avoid building hundreds of fragile NACL rules without a clear security
+requirement.</p>
+<hr/>
+<h1 id="9-33-nacl-reminder"><strong>9.33 NACL Reminder</strong></h1>
+<p>NACL:</p>
+<pre><code class="language-text">Stateless
+</code></pre>
+<p>Therefore both directions matter.</p>
+<p>If allowing:</p>
+<pre><code class="language-text">Client -&gt; Server:443
+</code></pre>
+<p>you must account for return traffic.</p>
+<hr/>
+<h1 id="9-34-ephemeral-port-reminder"><strong>9.34 Ephemeral Port Reminder</strong></h1>
+<p>Example:</p>
+<pre><code class="language-text">Client:
+10.60.11.25:53144
+
+Server:
+10.60.21.50:5432
+</code></pre>
+<p>Return:</p>
+<pre><code class="language-text">10.60.21.50:5432
+        |
+        v
+10.60.11.25:53144
+</code></pre>
+<p>A stateless filter must permit the required return-port behavior.</p>
+<hr/>
+<h1 id="9-35-step-8-database-subnet-group"><strong>9.35 Step 8 --- Database Subnet Group</strong></h1>
+<p>For an RDS-style Multi-AZ design, create a DB subnet group using
+database subnets in multiple Availability Zones.</p>
+<p>Concept:</p>
+<pre><code class="language-text">DB Subnet Group
+    |
+    +--&gt; DB-A
+    |
+    +--&gt; DB-B
+</code></pre>
+<p>The managed database service uses these network placements according to
+its configuration.</p>
+<hr/>
+<h1 id="9-36-database-public-accessibility"><strong>9.36 Database Public Accessibility</strong></h1>
+<p>For this design:</p>
+<pre><code class="language-text">Publicly Accessible = No
+</code></pre>
+<p>Application reaches the database over private VPC connectivity.</p>
+<hr/>
+<h1 id="9-37-database-dns"><strong>9.37 Database DNS</strong></h1>
+<p>Applications should generally connect using the managed database
+endpoint rather than hard-coding an underlying database IP.</p>
+<p>Concept:</p>
+<pre><code class="language-text">Application
+    |
+    v
+DB DNS Endpoint
+    |
+    v
+Current Database Endpoint
+</code></pre>
+<p>This supports managed failover behavior.</p>
+<hr/>
+<h1 id="9-38-step-9-administrative-access"><strong>9.38 Step 9 --- Administrative Access</strong></h1>
+<p>Old pattern:</p>
+<pre><code class="language-text">Internet
+   |
+   v
+Bastion Host
+   |
+   v
+Private EC2
+</code></pre>
+<p>This can work, but introduces:</p>
+<pre><code class="language-text">Public host
+SSH management
+Key management
+Patch responsibility
+Additional attack surface
+</code></pre>
+<hr/>
+<h1 id="9-39-systems-manager-pattern"><strong>9.39 Systems Manager Pattern</strong></h1>
+<p>Where supported and configured:</p>
+<pre><code class="language-text">Administrator
+      |
+      v
+AWS Identity
+      |
+      v
+Systems Manager
+      |
+      v
+Private EC2
+</code></pre>
+<p>This can remove the need for public SSH access.</p>
+<hr/>
+<h1 id="9-40-no-public-ssh"><strong>9.40 No Public SSH</strong></h1>
+<p>For this architecture, avoid:</p>
+<pre><code class="language-text">TCP 22
+Source 0.0.0.0/0
+</code></pre>
+<p>Production administration should use controlled identity-aware access.</p>
+<hr/>
+<h1 id="9-41-step-10-vpc-endpoints"><strong>9.41 Step 10 --- VPC Endpoints</strong></h1>
+<p>Application servers may need AWS services.</p>
+<p>Examples:</p>
+<pre><code class="language-text">S3
+Systems Manager
+ECR
+CloudWatch
+Secrets Manager
+STS
+</code></pre>
+<p>Evaluate endpoints to reduce unnecessary NAT/public-service routing.</p>
+<hr/>
+<h1 id="9-42-s3-gateway-endpoint"><strong>9.42 S3 Gateway Endpoint</strong></h1>
+<p>For S3:</p>
+<pre><code class="language-text">App Subnet
+    |
+    v
+Route Table
+    |
+    v
+S3 Gateway Endpoint
+    |
+    v
+S3
+</code></pre>
+<p>This avoids requiring NAT solely for supported S3 traffic.</p>
+<hr/>
+<h1 id="9-43-interface-endpoints"><strong>9.43 Interface Endpoints</strong></h1>
+<p>For supported services:</p>
+<pre><code class="language-text">Private App
+    |
+    v
+Private DNS
+    |
+    v
+Interface Endpoint ENI
+    |
+    v
+AWS Service
+</code></pre>
+<p>Interface endpoints should normally be deployed with availability
+requirements in mind.</p>
+<hr/>
+<h1 id="9-44-endpoint-security-group"><strong>9.44 Endpoint Security Group</strong></h1>
+<p>Example:</p>
+<pre><code class="language-text">APP-SG
+   |
+   | TCP 443
+   v
+ENDPOINT-SG
+</code></pre>
+<p>Inbound endpoint rule:</p>
+<pre><code class="language-text">TCP 443
+Source APP-SG
+</code></pre>
+<hr/>
+<h1 id="9-45-endpoint-policy"><strong>9.45 Endpoint Policy</strong></h1>
+<p>Where supported, restrict endpoint use to required actions/resources.</p>
+<p>Think:</p>
+<pre><code class="language-text">IAM Policy
++
+Endpoint Policy
++
+Resource Policy
+</code></pre>
+<p>Do not assume one policy layer replaces all others.</p>
+<hr/>
+<h1 id="9-46-step-11-dns"><strong>9.46 Step 11 --- DNS</strong></h1>
+<p>Enable and validate VPC DNS behavior according to requirements.</p>
+<p>Application flow may include:</p>
+<pre><code class="language-text">app.example.com
+      |
+      v
+Public DNS
+      |
+      v
+ALB
+</code></pre>
+<p>Internal service flow:</p>
+<pre><code class="language-text">database endpoint
+      |
+      v
+VPC Resolver
+      |
+      v
+Private destination
+</code></pre>
+<hr/>
+<h1 id="9-47-public-application-dns"><strong>9.47 Public Application DNS</strong></h1>
+<p>Example:</p>
+<pre><code class="language-text">app.example.com
+      |
+      v
+Route 53 alias
+      |
+      v
+Application Load Balancer
+</code></pre>
+<p>Do not hard-code ALB IP addresses.</p>
+<p>Use DNS.</p>
+<hr/>
+<h1 id="9-48-step-12-vpc-flow-logs"><strong>9.48 Step 12 --- VPC Flow Logs</strong></h1>
+<p>Enable VPC Flow Logs according to organizational requirements.</p>
+<p>Possible scope:</p>
+<pre><code class="language-text">VPC
+Subnet
+ENI
+</code></pre>
+<p>For this lab, a VPC-level flow log gives broad visibility.</p>
+<hr/>
+<h1 id="9-49-flow-log-use-cases"><strong>9.49 Flow Log Use Cases</strong></h1>
+<p>Flow Logs help investigate:</p>
+<pre><code class="language-text">Rejected database connections
+Unexpected sources
+Unexpected destination ports
+Traffic patterns
+Network incidents
+Security investigations
+</code></pre>
+<p>They complement application and OS logs.</p>
+<hr/>
+<h1 id="9-50-logging-architecture"><strong>9.50 Logging Architecture</strong></h1>
+<p>Example:</p>
+<pre><code class="language-text">VPC
+ |
+ v
+Flow Logs
+ |
+ +--&gt; CloudWatch Logs
+ |
+ +--&gt; S3
+</code></pre>
+<p>Choose destination based on:</p>
+<pre><code class="language-text">Retention
+Search
+Cost
+Security analytics
+Compliance
+</code></pre>
+<hr/>
+<h1 id="9-51-step-13-tags"><strong>9.51 Step 13 --- Tags</strong></h1>
+<p>Example:</p>
+<pre><code class="language-text">Environment = production
+Project     = payments
+Owner       = platform
+ManagedBy   = terraform
+CostCenter  = engineering
+</code></pre>
+<p>Resource Name examples:</p>
+<pre><code class="language-text">prod-payments-vpc
+prod-payments-public-a
+prod-payments-app-a
+prod-payments-db-a
+</code></pre>
+<hr/>
+<h1 id="9-52-step-14-create-architecture-diagram"><strong>9.52 Step 14 --- Create Architecture Diagram</strong></h1>
+<p>Before deployment, draw:</p>
+<pre><code class="language-text">CIDRs
+AZs
+Subnets
+Route tables
+Gateways
+Security Groups
+Endpoints
+Load balancer
+Database
+DNS
+Logging
+</code></pre>
+<p>If the team cannot explain the diagram, the design is not ready for
+production.</p>
+<hr/>
+<h1 id="9-53-final-architecture-diagram"><strong>9.53 Final Architecture Diagram</strong></h1>
+<pre><code class="language-text">                                 INTERNET
+                                    |
+                                    v
+                           Route 53 Public DNS
+                                    |
+                                    v
+                             Internet Gateway
+                                    |
+                                    v
+                      +---------------------------+
+                      |    INTERNET-FACING ALB    |
+                      |      HTTPS : 443          |
+                      +-------------+-------------+
+                                    |
+                      +-------------+-------------+
+                      |                           |
+                      v                           v
+                PUBLIC-A                     PUBLIC-B
+              10.60.1.0/24                 10.60.2.0/24
+                      |                           |
+                    NAT-A                       NAT-B
+                      |                           |
+                      v                           v
+                 APP-A                         APP-B
+              10.60.11.0/24                10.60.12.0/24
+                      |                           |
+                      +-------------+-------------+
+                                    |
+                                    v
+                             APPLICATION
+                              TCP 8080
+                                    |
+                                    v
+                               DB-SG
+                              TCP 5432
+                                    |
+                      +-------------+-------------+
+                      |                           |
+                      v                           v
+                   DB-A                         DB-B
+              10.60.21.0/24                10.60.22.0/24
+                      \                           /
+                       \                         /
+                        +---- RDS MULTI-AZ -----+
+
+Additional:
+App -&gt; S3 Gateway Endpoint
+App -&gt; Interface Endpoints
+VPC -&gt; Flow Logs
+Admin -&gt; Systems Manager -&gt; App
+</code></pre>
+<hr/>
+<h1 id="9-54-security-group-matrix"><strong>9.54 Security Group Matrix</strong></h1>
+<p>Source                Destination     Port Reason</p>
+<hr/>
+<p>Internet              ALB-SG           443 HTTPS
+ALB-SG                APP-SG          8080 Application traffic
+APP-SG                DB-SG           5432 PostgreSQL
+APP-SG                ENDPOINT-SG      443 AWS APIs
+Approved components   DNS               53 Name resolution</p>
+<p>Exact rules depend on implementation.</p>
+<hr/>
+<h1 id="9-55-route-table-matrix"><strong>9.55 Route Table Matrix</strong></h1>
+<h2 id="public">Public</h2>
+<pre><code class="language-text">10.60.0.0/16 -&gt; local
+0.0.0.0/0    -&gt; IGW
+</code></pre>
+<h2 id="app-a">App-A</h2>
+<pre><code class="language-text">10.60.0.0/16 -&gt; local
+0.0.0.0/0    -&gt; NAT-A
+S3 prefix     -&gt; S3 endpoint route
+</code></pre>
+<h2 id="app-b">App-B</h2>
+<pre><code class="language-text">10.60.0.0/16 -&gt; local
+0.0.0.0/0    -&gt; NAT-B
+S3 prefix     -&gt; S3 endpoint route
+</code></pre>
+<h2 id="database">Database</h2>
+<pre><code class="language-text">10.60.0.0/16 -&gt; local
+</code></pre>
+<p>plus only required additional private routes.</p>
+<hr/>
+<h1 id="9-56-packet-flow-1-user-to-application"><strong>9.56 Packet Flow 1 --- User to Application</strong></h1>
+<p>User opens:</p>
+<pre><code class="language-text">https://app.example.com
+</code></pre>
+<p>Flow:</p>
+<pre><code class="language-text">User
+ |
+ v
+DNS
+ |
+ v
+ALB
+ |
+ v
+ALB-SG
+ |
+ v
+Target Group
+ |
+ v
+APP-SG
+ |
+ v
+Application:8080
+</code></pre>
+<hr/>
+<h1 id="9-57-packet-flow-2-application-to-database"><strong>9.57 Packet Flow 2 --- Application to Database</strong></h1>
+<pre><code class="language-text">Application
+10.60.11.x
+    |
+    v
+VPC Local Route
+    |
+    v
+DB-SG
+    |
+    v
+RDS:5432
+</code></pre>
+<p>No NAT is needed.</p>
+<p>No Internet Gateway is needed.</p>
+<hr/>
+<h1 id="9-58-packet-flow-3-application-to-internet"><strong>9.58 Packet Flow 3 --- Application to Internet</strong></h1>
+<pre><code class="language-text">App-A
+ |
+ v
+App-A Route Table
+ |
+ | 0.0.0.0/0
+ v
+NAT-A
+ |
+ v
+Public Route Table
+ |
+ v
+IGW
+ |
+ v
+Internet
+</code></pre>
+<hr/>
+<h1 id="9-59-packet-flow-4-application-to-s3"><strong>9.59 Packet Flow 4 --- Application to S3</strong></h1>
+<p>With gateway endpoint:</p>
+<pre><code class="language-text">App
+ |
+ v
+Route Table
+ |
+ v
+S3 Gateway Endpoint
+ |
+ v
+S3
+</code></pre>
+<p>This path does not require the NAT Gateway.</p>
+<hr/>
+<h1 id="9-60-packet-flow-5-admin-to-instance"><strong>9.60 Packet Flow 5 --- Admin to Instance</strong></h1>
+<p>With Systems Manager:</p>
+<pre><code class="language-text">Administrator
+     |
+     v
+IAM / Identity Center
+     |
+     v
+Systems Manager
+     |
+     v
+Private EC2
+</code></pre>
+<p>No public SSH listener is required.</p>
+<hr/>
+<h1 id="9-61-cli-lab-prerequisites"><strong>9.61 CLI Lab --- Prerequisites</strong></h1>
+<p>Run commands from:</p>
+<pre><code class="language-text">Your administration workstation
+AWS CloudShell
+or an approved management host
+</code></pre>
+<p>Prerequisites:</p>
+<pre><code class="language-bash">aws --version
+</code></pre>
+<p>Verify identity:</p>
+<pre><code class="language-bash">aws sts get-caller-identity
+</code></pre>
+<p>Never build production infrastructure before confirming:</p>
+<pre><code class="language-text">Account
+Role
+Region
+</code></pre>
+<hr/>
+<h1 id="9-62-set-lab-variables"><strong>9.62 Set Lab Variables</strong></h1>
+<p>Example Bash:</p>
+<pre><code class="language-bash">export AWS_REGION="ap-south-1"
+export VPC_CIDR="10.60.0.0/16"
+</code></pre>
+<p>Verify:</p>
+<pre><code class="language-bash">echo "$AWS_REGION"
+echo "$VPC_CIDR"
+</code></pre>
+<hr/>
+<h1 id="9-63-create-vpc"><strong>9.63 Create VPC</strong></h1>
+<pre><code class="language-bash">VPC_ID=$(aws ec2 create-vpc \
+  --cidr-block "$VPC_CIDR" \
+  --region "$AWS_REGION" \
+  --query 'Vpc.VpcId' \
+  --output text)
+</code></pre>
+<p>Check:</p>
+<pre><code class="language-bash">echo "$VPC_ID"
+</code></pre>
+<hr/>
+<h1 id="9-64-tag-vpc"><strong>9.64 Tag VPC</strong></h1>
+<pre><code class="language-bash">aws ec2 create-tags \
+  --resources "$VPC_ID" \
+  --tags \
+  Key=Name,Value=prod-lab-vpc \
+  Key=Environment,Value=production-lab \
+  Key=ManagedBy,Value=cli
+</code></pre>
+<hr/>
+<h1 id="9-65-enable-dns-attributes"><strong>9.65 Enable DNS Attributes</strong></h1>
+<pre><code class="language-bash">aws ec2 modify-vpc-attribute \
+  --vpc-id "$VPC_ID" \
+  --enable-dns-support '{"Value":true}'
+</code></pre>
+<pre><code class="language-bash">aws ec2 modify-vpc-attribute \
+  --vpc-id "$VPC_ID" \
+  --enable-dns-hostnames '{"Value":true}'
+</code></pre>
+<hr/>
+<h1 id="9-66-discover-availability-zones"><strong>9.66 Discover Availability Zones</strong></h1>
+<pre><code class="language-bash">aws ec2 describe-availability-zones \
+  --region "$AWS_REGION" \
+  --query 'AvailabilityZones[?State==`available`].[ZoneName,ZoneId]' \
+  --output table
+</code></pre>
+<p>Select two appropriate AZs for the lab.</p>
+<p>Example variables:</p>
+<pre><code class="language-bash">export AZ_A="ap-south-1a"
+export AZ_B="ap-south-1b"
+</code></pre>
+<p>Use values valid for your account.</p>
+<hr/>
+<h1 id="9-67-create-public-subnet-a"><strong>9.67 Create Public Subnet A</strong></h1>
+<pre><code class="language-bash">PUBLIC_A=$(aws ec2 create-subnet \
+  --vpc-id "$VPC_ID" \
+  --cidr-block 10.60.1.0/24 \
+  --availability-zone "$AZ_A" \
+  --query 'Subnet.SubnetId' \
+  --output text)
+</code></pre>
+<hr/>
+<h1 id="9-68-create-public-subnet-b"><strong>9.68 Create Public Subnet B</strong></h1>
+<pre><code class="language-bash">PUBLIC_B=$(aws ec2 create-subnet \
+  --vpc-id "$VPC_ID" \
+  --cidr-block 10.60.2.0/24 \
+  --availability-zone "$AZ_B" \
+  --query 'Subnet.SubnetId' \
+  --output text)
+</code></pre>
+<hr/>
+<h1 id="9-69-create-application-subnet-a"><strong>9.69 Create Application Subnet A</strong></h1>
+<pre><code class="language-bash">APP_A=$(aws ec2 create-subnet \
+  --vpc-id "$VPC_ID" \
+  --cidr-block 10.60.11.0/24 \
+  --availability-zone "$AZ_A" \
+  --query 'Subnet.SubnetId' \
+  --output text)
+</code></pre>
+<hr/>
+<h1 id="9-70-create-application-subnet-b"><strong>9.70 Create Application Subnet B</strong></h1>
+<pre><code class="language-bash">APP_B=$(aws ec2 create-subnet \
+  --vpc-id "$VPC_ID" \
+  --cidr-block 10.60.12.0/24 \
+  --availability-zone "$AZ_B" \
+  --query 'Subnet.SubnetId' \
+  --output text)
+</code></pre>
+<hr/>
+<h1 id="9-71-create-database-subnets"><strong>9.71 Create Database Subnets</strong></h1>
+<pre><code class="language-bash">DB_A=$(aws ec2 create-subnet \
+  --vpc-id "$VPC_ID" \
+  --cidr-block 10.60.21.0/24 \
+  --availability-zone "$AZ_A" \
+  --query 'Subnet.SubnetId' \
+  --output text)
+</code></pre>
+<pre><code class="language-bash">DB_B=$(aws ec2 create-subnet \
+  --vpc-id "$VPC_ID" \
+  --cidr-block 10.60.22.0/24 \
+  --availability-zone "$AZ_B" \
+  --query 'Subnet.SubnetId' \
+  --output text)
+</code></pre>
+<hr/>
+<h1 id="9-72-verify-subnets"><strong>9.72 Verify Subnets</strong></h1>
+<pre><code class="language-bash">aws ec2 describe-subnets \
+  --filters Name=vpc-id,Values="$VPC_ID" \
+  --query 'Subnets[*].[SubnetId,CidrBlock,AvailabilityZone]' \
+  --output table
+</code></pre>
+<p>Expected logical result:</p>
+<pre><code class="language-text">10.60.1.0/24
+10.60.2.0/24
+10.60.11.0/24
+10.60.12.0/24
+10.60.21.0/24
+10.60.22.0/24
+</code></pre>
+<hr/>
+<h1 id="9-73-create-internet-gateway"><strong>9.73 Create Internet Gateway</strong></h1>
+<pre><code class="language-bash">IGW_ID=$(aws ec2 create-internet-gateway \
+  --query 'InternetGateway.InternetGatewayId' \
+  --output text)
+</code></pre>
+<p>Attach:</p>
+<pre><code class="language-bash">aws ec2 attach-internet-gateway \
+  --internet-gateway-id "$IGW_ID" \
+  --vpc-id "$VPC_ID"
+</code></pre>
+<hr/>
+<h1 id="9-74-create-public-route-table"><strong>9.74 Create Public Route Table</strong></h1>
+<pre><code class="language-bash">PUBLIC_RT=$(aws ec2 create-route-table \
+  --vpc-id "$VPC_ID" \
+  --query 'RouteTable.RouteTableId' \
+  --output text)
+</code></pre>
+<p>Add default route:</p>
+<pre><code class="language-bash">aws ec2 create-route \
+  --route-table-id "$PUBLIC_RT" \
+  --destination-cidr-block 0.0.0.0/0 \
+  --gateway-id "$IGW_ID"
+</code></pre>
+<hr/>
+<h1 id="9-75-associate-public-subnets"><strong>9.75 Associate Public Subnets</strong></h1>
+<pre><code class="language-bash">aws ec2 associate-route-table \
+  --route-table-id "$PUBLIC_RT" \
+  --subnet-id "$PUBLIC_A"
+</code></pre>
+<pre><code class="language-bash">aws ec2 associate-route-table \
+  --route-table-id "$PUBLIC_RT" \
+  --subnet-id "$PUBLIC_B"
+</code></pre>
+<hr/>
+<h1 id="9-76-verify-public-routes"><strong>9.76 Verify Public Routes</strong></h1>
+<pre><code class="language-bash">aws ec2 describe-route-tables \
+  --route-table-ids "$PUBLIC_RT" \
+  --query 'RouteTables[0].Routes' \
+  --output table
+</code></pre>
+<p>Look for:</p>
+<pre><code class="language-text">10.60.0.0/16 -&gt; local
+0.0.0.0/0    -&gt; IGW
+</code></pre>
+<hr/>
+<h1 id="9-77-allocate-elastic-ip-for-nat-a"><strong>9.77 Allocate Elastic IP for NAT-A</strong></h1>
+<pre><code class="language-bash">EIP_A_ALLOC=$(aws ec2 allocate-address \
+  --domain vpc \
+  --query 'AllocationId' \
+  --output text)
+</code></pre>
+<hr/>
+<h1 id="9-78-allocate-elastic-ip-for-nat-b"><strong>9.78 Allocate Elastic IP for NAT-B</strong></h1>
+<pre><code class="language-bash">EIP_B_ALLOC=$(aws ec2 allocate-address \
+  --domain vpc \
+  --query 'AllocationId' \
+  --output text)
+</code></pre>
+<p>Remember:</p>
+<pre><code class="language-text">Public IPv4 resources and NAT Gateways can incur charges.
+</code></pre>
+<p>Destroy lab resources after use.</p>
+<hr/>
+<h1 id="9-79-create-nat-a"><strong>9.79 Create NAT-A</strong></h1>
+<pre><code class="language-bash">NAT_A=$(aws ec2 create-nat-gateway \
+  --subnet-id "$PUBLIC_A" \
+  --allocation-id "$EIP_A_ALLOC" \
+  --query 'NatGateway.NatGatewayId' \
+  --output text)
+</code></pre>
+<hr/>
+<h1 id="9-80-create-nat-b"><strong>9.80 Create NAT-B</strong></h1>
+<pre><code class="language-bash">NAT_B=$(aws ec2 create-nat-gateway \
+  --subnet-id "$PUBLIC_B" \
+  --allocation-id "$EIP_B_ALLOC" \
+  --query 'NatGateway.NatGatewayId' \
+  --output text)
+</code></pre>
+<p>Wait until both NAT Gateways become available before adding routes.</p>
+<hr/>
+<h1 id="9-81-wait-for-nat-gateways"><strong>9.81 Wait for NAT Gateways</strong></h1>
+<pre><code class="language-bash">aws ec2 wait nat-gateway-available \
+  --nat-gateway-ids "$NAT_A"
+</code></pre>
+<pre><code class="language-bash">aws ec2 wait nat-gateway-available \
+  --nat-gateway-ids "$NAT_B"
+</code></pre>
+<hr/>
+<h1 id="9-82-create-app-route-table-a"><strong>9.82 Create App Route Table A</strong></h1>
+<pre><code class="language-bash">APP_RT_A=$(aws ec2 create-route-table \
+  --vpc-id "$VPC_ID" \
+  --query 'RouteTable.RouteTableId' \
+  --output text)
+</code></pre>
+<pre><code class="language-bash">aws ec2 create-route \
+  --route-table-id "$APP_RT_A" \
+  --destination-cidr-block 0.0.0.0/0 \
+  --nat-gateway-id "$NAT_A"
+</code></pre>
+<p>Associate:</p>
+<pre><code class="language-bash">aws ec2 associate-route-table \
+  --route-table-id "$APP_RT_A" \
+  --subnet-id "$APP_A"
+</code></pre>
+<hr/>
+<h1 id="9-83-create-app-route-table-b"><strong>9.83 Create App Route Table B</strong></h1>
+<pre><code class="language-bash">APP_RT_B=$(aws ec2 create-route-table \
+  --vpc-id "$VPC_ID" \
+  --query 'RouteTable.RouteTableId' \
+  --output text)
+</code></pre>
+<pre><code class="language-bash">aws ec2 create-route \
+  --route-table-id "$APP_RT_B" \
+  --destination-cidr-block 0.0.0.0/0 \
+  --nat-gateway-id "$NAT_B"
+</code></pre>
+<p>Associate:</p>
+<pre><code class="language-bash">aws ec2 associate-route-table \
+  --route-table-id "$APP_RT_B" \
+  --subnet-id "$APP_B"
+</code></pre>
+<hr/>
+<h1 id="9-84-create-database-route-table"><strong>9.84 Create Database Route Table</strong></h1>
+<pre><code class="language-bash">DB_RT=$(aws ec2 create-route-table \
+  --vpc-id "$VPC_ID" \
+  --query 'RouteTable.RouteTableId' \
+  --output text)
+</code></pre>
+<p>Associate both database subnets:</p>
+<pre><code class="language-bash">aws ec2 associate-route-table \
+  --route-table-id "$DB_RT" \
+  --subnet-id "$DB_A"
+</code></pre>
+<pre><code class="language-bash">aws ec2 associate-route-table \
+  --route-table-id "$DB_RT" \
+  --subnet-id "$DB_B"
+</code></pre>
+<p>No default internet route is added in this design.</p>
+<hr/>
+<h1 id="9-85-verify-all-route-tables"><strong>9.85 Verify All Route Tables</strong></h1>
+<pre><code class="language-bash">aws ec2 describe-route-tables \
+  --filters Name=vpc-id,Values="$VPC_ID" \
+  --output json
+</code></pre>
+<p>Do not merely count route tables.</p>
+<p>Verify:</p>
+<pre><code class="language-text">Routes
+Subnet associations
+Targets
+</code></pre>
+<hr/>
+<h1 id="9-86-create-alb-security-group"><strong>9.86 Create ALB Security Group</strong></h1>
+<pre><code class="language-bash">ALB_SG=$(aws ec2 create-security-group \
+  --group-name prod-lab-alb-sg \
+  --description "ALB security group" \
+  --vpc-id "$VPC_ID" \
+  --query 'GroupId' \
+  --output text)
+</code></pre>
+<hr/>
+<h1 id="9-87-allow-https-to-alb"><strong>9.87 Allow HTTPS to ALB</strong></h1>
+<p>Example IPv4 rule:</p>
+<pre><code class="language-bash">aws ec2 authorize-security-group-ingress \
+  --group-id "$ALB_SG" \
+  --protocol tcp \
+  --port 443 \
+  --cidr 0.0.0.0/0
+</code></pre>
+<p>Use a narrower source when business requirements permit.</p>
+<hr/>
+<h1 id="9-88-create-application-security-group"><strong>9.88 Create Application Security Group</strong></h1>
+<pre><code class="language-bash">APP_SG=$(aws ec2 create-security-group \
+  --group-name prod-lab-app-sg \
+  --description "Private application security group" \
+  --vpc-id "$VPC_ID" \
+  --query 'GroupId' \
+  --output text)
+</code></pre>
+<p>Allow ALB:</p>
+<pre><code class="language-bash">aws ec2 authorize-security-group-ingress \
+  --group-id "$APP_SG" \
+  --protocol tcp \
+  --port 8080 \
+  --source-group "$ALB_SG"
+</code></pre>
+<hr/>
+<h1 id="9-89-create-database-security-group"><strong>9.89 Create Database Security Group</strong></h1>
+<pre><code class="language-bash">DB_SG=$(aws ec2 create-security-group \
+  --group-name prod-lab-db-sg \
+  --description "Database security group" \
+  --vpc-id "$VPC_ID" \
+  --query 'GroupId' \
+  --output text)
+</code></pre>
+<p>PostgreSQL example:</p>
+<pre><code class="language-bash">aws ec2 authorize-security-group-ingress \
+  --group-id "$DB_SG" \
+  --protocol tcp \
+  --port 5432 \
+  --source-group "$APP_SG"
+</code></pre>
+<hr/>
+<h1 id="9-90-verify-security-groups"><strong>9.90 Verify Security Groups</strong></h1>
+<pre><code class="language-bash">aws ec2 describe-security-groups \
+  --group-ids "$ALB_SG" "$APP_SG" "$DB_SG" \
+  --output json
+</code></pre>
+<p>Validate:</p>
+<pre><code class="language-text">ALB:
+443 from intended clients
+
+APP:
+8080 from ALB-SG
+
+DB:
+5432 from APP-SG
+</code></pre>
+<hr/>
+<h1 id="9-91-create-db-subnet-group"><strong>9.91 Create DB Subnet Group</strong></h1>
+<p>Example:</p>
+<pre><code class="language-bash">aws rds create-db-subnet-group \
+  --db-subnet-group-name prod-lab-db-subnets \
+  --db-subnet-group-description "Production lab DB subnets" \
+  --subnet-ids "$DB_A" "$DB_B"
+</code></pre>
+<p>This prepares network placement for an RDS deployment.</p>
+<hr/>
+<h1 id="9-92-s3-gateway-endpoint"><strong>9.92 S3 Gateway Endpoint</strong></h1>
+<p>Obtain the route tables used by application subnets.</p>
+<p>Then create an S3 gateway endpoint:</p>
+<pre><code class="language-bash">aws ec2 create-vpc-endpoint \
+  --vpc-id "$VPC_ID" \
+  --service-name "com.amazonaws.${AWS_REGION}.s3" \
+  --vpc-endpoint-type Gateway \
+  --route-table-ids "$APP_RT_A" "$APP_RT_B"
+</code></pre>
+<p>Verify current service support and policy requirements before production
+deployment.</p>
+<hr/>
+<h1 id="9-93-verify-vpc-endpoint"><strong>9.93 Verify VPC Endpoint</strong></h1>
+<pre><code class="language-bash">aws ec2 describe-vpc-endpoints \
+  --filters Name=vpc-id,Values="$VPC_ID" \
+  --output table
+</code></pre>
+<p>Check:</p>
+<pre><code class="language-text">State
+Service
+Type
+Route tables
+</code></pre>
+<hr/>
+<h1 id="9-94-interface-endpoint-design"><strong>9.94 Interface Endpoint Design</strong></h1>
+<p>Suppose private instances use Systems Manager.</p>
+<p>Depending on current Systems Manager architecture and features, required
+interface endpoints can include relevant SSM-related services.</p>
+<p>Do not copy an old endpoint list blindly.</p>
+<p>Check current AWS documentation and actual workload dependencies.</p>
+<hr/>
+<h1 id="9-95-interface-endpoint-pattern"><strong>9.95 Interface Endpoint Pattern</strong></h1>
+<pre><code class="language-text">Private App
+     |
+     | TCP 443
+     v
+Endpoint ENI
+     |
+     v
+AWS API
+</code></pre>
+<p>Create endpoint ENIs in multiple AZs when availability requires it.</p>
+<hr/>
+<h1 id="9-96-flow-logs-iam-requirement"><strong>9.96 Flow Logs IAM Requirement</strong></h1>
+<p>If delivering VPC Flow Logs to CloudWatch Logs, an appropriate IAM role
+and permissions are required.</p>
+<p>The role must allow the VPC Flow Logs service to publish to the intended
+log destination.</p>
+<p>Use least privilege.</p>
+<hr/>
+<h1 id="9-97-create-log-group-example"><strong>9.97 Create Log Group Example</strong></h1>
+<pre><code class="language-bash">aws logs create-log-group \
+  --log-group-name /aws/vpc/prod-lab-flowlogs
+</code></pre>
+<p>Set retention according to organizational requirements.</p>
+<p>Example:</p>
+<pre><code class="language-bash">aws logs put-retention-policy \
+  --log-group-name /aws/vpc/prod-lab-flowlogs \
+  --retention-in-days 30
+</code></pre>
+<hr/>
+<h1 id="9-98-flow-log-creation-concept"><strong>9.98 Flow Log Creation Concept</strong></h1>
+<p>After creating the appropriate IAM role:</p>
+<pre><code class="language-bash">aws ec2 create-flow-logs \
+  --resource-type VPC \
+  --resource-ids "$VPC_ID" \
+  --traffic-type ALL \
+  --log-destination-type cloud-watch-logs \
+  --log-group-name /aws/vpc/prod-lab-flowlogs \
+  --deliver-logs-permission-arn &lt;FLOW_LOG_ROLE_ARN&gt;
+</code></pre>
+<p>Never paste an unreviewed broad IAM role into production.</p>
+<hr/>
+<h1 id="9-99-deploy-application-instances"><strong>9.99 Deploy Application Instances</strong></h1>
+<p>Application instances should be placed in:</p>
+<pre><code class="language-text">APP-A
+APP-B
+</code></pre>
+<p>They should use:</p>
+<pre><code class="language-text">APP-SG
+</code></pre>
+<p>and should normally not receive public IPv4 addresses in this
+architecture.</p>
+<hr/>
+<h1 id="9-100-verify-instance-addressing"><strong>9.100 Verify Instance Addressing</strong></h1>
+<pre><code class="language-bash">aws ec2 describe-instances \
+  --filters Name=vpc-id,Values="$VPC_ID" \
+  --query 'Reservations[].Instances[].[InstanceId,PrivateIpAddress,PublicIpAddress,SubnetId]' \
+  --output table
+</code></pre>
+<p>For private application instances, expect:</p>
+<pre><code class="language-text">Private IP = Yes
+Public IP  = None
+</code></pre>
+<hr/>
+<h1 id="9-101-application-listener"><strong>9.101 Application Listener</strong></h1>
+<p>On each application host:</p>
+<pre><code class="language-bash">sudo ss -lntp
+</code></pre>
+<p>Expected application listener:</p>
+<pre><code class="language-text">:8080
+</code></pre>
+<p>Be careful with:</p>
+<pre><code class="language-text">127.0.0.1:8080
+</code></pre>
+<p>If the ALB must reach the application over the instance network
+interface, binding only to loopback can make the target unreachable.</p>
+<hr/>
+<h1 id="9-102-linux-route-verification"><strong>9.102 Linux Route Verification</strong></h1>
+<p>On application EC2:</p>
+<pre><code class="language-bash">ip addr
+</code></pre>
+<pre><code class="language-bash">ip route
+</code></pre>
+<p>Example conceptual output:</p>
+<pre><code class="language-text">default via &lt;subnet-router&gt;
+10.60.11.0/24 dev eth0
+</code></pre>
+<p>AWS VPC routing occurs outside the guest route table after traffic
+reaches the VPC networking layer.</p>
+<hr/>
+<h1 id="9-103-dns-verification"><strong>9.103 DNS Verification</strong></h1>
+<pre><code class="language-bash">cat /etc/resolv.conf
+</code></pre>
+<pre><code class="language-bash">getent hosts example.com
+</code></pre>
+<pre><code class="language-bash">dig example.com
+</code></pre>
+<p>If IP connectivity works but names fail, investigate DNS rather than
+changing unrelated routes.</p>
+<hr/>
+<h1 id="9-104-test-outbound-internet"><strong>9.104 Test Outbound Internet</strong></h1>
+<p>From a private application instance:</p>
+<pre><code class="language-bash">curl -I https://example.com
+</code></pre>
+<p>If successful:</p>
+<pre><code class="language-text">App subnet
+-&gt; NAT
+-&gt; IGW
+-&gt; Internet
+</code></pre>
+<p>is functioning for the tested path.</p>
+<hr/>
+<h1 id="9-105-test-s3-endpoint"><strong>9.105 Test S3 Endpoint</strong></h1>
+<p>Use AWS CLI from the application instance with an appropriate IAM role:</p>
+<pre><code class="language-bash">aws s3 ls
+</code></pre>
+<p>Then inspect:</p>
+<pre><code class="language-text">Route table
+Endpoint
+IAM
+Bucket policy
+Endpoint policy
+DNS/service behavior
+</code></pre>
+<p>as relevant.</p>
+<hr/>
+<h1 id="9-106-never-use-static-access-keys-on-ec2"><strong>9.106 Never Use Static Access Keys on EC2</strong></h1>
+<p>Bad:</p>
+<pre><code class="language-text">~/.aws/credentials
+contains long-lived IAM user keys
+</code></pre>
+<p>Better:</p>
+<pre><code class="language-text">EC2 IAM Role
+     |
+     v
+Temporary credentials
+</code></pre>
+<p>Networking and identity design must work together.</p>
+<hr/>
+<h1 id="9-107-create-load-balancer-conceptually"><strong>9.107 Create Load Balancer Conceptually</strong></h1>
+<p>Example CLI shape:</p>
+<pre><code class="language-bash">aws elbv2 create-load-balancer \
+  --name prod-lab-alb \
+  --subnets "$PUBLIC_A" "$PUBLIC_B" \
+  --security-groups "$ALB_SG" \
+  --scheme internet-facing \
+  --type application
+</code></pre>
+<p>Capture the returned ALB ARN and DNS name.</p>
+<hr/>
+<h1 id="9-108-create-target-group"><strong>9.108 Create Target Group</strong></h1>
+<p>Example:</p>
+<pre><code class="language-bash">aws elbv2 create-target-group \
+  --name prod-lab-app-tg \
+  --protocol HTTP \
+  --port 8080 \
+  --vpc-id "$VPC_ID" \
+  --health-check-path /health \
+  --target-type instance
+</code></pre>
+<p>Register the actual application instance IDs.</p>
+<hr/>
+<h1 id="9-109-https-listener"><strong>9.109 HTTPS Listener</strong></h1>
+<p>For production HTTPS:</p>
+<pre><code class="language-text">ALB Listener :443
+Certificate from ACM
+Target Group :8080
+</code></pre>
+<p>Example command shape:</p>
+<pre><code class="language-bash">aws elbv2 create-listener \
+  --load-balancer-arn &lt;ALB_ARN&gt; \
+  --protocol HTTPS \
+  --port 443 \
+  --certificates CertificateArn=&lt;ACM_CERT_ARN&gt; \
+  --default-actions Type=forward,TargetGroupArn=&lt;TARGET_GROUP_ARN&gt;
+</code></pre>
+<p>Use a certificate valid for the application hostname.</p>
+<hr/>
+<h1 id="9-110-target-health"><strong>9.110 Target Health</strong></h1>
+<p>Check:</p>
+<pre><code class="language-bash">aws elbv2 describe-target-health \
+  --target-group-arn &lt;TARGET_GROUP_ARN&gt;
+</code></pre>
+<p>Healthy:</p>
+<pre><code class="language-text">healthy
+</code></pre>
+<p>Unhealthy targets require investigation.</p>
+<hr/>
+<h1 id="9-111-troubleshooting-unhealthy-target"><strong>9.111 Troubleshooting Unhealthy Target</strong></h1>
+<p>Check:</p>
+<pre><code class="language-text">Application running?
+Correct port?
+Correct health-check path?
+APP-SG allows ALB-SG?
+NACL permits traffic?
+App bound to correct address?
+Health endpoint returns expected status?
+</code></pre>
+<p>On instance:</p>
+<pre><code class="language-bash">curl -v http://127.0.0.1:8080/health
+</code></pre>
+<p>Then test using the instance's private address where appropriate.</p>
+<hr/>
+<h1 id="9-112-production-validation-checklist"><strong>9.112 Production Validation Checklist</strong></h1>
+<p>Before declaring success:</p>
+<pre><code class="language-text">[ ] ALB reachable through intended DNS
+
+[ ] HTTPS certificate valid
+
+[ ] Both AZ targets healthy
+
+[ ] Application instances have no public IP
+
+[ ] App outbound internet works if required
+
+[ ] S3 endpoint works
+
+[ ] Database reachable only from app tier
+
+[ ] Database not publicly accessible
+
+[ ] No public SSH rule
+
+[ ] Flow Logs active
+
+[ ] Route tables correctly associated
+
+[ ] NAT-A serves App-A
+
+[ ] NAT-B serves App-B
+
+[ ] DNS works
+
+[ ] IAM roles use temporary credentials
+
+[ ] Tags present
+</code></pre>
+<hr/>
+<h1 id="9-113-failure-test-1-break-app-security-group"><strong>9.113 Failure Test 1 --- Break App Security Group</strong></h1>
+<p>Remove:</p>
+<pre><code class="language-text">ALB-SG -&gt; APP-SG :8080
+</code></pre>
+<p>Expected:</p>
+<pre><code class="language-text">ALB targets become unhealthy
+Application unavailable
+</code></pre>
+<p>Investigation:</p>
+<pre><code class="language-text">Target health
+Security Group rules
+Flow Logs
+Application logs
+</code></pre>
+<p>Restore the rule.</p>
+<hr/>
+<h1 id="9-114-failure-test-2-wrong-health-port"><strong>9.114 Failure Test 2 --- Wrong Health Port</strong></h1>
+<p>Configure ALB health check for:</p>
+<pre><code class="language-text">8081
+</code></pre>
+<p>while app listens:</p>
+<pre><code class="language-text">8080
+</code></pre>
+<p>Expected:</p>
+<pre><code class="language-text">Target unhealthy
+</code></pre>
+<p>Lesson:</p>
+<pre><code class="language-text">Network reachability and application configuration must agree.
+</code></pre>
+<hr/>
+<h1 id="9-115-failure-test-3-wrong-private-route"><strong>9.115 Failure Test 3 --- Wrong Private Route</strong></h1>
+<p>Change App-A default route away from NAT-A or remove it.</p>
+<p>Expected:</p>
+<pre><code class="language-text">App-A loses required general internet egress
+</code></pre>
+<p>But:</p>
+<pre><code class="language-text">App-A -&gt; App-B
+</code></pre>
+<p>within the VPC may still work through the local route.</p>
+<p>This proves route specificity.</p>
+<hr/>
+<h1 id="9-116-failure-test-4-nat-failure-simulation"><strong>9.116 Failure Test 4 --- NAT Failure Simulation</strong></h1>
+<p>Temporarily test behavior if App-A cannot use NAT-A.</p>
+<p>Ask:</p>
+<pre><code class="language-text">Can App-A still reach S3 through gateway endpoint?
+Can App-A still reach database?
+Can ALB still reach App-A?
+Which external dependencies fail?
+</code></pre>
+<p>This demonstrates dependency-specific failure behavior.</p>
+<hr/>
+<h1 id="9-117-failure-test-5-database-sg"><strong>9.117 Failure Test 5 --- Database SG</strong></h1>
+<p>Remove:</p>
+<pre><code class="language-text">APP-SG -&gt; DB-SG :5432
+</code></pre>
+<p>Expected application symptom may be:</p>
+<pre><code class="language-text">Database connection timeout
+</code></pre>
+<p>depending on the connection path and software behavior.</p>
+<p>Restore the rule after testing.</p>
+<hr/>
+<h1 id="9-118-failure-test-6-application-process-down"><strong>9.118 Failure Test 6 --- Application Process Down</strong></h1>
+<p>Stop application service:</p>
+<pre><code class="language-bash">sudo systemctl stop myapp
+</code></pre>
+<p>or stop the lab application process.</p>
+<p>Network may still be correct.</p>
+<p>ALB should detect failed health checks.</p>
+<p>This separates:</p>
+<pre><code class="language-text">Network failure
+</code></pre>
+<p>from:</p>
+<pre><code class="language-text">Application failure
+</code></pre>
+<hr/>
+<h1 id="9-119-failure-test-7-dns-failure"><strong>9.119 Failure Test 7 --- DNS Failure</strong></h1>
+<p>Use an intentionally incorrect hostname.</p>
+<p>Example:</p>
+<pre><code class="language-bash">curl https://does-not-exist.example.invalid
+</code></pre>
+<p>Observe a DNS-resolution error.</p>
+<p>Compare with:</p>
+<pre><code class="language-text">Timeout
+Connection refused
+HTTP 500
+TLS error
+</code></pre>
+<p>Different error classes point to different layers.</p>
+<hr/>
+<h1 id="9-120-failure-test-8-nacl-return-traffic"><strong>9.120 Failure Test 8 --- NACL Return Traffic</strong></h1>
+<p>In a disposable lab only, create a restrictive NACL that fails to allow
+required return traffic.</p>
+<p>Observe:</p>
+<pre><code class="language-text">Connection timeout
+</code></pre>
+<p>Then restore correct rules.</p>
+<p>This demonstrates why stateless filters are easy to misconfigure.</p>
+<hr/>
+<h1 id="9-121-incident-1-website-down"><strong>9.121 Incident 1 --- Website Down</strong></h1>
+<p>User reports:</p>
+<pre><code class="language-text">https://app.example.com
+does not open
+</code></pre>
+<p>Do not immediately modify SGs.</p>
+<p>Start:</p>
+<pre><code class="language-text">1. DNS resolves?
+2. ALB reachable?
+3. Listener exists?
+4. Certificate valid?
+5. Target health?
+6. App SG?
+7. App listener?
+8. App logs?
+9. Database dependency?
+</code></pre>
+<hr/>
+<h1 id="9-122-incident-2-one-az-is-unhealthy"><strong>9.122 Incident 2 --- One AZ Is Unhealthy</strong></h1>
+<p>ALB:</p>
+<pre><code class="language-text">AZ-A targets = unhealthy
+AZ-B targets = healthy
+</code></pre>
+<p>Investigate AZ-specific components:</p>
+<pre><code class="language-text">App-A instance
+App-A subnet
+App-A route table
+NACL
+APP-SG association
+NAT-A if dependency requires egress
+AZ-specific application dependency
+</code></pre>
+<p>Avoid changing healthy AZ-B.</p>
+<hr/>
+<h1 id="9-123-incident-3-app-cannot-reach-database"><strong>9.123 Incident 3 --- App Cannot Reach Database</strong></h1>
+<p>From application:</p>
+<pre><code class="language-text">psql connection timeout
+</code></pre>
+<p>Check:</p>
+<pre><code class="language-text">DNS resolution
+DB endpoint
+DB port
+DB-SG
+APP-SG
+NACL
+Database status
+Database listener/service
+</code></pre>
+<p>Since both are in the VPC, NAT and IGW are not part of the normal local
+path.</p>
+<hr/>
+<h1 id="9-124-incident-4-app-cannot-download-packages"><strong>9.124 Incident 4 --- App Cannot Download Packages</strong></h1>
+<p>Database works.</p>
+<p>ALB works.</p>
+<p>But:</p>
+<pre><code class="language-bash">curl https://example.com
+</code></pre>
+<p>times out.</p>
+<p>This suggests application-local connectivity is healthy while internet
+egress may be broken.</p>
+<p>Check:</p>
+<pre><code class="language-text">App route table
+NAT
+Public NAT subnet
+Public route to IGW
+DNS
+SG egress
+NACL
+</code></pre>
+<hr/>
+<h1 id="9-125-incident-5-s3-works-but-internet-does-not"><strong>9.125 Incident 5 --- S3 Works but Internet Does Not</strong></h1>
+<p>This is possible.</p>
+<p>Why?</p>
+<pre><code class="language-text">S3
+uses gateway endpoint
+</code></pre>
+<p>while general internet traffic uses:</p>
+<pre><code class="language-text">NAT Gateway
+</code></pre>
+<p>Therefore:</p>
+<pre><code class="language-text">S3 path healthy
+NAT path broken
+</code></pre>
+<p>This is excellent production troubleshooting reasoning.</p>
+<hr/>
+<h1 id="9-126-incident-6-flow-log-accept-but-app-fails"><strong>9.126 Incident 6 --- Flow Log ACCEPT but App Fails</strong></h1>
+<p>Flow Log:</p>
+<pre><code class="language-text">ACCEPT
+</code></pre>
+<p>ALB receives:</p>
+<pre><code class="language-text">HTTP 500
+</code></pre>
+<p>Network path is not the main suspect.</p>
+<p>Check:</p>
+<pre><code class="language-text">Application logs
+Database errors
+Secrets
+Environment variables
+Code
+Dependencies
+</code></pre>
+<hr/>
+<h1 id="9-127-incident-7-connection-refused"><strong>9.127 Incident 7 --- Connection Refused</strong></h1>
+<p>From ALB-like test path:</p>
+<pre><code class="language-text">connection refused
+</code></pre>
+<p>Likely possibilities:</p>
+<pre><code class="language-text">Application not listening
+Wrong port
+Process crashed
+Application bound only to loopback
+Active reject
+</code></pre>
+<p>On EC2:</p>
+<pre><code class="language-bash">sudo ss -lntp
+</code></pre>
+<hr/>
+<h1 id="9-128-incident-8-timeout"><strong>9.128 Incident 8 --- Timeout</strong></h1>
+<p>Timeout is more consistent with:</p>
+<pre><code class="language-text">Dropped traffic
+Missing route
+Security filter
+NACL
+Host firewall
+Broken return path
+Unreachable target
+</code></pre>
+<p>Do not confuse timeout with refusal.</p>
+<hr/>
+<h1 id="9-129-incident-9-wrong-route-table-association"><strong>9.129 Incident 9 --- Wrong Route Table Association</strong></h1>
+<p>Engineer created correct private route table:</p>
+<pre><code class="language-text">0.0.0.0/0 -&gt; NAT-A
+</code></pre>
+<p>but App-A still has no internet.</p>
+<p>Why?</p>
+<p>The subnet may not actually be associated with that route table.</p>
+<p>Check:</p>
+<pre><code class="language-bash">aws ec2 describe-route-tables \
+  --filters Name=association.subnet-id,Values="$APP_A"
+</code></pre>
+<p>Configuration existence is not the same as configuration attachment.</p>
+<hr/>
+<h1 id="9-130-incident-10-wrong-security-group-attached"><strong>9.130 Incident 10 --- Wrong Security Group Attached</strong></h1>
+<p>The correct <code>APP-SG</code> exists.</p>
+<p>But the instance ENI has:</p>
+<pre><code class="language-text">default SG
+</code></pre>
+<p>Result:</p>
+<pre><code class="language-text">ALB cannot reach application
+</code></pre>
+<p>Check the actual ENI/resource association.</p>
+<p>Never troubleshoot based only on what SG was intended.</p>
+<hr/>
+<h1 id="9-131-incident-11-endpoint-dns-failure"><strong>9.131 Incident 11 --- Endpoint DNS Failure</strong></h1>
+<p>Interface endpoint exists.</p>
+<p>Application cannot access service hostname.</p>
+<p>Check:</p>
+<pre><code class="language-text">Private DNS enabled?
+VPC DNS support?
+Endpoint state?
+Endpoint subnet?
+Endpoint SG?
+Resolver?
+Service-specific DNS behavior?
+</code></pre>
+<hr/>
+<h1 id="9-132-incident-12-nat-cost-spike"><strong>9.132 Incident 12 --- NAT Cost Spike</strong></h1>
+<p>Cloud cost increases significantly.</p>
+<p>Investigation shows:</p>
+<pre><code class="language-text">Large S3 transfers through NAT
+</code></pre>
+<p>Evaluate:</p>
+<pre><code class="language-text">S3 Gateway Endpoint
+</code></pre>
+<p>Also inspect:</p>
+<pre><code class="language-text">Cross-AZ NAT traffic
+Unnecessary external transfers
+Application behavior
+Logging uploads
+Container image pulls
+</code></pre>
+<hr/>
+<h1 id="9-133-incident-13-single-nat-dependency"><strong>9.133 Incident 13 --- Single NAT Dependency</strong></h1>
+<p>Both:</p>
+<pre><code class="language-text">App-A
+App-B
+</code></pre>
+<p>route through:</p>
+<pre><code class="language-text">NAT-A
+</code></pre>
+<p>If NAT-A/AZ-A path is unavailable:</p>
+<pre><code class="language-text">Both application subnets may lose general internet egress.
+</code></pre>
+<p>This is why production availability architecture matters.</p>
+<hr/>
+<h1 id="9-134-incident-14-database-accidentally-public"><strong>9.134 Incident 14 --- Database Accidentally Public</strong></h1>
+<p>Review discovers:</p>
+<pre><code class="language-text">Publicly Accessible = Yes
+</code></pre>
+<p>and DB-SG contains:</p>
+<pre><code class="language-text">5432 from 0.0.0.0/0
+</code></pre>
+<p>This is a severe exposure.</p>
+<p>Remediation:</p>
+<pre><code class="language-text">Remove broad SG exposure
+Move/maintain DB in intended private network architecture
+Disable public accessibility where appropriate
+Review logs
+Rotate credentials if exposure created risk
+Investigate for unauthorized access
+</code></pre>
+<p>Treat exposure as a security incident according to organizational
+procedures.</p>
+<hr/>
+<h1 id="9-135-incident-15-public-ip-on-application"><strong>9.135 Incident 15 --- Public IP on Application</strong></h1>
+<p>Private application instance unexpectedly has a public IPv4 address.</p>
+<p>Check:</p>
+<pre><code class="language-text">Subnet auto-assign public IPv4 setting
+Launch configuration/template
+Network interface configuration
+</code></pre>
+<p>The route architecture may still prevent some paths, but unnecessary
+public addressing should be corrected.</p>
+<hr/>
+<h1 id="9-136-security-review"><strong>9.136 Security Review</strong></h1>
+<p>Ask:</p>
+<pre><code class="language-text">What is internet-facing?
+
+What has public IPs?
+
+Who can reach ALB?
+
+Who can reach application?
+
+Who can reach database?
+
+Can administrators SSH directly?
+
+Where do secrets come from?
+
+What traffic leaves through NAT?
+
+What traffic uses endpoints?
+
+Are Flow Logs enabled?
+
+Are logs retained?
+
+Are IAM roles least privilege?
+</code></pre>
+<hr/>
+<h1 id="9-137-availability-review"><strong>9.137 Availability Review</strong></h1>
+<p>Ask:</p>
+<pre><code class="language-text">What happens if App-A fails?
+
+What happens if App-B fails?
+
+What happens if AZ-A fails?
+
+What happens if NAT-A fails?
+
+What happens if database primary fails?
+
+What happens if an endpoint ENI fails?
+
+What happens if DNS fails?
+</code></pre>
+<p>Do not call architecture highly available without answering these.</p>
+<hr/>
+<h1 id="9-138-cost-review"><strong>9.138 Cost Review</strong></h1>
+<p>Major networking cost areas can include:</p>
+<pre><code class="language-text">NAT Gateway hourly/resource charges
+NAT data processing
+Public IPv4
+Cross-AZ transfer
+Load balancer
+Interface endpoints
+Flow Logs storage/ingestion
+Internet data transfer
+Transit services
+</code></pre>
+<p>Always verify current AWS pricing.</p>
+<hr/>
+<h1 id="9-139-cost-optimization-questions"><strong>9.139 Cost Optimization Questions</strong></h1>
+<p>Ask:</p>
+<pre><code class="language-text">Can S3/DynamoDB use gateway endpoints?
+
+Do we need NAT in every AZ?
+
+What availability tradeoff exists if we reduce NAT count?
+
+Are workloads unnecessarily crossing AZs?
+
+Do we need all interface endpoints?
+
+Can logs move to cheaper retention/storage?
+
+Are idle public IPv4 resources present?
+</code></pre>
+<p>Cost optimization must not silently destroy availability or security.</p>
+<hr/>
+<h1 id="9-140-terraform-readiness"><strong>9.140 Terraform Readiness</strong></h1>
+<p>Everything created manually should map cleanly into infrastructure code.</p>
+<p>Future Terraform modules may look like:</p>
+<pre><code class="language-text">modules/
+|
++-- vpc/
++-- subnets/
++-- nat/
++-- security-groups/
++-- endpoints/
++-- alb/
++-- rds-network/
+</code></pre>
+<p>Chapter 15 will build production AWS infrastructure using Terraform.</p>
+<hr/>
+<h1 id="9-141-terraform-resource-preview"><strong>9.141 Terraform Resource Preview</strong></h1>
+<p>VPC:</p>
+<pre><code class="language-hcl">resource "aws_vpc" "main" {
+  cidr_block = "10.60.0.0/16"
+
+  enable_dns_support   = true
+  enable_dns_hostnames = true
+
+  tags = {
+    Name = "prod-vpc"
+  }
+}
+</code></pre>
+<hr/>
+<h1 id="9-142-terraform-subnet-preview"><strong>9.142 Terraform Subnet Preview</strong></h1>
+<pre><code class="language-hcl">resource "aws_subnet" "app_a" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.60.11.0/24"
+  availability_zone = var.az_a
+
+  tags = {
+    Name = "prod-app-a"
+  }
+}
+</code></pre>
+<hr/>
+<h1 id="9-143-terraform-route-preview"><strong>9.143 Terraform Route Preview</strong></h1>
+<pre><code class="language-hcl">resource "aws_route" "app_a_default" {
+  route_table_id         = aws_route_table.app_a.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.a.id
+}
+</code></pre>
+<p>This is why learning VPC manually first is valuable.</p>
+<p>Terraform automates architecture.</p>
+<p>It does not replace architecture knowledge.</p>
+<hr/>
+<h1 id="9-144-cleanup-warning"><strong>9.144 Cleanup Warning</strong></h1>
+<p>This lab can create billable resources.</p>
+<p>Especially:</p>
+<pre><code class="language-text">NAT Gateways
+Elastic/public IPv4 addresses
+Load Balancer
+RDS
+Interface endpoints
+CloudWatch logs
+Data transfer
+</code></pre>
+<p>Delete resources when finished.</p>
+<hr/>
+<h1 id="9-145-cleanup-order"><strong>9.145 Cleanup Order</strong></h1>
+<p>Dependencies matter.</p>
+<p>Typical conceptual order:</p>
+<pre><code class="language-text">Application resources
+Load balancer/listeners/target groups
+Database
+Endpoints
+NAT Gateways
+Elastic IPs
+Route tables
+Subnets
+Internet Gateway
+Security Groups
+VPC
+Logs if no longer required
+</code></pre>
+<p>Exact deletion order depends on resources and dependencies.</p>
+<hr/>
+<h1 id="9-146-verify-before-delete"><strong>9.146 Verify Before Delete</strong></h1>
+<p>Before cleanup:</p>
+<pre><code class="language-bash">aws ec2 describe-nat-gateways \
+  --filter Name=vpc-id,Values="$VPC_ID"
+</code></pre>
+<pre><code class="language-bash">aws ec2 describe-vpc-endpoints \
+  --filters Name=vpc-id,Values="$VPC_ID"
+</code></pre>
+<pre><code class="language-bash">aws elbv2 describe-load-balancers
+</code></pre>
+<p>Do not accidentally delete unrelated resources.</p>
+<p>Use tags and IDs carefully.</p>
+<hr/>
+<h1 id="9-147-production-change-control-principle"><strong>9.147 Production Change-Control Principle</strong></h1>
+<p>Never perform network changes in production like this:</p>
+<pre><code class="language-text">"I think route table is wrong.
+I'll change it and see."
+</code></pre>
+<p>Instead:</p>
+<pre><code class="language-text">Observe
+Map path
+Form hypothesis
+Validate evidence
+Review blast radius
+Prepare rollback
+Change
+Verify
+Document
+</code></pre>
+<hr/>
+<h1 id="9-148-network-change-example"><strong>9.148 Network Change Example</strong></h1>
+<p>Suppose App-B cannot access internet.</p>
+<p>Bad:</p>
+<pre><code class="language-text">Modify every route table.
+Open all SG egress.
+Disable NACL.
+</code></pre>
+<p>Good:</p>
+<pre><code class="language-text">1. Identify App-B subnet.
+2. Identify associated route table.
+3. Verify 0.0.0.0/0 -&gt; NAT-B.
+4. Verify NAT-B state.
+5. Verify NAT-B public subnet.
+6. Verify public route -&gt; IGW.
+7. Test DNS.
+8. Inspect Flow Logs.
+9. Change only the proven fault.
+</code></pre>
+<hr/>
+<h1 id="9-149-troubleshooting-decision-tree"><strong>9.149 Troubleshooting Decision Tree</strong></h1>
+<pre><code class="language-text">CAN NAME RESOLVE?
+ |
+ +-- NO --&gt; DNS
+ |
+ +-- YES
+       |
+       v
+CAN TCP CONNECT?
+ |
+ +-- NO --&gt; Route / SG / NACL / Firewall / Listener
+ |
+ +-- YES
+       |
+       v
+DOES TLS WORK?
+ |
+ +-- NO --&gt; Certificate / SNI / TLS configuration
+ |
+ +-- YES
+       |
+       v
+DOES HTTP WORK?
+ |
+ +-- NO --&gt; Proxy / Application
+ |
+ +-- YES
+       |
+       v
+DOES BUSINESS FUNCTION WORK?
+ |
+ +-- NO --&gt; App / DB / dependency / data
+</code></pre>
+<p>This prevents layer confusion.</p>
+<hr/>
+<h1 id="9-150-osi-inspired-incident-thinking"><strong>9.150 OSI-Inspired Incident Thinking</strong></h1>
+<p>You do not need to rigidly troubleshoot every OSI layer, but the model
+is useful.</p>
+<pre><code class="language-text">Network:
+IP / route
+
+Transport:
+TCP / port
+
+Security:
+SG / NACL / firewall
+
+Session/TLS:
+Handshake / certificate
+
+Application:
+HTTP / database / API
+</code></pre>
+<p>Error messages often reveal the failing layer.</p>
+<hr/>
+<h1 id="9-151-interview-question-design-a-production-vpc"><strong>9.151 Interview Question --- Design a Production VPC</strong></h1>
+<p>A strong answer should mention:</p>
+<pre><code class="language-text">Non-overlapping VPC CIDR
+At least two AZs
+Public subnets for internet-facing load balancers/NAT
+Private application subnets
+Private database subnets
+IGW
+Per-AZ NAT where availability justifies it
+Explicit route tables
+Least-privilege Security Groups
+Simple NACL strategy
+Private database
+VPC endpoints
+Flow Logs
+DNS
+Systems Manager
+IaC
+Monitoring
+Cost
+Failure testing
+</code></pre>
+<hr/>
+<h1 id="9-152-interview-question-why-not-put-ec2-in-public-subnet"><strong>9.152 Interview Question --- Why Not Put EC2 in Public Subnet?</strong></h1>
+<p>Because internet users should reach:</p>
+<pre><code class="language-text">Load Balancer
+</code></pre>
+<p>not application instances directly.</p>
+<p>Private application placement reduces direct exposure and centralizes
+ingress controls.</p>
+<hr/>
+<h1 id="9-153-interview-question-why-nat"><strong>9.153 Interview Question --- Why NAT?</strong></h1>
+<p>Private IPv4 workloads may require outbound internet connectivity
+without accepting unsolicited inbound internet traffic through that NAT
+path.</p>
+<hr/>
+<h1 id="9-154-interview-question-why-two-nat-gateways"><strong>9.154 Interview Question --- Why Two NAT Gateways?</strong></h1>
+<p>To avoid making private subnets in multiple AZs depend on one NAT/AZ
+path when higher availability is required.</p>
+<p>Also reduces unnecessary cross-AZ NAT routing.</p>
+<hr/>
+<h1 id="9-155-interview-question-why-no-nat-for-database"><strong>9.155 Interview Question --- Why No NAT for Database?</strong></h1>
+<p>A database usually communicates with private application and managed
+service paths.</p>
+<p>If it does not require general internet egress, there is no reason to
+provide it.</p>
+<p>Least connectivity is safer.</p>
+<hr/>
+<h1 id="9-156-interview-question-sg-vs-nacl-in-this-architecture"><strong>9.156 Interview Question --- SG vs NACL in This Architecture</strong></h1>
+<p>Security Groups:</p>
+<pre><code class="language-text">Primary workload-level access control
+Stateful
+SG references
+</code></pre>
+<p>NACLs:</p>
+<pre><code class="language-text">Subnet-level stateless guardrail
+Allow/deny
+Used carefully
+</code></pre>
+<hr/>
+<h1 id="9-157-interview-question-how-does-alb-reach-private-ec2"><strong>9.157 Interview Question --- How Does ALB Reach Private EC2?</strong></h1>
+<p>Both are connected through VPC networking.</p>
+<p>The ALB sends traffic to registered targets using private network
+connectivity according to target type/configuration.</p>
+<p>The target does not need a public IP.</p>
+<hr/>
+<h1 id="9-158-interview-question-how-do-private-instances-reach-s3-without-nat"><strong>9.158 Interview Question --- How Do Private Instances Reach S3 Without NAT?</strong></h1>
+<p>Use an S3 Gateway VPC Endpoint where suitable.</p>
+<p>The relevant route tables direct S3 traffic to the endpoint.</p>
+<hr/>
+<h1 id="9-159-interview-question-how-would-you-remove-ssh"><strong>9.159 Interview Question --- How Would You Remove SSH?</strong></h1>
+<p>Use identity-aware managed administration such as Systems Manager where
+supported, with:</p>
+<pre><code class="language-text">IAM
+Instance role
+Agent/service configuration
+Required network connectivity/endpoints
+Logging
+</code></pre>
+<hr/>
+<h1 id="9-160-senior-scenario-entire-site-down"><strong>9.160 Senior Scenario --- Entire Site Down</strong></h1>
+<p>Architecture has two AZs.</p>
+<p>Both application targets are unhealthy.</p>
+<p>Likely common dependencies include:</p>
+<pre><code class="language-text">ALB listener/config
+Shared APP-SG
+Deployment issue
+Application image/version
+Database
+Secrets
+DNS
+Shared IAM/configuration
+</code></pre>
+<p>Because both AZs failed simultaneously, prioritize shared dependencies
+before assuming two independent subnet failures.</p>
+<hr/>
+<h1 id="9-161-senior-scenario-only-az-a-fails"><strong>9.161 Senior Scenario --- Only AZ-A Fails</strong></h1>
+<p>AZ-B is healthy.</p>
+<p>Focus on AZ-A-specific components:</p>
+<pre><code class="language-text">Instance
+Subnet
+Route table
+NACL
+NAT-A
+AZ dependency
+Target registration
+Deployment drift
+</code></pre>
+<p>Compare healthy and unhealthy sides.</p>
+<p>Differential troubleshooting is powerful.</p>
+<hr/>
+<h1 id="9-162-senior-scenario-db-failover"><strong>9.162 Senior Scenario --- DB Failover</strong></h1>
+<p>Application uses:</p>
+<pre><code class="language-text">Hard-coded DB IP
+</code></pre>
+<p>RDS failover occurs.</p>
+<p>Application fails.</p>
+<p>Better:</p>
+<pre><code class="language-text">Use database endpoint DNS
+</code></pre>
+<p>and ensure connection/retry behavior handles failover appropriately.</p>
+<hr/>
+<h1 id="9-163-senior-scenario-secret-retrieval-fails"><strong>9.163 Senior Scenario --- Secret Retrieval Fails</strong></h1>
+<p>Application starts but cannot retrieve secret from Secrets Manager.</p>
+<p>Investigate separately:</p>
+<pre><code class="language-text">DNS
+Endpoint/NAT path
+Endpoint SG
+IAM role
+Identity policy
+KMS permission
+Endpoint policy
+Resource policy if applicable
+</code></pre>
+<p>Network and IAM failures can look similar at application level.</p>
+<hr/>
+<h1 id="9-164-senior-scenario-accessdenied-from-s3"><strong>9.164 Senior Scenario --- <code>AccessDenied</code> from S3</strong></h1>
+<p>Do not change route tables immediately.</p>
+<p>If AWS returns:</p>
+<pre><code class="language-text">AccessDenied
+</code></pre>
+<p>the request likely reached an AWS authorization layer.</p>
+<p>Investigate:</p>
+<pre><code class="language-text">IAM
+Bucket policy
+Endpoint policy
+KMS
+SCP
+Permissions boundary
+</code></pre>
+<p>Distinguish authorization from connectivity.</p>
+<hr/>
+<h1 id="9-165-senior-scenario-could-not-resolve-host"><strong>9.165 Senior Scenario --- <code>Could not resolve host</code></strong></h1>
+<p>Focus first on:</p>
+<pre><code class="language-text">DNS
+</code></pre>
+<p>Check:</p>
+<pre><code class="language-bash">cat /etc/resolv.conf
+getent hosts &lt;hostname&gt;
+dig &lt;hostname&gt;
+</code></pre>
+<p>Then investigate VPC DNS and resolver architecture.</p>
+<hr/>
+<h1 id="9-166-senior-scenario-connection-timed-out"><strong>9.166 Senior Scenario --- <code>Connection timed out</code></strong></h1>
+<p>Focus on:</p>
+<pre><code class="language-text">Route
+Security Group
+NACL
+Firewall
+Return path
+Unreachable target
+</code></pre>
+<p>Use Flow Logs and path analysis.</p>
+<hr/>
+<h1 id="9-167-senior-scenario-connection-refused"><strong>9.167 Senior Scenario --- <code>Connection refused</code></strong></h1>
+<p>Focus on:</p>
+<pre><code class="language-text">Listener
+Process
+Port
+Bind address
+Host firewall/reject
+</code></pre>
+<p>Network routing may already be functioning.</p>
+<hr/>
+<h1 id="9-168-senior-scenario-tls-certificate-error"><strong>9.168 Senior Scenario --- TLS Certificate Error</strong></h1>
+<p>If TCP connection succeeds but TLS validation fails:</p>
+<pre><code class="language-text">Do not modify VPC routing.
+</code></pre>
+<p>Check:</p>
+<pre><code class="language-text">Certificate hostname
+Certificate chain
+Expiration
+Listener certificate
+Client trust
+SNI
+</code></pre>
+<p>Troubleshoot the correct layer.</p>
+<hr/>
+<h1 id="9-169-senior-scenario-http-502-from-alb"><strong>9.169 Senior Scenario --- HTTP 502 from ALB</strong></h1>
+<p>Potential causes include:</p>
+<pre><code class="language-text">Target connection issue
+Application closes connection
+Malformed response
+Port/protocol mismatch
+Target-side problem
+</code></pre>
+<p>Check:</p>
+<pre><code class="language-text">ALB metrics/logs
+Target health
+Application logs
+Listener/target protocol
+</code></pre>
+<p>Do not assume "502 = AWS network broken."</p>
+<hr/>
+<h1 id="9-170-senior-scenario-http-504"><strong>9.170 Senior Scenario --- HTTP 504</strong></h1>
+<p>Potential:</p>
+<pre><code class="language-text">Backend response timeout
+Slow dependency
+Network timeout
+Application hung
+Database latency
+</code></pre>
+<p>Trace:</p>
+<pre><code class="language-text">ALB -&gt; App -&gt; Dependency
+</code></pre>
+<p>and measure each stage.</p>
+<hr/>
+<h1 id="9-171-security-hardening-checklist"><strong>9.171 Security Hardening Checklist</strong></h1>
+<pre><code class="language-text">[ ] Only ALB is internet-facing for application ingress
+
+[ ] Application instances private
+
+[ ] Database private
+
+[ ] No 0.0.0.0/0 SSH
+
+[ ] ALB -&gt; App uses SG reference
+
+[ ] App -&gt; DB uses SG reference
+
+[ ] TLS enabled
+
+[ ] IAM roles instead of static keys
+
+[ ] Secrets stored in managed secret system
+
+[ ] VPC endpoints evaluated
+
+[ ] Flow Logs enabled
+
+[ ] Logging protected
+
+[ ] Public IPv4 usage reviewed
+
+[ ] Endpoint policies reviewed
+
+[ ] Database encryption enabled where required
+
+[ ] Backups configured
+
+[ ] Patch process defined
+
+[ ] Changes managed through IaC
+</code></pre>
+<hr/>
+<h1 id="9-172-reliability-checklist"><strong>9.172 Reliability Checklist</strong></h1>
+<pre><code class="language-text">[ ] Two AZs
+
+[ ] Multiple app instances
+
+[ ] ALB spans AZs
+
+[ ] NAT architecture matches availability requirement
+
+[ ] Database Multi-AZ where required
+
+[ ] Health checks meaningful
+
+[ ] Auto Scaling planned
+
+[ ] DNS does not hard-code mutable IPs
+
+[ ] Failure tests performed
+
+[ ] Monitoring and alerts configured
+
+[ ] Recovery procedures documented
+</code></pre>
+<hr/>
+<h1 id="9-173-observability-checklist"><strong>9.173 Observability Checklist</strong></h1>
+<pre><code class="language-text">[ ] VPC Flow Logs
+
+[ ] ALB access logs where required
+
+[ ] ALB metrics
+
+[ ] Application logs
+
+[ ] Application metrics
+
+[ ] Database metrics
+
+[ ] NAT metrics
+
+[ ] Endpoint metrics where available
+
+[ ] CloudTrail
+
+[ ] Security monitoring
+
+[ ] Alerts
+</code></pre>
+<p>A production network without observability is difficult to operate.</p>
+<hr/>
+<h1 id="9-174-architecture-review-questions"><strong>9.174 Architecture Review Questions</strong></h1>
+<p>Before approval, ask:</p>
+<pre><code class="language-text">Why this CIDR?
+
+Why these subnet sizes?
+
+Why two AZs?
+
+Why these public resources?
+
+Why does this workload need NAT?
+
+Why does this workload need internet?
+
+Can an endpoint replace that path?
+
+Why is this port open?
+
+Why is this source allowed?
+
+What happens during AZ failure?
+
+How do we investigate rejected traffic?
+
+How do we roll back a bad route change?
+</code></pre>
+<p>Every design choice should have a reason.</p>
+<hr/>
+<h1 id="9-175-complete-troubleshooting-workflow"><strong>9.175 Complete Troubleshooting Workflow</strong></h1>
+<pre><code class="language-text">SYMPTOM
+   |
+   v
+IDENTIFY SOURCE + DESTINATION
+   |
+   v
+RESOLVE DNS
+   |
+   v
+MAP FORWARD PATH
+   |
+   v
+MAP RETURN PATH
+   |
+   v
+CHECK ROUTES
+   |
+   v
+CHECK SG
+   |
+   v
+CHECK NACL
+   |
+   v
+CHECK HOST FIREWALL
+   |
+   v
+CHECK LISTENER
+   |
+   v
+CHECK TLS
+   |
+   v
+CHECK APPLICATION
+   |
+   v
+CHECK DEPENDENCIES
+   |
+   v
+CORRELATE LOGS
+   |
+   v
+CHANGE ONLY PROVEN FAULT
+</code></pre>
+<hr/>
+<h1 id="9-176-what-this-lab-teaches"><strong>9.176 What This Lab Teaches</strong></h1>
+<p>This chapter is not about memorizing:</p>
+<pre><code class="language-text">aws ec2 create-vpc
+</code></pre>
+<p>The important skill is understanding:</p>
+<pre><code class="language-text">WHY
+</code></pre>
+<p>each component exists.</p>
+<p>If Terraform later creates:</p>
+<pre><code class="language-text">VPC
+Subnet
+Route
+NAT
+SG
+Endpoint
+</code></pre>
+<p>you must still understand the resulting packet path.</p>
+<p>Automation without network understanding creates faster incidents.</p>
+<hr/>
+<h1 id="9-177-quick-revision"><strong>9.177 Quick Revision</strong></h1>
+<pre><code class="language-text">VPC:
+10.60.0.0/16
+
+PUBLIC:
+10.60.1.0/24
+10.60.2.0/24
+
+APP:
+10.60.11.0/24
+10.60.12.0/24
+
+DB:
+10.60.21.0/24
+10.60.22.0/24
+</code></pre>
+<p>Ingress:</p>
+<pre><code class="language-text">Internet
+-&gt; IGW
+-&gt; ALB
+-&gt; APP
+</code></pre>
+<p>App egress:</p>
+<pre><code class="language-text">APP
+-&gt; NAT
+-&gt; IGW
+-&gt; Internet
+</code></pre>
+<p>Database:</p>
+<pre><code class="language-text">APP
+-&gt; local VPC routing
+-&gt; DB
+</code></pre>
+<p>S3:</p>
+<pre><code class="language-text">APP
+-&gt; Gateway Endpoint
+-&gt; S3
+</code></pre>
+<p>Administration:</p>
+<pre><code class="language-text">Admin
+-&gt; Systems Manager
+-&gt; Private EC2
+</code></pre>
+<p>Security:</p>
+<pre><code class="language-text">Internet -&gt; ALB-SG :443
+ALB-SG   -&gt; APP-SG :8080
+APP-SG   -&gt; DB-SG  :5432
+</code></pre>
+<hr/>
+<h1 id="9-178-chapter-summary"><strong>9.178 Chapter Summary</strong></h1>
+<p>You designed a production-style AWS VPC from requirements to validation.</p>
+<p>You covered:</p>
+<ul>
+<li>CIDR planning</li>
+<li>Two-AZ architecture</li>
+<li>Public subnets</li>
+<li>Private application subnets</li>
+<li>Private database subnets</li>
+<li>Internet Gateway</li>
+<li>NAT Gateway per AZ</li>
+<li>Route-table associations</li>
+<li>Application Load Balancer</li>
+<li>Security Group chaining</li>
+<li>NACL strategy</li>
+<li>RDS subnet design</li>
+<li>Systems Manager administration</li>
+<li>VPC endpoints</li>
+<li>DNS</li>
+<li>VPC Flow Logs</li>
+<li>AWS CLI deployment</li>
+<li>Packet-flow validation</li>
+<li>Failure testing</li>
+<li>Security review</li>
+<li>Reliability review</li>
+<li>Cost review</li>
+<li>Production incident troubleshooting</li>
+<li>Terraform readiness</li>
+</ul>
+<p>The key architecture is:</p>
+<pre><code class="language-text">INTERNET
+   |
+   v
+ALB
+   |
+   v
+PRIVATE APPLICATION
+   |
+   v
+PRIVATE DATABASE
+</code></pre>
+<p>The key engineering habit is:</p>
+<pre><code class="language-text">DRAW THE PATH
+BEFORE
+CHANGING THE NETWORK
+</code></pre>
+<hr/>
+<h1 id="9-179-references"><strong>9.179 References</strong></h1>
+<p>For current implementation details, quotas, supported features, security
+recommendations and pricing, use official AWS documentation:</p>
+<ol>
+<li>Amazon VPC User Guide</li>
+<li>VPC CIDR and Subnet Documentation</li>
+<li>Route Table Documentation</li>
+<li>Internet Gateway Documentation</li>
+<li>NAT Gateway Documentation</li>
+<li>Security Group Documentation</li>
+<li>Network ACL Documentation</li>
+<li>VPC Endpoint Documentation</li>
+<li>VPC Flow Logs Documentation</li>
+<li>Elastic Load Balancing Documentation</li>
+<li>Amazon RDS VPC Documentation</li>
+<li>AWS Systems Manager Documentation</li>
+<li>Amazon Route 53 Documentation</li>
+<li>AWS Certificate Manager Documentation</li>
+<li>AWS IAM Documentation</li>
+<li>AWS CloudTrail Documentation</li>
+<li>AWS Well-Architected Framework</li>
+<li>AWS Architecture Center</li>
+<li>AWS Pricing Documentation</li>
+</ol>
+<hr/>
+<p><strong>End of Chapter 9</strong></p>
+<p><strong>Page: 237--282</strong></p>
+<hr/>
+<h1 id="next-chapter"><strong>NEXT CHAPTER</strong></h1>
+<h2 id="chapter-10-infrastructure-as-code"><strong>CHAPTER 10 --- INFRASTRUCTURE AS CODE</strong></h2>
+<p>Chapter 10 begins <strong>Part III --- Terraform</strong>.</p>
+<p>It will cover:</p>
+<pre><code class="language-text">Why Infrastructure as Code exists
+Manual infrastructure problems
+Desired state
+Declarative vs imperative automation
+Idempotency
+Infrastructure lifecycle
+Configuration drift
+Terraform architecture
+Providers
+Resources
+State
+Dependency graph
+Plan/apply workflow
+IaC repository structure
+Code review
+CI/CD for infrastructure
+Secrets
+Remote state concepts
+Production change control
+IaC security
+Drift detection
+Terraform vs Ansible
+Terraform vs CloudFormation
+Production scenarios
+Interview questions
+</code></pre>
+</article></main><footer>ARTHA Gurukul · Source material preserved as educational notes</footer></body></html>

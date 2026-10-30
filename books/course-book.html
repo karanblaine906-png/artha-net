@@ -1,0 +1,656 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Modern Programming + AI Course Book | ARTHA Gurukul</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><a class="brand" href="../index.html">✦ ARTHA GURUKUL</a><nav><a href="../index.html#courses">All Courses</a><a href="index.html">Source Library</a></nav></header><main class="book-layout"><aside class="book-toc"><div class="eyebrow">Original material · offline copy</div><h2>Modern Programming + AI Course Book</h2><a href="../index.html">⌂ Course library</a><div class="toc"><a href="#artha-mentor-s-ai-engineering-masterclass-lecturer-s-course-book">ARTHA Mentor&#x27;s AI Engineering Masterclass — Lecturer&#x27;s Course Book</a><a href="#table-of-contents">Table of Contents</a><a href="#part-0-how-to-learn-like-an-engineer">PART 0 — HOW TO LEARN LIKE AN ENGINEER</a><a href="#lesson-0-what-are-we-building-and-why-these-three-tools">Lesson 0 — What are we building, and why these three tools?</a><a href="#lesson-1-linux-lab-setup-and-command-line-confidence">Lesson 1 — Linux lab setup and command-line confidence</a><a href="#part-i-c-from-zero-to-professional-foundations">PART I — C++ FROM ZERO TO PROFESSIONAL FOUNDATIONS</a><a href="#lesson-2-your-first-compiled-program">Lesson 2 — Your first compiled program</a><a href="#lesson-3-variables-types-conversions-and-operators">Lesson 3 — Variables, types, conversions and operators</a><a href="#lesson-4-conditions-and-loops">Lesson 4 — Conditions and loops</a><a href="#lesson-5-functions-parameters-scope-and-references">Lesson 5 — Functions, parameters, scope and references</a><a href="#lesson-6-arrays-vectors-and-strings">Lesson 6 — Arrays, vectors and strings</a><a href="#lesson-7-memory-pointers-and-references">Lesson 7 — Memory, pointers and references</a><a href="#lesson-8-classes-encapsulation-and-oop">Lesson 8 — Classes, encapsulation and OOP</a><a href="#lesson-9-ownership-raii-exceptions-and-smart-pointers">Lesson 9 — Ownership, RAII, exceptions and smart pointers</a><a href="#lesson-10-stl-containers-algorithms-and-complexity">Lesson 10 — STL containers, algorithms and complexity</a><a href="#lesson-11-templates-generic-algorithms-and-modern-c">Lesson 11 — Templates, generic algorithms and modern C++</a><a href="#lesson-12-files-parsing-and-input-validation">Lesson 12 — Files, parsing and input validation</a><a href="#lesson-13-dsa-two-sum-stacks-queues-complexity">Lesson 13 — DSA: two-sum, stacks, queues, complexity</a><a href="#lesson-14-threads-tests-gdb-sanitizers-and-build-systems">Lesson 14 — Threads, tests, GDB, sanitizers and build systems</a><a href="#part-ii-python-mathematics-for-ai">PART II — PYTHON &amp; MATHEMATICS FOR AI</a><a href="#lesson-15-python-bridge-for-a-c-learner">Lesson 15 — Python bridge for a C++ learner</a><a href="#lesson-16-numpy-arrays-axes-shapes-and-vectorization">Lesson 16 — NumPy arrays, axes, shapes, and vectorization</a><a href="#lesson-17-linear-algebra-without-fear">Lesson 17 — Linear algebra without fear</a><a href="#lesson-18-statistics-probability-and-evaluation-intuition">Lesson 18 — Statistics, probability and evaluation intuition</a><a href="#lesson-19-calculus-and-gradient-descent-from-scratch">Lesson 19 — Calculus and gradient descent from scratch</a><a href="#part-iii-machine-learning-using-scikit-learn">PART III — MACHINE LEARNING USING SCIKIT-LEARN</a><a href="#lesson-20-ml-in-plain-language-supervised-vs-unsupervised">Lesson 20 — ML in plain language: supervised vs unsupervised</a><a href="#lesson-21-splitting-data-and-the-leakage-trap">Lesson 21 — Splitting data and the leakage trap</a><a href="#lesson-22-regression-linear-regularized-errors">Lesson 22 — Regression: linear, regularized, errors</a><a href="#lesson-23-classification-logistic-regression-and-metrics">Lesson 23 — Classification: logistic regression and metrics</a><a href="#lesson-24-trees-ensembles-and-overfitting">Lesson 24 — Trees, ensembles and overfitting</a><a href="#lesson-25-preprocessing-pipelines-and-categorical-values">Lesson 25 — Preprocessing, pipelines and categorical values</a><a href="#lesson-26-cross-validation-and-hyperparameter-tuning">Lesson 26 — Cross-validation and hyperparameter tuning</a><a href="#lesson-27-clustering-anomaly-detection-and-fair-model-reporting">Lesson 27 — Clustering, anomaly detection and fair model reporting</a><a href="#part-iv-deep-learning-with-pytorch">PART IV — DEEP LEARNING WITH PYTORCH</a><a href="#lesson-28-pytorch-mental-model-tensors-devices-and-dtypes">Lesson 28 — PyTorch mental model: tensors, devices and dtypes</a><a href="#lesson-29-autograd-and-computation-graphs">Lesson 29 — Autograd and computation graphs</a><a href="#lesson-30-neurons-layers-activation-functions">Lesson 30 — Neurons, layers, activation functions</a><a href="#lesson-31-a-complete-training-loop">Lesson 31 — A complete training loop</a><a href="#lesson-32-classification-network-with-a-real-train-test-boundary">Lesson 32 — Classification network with a real train/test boundary</a><a href="#lesson-33-dataset-and-dataloader">Lesson 33 — Dataset and DataLoader</a><a href="#lesson-34-generalization-regularization-and-diagnostics">Lesson 34 — Generalization, regularization and diagnostics</a><a href="#lesson-35-convolutional-neural-networks-cnn-basics">Lesson 35 — Convolutional neural networks (CNN) basics</a><a href="#lesson-36-saving-loading-and-inference-safety">Lesson 36 — Saving, loading and inference safety</a><a href="#part-v-real-job-ready-engineering-practice">PART V — REAL JOB-READY ENGINEERING PRACTICE</a><a href="#lesson-37-testing-and-reproducibility">Lesson 37 — Testing and reproducibility</a><a href="#lesson-38-api-and-deployment-architecture">Lesson 38 — API and deployment architecture</a><a href="#lesson-39-three-resume-worthy-capstones">Lesson 39 — Three resume-worthy capstones</a><a href="#lesson-40-how-to-prepare-for-real-interviews">Lesson 40 — How to prepare for real interviews</a><a href="#appendix-a-25-term-student-glossary">APPENDIX A — 25-term student glossary</a><a href="#appendix-b-lab-mapping">APPENDIX B — Lab mapping</a><a href="#appendix-c-first-party-documentation">APPENDIX C — First-party documentation</a></div></aside><article class="book-prose"><p class="source-note">Historical course notes converted into searchable offline HTML. Some content may be a draft; exercises requiring cloud accounts need credentials and may incur costs.</p><h1 id="artha-mentor-s-ai-engineering-masterclass-lecturer-s-course-book">ARTHA Mentor's AI Engineering Masterclass — Lecturer's Course Book</h1>
+<p><strong>C++ from scratch → scikit-learn from scratch → PyTorch from scratch → job-ready portfolio</strong></p>
+<p><strong>Teaching style:</strong> Simple Hinglish, proper engineering vocabulary, safe CPU labs. Lecturer says: "Pehle predict karo, phir code run karo, phir prove karo ki tum samajh gaye." Every topic has a concept, code/lab, debugging checks, and a checkpoint question. Avoid rote memorization.</p>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li>PART 0 — Thinking like an engineer (Lessons 0–1)</li>
+<li>PART I — C++ from scratch to modern C++ (Lessons 2–14)</li>
+<li>PART II — Math, Python and NumPy bridge (Lessons 15–19)</li>
+<li>PART III — Machine learning with scikit-learn (Lessons 20–27)</li>
+<li>PART IV — PyTorch and neural networks (Lessons 28–36)</li>
+<li>PART V — Deployment, testing and interviews (Lessons 37–40)</li>
+<li>Appendices — glossary, lab map, learning resources</li>
+</ul>
+<hr/>
+<h1 id="part-0-how-to-learn-like-an-engineer">PART 0 — HOW TO LEARN LIKE AN ENGINEER</h1>
+<h2 id="lesson-0-what-are-we-building-and-why-these-three-tools">Lesson 0 — What are we building, and why these three tools?</h2>
+<h3 id="mental-model">Mental model</h3>
+<p>Imagine a <strong>school</strong> with three specialist teachers:</p>
+<ul>
+<li><strong>C++</strong> teaches precise control of memory, performance, data structures and compiled programs. It's the workshop where you learn what software does close to the machine.</li>
+<li><strong>scikit-learn</strong> is a toolbox for <em>classical machine learning</em>: logistic regression, trees, random forests, clustering, feature preprocessing and robust model evaluation. Mostly NumPy arrays and Python interfaces.</li>
+<li><strong>PyTorch</strong> is a deep-learning tool where you manipulate <strong>tensors</strong> and train <strong>neural networks</strong> using automatically computed gradients.</li>
+</ul>
+<p>No, C++ is <strong>not a prerequisite</strong> for PyTorch. Python is the direct prerequisite. We study C++ because you explicitly want it and because its memory/performance ideas make you a stronger engineer. These are different tools, not interchangeable replacements.</p>
+<h3 id="the-software-to-ai-workflow">The software-to-AI workflow</h3>
+<pre><code class="language-text">Question → Data → Clean/validate → Split → Model → Train
+       → Evaluate → Debug → Package → Deploy → Monitor
+</code></pre>
+<p>A 98% accuracy printed in a notebook is <strong>not</strong> proof of a good model. What if 99% of the data belongs to one class? What if training leaked test information? What if production inputs differ? The job of an engineer is to ask these questions.</p>
+<h3 id="the-universal-6-step-debugging-habit">The universal 6-step debugging habit</h3>
+<ol>
+<li><strong>Reproduce</strong>: provide exact input, command, error and version.</li>
+<li><strong>Reduce</strong>: shrink the failing case to 3–10 lines.</li>
+<li><strong>Observe</strong>: read traceback/compiler diagnostic, inspect shapes/types/values.</li>
+<li><strong>Hypothesize</strong>: one explanation, not ten random changes.</li>
+<li><strong>Test</strong>: change one variable and rerun a targeted test.</li>
+<li><strong>Prevent</strong>: add a regression test and write a 2-line incident note.</li>
+</ol>
+<p><strong>Interview warmup:</strong> Difference between an algorithm, program, ML model and trained weights? An algorithm is a method; a program implements instructions; a model describes a function or structure; weights are learned numeric parameters within a model.</p>
+<h2 id="lesson-1-linux-lab-setup-and-command-line-confidence">Lesson 1 — Linux lab setup and command-line confidence</h2>
+<h3 id="why-isolated-environments">Why isolated environments?</h3>
+<p>Think of a Python virtual environment as a separate school bag. Each project carries its own package versions, without mixing them into system Python. Debian's OS package manager and pip should not fight for the same files.</p>
+<pre><code class="language-bash">sudo apt update
+sudo apt install -y build-essential gdb cmake python3 python3-venv python3-pip
+mkdir ai-school &amp;&amp; cd ai-school
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -U pip
+python -m pip install numpy scikit-learn pandas matplotlib pytest
+</code></pre>
+<p>For PyTorch, use the <strong>official CPU selector</strong> at <code>https://pytorch.org/get-started/locally/</code> when you reach Lesson 28. Python compatibility and wheel availability vary by release. You don't need CUDA on an 8 GB CPU-only machine.</p>
+<pre><code class="language-bash">g++ --version
+python --version
+python -c 'import sklearn; print(sklearn.__version__)'
+</code></pre>
+<p><strong>Debug:</strong> <code>externally-managed-environment</code> means you tried installing into system Python; create and activate <code>.venv</code>. <code>ModuleNotFoundError</code> means wrong environment or package not installed. Check <code>which python</code> and <code>python -m pip show scikit-learn</code>.</p>
+<p><strong>Homework:</strong> Make <code>notes/error-log.md</code> with columns date, command, error, root cause and fix. Learn <code>pwd</code>, <code>ls</code>, <code>cd</code>, <code>mkdir</code>, <code>cat</code>, <code>grep</code>, <code>head</code>, <code>top</code> and <code>free -h</code>.</p>
+<hr/>
+<h1 id="part-i-c-from-zero-to-professional-foundations">PART I — C++ FROM ZERO TO PROFESSIONAL FOUNDATIONS</h1>
+<h2 id="lesson-2-your-first-compiled-program">Lesson 2 — Your first compiled program</h2>
+<p>Think of <strong>source code</strong> as a recipe; a <strong>compiler</strong> turns it into a machine-readable executable. The OS runs that executable. Compilation happens before running; that is a major difference from the normal Python workflow.</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+int main() {
+    std::cout &lt;&lt; "Hello, engineer!\n";
+    return 0;
+}
+</code></pre>
+<p><code>#include</code> makes declarations available. <code>int main()</code> is the entry point. <code>{}</code> encloses a code block. <code>std::cout</code> is a stream sending characters to standard output. <code>;</code> finishes a statement. <code>\n</code> represents a newline; <code>return 0</code> signals successful termination.</p>
+<pre><code class="language-bash">g++ -std=c++20 -Wall -Wextra -Wpedantic -g hello.cpp -o hello
+./hello
+</code></pre>
+<p><code>-Wall -Wextra</code> enable warnings; <code>-g</code> embeds debug symbols; <code>-std=c++20</code> chooses a language standard.</p>
+<p><strong>Run:</strong> <code>cpp/01_hello.cpp</code>. Change the string and predict output.</p>
+<p><strong>Debug:</strong> <code>error: expected ';'</code> often means punctuation missing <em>above</em> the indicated line. <code>undefined reference to main</code> means no entry point was linked. <code>./hello: No such file</code> means compile failed or wrong directory.</p>
+<p><strong>Interview:</strong> What is compile-time vs runtime error? Compile-time means translation fails; runtime means an already-built program encounters a failure or incorrect behavior.</p>
+<h2 id="lesson-3-variables-types-conversions-and-operators">Lesson 3 — Variables, types, conversions and operators</h2>
+<p>A <strong>variable</strong> is a named storage location with a type. <code>int</code> stores whole numbers, <code>double</code> floating-point values, <code>bool</code> true/false, <code>char</code> one character, <code>std::string</code> text. Types control which operations make sense and how values are represented.</p>
+<pre><code class="language-cpp">int apples = 7;
+int children = 2;
+double wrong = apples / children;            // 3.0: integer division happened first
+// double correct = static_cast&lt;double&gt;(apples) / children; // 3.5
+</code></pre>
+<p>Type conversion is a major source of silent bugs. Operator precedence also matters: <code>a + b * c</code> evaluates multiplication first. Integers have finite ranges: overflowing signed integers is undefined behavior. Prefer appropriate types and explicit casts; never assume arbitrary sizes.</p>
+<p><strong>Practice:</strong> Temperature C→F, compound interest for one year, swap two values, compute rectangle perimeter, grade percentage. Test zero denominator and negative inputs.</p>
+<p><strong>Debug:</strong> If <code>5/2</code> prints <code>2</code>, neither variable is floating-point. Cast one operand <strong>before</strong> division.</p>
+<p><strong>Interview:</strong> Difference between <code>=</code> and <code>==</code>? Assignment changes a value; comparison produces a boolean.</p>
+<h2 id="lesson-4-conditions-and-loops">Lesson 4 — Conditions and loops</h2>
+<p>An <code>if</code> statement chooses a route. A <code>for</code> loop repeats for a known iteration pattern; <code>while</code> repeats while a condition holds. <code>break</code> exits; <code>continue</code> skips to next iteration.</p>
+<pre><code class="language-cpp">int sum = 0;
+for (int n = 1; n &lt;= 10; ++n) {
+    if (n % 2 == 0) sum += n;
+}
+// 2 + 4 + 6 + 8 + 10 = 30
+</code></pre>
+<p>The loop invariant is: before each iteration, <code>sum</code> is the total of even numbers processed so far. Thinking in invariants helps you prove correctness rather than guessing.</p>
+<p><strong>Run:</strong> <code>cpp/02_control_flow.cpp</code>. Rewrite using <code>while</code>; add a negative-number check to a grading program.</p>
+<p><strong>Debug:</strong> <code>for (int i=0; i&lt;=v.size(); i++)</code> often accesses one element too far. Valid indices go from <code>0</code> to <code>size()-1</code>; an empty list has no valid index.</p>
+<p><strong>Interview:</strong> <code>for</code> vs <code>while</code>? Both can express the same repetition; choose based on clarity and termination condition.</p>
+<h2 id="lesson-5-functions-parameters-scope-and-references">Lesson 5 — Functions, parameters, scope and references</h2>
+<p>Functions are named reusable operations. They keep code testable. Inputs are parameters, output is the return value. A function with one responsibility is easier to debug.</p>
+<pre><code class="language-cpp">double average(double sum, int count) {
+    if (count &lt;= 0) throw std::invalid_argument("count must be positive");
+    return sum / count;
+}
+</code></pre>
+<ul>
+<li><strong>Pass by value</strong>: copy value into parameter; edits do not affect caller.</li>
+<li><strong>Pass by reference</strong> <code>int&amp;</code>: alias caller's variable; edits can affect caller.</li>
+<li><strong>Pass by const reference</strong> <code>const std::vector&lt;int&gt;&amp;</code>: avoid copying a large object while forbidding mutation.</li>
+<li><strong>Scope</strong>: local names usually cease to exist when their block ends.</li>
+</ul>
+<p><strong>Run:</strong> <code>cpp/03_functions.cpp</code>. Add <code>highest_score(const vector&lt;int&gt;&amp;)</code> and test empty input.</p>
+<p><strong>Debug:</strong> <code>not declared in this scope</code>: variable outside visibility; <code>undefined reference</code>: declaration was seen, but definition not linked. A reference bound to a destroyed object leads to undefined behavior.</p>
+<p><strong>Interview:</strong> Why use <code>const &amp;</code> for a large object? Avoid potentially costly copy and express read-only intent.</p>
+<h2 id="lesson-6-arrays-vectors-and-strings">Lesson 6 — Arrays, vectors and strings</h2>
+<p>A <code>std::vector&lt;T&gt;</code> is a dynamically sized sequence. <code>std::string</code> represents text. Use <code>v.at(i)</code> while learning: it performs bounds checking; <code>v[i]</code> does not.</p>
+<pre><code class="language-cpp">std::vector&lt;int&gt; marks{80, 95, 72};
+marks.push_back(88);
+for (int mark : marks) std::cout &lt;&lt; mark &lt;&lt; ' ';
+</code></pre>
+<p>A vector has a <strong>size</strong> (existing elements) and <strong>capacity</strong> (allocated room). Expanding capacity may move elements and invalidate references, pointers and iterators. This is important later in real C++ code.</p>
+<p><strong>Run:</strong> <code>cpp/04_vectors.cpp</code>. Add median and range checks. Try passing an empty vector; observe intentional exception.</p>
+<p><strong>Debug:</strong> Segmentation faults or mysterious values can arise from out-of-range indices. Use <code>.at</code>, compiler warnings, sanitizers and the debugger; do not silently hide the problem.</p>
+<p><strong>Interview:</strong> Array vs vector? An array usually has fixed extent; vector manages resizable storage and its lifetime safely.</p>
+<h2 id="lesson-7-memory-pointers-and-references">Lesson 7 — Memory, pointers and references</h2>
+<p>Computer memory can be imagined as numbered lockers. A <strong>pointer</strong> stores a memory address; dereferencing (<code>*p</code>) accesses the object there. A reference is another name for an existing object. A pointer may be <code>nullptr</code> and may be reassigned.</p>
+<pre><code class="language-cpp">int value = 10;
+int* address = &amp;value;
+*address = 20;       // value is now 20
+</code></pre>
+<p><strong>Stack</strong> typically refers to automatic storage for local variables and call frames; <strong>heap</strong> colloquially refers to dynamic allocation. The standard describes storage durations; avoid believing the simplified diagrams are universal physical rules.</p>
+<p>A <strong>dangling pointer</strong> points to an object whose lifetime has ended. Dereferencing it is undefined behavior, even when a program appears to work.</p>
+<p><strong>Practice:</strong> Trace the values of <code>p</code>, <code>*p</code> and <code>value</code> after each statement. Explain why returning a reference to a local variable is dangerous.</p>
+<p><strong>Debug:</strong> Never dereference a null pointer. Prefer references or smart pointers when raw pointers are unnecessary.</p>
+<p><strong>Interview:</strong> Pointer vs reference? A pointer holds an address and can be null; a reference is an alias bound during initialization and must refer to a valid object during use.</p>
+<h2 id="lesson-8-classes-encapsulation-and-oop">Lesson 8 — Classes, encapsulation and OOP</h2>
+<p>A class bundles <strong>data + behavior</strong>. <code>private</code> protects an object's invariants; <code>public</code> exposes supported operations. A constructor establishes valid initial state. <code>const</code> on a method promises not to mutate the object's externally observable state (subject to language nuances).</p>
+<pre><code class="language-cpp">class Thermometer {
+  double celsius_;
+public:
+  explicit Thermometer(double c) : celsius_(c) {}
+  double fahrenheit() const { return celsius_ * 9.0 / 5.0 + 32; }
+};
+</code></pre>
+<p>The four familiar OOP concepts: encapsulation, abstraction, inheritance, polymorphism. Do not use inheritance just because you can; often composition creates simpler systems.</p>
+<p><strong>Run:</strong> <code>cpp/05_classes.cpp</code>. Add a transfer method with tests for insufficient funds. This is a training example, not financial-grade software (floating-point currency is unsafe in production).</p>
+<p><strong>Debug:</strong> <code>private within this context</code> signals API boundary; do not make everything public to silence compiler. Add an appropriate method.</p>
+<p><strong>Interview:</strong> What is encapsulation? Restricting direct manipulation of internal state, maintaining invariants through controlled methods.</p>
+<h2 id="lesson-9-ownership-raii-exceptions-and-smart-pointers">Lesson 9 — Ownership, RAII, exceptions and smart pointers</h2>
+<p><strong>RAII</strong> means a resource's lifetime is tied to an object's lifetime. When an object goes out of scope, its destructor runs and releases owned resources. This helps manage files, mutexes and allocated memory even when exceptions occur.</p>
+<pre><code class="language-cpp">auto sensor = std::make_unique&lt;int&gt;(42);
+std::cout &lt;&lt; *sensor &lt;&lt; '\n';
+// freed automatically when sensor's lifetime ends
+</code></pre>
+<p><code>std::unique_ptr&lt;T&gt;</code> means one owning pointer; <code>std::shared_ptr&lt;T&gt;</code> supports shared ownership but adds cost and can leak through reference cycles. Prefer <strong>value types</strong> and <code>unique_ptr</code> by default, and shared ownership only when it's genuinely needed.</p>
+<p><strong>Run:</strong> <code>cpp/06_raii.cpp</code>. Predict lifetime of each object; contrast <code>std::vector</code> storage with raw <code>new</code> and <code>delete</code>.</p>
+<p><strong>Debug:</strong> <code>double free</code>/<code>use-after-free</code> are memory safety defects. Compile with sanitizers described in <code>DEBUGGING_PLAYBOOK.md</code>.</p>
+<p><strong>Interview:</strong> Why is RAII preferable to manual cleanup? It makes resource release deterministic as object lifetime ends, including exceptional exits.</p>
+<h2 id="lesson-10-stl-containers-algorithms-and-complexity">Lesson 10 — STL containers, algorithms and complexity</h2>
+<p><strong>STL</strong> standard library containers and algorithms save you from rewriting common operations. Typical choices:</p>
+<table>
+<thead>
+<tr>
+<th>Need</th>
+<th>Container</th>
+<th>Typical operation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Index by position</td>
+<td><code>vector</code></td>
+<td><code>v[i]</code>, amortized O(1) push_back</td>
+</tr>
+<tr>
+<td>Key/value sorted</td>
+<td><code>map</code></td>
+<td>O(log n) lookup</td>
+</tr>
+<tr>
+<td>Key/value hashed</td>
+<td><code>unordered_map</code></td>
+<td>Average O(1) lookup</td>
+</tr>
+<tr>
+<td>Last-in-first-out</td>
+<td><code>stack</code></td>
+<td><code>push</code>, <code>top</code>, <code>pop</code></td>
+</tr>
+<tr>
+<td>First-in-first-out</td>
+<td><code>queue</code></td>
+<td><code>push</code>, <code>front</code>, <code>pop</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Big-O</strong> describes how resource usage grows with input. O(1) constant, O(log n) logarithmic, O(n) linear, O(n log n) common comparison sort, O(n²) quadratic. Big-O isn't the whole performance story: cache locality, allocations and real workloads matter.</p>
+<p><strong>Run:</strong> <code>cpp/07_stl_algorithms.cpp</code>. Compare linear search against <code>binary_search</code> on <strong>sorted</strong> input.</p>
+<p><strong>Debug:</strong> Calling <code>binary_search</code> on unsorted input breaks its precondition; results are unreliable.</p>
+<p><strong>Interview:</strong> Map vs unordered_map? Balanced-tree ordered keys and O(log n) operations versus hash-based average O(1) operations without key order guarantee.</p>
+<h2 id="lesson-11-templates-generic-algorithms-and-modern-c">Lesson 11 — Templates, generic algorithms and modern C++</h2>
+<p>A <strong>template</strong> is a recipe for code that works with multiple types. A compiler generates appropriate instantiations when needed.</p>
+<pre><code class="language-cpp">template&lt;class T&gt;
+T square(T value) { return value * value; }
+</code></pre>
+<p>Modern C++ ideas worth learning: <code>auto</code> type deduction, <code>constexpr</code>, range-based loops, move semantics, <code>std::optional</code>, lambdas and <code>std::span</code> (C++20). A move can transfer resources instead of copying; it is not a magical fast operation on every type.</p>
+<p><strong>Run:</strong> <code>cpp/08_templates.cpp</code>. Modify for empty input: throw an informative exception or return <code>std::optional&lt;T&gt;</code>.</p>
+<p><strong>Debug:</strong> Template errors can be verbose. Read the <em>first substantive compiler error</em> and identify the type that failed the required operation.</p>
+<p><strong>Interview:</strong> Why templates? Type-safe reuse without duplicating function logic for every type.</p>
+<h2 id="lesson-12-files-parsing-and-input-validation">Lesson 12 — Files, parsing and input validation</h2>
+<p>Most real programs read outside data. Data is often dirty: missing fields, invalid integers, unexpected commas, extra whitespace. Validate early and fail clearly.</p>
+<pre><code class="language-cpp">std::istringstream row("Ada,90");
+std::string name, score;
+std::getline(row, name, ',');
+std::getline(row, score);
+</code></pre>
+<p>This is a <strong>toy CSV reader</strong>; production CSV must support escaped quotes, delimiters inside quoted fields and encoding. Never treat a demonstration parser as complete.</p>
+<p><strong>Run:</strong> <code>cpp/09_files.cpp</code>. Add a third row with <code>not-a-number</code> and see how <code>std::stoi</code> fails. Catch the exception at the program boundary and show a useful error.</p>
+<p><strong>Interview:</strong> Why validate at the boundary? Invalid external inputs should not corrupt the trusted core of an application.</p>
+<h2 id="lesson-13-dsa-two-sum-stacks-queues-complexity">Lesson 13 — DSA: two-sum, stacks, queues, complexity</h2>
+<p><strong>Problem-solving template:</strong> explain brute force; derive more efficient approach; choose data structure; estimate complexity; write edge tests.</p>
+<p><strong>Two-sum</strong>: given numbers and target, return indices of two distinct elements whose sum equals target. Brute force nested loops O(n²). A hash map of previously seen values supports expected O(n) time and O(n) extra space.</p>
+<p><strong>Run:</strong> <code>cpp/10_dsa.cpp</code>. Test duplicate values, no solution, negatives and empty input. Be careful with integer overflow when calculating complements.</p>
+<p><strong>Further challenges:</strong> binary search O(log n), valid parentheses with stack O(n), BFS with queue O(V+E), DFS with recursion/stack, reverse linked list O(n), sliding-window maximum O(n) with deque, shortest path fundamentals, sorting algorithms and recursion.</p>
+<p><strong>Debug:</strong> A solution that passes a sample but fails empty or duplicate input is incomplete. Always write edge-case tests.</p>
+<p><strong>Interview:</strong> Why might unordered_map be O(n) worst-case? Hash collisions can degrade behavior; average assumptions depend on hashing and inputs.</p>
+<h2 id="lesson-14-threads-tests-gdb-sanitizers-and-build-systems">Lesson 14 — Threads, tests, GDB, sanitizers and build systems</h2>
+<p>A <strong>race condition</strong> happens when program correctness depends on uncontrolled interleaving of threads. Two threads incrementing the same unprotected variable have a data race (undefined behavior in C++).</p>
+<pre><code class="language-cpp">std::mutex mutex;
+// inside concurrent worker:
+std::lock_guard&lt;std::mutex&gt; guard(mutex);
+++counter;
+</code></pre>
+<p><strong>Run:</strong> <code>cpp/11_threads.cpp</code> and <code>cpp/12_tests.cpp</code>. Later learn <code>std::atomic</code>, deadlocks, condition variables and thread ownership.</p>
+<p><strong>GDB commands:</strong> <code>gdb ./program</code>, <code>break main</code>, <code>run</code>, <code>next</code>, <code>step</code>, <code>print variable</code>, <code>bt</code>, <code>quit</code>.</p>
+<p><strong>Debug builds:</strong></p>
+<pre><code class="language-bash">g++ -std=c++20 -g -O1 -Wall -Wextra -fsanitize=address,undefined \
+    -fno-omit-frame-pointer cpp/04_vectors.cpp -o /tmp/safe
+/tmp/safe
+</code></pre>
+<p><strong>CMake intro:</strong> a <code>CMakeLists.txt</code> identifies the project, sources and C++ standard; CMake generates a backend build. Learn <code>cmake -S . -B build &amp;&amp; cmake --build build</code>; add CTest and a separate test target when moving from small single files to projects.</p>
+<p><strong>Interview:</strong> What does a sanitizer do? Instruments compiled programs to diagnose selected runtime defects. It does not prove absence of all bugs.</p>
+<hr/>
+<h1 id="part-ii-python-mathematics-for-ai">PART II — PYTHON &amp; MATHEMATICS FOR AI</h1>
+<h2 id="lesson-15-python-bridge-for-a-c-learner">Lesson 15 — Python bridge for a C++ learner</h2>
+<p>Unlike C++, Python often runs by an interpreter and provides dynamic typing. A Python list is a high-level object, not a direct equivalent of a <code>std::vector&lt;int&gt;</code>. We use Python here because scikit-learn and standard PyTorch workflows are Python-centric.</p>
+<pre><code class="language-python">scores = [80, 90, 100]
+print(sum(scores) / len(scores))
+
+def mean(values):
+    if not values:
+        raise ValueError("empty values")
+    return sum(values) / len(values)
+
+assert mean([2, 4, 6]) == 4
+</code></pre>
+<p>Study: numbers, strings, lists, tuples, dictionaries, sets, comprehensions, <code>if</code>, <code>for</code>, functions, modules, exceptions, context managers, classes, file I/O, virtual environments and <code>pytest</code>.</p>
+<p><strong>C++ comparison:</strong> <code>vector&lt;int&gt;</code> is constrained to int values and compiled; Python list can contain mixed objects. A <code>dict</code> resembles a hash map at a high level.</p>
+<p><strong>Debug:</strong> <code>IndentationError</code> means block spacing is inconsistent; <code>TypeError</code> means the operation is incompatible with supplied object types.</p>
+<p><strong>Checkpoint:</strong> Write a function accepting a list of grades and returning average, minimum, maximum and grade category, handling an empty list.</p>
+<h2 id="lesson-16-numpy-arrays-axes-shapes-and-vectorization">Lesson 16 — NumPy arrays, axes, shapes, and vectorization</h2>
+<p>ML often uses a <strong>matrix</strong>: rows represent examples; columns represent features. NumPy arrays are homogeneous numeric containers enabling fast bulk operations. <code>shape=(100,4)</code> means 100 examples, each with four features.</p>
+<pre><code class="language-python">import numpy as np
+X = np.array([[1., 2.], [3., 4.], [5., 6.]])
+print(X.shape)         # (3, 2)
+print(X.mean(axis=0))  # mean per column: [3.,4.]
+print(X.mean(axis=1))  # mean per row: [1.5,3.5,5.5]
+</code></pre>
+<p><strong>Broadcasting:</strong> combining arrays with compatible shapes without manually writing nested loops. Rules compare dimensions from the right; they must match or one must equal 1.</p>
+<p><strong>Debug:</strong> <code>operands could not be broadcast together</code> means incompatible shapes. Print <code>a.shape</code>, <code>b.shape</code> before attempting fixes.</p>
+<p><strong>Checkpoint:</strong> Make a <code>(4,3)</code> numeric dataset; center each feature by subtracting the training-only column means; verify resulting means are near zero.</p>
+<h2 id="lesson-17-linear-algebra-without-fear">Lesson 17 — Linear algebra without fear</h2>
+<p>A <strong>scalar</strong> is one number, a <strong>vector</strong> is an ordered collection, a <strong>matrix</strong> is a 2D grid, a <strong>tensor</strong> generalizes to more axes. A dot product measures weighted combination:</p>
+<p>[a\cdot b = a_1b_1 + a_2b_2 + \cdots+a_nb_n]</p>
+<p>A neuron computes approximately <code>weighted_sum = x @ w + b</code>. Matrix multiplication composes transformations; its shape rule is <code>(m,n) @ (n,p) → (m,p)</code>.</p>
+<pre><code class="language-python">import numpy as np
+features = np.array([[2., 3.], [4., 5.]])   # (2 samples, 2 features)
+weights = np.array([[0.5], [2.0]])          # (2 features, 1 output)
+print(features @ weights)                  # (2, 1) output
+</code></pre>
+<p><strong>Norm</strong> is a measure of vector magnitude. <strong>Transpose</strong> swaps axes. <strong>Eigenvectors</strong> capture important transform directions and appear in PCA later; start with geometric intuition, then formulas.</p>
+<p><strong>Debug:</strong> Wrong matrix dimensions produce errors; ensure the inner dimensions match. <code>*</code> in NumPy means elementwise multiplication, <code>@</code> is matrix multiplication.</p>
+<p><strong>Interview:</strong> Why are tensor shapes important? They encode the structure of data and determine which operations are legal.</p>
+<h2 id="lesson-18-statistics-probability-and-evaluation-intuition">Lesson 18 — Statistics, probability and evaluation intuition</h2>
+<p><strong>Mean</strong> is arithmetic average; <strong>median</strong> is middle ordered value; <strong>variance</strong> measures spread; <strong>standard deviation</strong> is the square root of variance. Outliers can distort the mean more than the median.</p>
+<p>Probability represents uncertainty. <strong>Conditional probability</strong> <code>P(A|B)</code> means probability of A given B. Bayes' rule connects evidence and prior beliefs:</p>
+<p>[P(A|B)=\frac{P(B|A)P(A)}{P(B)}]</p>
+<p>ML evaluation has <em>sampling uncertainty</em>: one lucky split can make a weak model look excellent. Use stratification when appropriate, repeated experiments, cross-validation and confidence intervals where meaningful.</p>
+<p><strong>Practice:</strong> Analyze salaries <code>[10,12,13,14,100]</code> and explain why mean and median differ. Compute accuracy of a model predicting 'normal' for every case when 99 of 100 cases are normal.</p>
+<p><strong>Debug:</strong> Data distribution shift means the training population and real-world prediction population differ. Training success cannot guarantee deployed performance.</p>
+<p><strong>Interview:</strong> Why is 99% accuracy sometimes bad? With 99% majority-class prevalence, a constant-majority predictor can score 99% while detecting zero minority cases.</p>
+<h2 id="lesson-19-calculus-and-gradient-descent-from-scratch">Lesson 19 — Calculus and gradient descent from scratch</h2>
+<p>A <strong>derivative</strong> tells how output changes when an input changes. A gradient collects derivatives for multiple parameters. The loss is a numerical penalty for model mistakes.</p>
+<p>For linear regression <code>prediction = w*x + b</code>, mean squared error is</p>
+<p>[L(w,b)=\frac{1}{n}\sum_{i=1}^{n}(wx_i+b-y_i)^2.]</p>
+<p>Gradient descent adjusts parameters in the opposite direction to the slope:</p>
+<p>[w \leftarrow w-\eta\frac{\partial L}{\partial w},\qquad b\leftarrow b-\eta\frac{\partial L}{\partial b}]</p>
+<p>where <code>η</code> is learning rate. Too high makes updates overshoot; too low makes learning slow. A bad scale or noisy data complicates convergence.</p>
+<p><strong>Run:</strong> <code>cpp/13_gradient_descent.cpp</code>. It learns <code>w≈2</code> and <code>b≈1</code> on toy points. Change learning rate from <code>0.05</code> to <code>1.0</code> and observe instability—then fix it.</p>
+<p><strong>Debug:</strong> <code>nan</code> in loss can result from exploding numerical values, inappropriate learning rate, invalid math or bad inputs. Log inputs and parameter statistics before guessing.</p>
+<p><strong>Interview:</strong> What is a gradient? A vector of partial derivatives of a scalar-valued objective with respect to each parameter.</p>
+<hr/>
+<h1 id="part-iii-machine-learning-using-scikit-learn">PART III — MACHINE LEARNING USING SCIKIT-LEARN</h1>
+<h2 id="lesson-20-ml-in-plain-language-supervised-vs-unsupervised">Lesson 20 — ML in plain language: supervised vs unsupervised</h2>
+<p>A model is a function fitted from examples. In <strong>supervised learning</strong>, each example has a target: input features <code>X</code> and answer <code>y</code>. Classification predicts a category; regression predicts a continuous value. In <strong>unsupervised learning</strong>, no direct target is given; we identify structure, clusters or anomalies.</p>
+<pre><code class="language-text">DATA  (X, y)  → train/validation/test boundaries
+                    ↓
+TRAINING DATA → preprocess.fit → model.fit
+                    ↓
+HELD-OUT DATA → preprocess.transform → model.predict → metrics
+</code></pre>
+<p><code>fit</code> means learn from data, <code>transform</code> means apply learned transformation, <code>predict</code> means generate model outputs. A <strong>baseline</strong> is the simplest meaningful reference (majority-class classifier or average-value regressor). If your fancy model loses to the baseline, don't deploy it.</p>
+<p><strong>Checkpoint:</strong> Categorize spam detection, house-price estimation, customer grouping and suspicious-event discovery as classification/regression/clustering/anomaly detection.</p>
+<h2 id="lesson-21-splitting-data-and-the-leakage-trap">Lesson 21 — Splitting data and the leakage trap</h2>
+<p>A <strong>test set</strong> is a final exam. If a teacher hands you the answer key before your practice, exam marks are no longer trustworthy. Data leakage happens when the model sees information it should not know before prediction time.</p>
+<pre><code class="language-python">from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25, random_state=42, stratify=y
+)
+</code></pre>
+<p><code>random_state</code> helps reproduce the split. Stratification preserves approximate class proportions for classification. Time-series tasks must use chronological splits; random splits can leak future information. Grouped cases (multiple records for same patient/customer/device) need group-aware splitting.</p>
+<p><strong>Wrong:</strong> <code>scaler.fit_transform(X)</code> before splitting. <strong>Correct:</strong> split first; fit preprocessing on training data only, usually through <code>Pipeline</code>.</p>
+<p><strong>Debug:</strong> suspicious 100% accuracy? Check duplicate records, split-by-entity/time leakage, columns that directly encode target, preprocessing fit on whole dataset.</p>
+<p><strong>Interview:</strong> Train vs validation vs test? Train learns parameters, validation chooses settings/model, test gives final minimally biased evaluation.</p>
+<h2 id="lesson-22-regression-linear-regularized-errors">Lesson 22 — Regression: linear, regularized, errors</h2>
+<p>Linear regression approximates <code>y = w1*x1 + ... + b</code>. Ridge regression penalizes large weights with L2 regularization, often helping with unstable/highly correlated features. Lasso uses L1 penalty and can zero some coefficients.</p>
+<ul>
+<li><strong>MAE</strong>: mean absolute error; same units as target.</li>
+<li><strong>MSE</strong>: mean squared error; emphasizes larger errors.</li>
+<li><strong>RMSE</strong>: square root of MSE; original units.</li>
+<li><strong>R²</strong>: compares fit against predicting the target mean; can be negative on unseen data.</li>
+</ul>
+<p><strong>Run:</strong> <code>ml/02_regression.py</code>. It compares a mean-prediction baseline to Ridge on synthetic data. Describe why the better model is better using multiple metrics, not one number.</p>
+<p><strong>Debug:</strong> If training MAE is small but test MAE is huge, inspect leakage, overfitting, changed feature schema and label distribution.</p>
+<p><strong>Interview:</strong> Why would you choose MAE over RMSE? MAE is less sensitive to a few large errors; metric choice depends on business costs.</p>
+<h2 id="lesson-23-classification-logistic-regression-and-metrics">Lesson 23 — Classification: logistic regression and metrics</h2>
+<p>Despite its name, logistic regression is a <strong>classification</strong> algorithm. It forms a linear score and maps it to a probability (binary case) using a sigmoid:</p>
+<p>[\sigma(z)=\frac{1}{1+e^{-z}}]</p>
+<p><strong>Confusion matrix:</strong> TP = correctly predicted positive; FP = false alarm; FN = missed positive; TN = correctly predicted negative.</p>
+<p>[\text{precision}=TP/(TP+FP), \quad \text{recall}=TP/(TP+FN)]</p>
+<p><strong>F1</strong> is the harmonic mean of precision and recall. For rare suspicious logins, high recall may detect more true threats but produce more false alerts; tune the threshold in collaboration with the domain owner.</p>
+<p><strong>Run:</strong> <code>ml/01_iris_classification.py</code>. Interpret the confusion matrix; manually compute precision and recall for one class.</p>
+<p><strong>Debug:</strong> Accuracy overstates success under imbalance. Inspect per-class scores, PR curve, confusion matrix and decision thresholds.</p>
+<p><strong>Interview:</strong> Precision vs recall? Precision asks how many flagged were correct; recall asks how many actual positives were found.</p>
+<h2 id="lesson-24-trees-ensembles-and-overfitting">Lesson 24 — Trees, ensembles and overfitting</h2>
+<p>A <strong>decision tree</strong> repeatedly asks split questions such as <code>feature &lt; threshold?</code>. Deep trees can memorize training data; controlling depth or minimum leaf size helps regularize. A random forest trains many varied trees and aggregates predictions. Gradient boosting adds weak learners sequentially to correct errors.</p>
+<pre><code class="language-python">from sklearn.ensemble import RandomForestClassifier
+model = RandomForestClassifier(n_estimators=100, random_state=0)
+model.fit(X_train, y_train)
+</code></pre>
+<p>Trees generally do not require standardizing numeric features, but missing-value and categorical handling depend on the particular estimator and its version. Always check estimator documentation.</p>
+<p><strong>Practice:</strong> Train logistic regression and random forest on the same split. Compare macro F1, latency and feature interpretability.</p>
+<p><strong>Debug:</strong> Huge difference between train and test scores is often high variance/overfitting; reduce complexity, get more representative data or tune using cross-validation.</p>
+<p><strong>Interview:</strong> Bagging vs boosting? Bagging aggregates models built from varied samples; boosting builds learners sequentially to improve a chosen objective.</p>
+<h2 id="lesson-25-preprocessing-pipelines-and-categorical-values">Lesson 25 — Preprocessing, pipelines and categorical values</h2>
+<p>Real columns have missing data, strings, numeric values with different scales and outliers. Fit all learned preprocessing <strong>inside</strong> a pipeline. ColumnTransformer can apply separate steps to different feature types.</p>
+<pre><code class="language-python">from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.pipeline import Pipeline
+from sklearn.linear_model import LogisticRegression
+
+preprocess = ColumnTransformer([
+    ("num", Pipeline([("impute", SimpleImputer(strategy="median")),
+                      ("scale", StandardScaler())]), ["age", "salary"]),
+    ("cat", OneHotEncoder(handle_unknown="ignore"), ["city"])
+])
+model = Pipeline([("preprocess", preprocess),
+                  ("classifier", LogisticRegression(max_iter=500))])
+# Requires pandas DataFrame with these exact columns.
+</code></pre>
+<p><strong>Debug:</strong> <code>Found unknown categories</code> happens when prediction has unseen category values and the encoder was not configured to handle them. Never refit preprocessing on live prediction requests.</p>
+<p><strong>Interview:</strong> Why pipelines? A single object encodes ordered transformations, reduces leakage risk and supports cross-validation/deployment consistency.</p>
+<h2 id="lesson-26-cross-validation-and-hyperparameter-tuning">Lesson 26 — Cross-validation and hyperparameter tuning</h2>
+<p>A <strong>hyperparameter</strong> is chosen outside the model fitting process (e.g., Ridge <code>alpha</code>, classifier <code>C</code>, tree max depth). A <strong>parameter</strong> (like model weights) is learned from training data.</p>
+<p>K-fold cross-validation partitions training data into K folds; each fold serves as validation once. It estimates generalization variability more reliably than one arbitrary split, but grouped and chronological scenarios need suitable CV strategies.</p>
+<p><strong>Run:</strong> <code>ml/03_cross_validation.py</code>. It tunes logistic regression <code>C</code> on training folds and reports untouched holdout performance.</p>
+<p><strong>Debug:</strong> Never search hyperparameters on the test set. <code>n_jobs=-1</code> may overwhelm an 8 GB laptop; use <code>n_jobs=1</code> or a small number.</p>
+<p><strong>Interview:</strong> Does cross-validation eliminate leakage? No. Leakage can still enter through feature engineering, repeated test inspection or inappropriate split strategy.</p>
+<h2 id="lesson-27-clustering-anomaly-detection-and-fair-model-reporting">Lesson 27 — Clustering, anomaly detection and fair model reporting</h2>
+<p><strong>K-means</strong> assigns points to K clusters based on distances; it assumes roughly compact/spherical groupings and requires choosing K. Silhouette score measures separation/cohesion, but it doesn't prove clusters correspond to real-world meaningful groups.</p>
+<p><strong>Isolation Forest</strong> isolates unusual observations using random splits. Anomaly score is not a calibrated probability of attack or fraud; real production needs ground-truth evaluation, alert-volume constraints and analyst feedback.</p>
+<p><strong>Run:</strong> <code>ml/04_clustering.py</code> and <code>ml/05_anomaly_detection.py</code>. The anomaly example is deliberately synthetic; explain why its very high detection rate is <strong>not evidence</strong> it will work on real SOC events.</p>
+<p><strong>Debug:</strong> Feeding train/test from a different column order can silently break a model. Validate feature names, types, missingness, ranges and drift.</p>
+<p><strong>Interview:</strong> Supervised fraud detection vs unsupervised anomaly detection? The former learns from labeled fraud examples, while the latter flags statistical unusualness without necessarily knowing fraud labels.</p>
+<hr/>
+<h1 id="part-iv-deep-learning-with-pytorch">PART IV — DEEP LEARNING WITH PYTORCH</h1>
+<h2 id="lesson-28-pytorch-mental-model-tensors-devices-and-dtypes">Lesson 28 — PyTorch mental model: tensors, devices and dtypes</h2>
+<p>A <strong>tensor</strong> is a multi-dimensional array. A grayscale image may be shaped <code>(height,width)</code>, but a batch for a CNN is commonly <code>(batch,channels,height,width)</code>. An input features batch might be <code>(32,10)</code>: 32 rows, 10 features each.</p>
+<pre><code class="language-python">import torch
+x = torch.tensor([[1., 2.], [3., 4.]])
+print(x.shape, x.dtype, x.device)
+</code></pre>
+<p>Dtype matters: input features often <code>torch.float32</code>; class indices for <code>CrossEntropyLoss</code> must generally be <code>torch.long</code>. A CPU-only machine reports <code>cpu</code>, and that's <strong>fine</strong>.</p>
+<p><strong>Run:</strong> <code>pytorch/01_tensors.py</code>. Predict the output shape of <code>A + b</code> and <code>A @ A</code>.</p>
+<p><strong>Debug:</strong> <code>mat1 and mat2 shapes cannot be multiplied</code> means layer or matrix dimensions disagree; trace shapes from the earliest input.</p>
+<p><strong>Interview:</strong> NumPy arrays vs PyTorch tensors? Both do numerical arrays; PyTorch tensors integrate with automatic differentiation and hardware acceleration backends.</p>
+<h2 id="lesson-29-autograd-and-computation-graphs">Lesson 29 — Autograd and computation graphs</h2>
+<p>PyTorch tracks differentiable operations on tensors marked <code>requires_grad=True</code>. A <strong>computation graph</strong> records how an output depends on inputs; <code>backward()</code> applies the chain rule to compute gradients.</p>
+<pre><code class="language-python">x = torch.tensor(3.0, requires_grad=True)
+y = x * x
+# dy/dx = 2*x, so at x=3 gradient is 6
+y.backward()
+print(x.grad)  # tensor(6.)
+</code></pre>
+<p><strong>Run:</strong> <code>pytorch/02_autograd.py</code>. Change <code>y=x**3 + 2*x</code> and calculate expected gradient analytically before running (<code>3x²+2</code>).</p>
+<p><strong>Debug:</strong> If <code>loss.backward()</code> says a tensor does not require grad, check <code>.detach()</code>, <code>torch.no_grad()</code>, non-differentiable operations or model parameters accidentally frozen. Gradient accumulation is default for leaf parameters.</p>
+<p><strong>Interview:</strong> What does autograd do? Applies the chain rule through tracked tensor operations to calculate derivatives for training.</p>
+<h2 id="lesson-30-neurons-layers-activation-functions">Lesson 30 — Neurons, layers, activation functions</h2>
+<p>A basic artificial neuron computes <code>z = w·x + b</code>, then applies an activation <code>a=f(z)</code>. A network stacks transformations. Nonlinear activation is critical: stacking purely linear layers still reduces to one linear transformation.</p>
+<pre><code class="language-python">import torch.nn as nn
+model = nn.Sequential(nn.Linear(4, 8), nn.ReLU(), nn.Linear(8, 3))
+</code></pre>
+<p>Input <code>(batch,4)</code> becomes <code>(batch,8)</code> then <code>(batch,3)</code>. The final three raw outputs are <strong>logits</strong> for three classes. Don't blindly add softmax before <code>nn.CrossEntropyLoss</code>: that loss already handles log-softmax internally.</p>
+<p><strong>Practice:</strong> Draw a 4→8→3 network; count trainable parameters: first layer 4<em>8+8=40; second 8</em>3+3=27; total <strong>67</strong>.</p>
+<p><strong>Debug:</strong> <code>Expected target size</code>/shape mismatch often means wrong class-target shape, incorrect logits shape or passing one-hot labels when class-index labels are expected.</p>
+<p><strong>Interview:</strong> Why do networks need nonlinearities? Without them, chained linear layers cannot represent nonlinear decision boundaries.</p>
+<h2 id="lesson-31-a-complete-training-loop">Lesson 31 — A complete training loop</h2>
+<p>Training means: forward pass → calculate loss → clear prior grads → backpropagate → update parameters. Repeat across batches and epochs.</p>
+<pre><code class="language-python">model.train()
+for x_batch, y_batch in loader:
+    optimizer.zero_grad()
+    predictions = model(x_batch)
+    loss = criterion(predictions, y_batch)
+    loss.backward()
+    optimizer.step()
+</code></pre>
+<p><strong>Epoch</strong> = one sweep through training examples. <strong>Batch</strong> = a subset used for one update. <strong>Learning rate</strong> controls update size. <strong>Optimizer</strong> implements parameter update strategy (SGD, Adam etc.).</p>
+<p><strong>Run:</strong> <code>pytorch/03_linear_regression.py</code>. Compare the learned parameters to <code>cpp/13_gradient_descent.cpp</code>; same mathematical idea, different implementation.</p>
+<p><strong>Debug:</strong> Loss does not decrease? Check learning rate, dtype, label alignment, gradient flow, model initialization and whether optimizer actually receives model parameters.</p>
+<p><strong>Interview:</strong> Why <code>zero_grad()</code>? PyTorch accumulates gradients by default, so clearing prevents unintended accumulation across standard training steps.</p>
+<h2 id="lesson-32-classification-network-with-a-real-train-test-boundary">Lesson 32 — Classification network with a real train/test boundary</h2>
+<p>Use <code>make_moons</code> to create an illustrative 2D curved classification task. Scikit-learn splits and standardizes data using training-only statistics; PyTorch learns a nonlinear decision boundary. This combines the two frameworks correctly.</p>
+<p><strong>Run:</strong> <code>pytorch/04_mlp_classification.py</code>. It uses <code>nn.Linear → ReLU → Linear</code>, <code>CrossEntropyLoss</code> and Adam on small data. Note <code>model.train()</code> during training and <code>model.eval()</code> + <code>torch.inference_mode()</code> during evaluation.</p>
+<p><strong>Experiment:</strong> Reduce hidden units 16→1, compare accuracy. Try learning rates <code>.001</code>, <code>.03</code>, <code>.5</code> and record stability. Never tune repeatedly on the held-out test set; add a validation split for fair tuning.</p>
+<p><strong>Debug:</strong> <code>RuntimeError: expected scalar type Long but found Float</code> often indicates class targets wrongly encoded as float. Convert class index tensor with <code>.long()</code> (only if the task requires class indices).</p>
+<p><strong>Interview:</strong> Why is <code>model.eval()</code> needed? Some layers like dropout and batch normalization behave differently during evaluation than training.</p>
+<h2 id="lesson-33-dataset-and-dataloader">Lesson 33 — Dataset and DataLoader</h2>
+<p><code>Dataset</code> defines <code>__len__</code> and <code>__getitem__</code>; <code>DataLoader</code> groups samples into batches, optionally shuffles, and can use worker processes. On modest hardware, start with <code>num_workers=0</code>.</p>
+<p><strong>Run:</strong> <code>pytorch/05_dataloader.py</code>. It creates 96 samples with 3 features each, yields a first mini-batch <code>(16,3)</code> and labels <code>(16,)</code>.</p>
+<p><strong>Practice:</strong> Change batch size to 7. Predict number of batches: <code>ceil(96/7)=14</code>; the last batch contains 5 examples unless <code>drop_last=True</code>.</p>
+<p><strong>Debug:</strong> DataLoader hangs? Start by setting <code>num_workers=0</code>, make sure dataset indexing returns valid types and isolate one sample with <code>dataset[0]</code>.</p>
+<p><strong>Interview:</strong> What is the difference between a batch and an epoch? One batch is a subset for one step; an epoch processes the training set once.</p>
+<h2 id="lesson-34-generalization-regularization-and-diagnostics">Lesson 34 — Generalization, regularization and diagnostics</h2>
+<p><strong>Overfitting:</strong> excellent performance on training data, poor on new data. <strong>Underfitting:</strong> poor performance on both. Common controls: better data, smaller models, weight decay, dropout, augmentation, early stopping and robust validation.</p>
+<p><strong>Run:</strong> <code>pytorch/07_validation.py</code>. Compare <code>train_mse</code> and <code>val_mse</code> every 25 epochs. If validation begins rising while train continues falling, suspect overfitting. For time series or clustered data, choose an appropriate validation split first.</p>
+<p><strong>Debug:</strong> Loss becomes NaN? Log batch min/max, check finite data and weights, lower learning rate, check divisions/logarithms and consider gradient clipping for unstable training. <code>torch.isnan(loss)</code> can be a useful diagnostic.</p>
+<p><strong>Interview:</strong> Dropout vs weight decay? Dropout randomly zeroes activations during training; weight decay discourages large parameter values through optimizer regularization.</p>
+<h2 id="lesson-35-convolutional-neural-networks-cnn-basics">Lesson 35 — Convolutional neural networks (CNN) basics</h2>
+<p>A CNN applies small learned <strong>filters</strong> across an image to find local patterns like edges. <code>Conv2d</code> uses <code>(batch,channels,height,width)</code> in PyTorch. After a valid 3×3 convolution with stride 1 and no padding, a 16×16 image becomes 14×14.</p>
+<pre><code class="language-text">Input: (N,1,16,16)
+  → Conv2d(1,4,kernel=3)
+  → (N,4,14,14)
+  → ReLU → Flatten (N,784)
+  → Linear(784,2) → two class logits
+</code></pre>
+<p><strong>Run:</strong> <code>pytorch/08_tiny_cnn.py</code>. Entirely synthetic 16×16 horizontal-vs-vertical bars—no downloads or GPU. High accuracy here is only on this deliberately easy artificial dataset.</p>
+<p><strong>Practice:</strong> Replace one filter size with 5 and calculate flattened size. Add explicit shape prints to catch mismatches.</p>
+<p><strong>Debug:</strong> <code>mat1 and mat2 shapes cannot be multiplied</code> commonly follows a changed convolution kernel or pooling layer without updating the first dense layer's <code>in_features</code>.</p>
+<p><strong>Interview:</strong> Why CNNs? Weight sharing and local receptive fields exploit spatial structure efficiently compared with naive dense networks.</p>
+<h2 id="lesson-36-saving-loading-and-inference-safety">Lesson 36 — Saving, loading and inference safety</h2>
+<p>Save model parameters using <code>state_dict</code>, and recreate the same architecture before loading. Keep preprocessing artifacts, feature schema and class-name mapping alongside the weights. Version them and document the training environment.</p>
+<p><strong>Run:</strong> <code>pytorch/06_save_load.py</code>. It saves model weights to a temporary local file and loads them with <code>weights_only=True</code>.</p>
+<p><strong>Important security principle:</strong> Never load untrusted serialized model artifacts; Python pickle-based formats can execute code in unsafe loading contexts. PyTorch's <code>weights_only=True</code> reduces risk, but trust and validation remain important.</p>
+<p><strong>Debug:</strong> <code>Missing key(s) in state_dict</code> or <code>Unexpected key(s)</code> means saved weights and constructed architecture/key names do not match; inspect the training configuration and saved keys.</p>
+<p><strong>Interview:</strong> Why call inference mode? It avoids building autograd state for inference, reducing overhead when gradients are unnecessary.</p>
+<hr/>
+<h1 id="part-v-real-job-ready-engineering-practice">PART V — REAL JOB-READY ENGINEERING PRACTICE</h1>
+<h2 id="lesson-37-testing-and-reproducibility">Lesson 37 — Testing and reproducibility</h2>
+<p>Professional developers don't submit only a notebook that runs once. They produce an environment, deterministic tests when practical, an error-handling strategy and clear usage instructions.</p>
+<p><strong>Your checklist:</strong> set random seeds; record library versions and input schema; split before learned preprocessing; compare baselines; report test metrics honestly; include at least 3 tests (happy path, empty/bad input, shape change); document limitations and the reproducibility boundary.</p>
+<p>Test with:</p>
+<pre><code class="language-bash">python -m pytest -q
+# Run specific script:
+python ml/01_iris_classification.py
+</code></pre>
+<p>Reproducibility has limits across different hardware and library versions; fixed seed helps but does not universally guarantee bit-exact results.</p>
+<p><strong>Debug:</strong> A model that fails only in deployment might be seeing different schema, dependencies, numerical libraries, file permissions or serialization version.</p>
+<h2 id="lesson-38-api-and-deployment-architecture">Lesson 38 — API and deployment architecture</h2>
+<p>A typical local inference service looks like:</p>
+<pre><code class="language-text">Client JSON request
+      ↓
+Input validation (types, schema, size limits)
+      ↓
+Versioned preprocessing → model inference
+      ↓
+Output validation + response
+      ↓
+Metrics/logs (no secrets or raw sensitive data)
+</code></pre>
+<p>Learn REST basics, request/response status codes, FastAPI (optional package for the capstone), Docker basics, versioning and health checks. Never allow arbitrary file paths or untrusted model uploads. Use access control for sensitive endpoints; sanitize logs.</p>
+<p><strong>Lab design:</strong> Turn your Iris model into <code>/predict</code> that accepts numeric features, returns class + model version, rejects missing fields with a 4xx response and has a <code>/health</code> endpoint. Write endpoint tests before deploying anywhere. Run <strong>locally</strong>; no external publishing is assumed.</p>
+<p><strong>Debug:</strong> HTTP 422 indicates input schema validation failure in many FastAPI apps; HTTP 500 means an unhandled server error. Separate bad-input bugs from internal errors.</p>
+<p><strong>Interview:</strong> What is train-serving skew? Difference between data transformations/conditions used for training and those encountered during serving.</p>
+<h2 id="lesson-39-three-resume-worthy-capstones">Lesson 39 — Three resume-worthy capstones</h2>
+<h3 id="capstone-a-c-log-analyzer-engineering-and-dsa">Capstone A: C++ Log Analyzer (engineering and DSA)</h3>
+<p>Implement a command-line log analyzer supporting timestamp parsing, severity counts, filtering, top-K event types and deterministic summary. Handle invalid lines, large-ish files without loading everything, empty input and Unicode/encoding caveats. Use classes only when they improve design. Add unit tests and sanitizer runs. Explain O(n) scans, memory overhead, and trade-offs.</p>
+<p><strong>Acceptance:</strong> sample logs + documented schema; 10 tests; robust error paths; <code>README</code>; an example performance measurement; no unsafe pointer ownership.</p>
+<h3 id="capstone-b-scikit-learn-risk-classification-pipeline">Capstone B: scikit-learn Risk Classification Pipeline</h3>
+<p>Use a trustworthy public labeled dataset (or synthetic for first iteration). Define a non-sensitive risk classification task, baseline model, feature preprocessing in Pipeline, stratified or grouped split as appropriate, CV inside training only, F1/recall/precision/confusion matrix, threshold selection and error analysis. Avoid claiming synthetic metrics represent real world.</p>
+<p><strong>Acceptance:</strong> reproducible script, train/eval separation, proper leakage prevention, final test set used once for the selected model, model-card limitations and an inference example.</p>
+<h3 id="capstone-c-pytorch-neural-network-classifier">Capstone C: PyTorch Neural Network Classifier</h3>
+<p>Train a small MLP or CNN on an appropriately sized public dataset (start with the supplied synthetic one). Implement Dataset/DataLoader, training/validation curves, seeds, optimizer choice, checkpoint weights and batch inference. Add shape tests and a controlled ablation: learning rate, width or weight decay.</p>
+<p><strong>Acceptance:</strong> training loop written by you, shape tracing, test metrics, comparison with baseline, versioned weights, secure loading guidance, CPU instructions and failure modes.</p>
+<h2 id="lesson-40-how-to-prepare-for-real-interviews">Lesson 40 — How to prepare for real interviews</h2>
+<p>A strong answer usually follows this pattern: <strong>definition → why → tiny example → edge case → debugging → trade-off</strong>.</p>
+<p>Example prompt: "What is overfitting?" Say: "Model training data pe achha perform karta hai, unseen data pe weak. Main training-vs-validation score compare karunga, leakage check karunga, then regularization or more representative data try karunga. Test set ko tuning ke liye use nahi karunga."</p>
+<p>Interviews may assess live coding, C++ ownership, DSA, ML statistics, leakage, class imbalance, tensor shape, gradients, experiment design, system design and problem-solving under uncertainty. Use <code>INTERVIEW_QA.md</code> for rehearsals and <code>ASSESSMENTS.md</code> as gates.</p>
+<p><strong>Portfolio claim guidance:</strong> Don't claim 'senior engineer' or 'five years of ML' after finishing a course. Claim exactly what you built, tested and measured. Credibility beats exaggerated titles.</p>
+<hr/>
+<h1 id="appendix-a-25-term-student-glossary">APPENDIX A — 25-term student glossary</h1>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning in one line</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Compiler</td>
+<td>Converts source language into executable form</td>
+</tr>
+<tr>
+<td>Runtime</td>
+<td>Time when program runs</td>
+</tr>
+<tr>
+<td>Variable</td>
+<td>Named location/value container</td>
+</tr>
+<tr>
+<td>Type</td>
+<td>Rules for representation and operations</td>
+</tr>
+<tr>
+<td>Pointer</td>
+<td>Object that stores an address</td>
+</tr>
+<tr>
+<td>Reference</td>
+<td>Alias for an existing object</td>
+</tr>
+<tr>
+<td>RAII</td>
+<td>Tie resource management to object lifetime</td>
+</tr>
+<tr>
+<td>STL</td>
+<td>C++ standard containers, algorithms and utilities</td>
+</tr>
+<tr>
+<td>Big-O</td>
+<td>How computation scales with input</td>
+</tr>
+<tr>
+<td>Tensor</td>
+<td>Multi-axis numeric array</td>
+</tr>
+<tr>
+<td>Feature</td>
+<td>An input characteristic</td>
+</tr>
+<tr>
+<td>Target</td>
+<td>Value/category we want to predict</td>
+</tr>
+<tr>
+<td>Parameter</td>
+<td>Quantity learned during fitting</td>
+</tr>
+<tr>
+<td>Hyperparameter</td>
+<td>Setting selected outside normal fitting</td>
+</tr>
+<tr>
+<td>Epoch</td>
+<td>One pass over training dataset</td>
+</tr>
+<tr>
+<td>Batch</td>
+<td>Subset used for a training step</td>
+</tr>
+<tr>
+<td>Loss</td>
+<td>Penalty measuring prediction errors</td>
+</tr>
+<tr>
+<td>Gradient</td>
+<td>Partial derivatives showing sensitivity</td>
+</tr>
+<tr>
+<td>Optimizer</td>
+<td>Rule for updating parameters</td>
+</tr>
+<tr>
+<td>Overfitting</td>
+<td>Memorizing training-specific patterns</td>
+</tr>
+<tr>
+<td>Data leakage</td>
+<td>Using unavailable/future/held-out info</td>
+</tr>
+<tr>
+<td>Baseline</td>
+<td>Simple comparison model</td>
+</tr>
+<tr>
+<td>Cross-validation</td>
+<td>Training/validation across several folds</td>
+</tr>
+<tr>
+<td>Inference</td>
+<td>Using trained model to generate an output</td>
+</tr>
+<tr>
+<td>Model drift</td>
+<td>Model performance changes as data/task changes</td>
+</tr>
+</tbody>
+</table>
+<h1 id="appendix-b-lab-mapping">APPENDIX B — Lab mapping</h1>
+<table>
+<thead>
+<tr>
+<th>Lessons</th>
+<th>File</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2–14,19</td>
+<td><code>cpp/01_hello.cpp</code> through <code>cpp/13_gradient_descent.cpp</code></td>
+</tr>
+<tr>
+<td>21–27</td>
+<td><code>ml/01_iris_classification.py</code> through <code>ml/05_anomaly_detection.py</code></td>
+</tr>
+<tr>
+<td>28–36</td>
+<td><code>pytorch/01_tensors.py</code> through <code>pytorch/08_tiny_cnn.py</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Student promise:</strong> Don't just execute labs. For each one, write an explanation, modify an assumption, identify one failure mode and add a test. That is how 'zero to hero' becomes actual skill.</p>
+<h1 id="appendix-c-first-party-documentation">APPENDIX C — First-party documentation</h1>
+<ul>
+<li><a href="https://pytorch.org/get-started/locally/">https://pytorch.org/get-started/locally/</a></li>
+<li><a href="https://docs.pytorch.org/tutorials/beginner/basics/">https://docs.pytorch.org/tutorials/beginner/basics/</a></li>
+<li><a href="https://scikit-learn.org/stable/install">https://scikit-learn.org/stable/install</a></li>
+<li><a href="https://scikit-learn.org/stable/common_pitfalls.html">https://scikit-learn.org/stable/common_pitfalls.html</a></li>
+<li><a href="https://scikit-learn.org/stable/modules/cross_validation.html">https://scikit-learn.org/stable/modules/cross_validation.html</a></li>
+<li><a href="https://gcc.gnu.org/onlinedocs/gcc/Instrumentation-Options.html">https://gcc.gnu.org/onlinedocs/gcc/Instrumentation-Options.html</a></li>
+<li><a href="https://en.cppreference.com/w/cpp/language.html">https://en.cppreference.com/w/cpp/language.html</a></li>
+</ul>
+</article></main><footer>ARTHA Gurukul · Source material preserved as educational notes</footer></body></html>

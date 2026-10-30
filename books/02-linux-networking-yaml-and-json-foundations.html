@@ -1,0 +1,1822 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Linux Networking, YAML &amp; JSON | ARTHA Gurukul</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><a class="brand" href="../index.html">✦ ARTHA GURUKUL</a><nav><a href="../index.html#courses">All Courses</a><a href="index.html">Source Library</a></nav></header><main class="book-layout"><aside class="book-toc"><div class="eyebrow">Original material · offline copy</div><h2>Linux Networking, YAML &amp; JSON</h2><a href="../index.html">⌂ Course library</a><div class="toc"><a href="#chapter-2-linux-networking-yaml-and-json-foundations">CHAPTER 2 — LINUX, NETWORKING, YAML AND JSON FOUNDATIONS</a><a href="#2-1-learning-objectives">2.1 Learning Objectives</a><a href="#2-2-why-linux-matters">2.2 Why Linux Matters</a><a href="#2-3-linux-architecture">2.3 Linux Architecture</a><a href="#2-4-kernel">2.4 Kernel</a><a href="#2-5-user-space">2.5 User Space</a><a href="#2-6-process">2.6 Process</a><a href="#2-7-pid">2.7 PID</a><a href="#2-8-ppid">2.8 PPID</a><a href="#2-9-signals">2.9 Signals</a><a href="#2-10-systemd">2.10 systemd</a><a href="#2-11-service-troubleshooting">2.11 Service Troubleshooting</a><a href="#2-12-linux-filesystem">2.12 Linux Filesystem</a><a href="#2-13-etc">2.13 /etc</a><a href="#2-14-var">2.14 /var</a><a href="#2-15-proc">2.15 /proc</a><a href="#2-16-sys">2.16 /sys</a><a href="#2-17-dev">2.17 /dev</a><a href="#2-18-permissions">2.18 Permissions</a><a href="#2-19-chmod">2.19 chmod</a><a href="#2-20-ownership">2.20 Ownership</a><a href="#2-21-environment-variables">2.21 Environment Variables</a><a href="#2-22-path">2.22 PATH</a><a href="#2-23-ssh">2.23 SSH</a><a href="#2-24-ssh-key-authentication">2.24 SSH Key Authentication</a><a href="#2-25-networking-foundation">2.25 Networking Foundation</a><a href="#2-26-ipv4">2.26 IPv4</a><a href="#2-27-private-ipv4-ranges">2.27 Private IPv4 Ranges</a><a href="#2-28-cidr">2.28 CIDR</a><a href="#2-29-common-cidr-sizes">2.29 Common CIDR Sizes</a><a href="#2-30-subnet">2.30 Subnet</a><a href="#2-31-default-gateway">2.31 Default Gateway</a><a href="#2-32-routing-table">2.32 Routing Table</a><a href="#2-33-longest-prefix-match">2.33 Longest Prefix Match</a><a href="#2-34-mac-address">2.34 MAC Address</a><a href="#2-35-arp">2.35 ARP</a><a href="#2-36-tcp-ip-model">2.36 TCP/IP Model</a><a href="#2-37-tcp">2.37 TCP</a><a href="#2-38-tcp-three-way-handshake">2.38 TCP Three-Way Handshake</a><a href="#2-39-udp">2.39 UDP</a><a href="#2-40-port">2.40 Port</a><a href="#2-41-socket">2.41 Socket</a><a href="#2-42-listening-ports">2.42 Listening Ports</a><a href="#2-43-dns">2.43 DNS</a><a href="#2-44-dns-records">2.44 DNS Records</a><a href="#2-45-dns-lookup">2.45 DNS Lookup</a><a href="#2-46-etc-resolv-conf">2.46 /etc/resolv.conf</a><a href="#2-47-kubernetes-dns-preview">2.47 Kubernetes DNS Preview</a><a href="#2-48-http">2.48 HTTP</a><a href="#2-49-http-status-codes">2.49 HTTP Status Codes</a><a href="#2-50-502-bad-gateway">2.50 502 Bad Gateway</a><a href="#2-51-503-service-unavailable">2.51 503 Service Unavailable</a><a href="#2-52-504-gateway-timeout">2.52 504 Gateway Timeout</a><a href="#2-53-https">2.53 HTTPS</a><a href="#2-54-tls-certificate">2.54 TLS Certificate</a><a href="#2-55-tls-handshake-simplified">2.55 TLS Handshake — Simplified</a><a href="#2-56-certificate-chain">2.56 Certificate Chain</a><a href="#2-57-tls-troubleshooting">2.57 TLS Troubleshooting</a><a href="#2-58-nat">2.58 NAT</a><a href="#2-59-firewall">2.59 Firewall</a><a href="#2-60-firewalld">2.60 firewalld</a><a href="#2-61-security-group-vs-nacl-preview">2.61 Security Group vs NACL Preview</a><a href="#2-62-load-balancer">2.62 Load Balancer</a><a href="#2-63-layer-4-vs-layer-7">2.63 Layer 4 vs Layer 7</a><a href="#2-64-reverse-proxy">2.64 Reverse Proxy</a><a href="#2-65-network-troubleshooting-toolkit">2.65 Network Troubleshooting Toolkit</a><a href="#2-66-ip-addr">2.66 ip addr</a><a href="#2-67-ip-route">2.67 ip route</a><a href="#2-68-ping">2.68 ping</a><a href="#2-69-curl">2.69 curl</a><a href="#2-70-tcpdump">2.70 tcpdump</a><a href="#2-71-yaml">2.71 YAML</a><a href="#2-72-yaml-key-value">2.72 YAML Key-Value</a><a href="#2-73-yaml-nested-structure">2.73 YAML Nested Structure</a><a href="#2-74-yaml-lists">2.74 YAML Lists</a><a href="#2-75-yaml-indentation">2.75 YAML Indentation</a><a href="#2-76-yaml-boolean-and-numbers">2.76 YAML Boolean and Numbers</a><a href="#2-77-yaml-multiline">2.77 YAML Multiline</a><a href="#2-78-yaml-comments">2.78 YAML Comments</a><a href="#2-79-kubernetes-yaml">2.79 Kubernetes YAML</a><a href="#2-80-kubernetes-yaml-line-by-line">2.80 Kubernetes YAML Line by Line</a><a href="#2-81-pod-template">2.81 Pod Template</a><a href="#2-82-container-definition">2.82 Container Definition</a><a href="#2-83-kubernetes-yaml-hierarchy">2.83 Kubernetes YAML Hierarchy</a><a href="#2-84-ansible-yaml">2.84 Ansible YAML</a><a href="#2-85-ansible-structure">2.85 Ansible Structure</a><a href="#2-86-json">2.86 JSON</a><a href="#2-87-json-types">2.87 JSON Types</a><a href="#2-88-nested-json">2.88 Nested JSON</a><a href="#2-89-aws-iam-json-preview">2.89 AWS IAM JSON Preview</a><a href="#2-90-yaml-vs-json">2.90 YAML vs JSON</a><a href="#2-91-environment-variables-in-kubernetes">2.91 Environment Variables in Kubernetes</a><a href="#2-92-configmap-preview">2.92 ConfigMap Preview</a><a href="#2-93-secret-preview">2.93 Secret Preview</a><a href="#2-94-complete-request-workflow">2.94 Complete Request Workflow</a><a href="#2-95-troubleshooting-the-workflow">2.95 Troubleshooting the Workflow</a><a href="#2-96-hands-on-linux-lab">2.96 Hands-On Linux Lab</a><a href="#2-97-network-lab">2.97 Network Lab</a><a href="#2-98-listening-service-lab">2.98 Listening Service Lab</a><a href="#2-99-localhost-problem">2.99 Localhost Problem</a><a href="#2-100-kubernetes-localhost">2.100 Kubernetes Localhost</a><a href="#2-101-dns-troubleshooting-workflow">2.101 DNS Troubleshooting Workflow</a><a href="#2-102-tcp-troubleshooting-workflow">2.102 TCP Troubleshooting Workflow</a><a href="#2-103-http-troubleshooting-workflow">2.103 HTTP Troubleshooting Workflow</a><a href="#2-104-yaml-troubleshooting">2.104 YAML Troubleshooting</a><a href="#2-105-json-troubleshooting">2.105 JSON Troubleshooting</a><a href="#2-106-common-linux-mistakes">2.106 Common Linux Mistakes</a><a href="#2-107-common-networking-mistakes">2.107 Common Networking Mistakes</a><a href="#2-108-common-yaml-mistakes">2.108 Common YAML Mistakes</a><a href="#2-109-interview-questions-linux">2.109 Interview Questions — Linux</a><a href="#q1-process-vs-service">Q1. Process vs service?</a><a href="#q2-sigterm-vs-sigkill">Q2. SIGTERM vs SIGKILL?</a><a href="#q3-how-do-you-find-a-listening-port">Q3. How do you find a listening port?</a><a href="#2-110-interview-questions-networking">2.110 Interview Questions — Networking</a><a href="#q4-what-is-a-default-gateway">Q4. What is a default gateway?</a><a href="#q5-tcp-vs-udp">Q5. TCP vs UDP?</a><a href="#q6-what-is-dns">Q6. What is DNS?</a><a href="#2-111-interview-questions-http">2.111 Interview Questions — HTTP</a><a href="#q7-502-vs-503-vs-504">Q7. 502 vs 503 vs 504?</a><a href="#2-112-interview-questions-yaml">2.112 Interview Questions — YAML</a><a href="#q8-why-is-yaml-important-in-kubernetes">Q8. Why is YAML important in Kubernetes?</a><a href="#q9-what-determines-yaml-hierarchy">Q9. What determines YAML hierarchy?</a><a href="#q10-yaml-vs-json">Q10. YAML vs JSON?</a><a href="#2-113-senior-scenario">2.113 Senior Scenario</a><a href="#2-114-cidr-exercise">2.114 CIDR Exercise</a><a href="#2-115-architecture-exercise">2.115 Architecture Exercise</a><a href="#2-116-quick-revision">2.116 Quick Revision</a><a href="#2-117-chapter-summary">2.117 Chapter Summary</a><a href="#2-118-references">2.118 References</a><a href="#next-chapter">NEXT CHAPTER</a><a href="#chapter-3-aws-foundations-global-infrastructure-and-shared-responsibility">CHAPTER 3 — AWS FOUNDATIONS, GLOBAL INFRASTRUCTURE AND SHARED RESPONSIBILITY</a></div></aside><article class="book-prose"><p class="source-note">Historical course notes converted into searchable offline HTML. Some content may be a draft; exercises requiring cloud accounts need credentials and may incur costs.</p><h1 id="chapter-2-linux-networking-yaml-and-json-foundations"><strong>CHAPTER 2 — LINUX, NETWORKING, YAML AND JSON FOUNDATIONS</strong></h1>
+<p><strong>Page: 19–42</strong></p>
+<hr/>
+<h2 id="2-1-learning-objectives"><strong>2.1 Learning Objectives</strong></h2>
+<p>By the end of this chapter, you should understand:</p>
+<ul>
+<li>Linux architecture</li>
+<li>Kernel and user space</li>
+<li>Processes</li>
+<li>PID and PPID</li>
+<li>Signals</li>
+<li>systemd and services</li>
+<li>Linux filesystem</li>
+<li>Permissions and ownership</li>
+<li>Environment variables</li>
+<li>SSH</li>
+<li>Networking fundamentals</li>
+<li>IPv4</li>
+<li>Private IP ranges</li>
+<li>CIDR</li>
+<li>Subnets</li>
+<li>Default gateways</li>
+<li>Routing</li>
+<li>MAC addresses</li>
+<li>ARP</li>
+<li>TCP and UDP</li>
+<li>Ports and sockets</li>
+<li>DNS</li>
+<li>HTTP and HTTPS</li>
+<li>TLS</li>
+<li>NAT</li>
+<li>Firewalls</li>
+<li>Load balancers</li>
+<li>Reverse proxies</li>
+<li>Linux network troubleshooting</li>
+<li>YAML</li>
+<li>JSON</li>
+<li>Kubernetes YAML</li>
+<li>Ansible YAML</li>
+<li>AWS IAM JSON</li>
+<li>Common infrastructure troubleshooting workflows</li>
+</ul>
+<hr/>
+<h1 id="2-2-why-linux-matters"><strong>2.2 Why Linux Matters</strong></h1>
+<p>Most modern infrastructure platforms depend heavily on Linux.</p>
+<p>Examples:</p>
+<pre><code class="language-text">Kubernetes nodes
+OpenShift nodes
+Jenkins agents
+Docker hosts
+Ansible managed nodes
+Elasticsearch servers
+Prometheus servers
+Grafana servers
+Cloud VMs
+</code></pre>
+<p>Understanding tools without understanding Linux creates troubleshooting gaps.</p>
+<hr/>
+<h1 id="2-3-linux-architecture"><strong>2.3 Linux Architecture</strong></h1>
+<p>Simplified:</p>
+<pre><code class="language-text">+---------------------------+
+| Applications              |
++---------------------------+
+| Shell / Libraries         |
++---------------------------+
+| System Calls              |
++---------------------------+
+| Linux Kernel              |
++---------------------------+
+| Hardware                  |
++---------------------------+
+</code></pre>
+<hr/>
+<h1 id="2-4-kernel"><strong>2.4 Kernel</strong></h1>
+<p>The kernel manages:</p>
+<pre><code class="language-text">CPU scheduling
+Memory
+Processes
+Devices
+Filesystems
+Networking
+Security primitives
+</code></pre>
+<p>Applications do not directly control hardware.</p>
+<p>They interact through operating-system interfaces.</p>
+<hr/>
+<h1 id="2-5-user-space"><strong>2.5 User Space</strong></h1>
+<p>User-space components include:</p>
+<pre><code class="language-text">Shell
+systemd
+SSH
+Web servers
+Databases
+Python
+Jenkins
+Docker
+</code></pre>
+<p>When an application crashes, it does not necessarily mean the kernel failed.</p>
+<hr/>
+<h1 id="2-6-process"><strong>2.6 Process</strong></h1>
+<p>A process is a running program.</p>
+<p>View processes:</p>
+<pre><code class="language-bash">ps aux
+</code></pre>
+<p>or:</p>
+<pre><code class="language-bash">ps -ef
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-text">root       1     0  ... /sbin/init
+www-data 845     1  ... nginx
+</code></pre>
+<hr/>
+<h1 id="2-7-pid"><strong>2.7 PID</strong></h1>
+<p>PID means:</p>
+<blockquote>
+<p><strong>Process ID</strong></p>
+</blockquote>
+<p>Example:</p>
+<pre><code class="language-text">nginx PID = 845
+</code></pre>
+<p>Find a process:</p>
+<pre><code class="language-bash">ps -ef | grep nginx
+</code></pre>
+<hr/>
+<h1 id="2-8-ppid"><strong>2.8 PPID</strong></h1>
+<p>PPID means:</p>
+<blockquote>
+<p><strong>Parent Process ID</strong></p>
+</blockquote>
+<p>Example:</p>
+<pre><code class="language-text">PID  = 845
+PPID = 1
+</code></pre>
+<p>The parent-child relationship helps explain process trees.</p>
+<p>Use:</p>
+<pre><code class="language-bash">pstree
+</code></pre>
+<hr/>
+<h1 id="2-9-signals"><strong>2.9 Signals</strong></h1>
+<p>Signals communicate events to processes.</p>
+<p>Common examples:</p>
+<pre><code class="language-text">SIGTERM
+SIGKILL
+SIGHUP
+SIGINT
+</code></pre>
+<p>Graceful termination:</p>
+<pre><code class="language-bash">kill &lt;PID&gt;
+</code></pre>
+<p>This normally sends:</p>
+<pre><code class="language-text">SIGTERM
+</code></pre>
+<p>Force kill:</p>
+<pre><code class="language-bash">kill -9 &lt;PID&gt;
+</code></pre>
+<p>This sends:</p>
+<pre><code class="language-text">SIGKILL
+</code></pre>
+<p>Do not default to <code>kill -9</code>.</p>
+<p>Give applications a chance to shut down cleanly when possible.</p>
+<hr/>
+<h1 id="2-10-systemd"><strong>2.10 systemd</strong></h1>
+<p>Many modern Linux distributions use systemd.</p>
+<p>Check service:</p>
+<pre><code class="language-bash">systemctl status ssh
+</code></pre>
+<p>or on some distributions:</p>
+<pre><code class="language-bash">systemctl status sshd
+</code></pre>
+<p>Start:</p>
+<pre><code class="language-bash">sudo systemctl start ssh
+</code></pre>
+<p>Enable at boot:</p>
+<pre><code class="language-bash">sudo systemctl enable ssh
+</code></pre>
+<p>Restart:</p>
+<pre><code class="language-bash">sudo systemctl restart ssh
+</code></pre>
+<hr/>
+<h1 id="2-11-service-troubleshooting"><strong>2.11 Service Troubleshooting</strong></h1>
+<p>Use:</p>
+<pre><code class="language-bash">systemctl status &lt;service&gt;
+</code></pre>
+<p>Then:</p>
+<pre><code class="language-bash">journalctl -u &lt;service&gt;
+</code></pre>
+<p>Recent logs:</p>
+<pre><code class="language-bash">journalctl -u &lt;service&gt; -n 100
+</code></pre>
+<p>Follow logs:</p>
+<pre><code class="language-bash">journalctl -u &lt;service&gt; -f
+</code></pre>
+<hr/>
+<h1 id="2-12-linux-filesystem"><strong>2.12 Linux Filesystem</strong></h1>
+<p>Important directories:</p>
+<pre><code class="language-text">/
+├── etc
+├── var
+├── home
+├── root
+├── usr
+├── opt
+├── tmp
+├── proc
+├── sys
+├── dev
+└── run
+</code></pre>
+<hr/>
+<h1 id="2-13-etc"><strong>2.13 <code>/etc</code></strong></h1>
+<p>Contains system and application configuration.</p>
+<p>Examples:</p>
+<pre><code class="language-text">/etc/hosts
+/etc/resolv.conf
+/etc/ssh/
+/etc/systemd/
+</code></pre>
+<hr/>
+<h1 id="2-14-var"><strong>2.14 <code>/var</code></strong></h1>
+<p>Contains variable data.</p>
+<p>Examples:</p>
+<pre><code class="language-text">/var/log
+/var/lib
+/var/cache
+</code></pre>
+<p>Many service data directories live under <code>/var/lib</code>.</p>
+<hr/>
+<h1 id="2-15-proc"><strong>2.15 <code>/proc</code></strong></h1>
+<p><code>/proc</code> is a virtual filesystem exposing process and kernel information.</p>
+<p>Examples:</p>
+<pre><code class="language-bash">cat /proc/cpuinfo
+</code></pre>
+<pre><code class="language-bash">cat /proc/meminfo
+</code></pre>
+<p>Process:</p>
+<pre><code class="language-text">/proc/&lt;PID&gt;/
+</code></pre>
+<hr/>
+<h1 id="2-16-sys"><strong>2.16 <code>/sys</code></strong></h1>
+<p><code>/sys</code> exposes kernel/device information through sysfs.</p>
+<p>It is heavily used by operating-system tooling.</p>
+<hr/>
+<h1 id="2-17-dev"><strong>2.17 <code>/dev</code></strong></h1>
+<p>Device files appear under:</p>
+<pre><code class="language-text">/dev
+</code></pre>
+<p>Examples:</p>
+<pre><code class="language-text">/dev/sda
+/dev/null
+/dev/tty
+</code></pre>
+<hr/>
+<h1 id="2-18-permissions"><strong>2.18 Permissions</strong></h1>
+<p>Example:</p>
+<pre><code class="language-text">-rwxr-xr--
+</code></pre>
+<p>Breakdown:</p>
+<pre><code class="language-text">Owner = rwx
+Group = r-x
+Other = r--
+</code></pre>
+<p>Values:</p>
+<pre><code class="language-text">r = 4
+w = 2
+x = 1
+</code></pre>
+<hr/>
+<h1 id="2-19-chmod"><strong>2.19 chmod</strong></h1>
+<p>Example:</p>
+<pre><code class="language-bash">chmod 750 script.sh
+</code></pre>
+<p>Means:</p>
+<pre><code class="language-text">Owner = 7 = rwx
+Group = 5 = r-x
+Other = 0 = ---
+</code></pre>
+<hr/>
+<h1 id="2-20-ownership"><strong>2.20 Ownership</strong></h1>
+<p>Check:</p>
+<pre><code class="language-bash">ls -l
+</code></pre>
+<p>Change owner:</p>
+<pre><code class="language-bash">sudo chown user:group file
+</code></pre>
+<p>Recursive:</p>
+<pre><code class="language-bash">sudo chown -R user:group directory/
+</code></pre>
+<p>Use recursive ownership changes carefully.</p>
+<hr/>
+<h1 id="2-21-environment-variables"><strong>2.21 Environment Variables</strong></h1>
+<p>View:</p>
+<pre><code class="language-bash">env
+</code></pre>
+<p>Set temporarily:</p>
+<pre><code class="language-bash">export APP_ENV=production
+</code></pre>
+<p>Read:</p>
+<pre><code class="language-bash">echo "$APP_ENV"
+</code></pre>
+<p>Environment variables are widely used in:</p>
+<pre><code class="language-text">Linux
+Docker
+Kubernetes
+Jenkins
+AWS CLI
+Terraform
+</code></pre>
+<hr/>
+<h1 id="2-22-path"><strong>2.22 PATH</strong></h1>
+<p><code>PATH</code> controls where the shell searches for commands.</p>
+<p>View:</p>
+<pre><code class="language-bash">echo "$PATH"
+</code></pre>
+<p>If a command is installed but not found, PATH can be one cause.</p>
+<hr/>
+<h1 id="2-23-ssh"><strong>2.23 SSH</strong></h1>
+<p>SSH provides secure remote shell access.</p>
+<p>Example:</p>
+<pre><code class="language-bash">ssh user@server
+</code></pre>
+<p>Using a private key:</p>
+<pre><code class="language-bash">ssh -i ~/.ssh/id_ed25519 user@server
+</code></pre>
+<hr/>
+<h1 id="2-24-ssh-key-authentication"><strong>2.24 SSH Key Authentication</strong></h1>
+<p>Concept:</p>
+<pre><code class="language-text">Client
+ |
+ | Private Key
+ v
+SSH Authentication
+ |
+ v
+Server
+ |
+ | Authorized Public Key
+ v
+Access
+</code></pre>
+<p>Never copy the private key to the server merely to enable login.</p>
+<hr/>
+<h1 id="2-25-networking-foundation"><strong>2.25 Networking Foundation</strong></h1>
+<p>A host requires network configuration such as:</p>
+<pre><code class="language-text">IP address
+Subnet/prefix
+Default gateway
+DNS server
+Routes
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-text">IP      = 192.168.1.10
+Prefix  = /24
+Gateway = 192.168.1.1
+DNS     = 8.8.8.8
+</code></pre>
+<hr/>
+<h1 id="2-26-ipv4"><strong>2.26 IPv4</strong></h1>
+<p>IPv4 addresses are 32 bits.</p>
+<p>Example:</p>
+<pre><code class="language-text">192.168.1.10
+</code></pre>
+<p>Binary structure:</p>
+<pre><code class="language-text">8 bits . 8 bits . 8 bits . 8 bits
+</code></pre>
+<hr/>
+<h1 id="2-27-private-ipv4-ranges"><strong>2.27 Private IPv4 Ranges</strong></h1>
+<p>Common private ranges:</p>
+<pre><code class="language-text">10.0.0.0/8
+
+172.16.0.0/12
+
+192.168.0.0/16
+</code></pre>
+<p>These are widely used in:</p>
+<pre><code class="language-text">Enterprise networks
+AWS VPCs
+Home networks
+Labs
+Kubernetes environments
+</code></pre>
+<hr/>
+<h1 id="2-28-cidr"><strong>2.28 CIDR</strong></h1>
+<p>CIDR example:</p>
+<pre><code class="language-text">10.0.0.0/16
+</code></pre>
+<p><code>/16</code> means the first 16 bits identify the network prefix.</p>
+<p>A <code>/24</code> IPv4 block contains:</p>
+<pre><code class="language-text">256 total addresses
+</code></pre>
+<p>before platform-specific reservations or usage constraints.</p>
+<hr/>
+<h1 id="2-29-common-cidr-sizes"><strong>2.29 Common CIDR Sizes</strong></h1>
+<table>
+<thead>
+<tr>
+<th>CIDR</th>
+<th style="text-align:right">Total IPv4 Addresses</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/16</td>
+<td style="text-align:right">65,536</td>
+</tr>
+<tr>
+<td>/20</td>
+<td style="text-align:right">4,096</td>
+</tr>
+<tr>
+<td>/24</td>
+<td style="text-align:right">256</td>
+</tr>
+<tr>
+<td>/25</td>
+<td style="text-align:right">128</td>
+</tr>
+<tr>
+<td>/26</td>
+<td style="text-align:right">64</td>
+</tr>
+<tr>
+<td>/27</td>
+<td style="text-align:right">32</td>
+</tr>
+<tr>
+<td>/28</td>
+<td style="text-align:right">16</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h1 id="2-30-subnet"><strong>2.30 Subnet</strong></h1>
+<p>A subnet is a smaller network carved from a larger address range.</p>
+<p>Example:</p>
+<pre><code class="language-text">VPC
+10.0.0.0/16
+</code></pre>
+<p>Subnets:</p>
+<pre><code class="language-text">10.0.1.0/24
+10.0.2.0/24
+10.0.3.0/24
+</code></pre>
+<hr/>
+<h1 id="2-31-default-gateway"><strong>2.31 Default Gateway</strong></h1>
+<p>If a destination is not directly reachable through a more specific route, traffic may use a default route.</p>
+<p>Example:</p>
+<pre><code class="language-text">0.0.0.0/0 via 192.168.1.1
+</code></pre>
+<p>Concept:</p>
+<pre><code class="language-text">Host
+ |
+ v
+Default Gateway
+ |
+ v
+Other Networks
+</code></pre>
+<hr/>
+<h1 id="2-32-routing-table"><strong>2.32 Routing Table</strong></h1>
+<p>Linux:</p>
+<pre><code class="language-bash">ip route
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-text">default via 192.168.1.1 dev eth0
+192.168.1.0/24 dev eth0
+</code></pre>
+<hr/>
+<h1 id="2-33-longest-prefix-match"><strong>2.33 Longest Prefix Match</strong></h1>
+<p>When multiple routes match a destination, routers prefer the most specific matching prefix.</p>
+<p>Example:</p>
+<pre><code class="language-text">10.0.0.0/8
+10.10.0.0/16
+10.10.20.0/24
+</code></pre>
+<p>Destination:</p>
+<pre><code class="language-text">10.10.20.5
+</code></pre>
+<p>Most specific:</p>
+<pre><code class="language-text">10.10.20.0/24
+</code></pre>
+<p>This principle is essential for AWS route tables.</p>
+<hr/>
+<h1 id="2-34-mac-address"><strong>2.34 MAC Address</strong></h1>
+<p>A MAC address identifies a network interface at Layer 2.</p>
+<p>View:</p>
+<pre><code class="language-bash">ip link
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-text">52:54:00:12:34:56
+</code></pre>
+<hr/>
+<h1 id="2-35-arp"><strong>2.35 ARP</strong></h1>
+<p>ARP resolves IPv4 addresses to Layer-2 MAC addresses on a local network.</p>
+<p>Concept:</p>
+<pre><code class="language-text">Host A knows:
+
+IP = 192.168.1.20
+
+Needs:
+
+MAC = ?
+</code></pre>
+<p>ARP discovers the mapping.</p>
+<p>View neighbor table:</p>
+<pre><code class="language-bash">ip neigh
+</code></pre>
+<hr/>
+<h1 id="2-36-tcp-ip-model"><strong>2.36 TCP/IP Model</strong></h1>
+<p>Simplified:</p>
+<pre><code class="language-text">Application
+Transport
+Internet
+Link
+</code></pre>
+<p>Examples:</p>
+<pre><code class="language-text">HTTP  -&gt; Application
+TCP   -&gt; Transport
+IP    -&gt; Internet
+Ethernet -&gt; Link
+</code></pre>
+<hr/>
+<h1 id="2-37-tcp"><strong>2.37 TCP</strong></h1>
+<p>TCP is connection-oriented.</p>
+<p>It provides mechanisms for:</p>
+<pre><code class="language-text">Reliable delivery
+Ordering
+Retransmission
+Flow control
+Congestion control
+</code></pre>
+<hr/>
+<h1 id="2-38-tcp-three-way-handshake"><strong>2.38 TCP Three-Way Handshake</strong></h1>
+<pre><code class="language-text">Client                  Server
+
+SYN --------------------&gt;
+
+    &lt;---------------- SYN-ACK
+
+ACK --------------------&gt;
+
+Connection established
+</code></pre>
+<hr/>
+<h1 id="2-39-udp"><strong>2.39 UDP</strong></h1>
+<p>UDP is connectionless.</p>
+<p>It has lower protocol overhead but does not provide TCP's built-in reliability guarantees.</p>
+<p>Common use cases include:</p>
+<pre><code class="language-text">DNS queries
+Streaming
+Telemetry
+Real-time traffic
+</code></pre>
+<p>depending on application design.</p>
+<hr/>
+<h1 id="2-40-port"><strong>2.40 Port</strong></h1>
+<p>A port identifies an application endpoint on a host.</p>
+<p>Examples:</p>
+<pre><code class="language-text">22   SSH
+53   DNS
+80   HTTP
+443  HTTPS
+5432 PostgreSQL
+</code></pre>
+<hr/>
+<h1 id="2-41-socket"><strong>2.41 Socket</strong></h1>
+<p>A network socket can be represented conceptually by:</p>
+<pre><code class="language-text">IP + Port + Protocol
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-text">10.0.1.20:443/TCP
+</code></pre>
+<hr/>
+<h1 id="2-42-listening-ports"><strong>2.42 Listening Ports</strong></h1>
+<p>Use:</p>
+<pre><code class="language-bash">ss -lntp
+</code></pre>
+<p>Meaning:</p>
+<pre><code class="language-text">-l = listening
+-n = numeric
+-t = TCP
+-p = process
+</code></pre>
+<p>UDP:</p>
+<pre><code class="language-bash">ss -lnup
+</code></pre>
+<hr/>
+<h1 id="2-43-dns"><strong>2.43 DNS</strong></h1>
+<p>DNS translates names into records used for network communication and other purposes.</p>
+<p>Example:</p>
+<pre><code class="language-text">app.example.com
+        |
+        v
+DNS
+        |
+        v
+203.0.113.20
+</code></pre>
+<hr/>
+<h1 id="2-44-dns-records"><strong>2.44 DNS Records</strong></h1>
+<p>Common records:</p>
+<pre><code class="language-text">A
+AAAA
+CNAME
+MX
+NS
+TXT
+</code></pre>
+<p>A:</p>
+<pre><code class="language-text">Name -&gt; IPv4
+</code></pre>
+<p>AAAA:</p>
+<pre><code class="language-text">Name -&gt; IPv6
+</code></pre>
+<p>CNAME:</p>
+<pre><code class="language-text">Alias -&gt; Canonical name
+</code></pre>
+<hr/>
+<h1 id="2-45-dns-lookup"><strong>2.45 DNS Lookup</strong></h1>
+<p>Commands:</p>
+<pre><code class="language-bash">dig example.com
+</code></pre>
+<pre><code class="language-bash">nslookup example.com
+</code></pre>
+<pre><code class="language-bash">getent hosts example.com
+</code></pre>
+<hr/>
+<h1 id="2-46-etc-resolv-conf"><strong>2.46 <code>/etc/resolv.conf</code></strong></h1>
+<p>Commonly contains resolver configuration.</p>
+<p>Example:</p>
+<pre><code class="language-text">nameserver 10.0.0.2
+</code></pre>
+<p>Modern systems may manage this file through:</p>
+<pre><code class="language-text">systemd-resolved
+NetworkManager
+DHCP
+cloud-init
+</code></pre>
+<p>Do not assume manual edits will persist.</p>
+<hr/>
+<h1 id="2-47-kubernetes-dns-preview"><strong>2.47 Kubernetes DNS Preview</strong></h1>
+<p>Kubernetes commonly uses CoreDNS for cluster service discovery.</p>
+<p>Example:</p>
+<pre><code class="language-text">frontend Pod
+      |
+      v
+backend.default.svc.cluster.local
+      |
+      v
+CoreDNS
+      |
+      v
+Service ClusterIP
+</code></pre>
+<p>This will be covered deeply later.</p>
+<hr/>
+<h1 id="2-48-http"><strong>2.48 HTTP</strong></h1>
+<p>HTTP is an application protocol.</p>
+<p>Common methods:</p>
+<pre><code class="language-text">GET
+POST
+PUT
+PATCH
+DELETE
+HEAD
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-text">GET /api/users HTTP/1.1
+Host: example.com
+</code></pre>
+<hr/>
+<h1 id="2-49-http-status-codes"><strong>2.49 HTTP Status Codes</strong></h1>
+<p>Categories:</p>
+<pre><code class="language-text">1xx Informational
+2xx Success
+3xx Redirection
+4xx Client error
+5xx Server error
+</code></pre>
+<p>Common:</p>
+<pre><code class="language-text">200 OK
+201 Created
+301 Moved Permanently
+400 Bad Request
+401 Unauthorized
+403 Forbidden
+404 Not Found
+500 Internal Server Error
+502 Bad Gateway
+503 Service Unavailable
+504 Gateway Timeout
+</code></pre>
+<hr/>
+<h1 id="2-50-502-bad-gateway"><strong>2.50 502 Bad Gateway</strong></h1>
+<p>Common architecture:</p>
+<pre><code class="language-text">Client
+  |
+  v
+Nginx
+  |
+  X
+Application
+</code></pre>
+<p>A 502 can indicate that a gateway/proxy received an invalid response or could not properly communicate with the upstream.</p>
+<p>Check:</p>
+<pre><code class="language-text">Upstream process
+Port
+Socket
+DNS
+Firewall
+Proxy configuration
+Application logs
+</code></pre>
+<hr/>
+<h1 id="2-51-503-service-unavailable"><strong>2.51 503 Service Unavailable</strong></h1>
+<p>Possible causes:</p>
+<pre><code class="language-text">Application unavailable
+No healthy backends
+Maintenance
+Overload
+Kubernetes Service has no usable endpoints
+</code></pre>
+<p>Always inspect architecture-specific evidence.</p>
+<hr/>
+<h1 id="2-52-504-gateway-timeout"><strong>2.52 504 Gateway Timeout</strong></h1>
+<p>Typical:</p>
+<pre><code class="language-text">Client
+  |
+  v
+Proxy
+  |
+  v
+Upstream
+  |
+  X
+Response too slow / timeout
+</code></pre>
+<p>Investigate:</p>
+<pre><code class="language-text">Application latency
+Database latency
+Network path
+Proxy timeout
+Dependency health
+</code></pre>
+<hr/>
+<h1 id="2-53-https"><strong>2.53 HTTPS</strong></h1>
+<p>HTTPS is HTTP protected using TLS.</p>
+<p>Concept:</p>
+<pre><code class="language-text">HTTP
+ +
+TLS
+ =
+HTTPS
+</code></pre>
+<p>TLS provides properties including:</p>
+<pre><code class="language-text">Encryption
+Integrity
+Server authentication
+</code></pre>
+<p>Client authentication can also be used in appropriate designs.</p>
+<hr/>
+<h1 id="2-54-tls-certificate"><strong>2.54 TLS Certificate</strong></h1>
+<p>A certificate binds identity information to a public key through a trusted certificate system.</p>
+<p>Simplified:</p>
+<pre><code class="language-text">Client
+ |
+ v
+Server Certificate
+ |
+ v
+Validate:
+- Name
+- Validity
+- Trust chain
+- Signature
+</code></pre>
+<hr/>
+<h1 id="2-55-tls-handshake-simplified"><strong>2.55 TLS Handshake — Simplified</strong></h1>
+<pre><code class="language-text">Client
+  |
+  | ClientHello
+  v
+Server
+  |
+  | ServerHello + Certificate
+  v
+Client validates certificate
+  |
+  v
+Key establishment
+  |
+  v
+Encrypted application traffic
+</code></pre>
+<p>Modern TLS details vary by protocol version and cipher suite.</p>
+<hr/>
+<h1 id="2-56-certificate-chain"><strong>2.56 Certificate Chain</strong></h1>
+<p>Concept:</p>
+<pre><code class="language-text">Root CA
+   |
+   v
+Intermediate CA
+   |
+   v
+Server Certificate
+</code></pre>
+<p>The client builds and validates the trust chain.</p>
+<hr/>
+<h1 id="2-57-tls-troubleshooting"><strong>2.57 TLS Troubleshooting</strong></h1>
+<p>Useful:</p>
+<pre><code class="language-bash">openssl s_client -connect example.com:443 -servername example.com
+</code></pre>
+<p>Check:</p>
+<pre><code class="language-text">Certificate subject
+Issuer
+Expiry
+SAN
+Chain
+Handshake
+</code></pre>
+<hr/>
+<h1 id="2-58-nat"><strong>2.58 NAT</strong></h1>
+<p>NAT means:</p>
+<blockquote>
+<p><strong>Network Address Translation</strong></p>
+</blockquote>
+<p>Example:</p>
+<pre><code class="language-text">Private Host
+10.0.1.10
+   |
+   v
+NAT
+   |
+   v
+Public Address
+   |
+   v
+Internet
+</code></pre>
+<p>AWS private subnet internet access commonly uses NAT architecture, covered later.</p>
+<hr/>
+<h1 id="2-59-firewall"><strong>2.59 Firewall</strong></h1>
+<p>A firewall controls traffic based on rules.</p>
+<p>Example:</p>
+<pre><code class="language-text">Source
+Destination
+Protocol
+Port
+Action
+</code></pre>
+<p>Linux tools may include:</p>
+<pre><code class="language-text">nftables
+firewalld
+iptables
+</code></pre>
+<p>depending on distribution and architecture.</p>
+<hr/>
+<h1 id="2-60-firewalld"><strong>2.60 firewalld</strong></h1>
+<p>Check:</p>
+<pre><code class="language-bash">sudo firewall-cmd --state
+</code></pre>
+<p>List:</p>
+<pre><code class="language-bash">sudo firewall-cmd --list-all
+</code></pre>
+<p>Allow HTTP:</p>
+<pre><code class="language-bash">sudo firewall-cmd --permanent --add-service=http
+sudo firewall-cmd --reload
+</code></pre>
+<p>Use only on systems where firewalld is the active firewall manager.</p>
+<hr/>
+<h1 id="2-61-security-group-vs-nacl-preview"><strong>2.61 Security Group vs NACL Preview</strong></h1>
+<p>AWS uses controls including:</p>
+<pre><code class="language-text">Security Groups
+Network ACLs
+</code></pre>
+<p>High-level:</p>
+<pre><code class="language-text">Security Group
+=
+Stateful resource-level traffic filtering
+</code></pre>
+<pre><code class="language-text">Network ACL
+=
+Stateless subnet-level filtering
+</code></pre>
+<p>Detailed behavior comes in the VPC chapters.</p>
+<hr/>
+<h1 id="2-62-load-balancer"><strong>2.62 Load Balancer</strong></h1>
+<p>A load balancer distributes traffic.</p>
+<pre><code class="language-text">Clients
+   |
+   v
+Load Balancer
+ /     |     \
+v      v      v
+App1  App2  App3
+</code></pre>
+<p>Benefits:</p>
+<pre><code class="language-text">Availability
+Scaling
+Health checking
+Traffic distribution
+</code></pre>
+<hr/>
+<h1 id="2-63-layer-4-vs-layer-7"><strong>2.63 Layer 4 vs Layer 7</strong></h1>
+<p>Layer 4 load balancing focuses on transport-level information.</p>
+<p>Examples:</p>
+<pre><code class="language-text">TCP
+UDP
+</code></pre>
+<p>Layer 7 can understand application protocols such as:</p>
+<pre><code class="language-text">HTTP
+HTTPS
+</code></pre>
+<p>and make routing decisions based on:</p>
+<pre><code class="language-text">Host
+Path
+Headers
+</code></pre>
+<hr/>
+<h1 id="2-64-reverse-proxy"><strong>2.64 Reverse Proxy</strong></h1>
+<p>A reverse proxy receives requests on behalf of backend applications.</p>
+<p>Example:</p>
+<pre><code class="language-text">Client
+  |
+  v
+Nginx
+  |
+  +--&gt; Flask
+  +--&gt; Django
+  +--&gt; Node.js
+</code></pre>
+<p>Benefits can include:</p>
+<pre><code class="language-text">TLS termination
+Routing
+Load balancing
+Caching
+Security controls
+</code></pre>
+<hr/>
+<h1 id="2-65-network-troubleshooting-toolkit"><strong>2.65 Network Troubleshooting Toolkit</strong></h1>
+<p>Important commands:</p>
+<pre><code class="language-bash">ip addr
+ip route
+ip link
+ip neigh
+ss -lntp
+ping
+traceroute
+tracepath
+dig
+nslookup
+curl
+openssl s_client
+tcpdump
+</code></pre>
+<hr/>
+<h1 id="2-66-ip-addr"><strong>2.66 <code>ip addr</code></strong></h1>
+<p>Check interface addresses:</p>
+<pre><code class="language-bash">ip addr
+</code></pre>
+<p>Ask:</p>
+<pre><code class="language-text">Does interface have expected IP?
+Is interface UP?
+Correct subnet?
+</code></pre>
+<hr/>
+<h1 id="2-67-ip-route"><strong>2.67 <code>ip route</code></strong></h1>
+<p>Check routing:</p>
+<pre><code class="language-bash">ip route
+</code></pre>
+<p>Ask:</p>
+<pre><code class="language-text">Is destination directly connected?
+Is default route present?
+Is gateway correct?
+</code></pre>
+<hr/>
+<h1 id="2-68-ping"><strong>2.68 <code>ping</code></strong></h1>
+<p>Example:</p>
+<pre><code class="language-bash">ping 8.8.8.8
+</code></pre>
+<p>But remember:</p>
+<pre><code class="language-text">Ping failure
+!=
+Host definitely down
+</code></pre>
+<p>ICMP may be blocked.</p>
+<hr/>
+<h1 id="2-69-curl"><strong>2.69 <code>curl</code></strong></h1>
+<p>HTTP test:</p>
+<pre><code class="language-bash">curl -v http://server:8080/
+</code></pre>
+<p>HTTPS:</p>
+<pre><code class="language-bash">curl -vk https://server/
+</code></pre>
+<p><code>-k</code> disables certificate verification and should only be used deliberately for diagnostics, not as a production fix.</p>
+<hr/>
+<h1 id="2-70-tcpdump"><strong>2.70 <code>tcpdump</code></strong></h1>
+<p>Capture traffic:</p>
+<pre><code class="language-bash">sudo tcpdump -i any port 443
+</code></pre>
+<p>Host filter:</p>
+<pre><code class="language-bash">sudo tcpdump -i any host 10.0.1.20
+</code></pre>
+<p>Packet capture is extremely valuable when:</p>
+<pre><code class="language-text">Application says network failed
+Network team says application failed
+</code></pre>
+<hr/>
+<h1 id="2-71-yaml"><strong>2.71 YAML</strong></h1>
+<p>YAML is a human-readable data serialization format heavily used by:</p>
+<pre><code class="language-text">Kubernetes
+Ansible
+Helm
+CI/CD systems
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-yaml">name: application
+replicas: 3
+enabled: true
+</code></pre>
+<hr/>
+<h1 id="2-72-yaml-key-value"><strong>2.72 YAML Key-Value</strong></h1>
+<pre><code class="language-yaml">name: nginx
+</code></pre>
+<p>Means:</p>
+<pre><code class="language-text">Key   = name
+Value = nginx
+</code></pre>
+<hr/>
+<h1 id="2-73-yaml-nested-structure"><strong>2.73 YAML Nested Structure</strong></h1>
+<pre><code class="language-yaml">application:
+  name: nginx
+  port: 80
+</code></pre>
+<p>Structure:</p>
+<pre><code class="language-text">application
+   |
+   +--&gt; name
+   |
+   +--&gt; port
+</code></pre>
+<p>Indentation defines hierarchy.</p>
+<hr/>
+<h1 id="2-74-yaml-lists"><strong>2.74 YAML Lists</strong></h1>
+<pre><code class="language-yaml">ports:
+  - 80
+  - 443
+  - 8080
+</code></pre>
+<p>Object list:</p>
+<pre><code class="language-yaml">users:
+  - name: alice
+    role: admin
+
+  - name: bob
+    role: developer
+</code></pre>
+<hr/>
+<h1 id="2-75-yaml-indentation"><strong>2.75 YAML Indentation</strong></h1>
+<p>Correct:</p>
+<pre><code class="language-yaml">server:
+  name: web01
+  port: 80
+</code></pre>
+<p>Incorrect:</p>
+<pre><code class="language-yaml">server:
+ name: web01
+   port: 80
+</code></pre>
+<p>YAML is indentation-sensitive.</p>
+<p>Use spaces consistently.</p>
+<p>Avoid tabs for indentation.</p>
+<hr/>
+<h1 id="2-76-yaml-boolean-and-numbers"><strong>2.76 YAML Boolean and Numbers</strong></h1>
+<p>Example:</p>
+<pre><code class="language-yaml">enabled: true
+replicas: 3
+</code></pre>
+<p>Strings:</p>
+<pre><code class="language-yaml">environment: "production"
+</code></pre>
+<p>Be careful with automatic type interpretation in different YAML parsers/spec versions.</p>
+<hr/>
+<h1 id="2-77-yaml-multiline"><strong>2.77 YAML Multiline</strong></h1>
+<p>Literal block:</p>
+<pre><code class="language-yaml">message: |
+  Line one
+  Line two
+  Line three
+</code></pre>
+<p>Useful for:</p>
+<pre><code class="language-text">Scripts
+Configuration
+Certificates
+Long messages
+</code></pre>
+<hr/>
+<h1 id="2-78-yaml-comments"><strong>2.78 YAML Comments</strong></h1>
+<pre><code class="language-yaml"># Application name
+name: nginx
+</code></pre>
+<p>Comments begin with:</p>
+<pre><code class="language-text">#
+</code></pre>
+<hr/>
+<h1 id="2-79-kubernetes-yaml"><strong>2.79 Kubernetes YAML</strong></h1>
+<p>Example:</p>
+<pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: web
+
+spec:
+  replicas: 3
+
+  selector:
+    matchLabels:
+      app: web
+
+  template:
+    metadata:
+      labels:
+        app: web
+
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:stable
+          ports:
+            - containerPort: 80
+</code></pre>
+<hr/>
+<h1 id="2-80-kubernetes-yaml-line-by-line"><strong>2.80 Kubernetes YAML Line by Line</strong></h1>
+<pre><code class="language-yaml">apiVersion: apps/v1
+</code></pre>
+<p>Defines the API group/version.</p>
+<pre><code class="language-yaml">kind: Deployment
+</code></pre>
+<p>Resource type.</p>
+<pre><code class="language-yaml">metadata:
+  name: web
+</code></pre>
+<p>Object metadata and name.</p>
+<pre><code class="language-yaml">spec:
+  replicas: 3
+</code></pre>
+<p>Desired replica count.</p>
+<pre><code class="language-yaml">selector:
+  matchLabels:
+    app: web
+</code></pre>
+<p>Deployment selects Pods with:</p>
+<pre><code class="language-text">app=web
+</code></pre>
+<hr/>
+<h1 id="2-81-pod-template"><strong>2.81 Pod Template</strong></h1>
+<pre><code class="language-yaml">template:
+  metadata:
+    labels:
+      app: web
+</code></pre>
+<p>Defines labels placed on Pods created by the Deployment.</p>
+<pre><code class="language-yaml">spec:
+  containers:
+</code></pre>
+<p>Defines Pod containers.</p>
+<hr/>
+<h1 id="2-82-container-definition"><strong>2.82 Container Definition</strong></h1>
+<pre><code class="language-yaml">- name: nginx
+  image: nginx:stable
+</code></pre>
+<p>Means:</p>
+<pre><code class="language-text">Container name = nginx
+Image = nginx:stable
+</code></pre>
+<hr/>
+<h1 id="2-83-kubernetes-yaml-hierarchy"><strong>2.83 Kubernetes YAML Hierarchy</strong></h1>
+<pre><code class="language-text">Deployment
+ |
+ +--&gt; metadata
+ |
+ +--&gt; spec
+       |
+       +--&gt; replicas
+       +--&gt; selector
+       +--&gt; template
+              |
+              +--&gt; metadata
+              +--&gt; spec
+                     |
+                     +--&gt; containers
+</code></pre>
+<p>Learn the hierarchy, not just memorized indentation.</p>
+<hr/>
+<h1 id="2-84-ansible-yaml"><strong>2.84 Ansible YAML</strong></h1>
+<p>Example:</p>
+<pre><code class="language-yaml">- name: Configure web servers
+  hosts: web
+  become: true
+
+  tasks:
+    - name: Install nginx
+      ansible.builtin.package:
+        name: nginx
+        state: present
+</code></pre>
+<hr/>
+<h1 id="2-85-ansible-structure"><strong>2.85 Ansible Structure</strong></h1>
+<pre><code class="language-text">Play
+ |
+ +--&gt; name
+ +--&gt; hosts
+ +--&gt; become
+ +--&gt; tasks
+       |
+       +--&gt; Task
+              |
+              +--&gt; Module
+</code></pre>
+<hr/>
+<h1 id="2-86-json"><strong>2.86 JSON</strong></h1>
+<p>JSON is another data serialization format.</p>
+<p>Example:</p>
+<pre><code class="language-json">{
+  "name": "nginx",
+  "port": 80,
+  "enabled": true
+}
+</code></pre>
+<hr/>
+<h1 id="2-87-json-types"><strong>2.87 JSON Types</strong></h1>
+<p>Common types:</p>
+<pre><code class="language-text">String
+Number
+Boolean
+Object
+Array
+null
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-json">{
+  "name": "web",
+  "replicas": 3,
+  "enabled": true,
+  "tags": ["prod", "frontend"]
+}
+</code></pre>
+<hr/>
+<h1 id="2-88-nested-json"><strong>2.88 Nested JSON</strong></h1>
+<pre><code class="language-json">{
+  "application": {
+    "name": "web",
+    "database": {
+      "host": "db.internal",
+      "port": 5432
+    }
+  }
+}
+</code></pre>
+<p>Hierarchy:</p>
+<pre><code class="language-text">application
+   |
+   +--&gt; name
+   |
+   +--&gt; database
+          |
+          +--&gt; host
+          +--&gt; port
+</code></pre>
+<hr/>
+<h1 id="2-89-aws-iam-json-preview"><strong>2.89 AWS IAM JSON Preview</strong></h1>
+<pre><code class="language-json">{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::example-bucket/*"
+    }
+  ]
+}
+</code></pre>
+<p>This will be studied deeply in AWS IAM chapters.</p>
+<hr/>
+<h1 id="2-90-yaml-vs-json"><strong>2.90 YAML vs JSON</strong></h1>
+<p>YAML:</p>
+<pre><code class="language-yaml">name: web
+port: 80
+</code></pre>
+<p>JSON:</p>
+<pre><code class="language-json">{
+  "name": "web",
+  "port": 80
+}
+</code></pre>
+<p>YAML is often easier for humans to write.</p>
+<p>JSON is widely used by APIs and AWS policy documents.</p>
+<hr/>
+<h1 id="2-91-environment-variables-in-kubernetes"><strong>2.91 Environment Variables in Kubernetes</strong></h1>
+<p>Example:</p>
+<pre><code class="language-yaml">env:
+  - name: APP_ENV
+    value: production
+</code></pre>
+<p>Inside container:</p>
+<pre><code class="language-bash">echo "$APP_ENV"
+</code></pre>
+<p>Expected:</p>
+<pre><code class="language-text">production
+</code></pre>
+<hr/>
+<h1 id="2-92-configmap-preview"><strong>2.92 ConfigMap Preview</strong></h1>
+<pre><code class="language-yaml">apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: app-config
+
+data:
+  APP_ENV: production
+  LOG_LEVEL: info
+</code></pre>
+<p>ConfigMaps hold non-secret configuration.</p>
+<hr/>
+<h1 id="2-93-secret-preview"><strong>2.93 Secret Preview</strong></h1>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Secret
+
+metadata:
+  name: app-secret
+
+type: Opaque
+
+stringData:
+  DB_USER: appuser
+</code></pre>
+<p>Kubernetes Secrets require proper security controls; base64 representation alone is not encryption.</p>
+<hr/>
+<h1 id="2-94-complete-request-workflow"><strong>2.94 Complete Request Workflow</strong></h1>
+<p>Suppose a user opens:</p>
+<pre><code class="language-text">https://app.example.com
+</code></pre>
+<p>Simplified path:</p>
+<pre><code class="language-text">Browser
+  |
+  v
+DNS
+  |
+  v
+IP Address
+  |
+  v
+TCP Connection
+  |
+  v
+TLS Handshake
+  |
+  v
+HTTP Request
+  |
+  v
+Load Balancer
+  |
+  v
+Reverse Proxy / Ingress
+  |
+  v
+Application
+  |
+  v
+Database
+</code></pre>
+<p>Every layer can fail independently.</p>
+<hr/>
+<h1 id="2-95-troubleshooting-the-workflow"><strong>2.95 Troubleshooting the Workflow</strong></h1>
+<p>If DNS fails:</p>
+<pre><code class="language-text">Application may be healthy
+but user cannot resolve name.
+</code></pre>
+<p>If TCP fails:</p>
+<pre><code class="language-text">DNS may be correct
+but port/network path is unavailable.
+</code></pre>
+<p>If TLS fails:</p>
+<pre><code class="language-text">TCP may work
+but certificate/handshake is invalid.
+</code></pre>
+<p>If HTTP returns 500:</p>
+<pre><code class="language-text">Network may work
+but application has failed.
+</code></pre>
+<hr/>
+<h1 id="2-96-hands-on-linux-lab"><strong>2.96 Hands-On Linux Lab</strong></h1>
+<p>Run on a Linux lab machine:</p>
+<pre><code class="language-bash">uname -a
+</code></pre>
+<pre><code class="language-bash">cat /etc/os-release
+</code></pre>
+<pre><code class="language-bash">ip addr
+</code></pre>
+<pre><code class="language-bash">ip route
+</code></pre>
+<pre><code class="language-bash">ss -lntp
+</code></pre>
+<pre><code class="language-bash">ps -ef
+</code></pre>
+<pre><code class="language-bash">systemctl --type=service --state=running
+</code></pre>
+<pre><code class="language-bash">df -h
+</code></pre>
+<pre><code class="language-bash">free -m
+</code></pre>
+<p>Goal:</p>
+<p>Build familiarity with system state.</p>
+<hr/>
+<h1 id="2-97-network-lab"><strong>2.97 Network Lab</strong></h1>
+<p>Check DNS:</p>
+<pre><code class="language-bash">dig example.com
+</code></pre>
+<p>Check HTTP:</p>
+<pre><code class="language-bash">curl -I https://example.com
+</code></pre>
+<p>Trace:</p>
+<pre><code class="language-bash">tracepath example.com
+</code></pre>
+<p>Inspect TLS:</p>
+<pre><code class="language-bash">openssl s_client \
+  -connect example.com:443 \
+  -servername example.com
+</code></pre>
+<hr/>
+<h1 id="2-98-listening-service-lab"><strong>2.98 Listening Service Lab</strong></h1>
+<p>Start a temporary Python web server in a lab directory:</p>
+<pre><code class="language-bash">python3 -m http.server 8080
+</code></pre>
+<p>In another terminal:</p>
+<pre><code class="language-bash">ss -lntp | grep 8080
+</code></pre>
+<p>Test:</p>
+<pre><code class="language-bash">curl http://127.0.0.1:8080/
+</code></pre>
+<p>This connects:</p>
+<pre><code class="language-text">Process
+Port
+Socket
+HTTP
+</code></pre>
+<p>into one lab.</p>
+<hr/>
+<h1 id="2-99-localhost-problem"><strong>2.99 Localhost Problem</strong></h1>
+<p>Suppose application runs inside a container.</p>
+<p>Inside the container:</p>
+<pre><code class="language-text">127.0.0.1
+</code></pre>
+<p>means:</p>
+<pre><code class="language-text">that container's own network namespace
+</code></pre>
+<p>not automatically:</p>
+<pre><code class="language-text">host
+another container
+database server
+</code></pre>
+<p>This is a very common container troubleshooting mistake.</p>
+<hr/>
+<h1 id="2-100-kubernetes-localhost"><strong>2.100 Kubernetes Localhost</strong></h1>
+<p>Two containers in the same Pod share the Pod network namespace and can communicate through localhost.</p>
+<p>Different Pods have separate network namespaces.</p>
+<p>This distinction becomes important later.</p>
+<hr/>
+<h1 id="2-101-dns-troubleshooting-workflow"><strong>2.101 DNS Troubleshooting Workflow</strong></h1>
+<pre><code class="language-text">Name
+ |
+ v
+Check resolver
+ |
+ v
+dig / getent
+ |
+ v
+Correct record?
+ |
+ v
+Correct IP?
+ |
+ v
+Network path?
+ |
+ v
+Service listening?
+</code></pre>
+<hr/>
+<h1 id="2-102-tcp-troubleshooting-workflow"><strong>2.102 TCP Troubleshooting Workflow</strong></h1>
+<pre><code class="language-text">Client
+ |
+ v
+DNS correct?
+ |
+ v
+Route correct?
+ |
+ v
+Firewall allows?
+ |
+ v
+Server listening?
+ |
+ v
+TCP handshake?
+ |
+ v
+Application response?
+</code></pre>
+<hr/>
+<h1 id="2-103-http-troubleshooting-workflow"><strong>2.103 HTTP Troubleshooting Workflow</strong></h1>
+<pre><code class="language-text">curl -v
+ |
+ v
+DNS
+ |
+ v
+TCP
+ |
+ v
+TLS
+ |
+ v
+HTTP Status
+ |
+ v
+Headers
+ |
+ v
+Application Logs
+</code></pre>
+<hr/>
+<h1 id="2-104-yaml-troubleshooting"><strong>2.104 YAML Troubleshooting</strong></h1>
+<p>When YAML fails:</p>
+<pre><code class="language-text">Check indentation
+Check list markers
+Check colon placement
+Check expected data type
+Check hierarchy
+Validate schema
+</code></pre>
+<p>For Kubernetes:</p>
+<pre><code class="language-bash">kubectl apply --dry-run=client -f file.yaml
+</code></pre>
+<p>where suitable for client-side validation.</p>
+<hr/>
+<h1 id="2-105-json-troubleshooting"><strong>2.105 JSON Troubleshooting</strong></h1>
+<p>Common JSON errors:</p>
+<pre><code class="language-text">Missing comma
+Extra comma
+Missing quote
+Unclosed brace
+Wrong array/object structure
+</code></pre>
+<p>Pretty print with:</p>
+<pre><code class="language-bash">python3 -m json.tool file.json
+</code></pre>
+<hr/>
+<h1 id="2-106-common-linux-mistakes"><strong>2.106 Common Linux Mistakes</strong></h1>
+<ol>
+<li>Using <code>kill -9</code> immediately.</li>
+<li>Restarting before reading logs.</li>
+<li>Editing generated configuration files.</li>
+<li>Using <code>chmod 777</code> as a universal fix.</li>
+<li>Running everything as root.</li>
+<li>Ignoring disk space.</li>
+<li>Ignoring DNS.</li>
+<li>Assuming ping proves application availability.</li>
+<li>Confusing localhost with remote services.</li>
+<li>Ignoring routing tables.</li>
+</ol>
+<hr/>
+<h1 id="2-107-common-networking-mistakes"><strong>2.107 Common Networking Mistakes</strong></h1>
+<ol>
+<li>Wrong subnet mask.</li>
+<li>Wrong default gateway.</li>
+<li>Wrong DNS.</li>
+<li>Firewall blocks port.</li>
+<li>Application listens only on <code>127.0.0.1</code>.</li>
+<li>Wrong route.</li>
+<li>Wrong service port.</li>
+<li>TLS certificate mismatch.</li>
+<li>NAT misunderstood.</li>
+<li>Security group/NACL confusion.</li>
+</ol>
+<hr/>
+<h1 id="2-108-common-yaml-mistakes"><strong>2.108 Common YAML Mistakes</strong></h1>
+<ol>
+<li>Wrong indentation.</li>
+<li>Tabs.</li>
+<li>List/object confusion.</li>
+<li>Wrong field hierarchy.</li>
+<li>Wrong API version.</li>
+<li>Wrong data type.</li>
+<li>Copying YAML without understanding schema.</li>
+<li>Putting secrets directly into Git.</li>
+</ol>
+<hr/>
+<h1 id="2-109-interview-questions-linux"><strong>2.109 Interview Questions — Linux</strong></h1>
+<h2 id="q1-process-vs-service"><strong>Q1. Process vs service?</strong></h2>
+<p>A process is a running program.</p>
+<p>A service is a long-running system function/application often managed by a service manager such as systemd.</p>
+<h2 id="q2-sigterm-vs-sigkill"><strong>Q2. SIGTERM vs SIGKILL?</strong></h2>
+<p>SIGTERM asks a process to terminate and can be handled.</p>
+<p>SIGKILL immediately terminates and cannot be caught or ignored by the target process.</p>
+<h2 id="q3-how-do-you-find-a-listening-port"><strong>Q3. How do you find a listening port?</strong></h2>
+<pre><code class="language-bash">ss -lntp
+</code></pre>
+<hr/>
+<h1 id="2-110-interview-questions-networking"><strong>2.110 Interview Questions — Networking</strong></h1>
+<h2 id="q4-what-is-a-default-gateway"><strong>Q4. What is a default gateway?</strong></h2>
+<p>A router used for destinations not matched by a more specific route.</p>
+<h2 id="q5-tcp-vs-udp"><strong>Q5. TCP vs UDP?</strong></h2>
+<p>TCP is connection-oriented and provides reliability/order mechanisms.</p>
+<p>UDP is connectionless with lower protocol overhead and no built-in TCP-style reliability.</p>
+<h2 id="q6-what-is-dns"><strong>Q6. What is DNS?</strong></h2>
+<p>DNS maps domain names to records such as IP addresses and other service information.</p>
+<hr/>
+<h1 id="2-111-interview-questions-http"><strong>2.111 Interview Questions — HTTP</strong></h1>
+<h2 id="q7-502-vs-503-vs-504"><strong>Q7. 502 vs 503 vs 504?</strong></h2>
+<pre><code class="language-text">502
+=
+Gateway received invalid/unusable upstream response
+
+503
+=
+Service unavailable
+
+504
+=
+Gateway timed out waiting for upstream
+</code></pre>
+<p>Exact cause depends on architecture.</p>
+<hr/>
+<h1 id="2-112-interview-questions-yaml"><strong>2.112 Interview Questions — YAML</strong></h1>
+<h2 id="q8-why-is-yaml-important-in-kubernetes"><strong>Q8. Why is YAML important in Kubernetes?</strong></h2>
+<p>Kubernetes resource manifests are commonly defined in YAML.</p>
+<h2 id="q9-what-determines-yaml-hierarchy"><strong>Q9. What determines YAML hierarchy?</strong></h2>
+<p>Indentation.</p>
+<h2 id="q10-yaml-vs-json"><strong>Q10. YAML vs JSON?</strong></h2>
+<p>Both represent structured data. YAML is generally more human-friendly; JSON is widely used by APIs and machine interfaces.</p>
+<hr/>
+<h1 id="2-113-senior-scenario"><strong>2.113 Senior Scenario</strong></h1>
+<p>Users cannot access:</p>
+<pre><code class="language-text">https://app.example.com
+</code></pre>
+<p>Troubleshoot in layers:</p>
+<pre><code class="language-text">1. DNS resolution
+2. Route/network path
+3. Firewall
+4. TCP 443
+5. TLS
+6. Load balancer
+7. Reverse proxy/Ingress
+8. Service
+9. Pod/process
+10. Application
+11. Database/dependency
+</code></pre>
+<p>Do not skip directly to application restart.</p>
+<hr/>
+<h1 id="2-114-cidr-exercise"><strong>2.114 CIDR Exercise</strong></h1>
+<p>Network:</p>
+<pre><code class="language-text">10.10.0.0/16
+</code></pre>
+<p>Design four <code>/24</code> subnets:</p>
+<pre><code class="language-text">10.10.1.0/24
+10.10.2.0/24
+10.10.3.0/24
+10.10.4.0/24
+</code></pre>
+<p>Later we will map these to:</p>
+<pre><code class="language-text">Public AZ-A
+Public AZ-B
+Private AZ-A
+Private AZ-B
+</code></pre>
+<p>inside AWS.</p>
+<hr/>
+<h1 id="2-115-architecture-exercise"><strong>2.115 Architecture Exercise</strong></h1>
+<p>Draw:</p>
+<pre><code class="language-text">Internet
+   |
+   v
+DNS
+   |
+   v
+Load Balancer
+   |
+   v
+Nginx
+   |
+   v
+Application
+   |
+   v
+PostgreSQL
+</code></pre>
+<p>For every arrow identify:</p>
+<pre><code class="language-text">Source
+Destination
+Protocol
+Port
+DNS dependency
+Firewall requirement
+</code></pre>
+<p>This is how production engineers reason.</p>
+<hr/>
+<h1 id="2-116-quick-revision"><strong>2.116 Quick Revision</strong></h1>
+<pre><code class="language-text">KERNEL
+=
+Core OS component
+
+PROCESS
+=
+Running program
+
+PID
+=
+Process ID
+
+SYSTEMD
+=
+Service/system manager
+
+CIDR
+=
+IP prefix notation
+
+ROUTE
+=
+Path selection rule
+
+DNS
+=
+Name resolution
+
+TCP
+=
+Reliable connection-oriented transport
+
+UDP
+=
+Connectionless transport
+
+PORT
+=
+Application endpoint number
+
+TLS
+=
+Transport security protocol
+
+NAT
+=
+Address translation
+
+YAML
+=
+Human-friendly structured data
+
+JSON
+=
+Structured data format
+</code></pre>
+<hr/>
+<h1 id="2-117-chapter-summary"><strong>2.117 Chapter Summary</strong></h1>
+<p>The technologies in later chapters depend on these foundations.</p>
+<p>Kubernetes troubleshooting requires:</p>
+<pre><code class="language-text">Linux
+Networking
+DNS
+YAML
+</code></pre>
+<p>AWS requires:</p>
+<pre><code class="language-text">CIDR
+Routing
+Security
+JSON
+</code></pre>
+<p>Ansible requires:</p>
+<pre><code class="language-text">Linux
+SSH
+YAML
+</code></pre>
+<p>Jenkins requires:</p>
+<pre><code class="language-text">Linux
+Networking
+Processes
+Environment variables
+</code></pre>
+<p>Observability requires:</p>
+<pre><code class="language-text">Processes
+Ports
+HTTP
+Networking
+Logs
+</code></pre>
+<p>If these foundations are strong, advanced DevOps troubleshooting becomes much easier.</p>
+<hr/>
+<h1 id="2-118-references"><strong>2.118 References</strong></h1>
+<p>For current implementation details, consult official documentation:</p>
+<ol>
+<li>Linux man pages</li>
+<li>systemd Documentation</li>
+<li>OpenSSH Documentation</li>
+<li>nftables / firewalld Documentation</li>
+<li>Kubernetes Documentation</li>
+<li>Ansible Documentation</li>
+<li>AWS Documentation</li>
+<li>IETF RFCs for TCP/IP, DNS, HTTP and TLS where deeper protocol study is required</li>
+</ol>
+<hr/>
+<p><strong>End of Chapter 2</strong></p>
+<p><strong>Page: 19–42</strong></p>
+<hr/>
+<h1 id="next-chapter"><strong>NEXT CHAPTER</strong></h1>
+<h2 id="chapter-3-aws-foundations-global-infrastructure-and-shared-responsibility"><strong>CHAPTER 3 — AWS FOUNDATIONS, GLOBAL INFRASTRUCTURE AND SHARED RESPONSIBILITY</strong></h2>
+</article></main><footer>ARTHA Gurukul · Source material preserved as educational notes</footer></body></html>

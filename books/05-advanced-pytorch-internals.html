@@ -1,0 +1,315 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Advanced PyTorch Internals | ARTHA Gurukul</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><a class="brand" href="../index.html">✦ ARTHA GURUKUL</a><nav><a href="../index.html#courses">All Courses</a><a href="index.html">Source Library</a></nav></header><main class="book-layout"><aside class="book-toc"><div class="eyebrow">Original material · offline copy</div><h2>Advanced PyTorch Internals</h2><a href="../index.html">⌂ Course library</a><div class="toc"><a href="#chapter-5-advanced-pytorch-internals">Chapter 5 — Advanced PyTorch Internals</a><a href="#learning-outcomes">Learning outcomes</a><a href="#5-1-tensors-dimensions-shapes-strides-storage">5.1 Tensors: dimensions, shapes, strides, storage</a><a href="#5-2-matrix-multiplication-and-shape-contracts">5.2 Matrix multiplication and shape contracts</a><a href="#5-3-autograd-dynamic-computation-graphs">5.3 Autograd: dynamic computation graphs</a><a href="#5-4-deriving-backpropagation-for-a-linear-layer">5.4 Deriving backpropagation for a linear layer</a><a href="#5-5-gradient-checking-with-finite-differences">5.5 Gradient checking with finite differences</a><a href="#5-6-custom-pytorch-module-for-log-classification">5.6 Custom PyTorch module for log classification</a><a href="#5-7-dataset-and-dataloader-for-windowed-log-features">5.7 Dataset and DataLoader for windowed log features</a><a href="#5-8-stable-training-loop-with-validation">5.8 Stable training loop with validation</a><a href="#5-9-cpu-cuda-and-mixed-precision">5.9 CPU, CUDA and mixed precision</a><a href="#5-10-profiling-and-bottleneck-diagnosis">5.10 Profiling and bottleneck diagnosis</a><a href="#5-11-production-reliability-and-security">5.11 Production reliability and security</a><a href="#5-12-troubleshooting-playbook">5.12 Troubleshooting playbook</a><a href="#5-13-interview-questions-and-answers">5.13 Interview questions and answers</a><a href="#5-14-practical-labs">5.14 Practical labs</a><a href="#5-15-next-chapter">5.15 Next chapter</a></div></aside><article class="book-prose"><p class="source-note">Historical course notes converted into searchable offline HTML. Some content may be a draft; exercises requiring cloud accounts need credentials and may incur costs.</p><h1 id="chapter-5-advanced-pytorch-internals">Chapter 5 — Advanced PyTorch Internals</h1>
+<p><strong>Course:</strong> PyTorch from Scratch to Production SOC Log Analysis<br/>
+<strong>Audience:</strong> Python/Linux administrators, ML/MLOps engineers and security analysts<br/>
+<strong>Goal:</strong> Understand tensor memory, automatic differentiation, mathematical gradients, custom modules, data pipelines and CPU/GPU optimization.</p>
+<h2 id="learning-outcomes">Learning outcomes</h2>
+<p>By the end, you should be able to explain PyTorch tensor storage and views, debug incorrect gradients, write a custom <code>nn.Module</code>, create a streaming dataset for Linux logs, profile training, and reason about performance bottlenecks. Examples use PyTorch 2.x APIs. Outputs are deterministic where explicitly indicated; device timings and performance vary.</p>
+<h2 id="5-1-tensors-dimensions-shapes-strides-storage">5.1 Tensors: dimensions, shapes, strides, storage</h2>
+<p>A tensor is a typed, device-resident multidimensional array. Shape tells us how many entries exist per dimension. Stride gives the number of <em>elements</em> to move in underlying storage when an index increments by one. Storage is not necessarily laid out in the logical order of a view.</p>
+<pre><code class="language-python">import torch
+x = torch.tensor([[1., 2., 3.], [4., 5., 6.]])
+print(x.shape)           # torch.Size([2, 3])
+print(x.dtype)           # torch.float32
+print(x.stride())        # (3, 1)
+print(x.is_contiguous()) # True
+y = x.transpose(0, 1)
+print(y.shape)           # torch.Size([3, 2])
+print(y.stride())        # (1, 3)
+print(y.is_contiguous()) # False
+</code></pre>
+<p><strong>Line by line:</strong> <code>import torch</code> imports the library. <code>torch.tensor</code> copies the nested values into a newly allocated tensor; floating-point literals produce the default floating dtype (normally float32). <code>shape</code> reports logical dimensions; <code>dtype</code> reports element representation; <code>stride()</code> returns offsets into storage; <code>is_contiguous()</code> checks the standard contiguous layout. <code>transpose(0,1)</code> swaps the two logical axes, typically without copying the underlying data. The transposed view therefore has different strides and is not contiguous.</p>
+<h3 id="views-vs-copies">Views vs copies</h3>
+<pre><code class="language-python">x = torch.arange(6).reshape(2, 3)
+y = x[:, 1:]           # Basic slicing: view
+z = x[:, [1, 2]]       # Advanced indexing: copy
+x[0, 1] = 99
+print(y[0, 0].item())  # 99
+print(z[0, 0].item())  # 1
+</code></pre>
+<p><code>arange(6)</code> constructs integer values 0–5. <code>reshape(2,3)</code> arranges them in two rows; reshape may return a view or copy depending on layout. <code>x[:,1:]</code> uses basic slicing, sharing storage. <code>x[:,[1,2]]</code> uses advanced indexing, producing a copy. Mutating <code>x</code> changes the view but not the copy. In-place mutations of tensors involved in Autograd can cause version-counter errors; prefer out-of-place operations when unsure.</p>
+<p><strong>Production scenario:</strong> A preprocessing pipeline transposes <code>[batch, sequence, features]</code> to <code>[sequence, batch, features]</code>. If a downstream operation requires contiguous layout, use <code>tensor.contiguous()</code> intentionally; do not insert copies everywhere because they consume bandwidth and memory.</p>
+<p><strong>Troubleshooting:</strong> If <code>.view(...)</code> fails on a noncontiguous tensor, use <code>.reshape(...)</code> when copying is acceptable or <code>.contiguous().view(...)</code> when you explicitly require a contiguous buffer.</p>
+<h2 id="5-2-matrix-multiplication-and-shape-contracts">5.2 Matrix multiplication and shape contracts</h2>
+<pre><code class="language-python">X = torch.randn(4, 6)   # 4 samples, 6 features
+W = torch.randn(6, 16)  # 6 inputs, 16 outputs
+b = torch.zeros(16)     # 16 biases
+H = X @ W + b
+print(H.shape)          # torch.Size([4, 16])
+</code></pre>
+<p><code>randn</code> draws random normal values. <code>@</code> performs matrix multiplication; inner dimensions must match (<code>6</code> and <code>6</code>). Addition broadcasts the 16-element bias across four samples. <code>H</code> is a batch of 16-dimensional pre-activations. For our SSH detector, <code>6</code> is the number of engineered security features.</p>
+<p><strong>Interview:</strong> Why does <code>nn.Linear(6,16)</code> have 112 parameters? Its weight has <code>16 × 6 = 96</code> elements and bias has <code>16</code> elements, totaling 112. Internally the layer computes <code>X @ weight.T + bias</code>.</p>
+<h2 id="5-3-autograd-dynamic-computation-graphs">5.3 Autograd: dynamic computation graphs</h2>
+<pre><code class="language-python">w = torch.tensor(2.0, requires_grad=True)
+x = torch.tensor(3.0)
+y = w * x
+loss = (y - 10) ** 2
+loss.backward()
+print(w.grad)  # tensor(-24.)
+</code></pre>
+<p><strong>Line by line:</strong> <code>w</code> is a leaf tensor for which PyTorch will accumulate gradients. <code>x</code> is a constant input. Multiplication creates <code>y</code> and records a differentiable operation. Squaring the prediction error produces scalar <code>loss</code>. Calling <code>backward()</code> traverses the graph in reverse, applying derivatives and accumulating results in <code>w.grad</code>.</p>
+<p>Mathematically, <code>L = (wx - 10)^2</code>. Therefore <code>dL/dw = 2(wx - 10)x</code>; substituting <code>w=2</code>, <code>x=3</code> yields <code>2(6-10)3 = -24</code>. A gradient tells us the local direction of steepest <em>increase</em>; gradient descent subtracts a scaled gradient.</p>
+<h3 id="why-gradients-accumulate">Why gradients accumulate</h3>
+<pre><code class="language-python">w = torch.tensor(2.0, requires_grad=True)
+for step in range(2):
+    loss = (w * 3 - 10) ** 2
+    loss.backward()
+    print(step, w.grad.item())
+# 0 -24.0
+# 1 -48.0
+</code></pre>
+<p>Each iteration creates a fresh graph, but leaf gradients are accumulated. In a real training loop, call <code>optimizer.zero_grad()</code> (often with <code>set_to_none=True</code>) before backward unless intentional gradient accumulation is required.</p>
+<h3 id="no-grad-vs-inference-mode-vs-eval"><code>no_grad</code> vs <code>inference_mode</code> vs <code>eval</code></h3>
+<ul>
+<li><code>model.eval()</code> changes Dropout and BatchNorm behavior; it does <strong>not</strong> disable gradient tracking.</li>
+<li><code>torch.no_grad()</code> stops recording gradient operations within its scope; useful for validation and parameter updates.</li>
+<li><code>torch.inference_mode()</code> additionally disables some Autograd bookkeeping and can improve inference performance; tensors created there have restrictions when reused in gradient-tracked computations.</li>
+</ul>
+<pre><code class="language-python">model.eval()
+with torch.inference_mode():
+    logits = model(batch)
+    probabilities = torch.sigmoid(logits)
+</code></pre>
+<p><code>eval()</code> sets the model's training flag to false. <code>inference_mode()</code> disables Autograd-related work for the block. <code>model(batch)</code> runs a forward pass, and <code>sigmoid</code> converts binary logits to values between zero and one. These probabilities are not necessarily calibrated.</p>
+<h2 id="5-4-deriving-backpropagation-for-a-linear-layer">5.4 Deriving backpropagation for a linear layer</h2>
+<p>Let <code>Z = XW + b</code>, <code>A = ReLU(Z)</code> and scalar loss <code>L</code>. The chain rule yields <code>dL/dW = Xᵀ (dL/dZ)</code>, <code>dL/db = sum_batch(dL/dZ)</code> and <code>dL/dX = (dL/dZ)Wᵀ</code>. For ReLU, <code>dA/dZ</code> is 1 where <code>Z &gt; 0</code> and 0 where <code>Z &lt; 0</code> (PyTorch chooses 0 at exactly 0). With mean reduction, upstream gradients already contain the relevant averaging factor.</p>
+<pre><code class="language-python">x = torch.tensor([[2.0, -1.0]])
+layer = torch.nn.Linear(2, 1, bias=False)
+with torch.no_grad():
+    layer.weight.copy_(torch.tensor([[0.5, 0.25]]))
+output = layer(x)
+loss = output.square().mean()
+loss.backward()
+print(output.item())           # 0.75
+print(layer.weight.grad)       # tensor([[ 3.0000, -1.5000]])
+</code></pre>
+<p><code>Linear(2,1,bias=False)</code> defines one linear neuron with two weights. <code>no_grad</code> ensures the initialization assignment is not recorded in the computation graph. <code>copy_</code> replaces the parameter values. The output is <code>2(0.5) + (-1)(0.25) = 0.75</code>; loss is <code>0.75²</code>. Derivative <code>dL/dw = 2(output)x = 1.5[2,-1] = [3,-1.5]</code>.</p>
+<p><strong>Interview:</strong> Does <code>backward()</code> update parameters? No. It computes gradients. An optimizer such as SGD or Adam uses those gradients to update parameters.</p>
+<h2 id="5-5-gradient-checking-with-finite-differences">5.5 Gradient checking with finite differences</h2>
+<pre><code class="language-python">import torch
+w = torch.tensor(2.0, dtype=torch.float64, requires_grad=True)
+f = lambda v: (3 * v - 10) ** 2
+f(w).backward()
+eps = 1e-5
+with torch.no_grad():
+    numerical = (f(w + eps) - f(w - eps)) / (2 * eps)
+print(round(w.grad.item(), 5))   # -24.0
+print(round(numerical.item(), 5)) # -24.0
+</code></pre>
+<p><code>float64</code> reduces rounding error for numerical checks. The central-difference formula approximates the derivative by evaluating the loss at nearby weights. <code>no_grad</code> prevents the check from constructing another graph. Finite differences are slow for large models but valuable for testing custom derivatives. PyTorch also offers <code>torch.autograd.gradcheck</code> for suitable differentiable functions.</p>
+<h2 id="5-6-custom-pytorch-module-for-log-classification">5.6 Custom PyTorch module for log classification</h2>
+<pre><code class="language-python">import torch
+from torch import nn
+
+class LogMLP(nn.Module):
+    def __init__(self, input_features=6, hidden=32):
+        super().__init__()
+        self.layers = nn.Sequential(
+            nn.Linear(input_features, hidden),
+            nn.ReLU(),
+            nn.Linear(hidden, 16),
+            nn.ReLU(),
+            nn.Linear(16, 1)
+        )
+
+    def forward(self, features):
+        if features.ndim != 2 or features.shape[1] != 6:
+            raise ValueError('Expected [batch, 6] features')
+        return self.layers(features)
+
+model = LogMLP()
+print(sum(p.numel() for p in model.parameters())) # 769
+</code></pre>
+<p><code>nn.Module</code> provides parameter registration and integration with optimizers and serialization. <code>super().__init__()</code> initializes its base state. <code>nn.Sequential</code> applies layers in sequence. The <code>forward</code> shape check catches malformed API inputs before matrix multiplication. <code>numel()</code> counts tensor elements; parameter count is <code>(6×32+32)+(32×16+16)+(16×1+1)=769</code>.</p>
+<p><strong>Production consideration:</strong> Input shape validation is not enough: enforce numeric ranges, correct feature order, and the exact fitted scaler and aggregation window used during training.</p>
+<h2 id="5-7-dataset-and-dataloader-for-windowed-log-features">5.7 Dataset and DataLoader for windowed log features</h2>
+<pre><code class="language-python">import torch
+from torch.utils.data import Dataset, DataLoader
+
+class LogWindowDataset(Dataset):
+    def __init__(self, features, labels):
+        self.features = torch.as_tensor(features, dtype=torch.float32)
+        self.labels = torch.as_tensor(labels, dtype=torch.float32).reshape(-1, 1)
+        if self.features.ndim != 2 or self.features.shape[1] != 6:
+            raise ValueError('features must have shape [N,6]')
+        if len(self.features) != len(self.labels):
+            raise ValueError('feature/label count mismatch')
+
+    def __len__(self):
+        return len(self.labels)
+
+    def __getitem__(self, index):
+        return self.features[index], self.labels[index]
+
+features = torch.randn(100, 6)
+labels = torch.randint(0, 2, (100, 1))
+loader = DataLoader(LogWindowDataset(features, labels),
+                    batch_size=16, shuffle=True, num_workers=0)
+for batch_x, batch_y in loader:
+    print(batch_x.shape, batch_y.shape)
+    break
+# torch.Size([16, 6]) torch.Size([16, 1])
+</code></pre>
+<p><strong>Line by line:</strong> <code>Dataset</code> defines how to access one example; <code>DataLoader</code> batches examples and optionally shuffles or parallelizes fetching. <code>as_tensor</code> converts input arrays into tensors, potentially sharing memory when compatible. <code>reshape(-1,1)</code> ensures binary labels have shape <code>[N,1]</code>. <code>__len__</code> reports dataset size; <code>__getitem__</code> returns one feature/label pair. <code>batch_size=16</code> requests 16 examples per batch. <code>shuffle=True</code> randomizes example order; it does <strong>not</strong> prevent temporal leakage. <code>num_workers=0</code> performs loading in the main process, a good starting point for small datasets and debugging. The loop reads the first batch only.</p>
+<h3 id="time-aware-splitting-for-security-logs">Time-aware splitting for security logs</h3>
+<p>Do not randomly mix highly overlapping SSH time windows from the same host/source IP across training and testing: this leaks near-duplicate information. Prefer chronological train/validation/test splits, and consider grouping by host or source entity depending on your deployment goal. Fit scalers <strong>only on training data</strong>. Validate on a later period and test on a final untouched period.</p>
+<h3 id="iterable-datasets-for-live-logs">Iterable datasets for live logs</h3>
+<p><code>IterableDataset</code> can stream records, but each worker must shard its input to avoid duplicate events. Handle file rotation, checkpoints, backpressure, event-time ordering and at-least-once delivery explicitly. A real-time detector should aggregate events into fixed or sliding windows before inference; individual failed-login lines lack necessary context.</p>
+<h2 id="5-8-stable-training-loop-with-validation">5.8 Stable training loop with validation</h2>
+<pre><code class="language-python">import torch
+from torch import nn
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+model = LogMLP().to(device)
+criterion = nn.BCEWithLogitsLoss()
+optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3, weight_decay=1e-2)
+
+for epoch in range(5):
+    model.train()
+    total_loss = 0.0
+    for xb, yb in loader:
+        xb, yb = xb.to(device), yb.to(device)
+        optimizer.zero_grad(set_to_none=True)
+        logits = model(xb)
+        loss = criterion(logits, yb)
+        loss.backward()
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+        optimizer.step()
+        total_loss += loss.item() * xb.shape[0]
+    print(f'Epoch {epoch+1}: loss={total_loss/len(loader.dataset):.4f}')
+</code></pre>
+<p><code>device</code> selects a CUDA GPU if available, otherwise CPU. <code>model.to(device)</code> moves model parameters. <code>BCEWithLogitsLoss</code> accepts raw logits and combines sigmoid with binary cross-entropy stably. <code>AdamW</code> uses decoupled weight decay. <code>train()</code> enables training behavior. Each batch is transferred to the model device. <code>zero_grad(set_to_none=True)</code> clears old gradients. The forward pass computes logits; loss compares them with labels; backward computes gradients; clipping bounds the global gradient norm; <code>step()</code> updates weights. Multiplying mean batch loss by batch size and dividing by dataset length produces a sample-weighted epoch mean.</p>
+<p><strong>Important:</strong> This demo uses random features and random labels, so loss reduction does not imply security detection capability. Use meaningful labeled datasets and separate validation/test loaders before making performance claims.</p>
+<h2 id="5-9-cpu-cuda-and-mixed-precision">5.9 CPU, CUDA and mixed precision</h2>
+<pre><code class="language-python">print(torch.cuda.is_available())
+print(torch.cuda.device_count())
+if torch.cuda.is_available():
+    print(torch.cuda.get_device_name(0))
+</code></pre>
+<p><code>cuda.is_available()</code> tests whether a supported CUDA runtime/device is available. <code>device_count()</code> reports visible CUDA devices. <code>get_device_name(0)</code> identifies the first visible GPU. On a CPU-only Debian laptop, CUDA availability is typically <code>False</code>.</p>
+<p>For CUDA training, mixed precision can reduce memory use and accelerate supported operations:</p>
+<pre><code class="language-python">scaler = torch.amp.GradScaler('cuda', enabled=(device.type == 'cuda'))
+for xb, yb in loader:
+    xb, yb = xb.to(device), yb.to(device)
+    optimizer.zero_grad(set_to_none=True)
+    with torch.autocast(device_type=device.type,
+                        enabled=(device.type == 'cuda')):
+        loss = criterion(model(xb), yb)
+    scaler.scale(loss).backward()
+    scaler.unscale_(optimizer)
+    torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+    scaler.step(optimizer)
+    scaler.update()
+</code></pre>
+<p><code>autocast</code> selects lower-precision operations where appropriate. <code>GradScaler</code> scales the loss to reduce float16 gradient underflow; <code>unscale_</code> restores gradients before clipping. <code>scaler.step</code> skips unsafe updates if nonfinite gradients are detected; <code>update</code> adjusts the scale. On CPU this example disables scaling and autocast, so it behaves like ordinary training. Mixed precision is not automatically faster for every model/device.</p>
+<h2 id="5-10-profiling-and-bottleneck-diagnosis">5.10 Profiling and bottleneck diagnosis</h2>
+<pre><code class="language-python">from torch.profiler import profile, ProfilerActivity
+
+model.eval()
+example = torch.randn(64, 6, device=device)
+activities = [ProfilerActivity.CPU]
+if device.type == 'cuda':
+    activities.append(ProfilerActivity.CUDA)
+with profile(activities=activities, record_shapes=True) as prof:
+    with torch.inference_mode():
+        for _ in range(10):
+            model(example)
+print(prof.key_averages().table(sort_by='self_cpu_time_total', row_limit=10))
+</code></pre>
+<p>The profiler records selected CPU/GPU operations. <code>record_shapes</code> helps identify unexpectedly large tensors. <code>key_averages()</code> aggregates measurements, and the table sorts by CPU self time. Profiling adds overhead, so do not treat its times as unbiased production latency. Warm up the model before benchmarking, synchronize CUDA around manual timings, and report batch size, device and percentile latency.</p>
+<p><strong>Security-analytics performance scenario:</strong> If parsing syslog lines consumes more CPU than neural inference, adding a GPU will not fix the bottleneck. Profile parsing, aggregation, feature scaling and inference separately. Consider batch inference, compiled regexes, streaming aggregation and caching only after measurements.</p>
+<h2 id="5-11-production-reliability-and-security">5.11 Production reliability and security</h2>
+<ol>
+<li><strong>Model artifacts:</strong> Prefer trusted, versioned <code>state_dict</code> artifacts; use <code>torch.load(..., weights_only=True, map_location='cpu')</code>, verify artifact integrity and match the architecture.</li>
+<li><strong>Input contract:</strong> Version feature schema, scaler parameters, aggregation duration, timezone assumptions and missing-value behavior together with model weights.</li>
+<li><strong>Data privacy:</strong> Minimize raw usernames and source IPs in stored training datasets; apply retention and access controls.</li>
+<li><strong>Alert quality:</strong> Optimize precision, recall and false alerts per host/day, not only accuracy. Class imbalance makes accuracy misleading.</li>
+<li><strong>Drift:</strong> Track changes in feature distributions and false-positive feedback. Retraining requires evaluation and approval, not automatic trust in new data.</li>
+<li><strong>Failure modes:</strong> Have a rule-based fallback or queue/retry path if inference is unavailable. Decide explicitly whether the pipeline should fail open or closed.</li>
+<li><strong>Adversarial behavior:</strong> Attackers can adapt to detection thresholds. Use layered detections, analyst review and careful testing rather than treating neural predictions as proof of compromise.</li>
+</ol>
+<h2 id="5-12-troubleshooting-playbook">5.12 Troubleshooting playbook</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely cause</th>
+<th>Diagnostic step</th>
+<th>Corrective action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mat1 and mat2 shapes cannot be multiplied</code></td>
+<td>Feature dimension mismatch</td>
+<td>Print <code>xb.shape</code> and first layer dimensions</td>
+<td>Fix schema/shape; never silently truncate</td>
+</tr>
+<tr>
+<td><code>Expected all tensors to be on the same device</code></td>
+<td>CPU/GPU mismatch</td>
+<td>Print tensor and parameter <code>.device</code></td>
+<td>Move data and model to same device</td>
+</tr>
+<tr>
+<td><code>Trying to backward through the graph a second time</code></td>
+<td>Reusing freed graph</td>
+<td>Check retained <code>loss</code>/hidden state</td>
+<td>Recompute forward; detach state appropriately</td>
+</tr>
+<tr>
+<td><code>one of the variables needed ... modified by an inplace operation</code></td>
+<td>In-place mutation</td>
+<td>Enable anomaly detection for debugging</td>
+<td>Use out-of-place ops</td>
+</tr>
+<tr>
+<td>NaN loss</td>
+<td>Bad values, high LR, unstable operations</td>
+<td>Check <code>torch.isfinite</code> on inputs, loss, gradients</td>
+<td>Clean inputs; lower LR; stable losses</td>
+</tr>
+<tr>
+<td>GPU OOM</td>
+<td>Oversized batch or retained graph</td>
+<td>Track allocated/reserved memory</td>
+<td>Reduce batch, avoid storing attached tensors</td>
+</tr>
+<tr>
+<td>Excellent test score, poor real alerts</td>
+<td>Leakage, label bias or drift</td>
+<td>Audit chronological splits and label source</td>
+<td>Redesign evaluation and collect representative data</td>
+</tr>
+<tr>
+<td>Excess false positives</td>
+<td>Threshold/class imbalance/context</td>
+<td>Plot PR curve and alerts/day</td>
+<td>Calibrate threshold on validation set</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-13-interview-questions-and-answers">5.13 Interview questions and answers</h2>
+<p><strong>Q1. What is a tensor stride?</strong> Number of storage elements traversed when an index increments along an axis; views can change stride without copying storage.</p>
+<p><strong>Q2. Why can <code>view()</code> fail after transpose?</strong> A transposed tensor often has noncontiguous strides that cannot be represented by the requested view; <code>reshape</code> may copy.</p>
+<p><strong>Q3. What is a leaf tensor?</strong> A user-created tensor not produced by a recorded differentiable operation; leaf tensors with <code>requires_grad=True</code> accumulate gradients in <code>.grad</code>.</p>
+<p><strong>Q4. Why does PyTorch accumulate gradients?</strong> It supports contributions from multiple backward calls, including gradient accumulation across minibatches.</p>
+<p><strong>Q5. Explain the chain rule in backpropagation.</strong> Derivatives of composed operations multiply along paths, and contributions from multiple paths sum.</p>
+<p><strong>Q6. Difference between <code>eval()</code> and <code>inference_mode()</code>?</strong> The former changes module behavior; the latter disables gradient-related bookkeeping.</p>
+<p><strong>Q7. What does <code>BCEWithLogitsLoss</code> expect?</strong> Raw logits, not probabilities; it applies a numerically stable combination of sigmoid and binary cross-entropy.</p>
+<p><strong>Q8. Why prefer AdamW over naive L2 regularization in Adam?</strong> AdamW decouples weight decay from adaptive gradient updates.</p>
+<p><strong>Q9. Why might a GPU not accelerate a small MLP?</strong> Kernel-launch and transfer overhead can dominate tiny workloads; parsing and preprocessing may be the bottleneck.</p>
+<p><strong>Q10. How do you avoid data leakage in SSH detection?</strong> Use time-aware and possibly entity-aware splits, fit transformations only on training data, and isolate overlapping windows.</p>
+<p><strong>Q11. What is gradient clipping?</strong> Bounding gradient magnitude/norm to reduce extreme updates; it does not fix fundamentally bad labels or architectures.</p>
+<p><strong>Q12. What is the role of a DataLoader worker?</strong> It loads/transforms dataset samples in a separate process; multiprocessing overhead can exceed benefits for small datasets.</p>
+<p><strong>Q13. How do you diagnose an OOM?</strong> Measure batch shapes and allocated memory, inspect stored tensors with attached graphs, and adjust batch size/model or accumulation.</p>
+<p><strong>Q14. Why isn't classification accuracy enough for SOC alerts?</strong> With rare attacks, predicting normal for everything can have high accuracy but zero recall; alert volume and precision matter.</p>
+<p><strong>Q15. How would you validate a deployed detector?</strong> Evaluate on unseen future periods, monitor precision/recall and false-alert burden, shadow-test against rules, and establish rollback criteria.</p>
+<h2 id="5-14-practical-labs">5.14 Practical labs</h2>
+<p><strong>Lab A — Tensor layout:</strong> Run the transpose and indexing examples. Print <code>data_ptr()</code>, <code>stride()</code> and <code>is_contiguous()</code> before/after; explain when a copy occurs.</p>
+<p><strong>Lab B — Gradient audit:</strong> Derive <code>dL/dw</code> manually for three different <code>w</code> values and compare with Autograd and central finite differences.</p>
+<p><strong>Lab C — Model contracts:</strong> Change input features from six to five and observe the validation error; restore six features and count trainable parameters.</p>
+<p><strong>Lab D — Training pipeline:</strong> Train on a properly labeled synthetic SSH-window dataset with a chronological holdout. Report confusion matrix, precision, recall, PR-AUC and alerts per 1,000 windows. Document that synthetic metrics do not establish real-world efficacy.</p>
+<p><strong>Lab E — Performance:</strong> Benchmark batch sizes 1, 16, 64 and 256 on CPU. Compare end-to-end latency including feature creation to model-only latency, and explain the difference.</p>
+<h2 id="5-15-next-chapter">5.15 Next chapter</h2>
+<p><strong>Chapter 6 — Real SSH Log Ingestion and Feature Engineering:</strong> journald/auth.log ingestion, log rotation, source-IP grouping, event-time windows, malformed log handling, labeling strategy, realistic datasets, leakage-safe splitting and training-ready data exports.</p>
+</article></main><footer>ARTHA Gurukul · Source material preserved as educational notes</footer></body></html>

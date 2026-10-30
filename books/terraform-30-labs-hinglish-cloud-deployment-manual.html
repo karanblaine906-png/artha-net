@@ -1,0 +1,1874 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Terraform 30 Labs | ARTHA Gurukul</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><a class="brand" href="../index.html">✦ ARTHA GURUKUL</a><nav><a href="../index.html#courses">All Courses</a><a href="index.html">Source Library</a></nav></header><main class="book-layout"><aside class="book-toc"><div class="eyebrow">Original material · offline copy</div><h2>Terraform 30 Labs</h2><a href="../index.html">⌂ Course library</a><div class="toc"><a href="#terraform-zero-to-aws-cloud-deployment">Terraform Zero to AWS Cloud Deployment</a><a href="#hinglish-theory-command-workflows-practical-labs-troubleshooting-and-interview-p">Hinglish Theory, Command Workflows, Practical Labs, Troubleshooting and Interview Pre</a><a href="#course-roadmap">Course roadmap</a><a href="#chapter-1-terraform-kya-hai">Chapter 1 — Terraform kya hai?</a><a href="#workflow-and-internal-mechanism">Workflow and internal mechanism</a><a href="#chapter-2-install-terraform-on-debian-12">Chapter 2 — Install Terraform on Debian 12</a><a href="#important-file-names">Important file names</a><a href="#lab-1-your-first-terraform-resource-no-cloud-cost">Lab 1 — Your first Terraform resource (no cloud cost)</a><a href="#chapter-3-hcl-explained-line-by-line">Chapter 3 — HCL explained line by line</a><a href="#lab-2-variables-types-locals-functions-and-outputs">Lab 2 — Variables, types, locals, functions and outputs</a><a href="#chapter-4-state-and-dependency-graph">Chapter 4 — State and dependency graph</a><a href="#chapter-5-aws-setup-and-identity-verification">Chapter 5 — AWS setup and identity verification</a><a href="#lab-3-aws-vpc-public-subnet-ec2-nginx">Lab 3 — AWS VPC + public subnet + EC2 + Nginx</a><a href="#lab-4-reusable-modules">Lab 4 — Reusable modules</a><a href="#chapter-6-count-vs-for-each">Chapter 6 — count vs for_each</a><a href="#chapter-7-remote-state-on-s3-and-locking">Chapter 7 — Remote state on S3 and locking</a><a href="#chapter-8-import-drift-refactoring-and-state-operations">Chapter 8 — Import, drift, refactoring and state operations</a><a href="#chapter-9-environments-and-production-structure">Chapter 9 — Environments and production structure</a><a href="#chapter-10-terraform-with-ci-cd">Chapter 10 — Terraform with CI/CD</a><a href="#chapter-11-troubleshooting-playbook">Chapter 11 — Troubleshooting playbook</a><a href="#practical-diagnosis-web-server-unreachable">Practical diagnosis: web server unreachable</a><a href="#chapter-12-capstone-project-terraform-managed-aws-web-infrastructure">Chapter 12 — Capstone project: Terraform-managed AWS web infrastructure</a><a href="#chapter-13-interview-q-a-senior-devops-focus">Chapter 13 — Interview Q&amp;A (senior DevOps focus)</a><a href="#final-quick-reference-command-sheet">Final quick-reference command sheet</a><a href="#final-self-test">Final self-test</a><a href="#authoritative-references">Authoritative references</a><a href="#extended-practical-lab-workbook-labs-5-30">Extended Practical Lab Workbook — Labs 5–30</a><a href="#pre-flight-safety-and-aws-setup">Pre-flight safety and AWS setup</a><a href="#lab-5-terraform-lifecycle-and-saved-plans">Lab 5 — Terraform lifecycle and saved plans</a><a href="#lab-6-sensitive-variables-and-tfvars">Lab 6 — Sensitive variables and tfvars</a><a href="#lab-7-data-sources-and-outputs">Lab 7 — Data sources and outputs</a><a href="#lab-8-vpc-and-cidr-planning">Lab 8 — VPC and CIDR planning</a><a href="#lab-9-public-and-private-subnets">Lab 9 — Public and private subnets</a><a href="#lab-10-internet-gateway-and-routing">Lab 10 — Internet gateway and routing</a><a href="#lab-11-ec2-instance-and-user-data">Lab 11 — EC2 instance and user_data</a><a href="#lab-12-security-groups-and-least-privilege">Lab 12 — Security groups and least privilege</a><a href="#lab-13-iam-role-and-ec2-instance-profile">Lab 13 — IAM role and EC2 instance profile</a><a href="#lab-14-s3-bucket-and-versioning">Lab 14 — S3 bucket and versioning</a><a href="#lab-15-s3-backend-and-state-locking">Lab 15 — S3 backend and state locking</a><a href="#lab-16-module-design-and-composition">Lab 16 — Module design and composition</a><a href="#lab-17-for-each-and-count">Lab 17 — for_each and count</a><a href="#lab-18-nat-gateway-and-private-egress">Lab 18 — NAT Gateway and private egress</a><a href="#lab-19-application-load-balancer">Lab 19 — Application Load Balancer</a><a href="#lab-20-auto-scaling-group-and-launch-template">Lab 20 — Auto Scaling Group and launch template</a><a href="#lab-21-rds-postgresql-in-private-subnet">Lab 21 — RDS PostgreSQL in private subnet</a><a href="#lab-22-multi-environment-dev-and-prod">Lab 22 — Multi-environment dev and prod</a><a href="#lab-23-terraform-import-existing-resource">Lab 23 — Terraform import existing resource</a><a href="#lab-24-drift-detection-and-refresh-only">Lab 24 — Drift detection and refresh-only</a><a href="#lab-25-refactor-resources-with-moved-blocks">Lab 25 — Refactor resources with moved blocks</a><a href="#lab-26-terraform-validation-and-security-checks">Lab 26 — Terraform validation and security checks</a><a href="#lab-27-jenkins-ci-cd-terraform-pipeline">Lab 27 — Jenkins CI/CD Terraform pipeline</a><a href="#lab-28-recovery-from-state-mistakes">Lab 28 — Recovery from state mistakes</a><a href="#lab-29-troubleshooting-failure-scenarios">Lab 29 — Troubleshooting failure scenarios</a><a href="#lab-30-production-style-capstone-and-teardown">Lab 30 — Production-style capstone and teardown</a><a href="#final-capstone-acceptance-checklist">Final capstone acceptance checklist</a><a href="#useful-official-references">Useful official references</a></div></aside><article class="book-prose"><p class="source-note">Historical course notes converted into searchable offline HTML. Some content may be a draft; exercises requiring cloud accounts need credentials and may incur costs.</p><h1 id="terraform-zero-to-aws-cloud-deployment">Terraform Zero to AWS Cloud Deployment</h1>
+<h2 id="hinglish-theory-command-workflows-practical-labs-troubleshooting-and-interview-p">Hinglish Theory, Command Workflows, Practical Labs, Troubleshooting and Interview Preparation</h2>
+<p><strong>Audience:</strong> Linux / DevOps engineers moving from Terraform basics to practical AWS provisioning.<br/>
+<strong>Platform:</strong> Debian 12 or comparable Linux, Terraform CLI, AWS CLI, AWS account.<br/>
+<strong>Time:</strong> 10–14 days, ~2–4 hours/day.<br/>
+<strong>Outcome:</strong> Write, plan, deploy, inspect, modify, and safely remove AWS infrastructure using reusable Terraform configurations.</p>
+<blockquote>
+<p><strong>Cost &amp; security:</strong> AWS resources can incur charges, including EC2, public IPv4 addresses, NAT gateways, load balancers and data transfer. Use a dedicated learning account, configure billing alerts, and run <code>terraform destroy</code> after each lab. Do not commit secrets, state files, <code>.terraform/</code>, or credential files. Never run an unfamiliar <code>apply</code> or <code>destroy</code> without inspecting the plan.</p>
+</blockquote>
+<hr/>
+<h1 id="course-roadmap">Course roadmap</h1>
+<table>
+<thead>
+<tr>
+<th>Day</th>
+<th>Topics</th>
+<th>Hands-on deliverable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>IaC, HCL, CLI, provider, resource</td>
+<td>Local file lab</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Variables, outputs, locals, types, functions</td>
+<td>Parameterized local project</td>
+</tr>
+<tr>
+<td>3</td>
+<td>State, refresh, plan, drift, lifecycle</td>
+<td>State inspection and change lab</td>
+</tr>
+<tr>
+<td>4</td>
+<td>AWS credentials and providers</td>
+<td>AWS identity verification</td>
+</tr>
+<tr>
+<td>5</td>
+<td>VPC, subnet, routes, IGW, SG</td>
+<td>Public subnet networking</td>
+</tr>
+<tr>
+<td>6</td>
+<td>EC2, user data, outputs</td>
+<td>Running Nginx web server</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Modules and <code>for_each</code></td>
+<td>Reusable infrastructure</td>
+</tr>
+<tr>
+<td>8</td>
+<td>S3 remote backend, locking, state safety</td>
+<td>Remote state migration</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Environments, import, moved blocks</td>
+<td>Refactor without replacement</td>
+</tr>
+<tr>
+<td>10</td>
+<td>CI/CD, plan artifacts, policy, security</td>
+<td>Pipeline workflow</td>
+</tr>
+<tr>
+<td>11–12</td>
+<td>Troubleshooting and production design</td>
+<td>Capstone and runbook</td>
+</tr>
+<tr>
+<td>13–14</td>
+<td>Interview questions and revision</td>
+<td>Mock interview</td>
+</tr>
+</tbody>
+</table>
+<h1 id="chapter-1-terraform-kya-hai">Chapter 1 — Terraform kya hai?</h1>
+<p>Terraform ek <strong>Infrastructure as Code (IaC)</strong> tool hai. Matlab AWS console par manually click karke VPC/EC2 create karne ke bajay hum infrastructure ko declarative configuration files (<code>.tf</code>) mein describe karte hain.</p>
+<p><strong>Imperative vs declarative:</strong> Imperative mein aap bolte ho <em>kaise</em> karna hai: <code>create subnet</code>, <code>create route</code>. Declarative mein aap bolte ho <em>desired result</em> kya hai: <code>aws_subnet</code> resource with specified CIDR. Terraform provider APIs use karke current infrastructure ko desired configuration ke saath reconcile karta hai.</p>
+<p><strong>Core pieces:</strong></p>
+<ul>
+<li><strong>Terraform CLI/core:</strong> Parses HCL, resolves dependency graph, computes changes, and coordinates execution.</li>
+<li><strong>Provider:</strong> Plugin that communicates with external APIs, e.g., <code>hashicorp/aws</code>, <code>hashicorp/local</code>.</li>
+<li><strong>Resource:</strong> Managed infrastructure object, e.g., <code>aws_vpc.main</code>.</li>
+<li><strong>Data source:</strong> Reads existing external information without managing its lifecycle.</li>
+<li><strong>State:</strong> Terraform's mapping of resource addresses to real objects and recorded attributes; it can contain sensitive information.</li>
+<li><strong>Module:</strong> A folder of Terraform configuration. Every project has a root module; reusable child modules are invoked with <code>module</code> blocks.</li>
+<li><strong>Backend:</strong> Storage mechanism for Terraform state; may support locking.</li>
+</ul>
+<h2 id="workflow-and-internal-mechanism">Workflow and internal mechanism</h2>
+<pre><code class="language-text">main.tf / variables.tf / outputs.tf
+              |
+              v
+      terraform init
+      providers + modules + backend
+              |
+              v
+      terraform validate
+      syntax + configuration consistency
+              |
+              v
+      terraform plan
+      read state + query provider APIs
+      build dependency graph + diff
+              |
+              v
+      human reviews changes
+              |
+              v
+      terraform apply
+      call cloud APIs in dependency order
+              |
+              v
+      update Terraform state
+              |
+              v
+      terraform output / AWS verification
+</code></pre>
+<p>Terraform is not a full configuration management system: use cloud-init, Ansible, images, or Kubernetes for substantial application configuration.</p>
+<h1 id="chapter-2-install-terraform-on-debian-12">Chapter 2 — Install Terraform on Debian 12</h1>
+<p>Run in <strong>Debian terminal</strong>. Prefer the official HashiCorp apt repository. The commands below use Debian's standard GPG/keyring flow; verify the current instructions at <a href="https://developer.hashicorp.com/terraform/install">https://developer.hashicorp.com/terraform/install</a> before installing.</p>
+<pre><code class="language-bash">sudo apt-get update
+sudo apt-get install -y gnupg software-properties-common curl ca-certificates
+wget -O- https://apt.releases.hashicorp.com/gpg | \
+  gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg &gt;/dev/null
+printf 'deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com %s main\n' \
+  "$(. /etc/os-release &amp;&amp; echo "$VERSION_CODENAME")" | \
+  sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt-get update
+sudo apt-get install -y terraform
+terraform version
+terraform -help
+</code></pre>
+<p>If <code>wget</code> is missing: <code>sudo apt-get install -y wget</code>. Never use <code>curl | sudo bash</code> from an unverified source.</p>
+<h2 id="important-file-names">Important file names</h2>
+<pre><code class="language-text">terraform-project/
+├── versions.tf        # Terraform and provider version constraints
+├── providers.tf       # Provider configuration
+├── main.tf            # Resources and data sources
+├── variables.tf       # Input variable declarations
+├── terraform.tfvars   # Non-secret variable values (optional)
+├── outputs.tf         # Outputs
+├── .terraform.lock.hcl # Selected provider versions; commit to Git
+└── .gitignore
+</code></pre>
+<p>Terraform loads all <code>.tf</code> files in the same directory together. File names are conventions, not execution order.</p>
+<h1 id="lab-1-your-first-terraform-resource-no-cloud-cost">Lab 1 — Your first Terraform resource (no cloud cost)</h1>
+<p><strong>Goal:</strong> Use Terraform to create a file on your local machine. <strong>Where:</strong> Debian terminal.</p>
+<pre><code class="language-bash">mkdir -p ~/terraform-course/lab01-local
+cd ~/terraform-course/lab01-local
+cat &gt; main.tf &lt;&lt;'HCL'
+terraform {
+  required_providers {
+    local = {
+      source  = "hashicorp/local"
+      version = "~&gt; 2.5"
+    }
+  }
+}
+
+resource "local_file" "hello" {
+  filename = "${path.module}/hello.txt"
+  content  = "Hello from Terraform!\n"
+}
+
+output "file_path" {
+  value = local_file.hello.filename
+}
+HCL
+terraform fmt
+terraform init
+terraform validate
+terraform plan
+terraform apply
+cat hello.txt
+terraform output
+terraform state list
+terraform destroy
+</code></pre>
+<p><strong>Expected conceptual output:</strong> Plan shows <code>+ create</code> for <code>local_file.hello</code>; after apply, <code>hello.txt</code> exists; destroy removes the managed file.</p>
+<p><strong>Command workflow:</strong></p>
+<ul>
+<li><code>fmt</code>: normalizes HCL formatting; does not deploy.</li>
+<li><code>init</code>: downloads provider plugin, writes <code>.terraform.lock.hcl</code>; does not create your managed resources.</li>
+<li><code>validate</code>: checks configuration validity; does not guarantee AWS permissions or runtime success.</li>
+<li><code>plan</code>: calculates intended actions; may query remote APIs; does not apply changes.</li>
+<li><code>apply</code>: executes proposed actions after approval; <code>-auto-approve</code> bypasses interactive approval and is risky.</li>
+<li><code>state list</code>: shows addresses Terraform manages.</li>
+<li><code>destroy</code>: plans and deletes managed resources; always inspect first.</li>
+</ul>
+<p><strong>Try it:</strong> Change file content, run <code>terraform plan</code>, note <code>~ update</code> or replacement according to provider behavior, and apply again.</p>
+<h1 id="chapter-3-hcl-explained-line-by-line">Chapter 3 — HCL explained line by line</h1>
+<pre><code class="language-hcl">resource "local_file" "hello" {
+  filename = "${path.module}/hello.txt"
+  content  = "Hello from Terraform!\n"
+}
+</code></pre>
+<ul>
+<li><code>resource</code>: managed object declaration.</li>
+<li><code>"local_file"</code>: resource <strong>type</strong> defined by local provider.</li>
+<li><code>"hello"</code>: local <strong>name</strong>, forming address <code>local_file.hello</code>.</li>
+<li><code>{ ... }</code>: block body.</li>
+<li><code>filename</code>: argument expected by provider.</li>
+<li><code>path.module</code>: built-in reference to current module directory.</li>
+<li><code>content</code>: desired file contents.</li>
+</ul>
+<p><strong>References create dependencies.</strong> If resource B refers to <code>aws_vpc.main.id</code>, Terraform knows B depends on A. <code>depends_on</code> is for dependencies Terraform cannot infer from expressions.</p>
+<h1 id="lab-2-variables-types-locals-functions-and-outputs">Lab 2 — Variables, types, locals, functions and outputs</h1>
+<pre><code class="language-bash">mkdir -p ~/terraform-course/lab02-variables
+cd ~/terraform-course/lab02-variables
+cat &gt; main.tf &lt;&lt;'HCL'
+terraform {
+  required_providers {
+    local = { source = "hashicorp/local", version = "~&gt; 2.5" }
+  }
+}
+
+variable "environment" {
+  type        = string
+  description = "Deployment environment"
+  default     = "dev"
+  validation {
+    condition     = contains(["dev", "test", "prod"], var.environment)
+    error_message = "environment must be dev, test or prod"
+  }
+}
+
+variable "owners" {
+  type    = list(string)
+  default = ["platform", "security"]
+}
+
+locals {
+  app_name = "web-${var.environment}"
+  message  = "App=${local.app_name}; Owners=${join(",", var.owners)}\n"
+}
+
+resource "local_file" "config" {
+  filename = "${path.module}/config.txt"
+  content  = local.message
+}
+
+output "app_name" {
+  value = local.app_name
+}
+HCL
+terraform init
+terraform plan -var='environment=test'
+terraform apply -var='environment=test'
+cat config.txt
+terraform destroy -var='environment=test'
+</code></pre>
+<p><strong>Theory:</strong> <code>var.environment</code> reads an input; <code>local.app_name</code> computes an internal value; <code>output</code> exposes a result. <code>list(string)</code> is an ordered list. Other useful types: <code>number</code>, <code>bool</code>, <code>set(string)</code>, <code>map(string)</code>, <code>object({ name=string, port=number })</code>. <code>for_each</code> works with maps or sets of strings; <code>count</code> uses numeric indices.</p>
+<p><strong>Variable precedence (practical overview):</strong> defaults, environment variables <code>TF_VAR_name</code>, <code>terraform.tfvars</code> / <code>.auto.tfvars</code>, and explicit <code>-var</code> / <code>-var-file</code> overrides. See official docs for full precedence and same-level ordering.</p>
+<p><strong>Secrets warning:</strong> <code>sensitive = true</code> hides values in normal CLI presentation but does not necessarily prevent storage in state or plan files. Prefer temporary credentials, secret managers and secure state access.</p>
+<h1 id="chapter-4-state-and-dependency-graph">Chapter 4 — State and dependency graph</h1>
+<p>Terraform state records resource addresses, object IDs, attributes and metadata. It is <strong>not</strong> simply a copy of your <code>.tf</code> files. Never hand-edit state JSON.</p>
+<pre><code class="language-bash">terraform state list
+terraform state show local_file.config
+terraform show
+terraform plan -out=review.tfplan
+terraform show review.tfplan
+</code></pre>
+<p><strong>Plan files can contain secrets</strong>; protect and delete them after use. <code>terraform state show</code> may reveal sensitive attributes. <code>terraform refresh</code> is deprecated in modern workflows; prefer <code>terraform plan -refresh-only</code> and review before <code>terraform apply -refresh-only</code> when appropriate.</p>
+<p><strong>Drift example:</strong> Manually edit the local managed file. Run <code>terraform plan</code>. Terraform will detect the discrepancy and propose reconciliation (exact action depends on provider).</p>
+<p><strong>Lifecycle concepts:</strong> <code>create_before_destroy</code>, <code>prevent_destroy</code>, <code>ignore_changes</code>. These are specialized tools, not substitutes for careful planning. <code>ignore_changes</code> can hide meaningful drift.</p>
+<h1 id="chapter-5-aws-setup-and-identity-verification">Chapter 5 — AWS setup and identity verification</h1>
+<p><strong>Goal:</strong> Provision AWS infrastructure from Debian using credentials safely.</p>
+<ol>
+<li>Create or select a dedicated learning AWS account and a least-privilege IAM principal. Avoid using root access keys.</li>
+<li>Prefer short-lived credentials via AWS IAM Identity Center (SSO) or an assumed role. Do not paste credentials into <code>.tf</code>.</li>
+<li>Install AWS CLI v2 following <a href="https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html">https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html</a> and verify:</li>
+</ol>
+<pre><code class="language-bash">aws --version
+aws configure sso --profile terraform-lab
+aws sso login --profile terraform-lab
+aws sts get-caller-identity --profile terraform-lab
+export AWS_PROFILE=terraform-lab
+export AWS_REGION=ap-south-1
+</code></pre>
+<p>If your account does not use SSO, ask the account administrator for an appropriate temporary role-based access method. Verify <code>aws sts get-caller-identity</code> before running Terraform.</p>
+<p><strong>Permissions:</strong> VPC, subnets, route tables, IGW, security groups, EC2 instance operations, describe/read actions and (for later remote state) S3 permissions. IAM permissions vary with lab scope; use a dedicated scoped role and avoid <code>AdministratorAccess</code> in shared/production accounts.</p>
+<h1 id="lab-3-aws-vpc-public-subnet-ec2-nginx">Lab 3 — AWS VPC + public subnet + EC2 + Nginx</h1>
+<p><strong>Architecture</strong></p>
+<pre><code class="language-text">Internet
+   |
+Internet Gateway
+   |
+VPC 10.20.0.0/16
+   |
+Public subnet 10.20.1.0/24
+   |
+Route table: 0.0.0.0/0 -&gt; IGW
+   |
+Security group: HTTP 80 from internet; SSH not opened
+   |
+EC2 Amazon Linux 2023 -&gt; Nginx via user_data
+</code></pre>
+<p><strong>Cost:</strong> EC2, EBS and public IPv4 may incur charges. Check region and pricing before apply. Use a short-lived lab, do not deploy if budget cannot tolerate charges.</p>
+<pre><code class="language-bash">mkdir -p ~/terraform-course/lab03-aws-web
+cd ~/terraform-course/lab03-aws-web
+cat &gt; versions.tf &lt;&lt;'HCL'
+terraform {
+  required_version = "&gt;= 1.5.0"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~&gt; 5.0"
+    }
+  }
+}
+HCL
+cat &gt; variables.tf &lt;&lt;'HCL'
+variable "aws_region" {
+  type    = string
+  default = "ap-south-1"
+}
+variable "project" {
+  type    = string
+  default = "tf-crash-lab"
+}
+variable "instance_type" {
+  type    = string
+  default = "t3.micro"
+}
+HCL
+cat &gt; main.tf &lt;&lt;'HCL'
+provider "aws" {
+  region = var.aws_region
+  default_tags {
+    tags = { Project = var.project, ManagedBy = "Terraform", Environment = "lab" }
+  }
+}
+
+data "aws_ami" "al2023" {
+  most_recent = true
+  owners      = ["amazon"]
+  filter {
+    name   = "name"
+    values = ["al2023-ami-2023.*-x86_64"]
+  }
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
+
+resource "aws_vpc" "main" {
+  cidr_block           = "10.20.0.0/16"
+  enable_dns_support   = true
+  enable_dns_hostnames = true
+  tags = { Name = "${var.project}-vpc" }
+}
+
+resource "aws_subnet" "public" {
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.20.1.0/24"
+  map_public_ip_on_launch = true
+  tags = { Name = "${var.project}-public" }
+}
+
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.main.id
+  tags   = { Name = "${var.project}-igw" }
+}
+
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.main.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.igw.id
+  }
+  tags = { Name = "${var.project}-public-rt" }
+}
+
+resource "aws_route_table_association" "public" {
+  subnet_id      = aws_subnet.public.id
+  route_table_id = aws_route_table.public.id
+}
+
+resource "aws_security_group" "web" {
+  name_prefix = "${var.project}-web-"
+  description = "Allow inbound HTTP only"
+  vpc_id      = aws_vpc.main.id
+  ingress {
+    description = "HTTP for demonstration"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  tags = { Name = "${var.project}-web-sg" }
+}
+
+resource "aws_instance" "web" {
+  ami                         = data.aws_ami.al2023.id
+  instance_type               = var.instance_type
+  subnet_id                   = aws_subnet.public.id
+  vpc_security_group_ids      = [aws_security_group.web.id]
+  associate_public_ip_address = true
+  metadata_options {
+    http_tokens = "required"
+  }
+  root_block_device {
+    volume_type = "gp3"
+    encrypted   = true
+  }
+  user_data = &lt;&lt;-EOF_USERDATA
+    #!/bin/bash
+    set -euxo pipefail
+    dnf install -y nginx
+    echo 'Hello from Terraform on AWS' &gt; /usr/share/nginx/html/index.html
+    systemctl enable --now nginx
+  EOF_USERDATA
+  tags = { Name = "${var.project}-web" }
+}
+HCL
+cat &gt; outputs.tf &lt;&lt;'HCL'
+output "vpc_id" {
+  value = aws_vpc.main.id
+}
+output "instance_id" {
+  value = aws_instance.web.id
+}
+output "web_url" {
+  value = "http://${aws_instance.web.public_ip}"
+}
+HCL
+cat &gt; .gitignore &lt;&lt;'EOF_GIT'
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+crash.*.log
+*.tfvars
+!example.tfvars
+EOF_GIT
+terraform fmt -recursive
+terraform init
+terraform validate
+terraform plan -out=lab.tfplan
+terraform show lab.tfplan
+terraform apply lab.tfplan
+terraform output web_url
+</code></pre>
+<p><strong>Check in browser:</strong> Open the URL shown by <code>terraform output -raw web_url</code>. Initial EC2 user data may take 1–3 minutes. HTTP is deliberately unencrypted for a temporary lab; do not use this architecture for production.</p>
+<p><strong>CLI verification:</strong></p>
+<pre><code class="language-bash">aws ec2 describe-instances \
+  --instance-ids "$(terraform output -raw instance_id)" \
+  --query 'Reservations[].Instances[].{State:State.Name,IP:PublicIpAddress}' \
+  --output table
+curl -I "$(terraform output -raw web_url)"
+terraform state list
+terraform graph &gt; graph.dot
+</code></pre>
+<p><strong>Cleanup (mandatory):</strong></p>
+<pre><code class="language-bash">terraform plan -destroy
+terraform destroy
+aws ec2 describe-instances --filters Name=tag:Project,Values=tf-crash-lab \
+  --query 'Reservations[].Instances[].{ID:InstanceId,State:State.Name}' --output table
+</code></pre>
+<p><strong>Why the command sequence matters:</strong> <code>init</code> installs provider and sets backend, <code>validate</code> checks syntax, <code>plan -out</code> freezes a reviewed proposal, <code>apply lab.tfplan</code> applies that saved proposal (subject to possible failures if real infrastructure changed), <code>output</code> reads computed state values, <code>destroy</code> removes managed resources. Never assume destroy succeeded until you check AWS.</p>
+<p><strong>Line-by-line key ideas:</strong> <code>data "aws_ami"</code> discovers an AMI, <code>aws_vpc.main.id</code> creates implicit dependency, <code>map_public_ip_on_launch</code> makes subnet eligible for public IPs, <code>0.0.0.0/0</code> route points internet traffic to IGW, SG ingress allows only TCP 80, <code>user_data</code> bootstraps Nginx, and <code>metadata_options.http_tokens = "required"</code> enforces IMDSv2.</p>
+<h1 id="lab-4-reusable-modules">Lab 4 — Reusable modules</h1>
+<p>A module groups reusable infrastructure. Structure:</p>
+<pre><code class="language-text">lab04-modules/
+├── main.tf
+├── variables.tf
+└── modules/
+    └── network/
+        ├── main.tf
+        ├── variables.tf
+        └── outputs.tf
+</code></pre>
+<p><strong>Child module</strong> <code>modules/network/variables.tf</code>:</p>
+<pre><code class="language-hcl">variable "cidr" { type = string }
+variable "name" { type = string }
+</code></pre>
+<p><code>modules/network/main.tf</code>:</p>
+<pre><code class="language-hcl">resource "aws_vpc" "this" {
+  cidr_block = var.cidr
+  tags       = { Name = var.name }
+}
+</code></pre>
+<p><code>modules/network/outputs.tf</code>:</p>
+<pre><code class="language-hcl">output "vpc_id" { value = aws_vpc.this.id }
+</code></pre>
+<p><strong>Root</strong> <code>main.tf</code> (with AWS provider configured as in Lab 3):</p>
+<pre><code class="language-hcl">module "network" {
+  source = "./modules/network"
+  cidr   = "10.30.0.0/16"
+  name   = "training-vpc"
+}
+output "network_vpc_id" { value = module.network.vpc_id }
+</code></pre>
+<p>Run <code>terraform init</code>, <code>terraform plan</code>, <code>terraform apply</code>, <code>terraform output</code>, then <code>terraform destroy</code>.</p>
+<p><strong>Difference:</strong> <code>module.network.vpc_id</code> is a child module output, while <code>aws_vpc.this.id</code> is a resource attribute inside that module.</p>
+<h1 id="chapter-6-count-vs-for-each">Chapter 6 — <code>count</code> vs <code>for_each</code></h1>
+<pre><code class="language-hcl">variable "subnets" {
+  type = map(string)
+  default = {
+    app = "10.30.1.0/24"
+    ops = "10.30.2.0/24"
+  }
+}
+
+resource "aws_subnet" "named" {
+  for_each   = var.subnets
+  vpc_id     = module.network.vpc_id
+  cidr_block = each.value
+  tags       = { Name = each.key }
+}
+</code></pre>
+<p><code>for_each</code> gives stable addresses like <code>aws_subnet.named["app"]</code>; <code>count</code> creates indexed addresses like <code>aws_subnet.named[0]</code>. Use stable keys for long-lived resources. For AWS subnet creation, CIDRs must not overlap, and each subnet belongs to one AZ.</p>
+<h1 id="chapter-7-remote-state-on-s3-and-locking">Chapter 7 — Remote state on S3 and locking</h1>
+<p><strong>Why:</strong> Local <code>terraform.tfstate</code> on one laptop creates collaboration and loss risks. An S3 backend stores state centrally. For current Terraform releases, S3 native locking can use <code>use_lockfile = true</code> (check installed Terraform backend support). Older guides often show DynamoDB locking, which is deprecated for this backend in current documentation.</p>
+<p><strong>Bootstrap:</strong> Create a private, versioned S3 bucket <strong>separately</strong> (through a dedicated bootstrap Terraform stack or approved admin process). Ensure bucket name is globally unique; configure encryption, block public access, bucket versioning and restricted IAM. Never put the state bucket under the same state that depends on it without a deliberate bootstrap design.</p>
+<pre><code class="language-hcl">terraform {
+  backend "s3" {
+    bucket       = "REPLACE-WITH-YOUR-UNIQUE-STATE-BUCKET"
+    key          = "terraform-course/dev/terraform.tfstate"
+    region       = "ap-south-1"
+    encrypt      = true
+    use_lockfile = true
+  }
+}
+</code></pre>
+<p><strong>Migration:</strong> Add backend block after creating bucket, then run:</p>
+<pre><code class="language-bash">terraform init -migrate-state
+terraform state list
+terraform plan
+</code></pre>
+<p><strong>Important:</strong> Backends do not accept normal <code>var.*</code> interpolation. Use partial backend config or separate backend config files when appropriate. State contains sensitive data; restrict read/write, enable versioning, audit access and test recovery. The <code>.tflock</code> object requires appropriate S3 permissions. Never manually delete a lock without establishing that no operation is active.</p>
+<h1 id="chapter-8-import-drift-refactoring-and-state-operations">Chapter 8 — Import, drift, refactoring and state operations</h1>
+<p><strong>Scenario:</strong> Existing VPC was created manually. To bring it under Terraform management, write matching resource configuration and use an import block:</p>
+<pre><code class="language-hcl">import {
+  to = aws_vpc.imported
+  id = "vpc-REPLACE_WITH_REAL_ID"
+}
+resource "aws_vpc" "imported" {
+  cidr_block = "10.50.0.0/16"
+}
+</code></pre>
+<p>Run <code>terraform plan</code>, review all proposed changes, then <code>terraform apply</code>. The resource config must match reality or Terraform may plan modifications. You can also use <code>terraform import aws_vpc.imported vpc-...</code> with the resource configuration present.</p>
+<p><strong>Refactor without recreation:</strong></p>
+<pre><code class="language-hcl">moved {
+  from = aws_vpc.old
+  to   = aws_vpc.main
+}
+</code></pre>
+<p>A <code>moved</code> block communicates a resource address change to Terraform. For complex refactors and shared modules, test the plan in a nonproduction environment.</p>
+<p><strong>Commands and cautions:</strong></p>
+<ul>
+<li><code>terraform state list</code>: enumerate managed objects.</li>
+<li><code>terraform state show ADDRESS</code>: inspect one object.</li>
+<li><code>terraform state mv OLD NEW</code>: move state address; prefer declarative <code>moved</code> blocks for versioned refactors.</li>
+<li><code>terraform state rm ADDRESS</code>: <strong>stops managing</strong> an object without deleting it; can create orphaned infrastructure.</li>
+<li><code>terraform apply -replace=ADDRESS</code>: deliberately replace one resource; check downtime and data loss.</li>
+<li><code>terraform plan -refresh-only</code>: inspect remote drift in recorded state.</li>
+</ul>
+<h1 id="chapter-9-environments-and-production-structure">Chapter 9 — Environments and production structure</h1>
+<pre><code class="language-text">infrastructure/
+├── modules/
+│   ├── network/
+│   ├── compute/
+│   └── security/
+├── environments/
+│   ├── dev/
+│   │   ├── main.tf
+│   │   └── backend.tf
+│   └── prod/
+│       ├── main.tf
+│       └── backend.tf
+└── README.md
+</code></pre>
+<p><strong>Best practice:</strong> Separate state keys, credentials, approval controls and blast radius for dev/prod. A single state should not own unrelated environments. Use version-pinned modules and providers, code review, protected branches and least-privilege CI roles. Workspaces can help with identical deployments but are not a substitute for strong production isolation.</p>
+<p><strong>Production architecture concept:</strong> Multi-AZ VPC, public subnets for ALB, private app subnets, private database subnets, tightly scoped SGs, TLS/ACM, logging/monitoring, backup, tagging, and policy checks. This crash course does not automatically deploy a production-grade design; the single-EC2 lab is intentionally simpler.</p>
+<h1 id="chapter-10-terraform-with-ci-cd">Chapter 10 — Terraform with CI/CD</h1>
+<pre><code class="language-text">Developer PR
+    |
+terraform fmt -check + init + validate
+    |
+Security / policy checks
+    |
+terraform plan -out=tfplan
+    |
+Human review / approval
+    |
+Apply approved plan in trusted runner
+    |
+Post-deploy health check + audit
+</code></pre>
+<p><strong>Example GitHub Actions validation workflow</strong> (safe, no cloud apply):</p>
+<pre><code class="language-yaml">name: Terraform checks
+on:
+  pull_request:
+    paths: ['infra/**']
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: infra
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - run: terraform fmt -check -recursive
+      - run: terraform init -backend=false
+      - run: terraform validate
+</code></pre>
+<p>For cloud plans, configure GitHub OIDC to assume a scoped AWS IAM role; never store permanent AWS access keys in repository secrets if role federation is available. Pin third-party actions to reviewed commit SHAs for high-assurance production pipelines. Treat plan artifacts as sensitive, protect environment approvals, and ensure apply executes only the reviewed plan.</p>
+<h1 id="chapter-11-troubleshooting-playbook">Chapter 11 — Troubleshooting playbook</h1>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely reason</th>
+<th>Investigation</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>terraform: command not found</code></td>
+<td>CLI not installed / PATH</td>
+<td><code>command -v terraform</code></td>
+<td>Install and verify PATH</td>
+</tr>
+<tr>
+<td>Provider install fails</td>
+<td>Proxy, DNS, TLS, registry blocked</td>
+<td><code>terraform init</code>, proxy settings, network</td>
+<td>Fix approved network/proxy configuration</td>
+</tr>
+<tr>
+<td><code>NoCredentialProviders</code> / credentials error</td>
+<td>No valid AWS identity</td>
+<td><code>aws sts get-caller-identity</code></td>
+<td>Login with correct profile/role</td>
+</tr>
+<tr>
+<td><code>AccessDenied</code></td>
+<td>IAM/SCP/bucket policy</td>
+<td>AWS error + CloudTrail</td>
+<td>Add only necessary permission via admin</td>
+</tr>
+<tr>
+<td>Invalid AMI</td>
+<td>Region/architecture mismatch</td>
+<td><code>aws ec2 describe-images</code></td>
+<td>Use valid regional AMI data source</td>
+</tr>
+<tr>
+<td>EC2 launches but HTTP fails</td>
+<td>Nginx startup, route, SG, user data</td>
+<td><code>curl</code>, EC2 console logs, SSM</td>
+<td>Inspect boot logs, route table and SG</td>
+</tr>
+<tr>
+<td>State lock error</td>
+<td>Concurrent operation or stale lock</td>
+<td>Check running jobs and lock holder</td>
+<td>Wait; force-unlock only with certainty</td>
+</tr>
+<tr>
+<td>Unexpected replacement</td>
+<td>Immutable argument / changed keys</td>
+<td><code>terraform plan</code> details</td>
+<td>Correct config or plan maintenance window</td>
+</tr>
+<tr>
+<td>Resource already exists</td>
+<td>Outside-Terraform object</td>
+<td>AWS console/CLI, state list</td>
+<td>Import existing object if appropriate</td>
+</tr>
+<tr>
+<td><code>Dependency cycle</code></td>
+<td>Circular references</td>
+<td><code>terraform graph</code></td>
+<td>Break cycle or redesign dependencies</td>
+</tr>
+<tr>
+<td>Quota exceeded</td>
+<td>Account limits</td>
+<td>AWS service quotas</td>
+<td>Clean resources / request approved quota</td>
+</tr>
+<tr>
+<td><code>destroy</code> fails</td>
+<td>Dependency or permissions</td>
+<td>Error, AWS API, state list</td>
+<td>Resolve root cause, rerun safely</td>
+</tr>
+</tbody>
+</table>
+<h2 id="practical-diagnosis-web-server-unreachable">Practical diagnosis: web server unreachable</h2>
+<pre><code class="language-bash">terraform output -raw web_url
+curl -v "$(terraform output -raw web_url)"
+aws ec2 describe-instances --instance-ids "$(terraform output -raw instance_id)" \
+  --query 'Reservations[].Instances[].{State:State.Name,IP:PublicIpAddress,Subnet:SubnetId}'
+aws ec2 describe-route-tables --filters Name=vpc-id,Values="$(terraform output -raw vpc_id)"
+</code></pre>
+<p>Then check EC2 status checks, security group port 80, public IP assignment, internet gateway, and boot/user-data logs. For deeper inspection, prefer AWS Systems Manager Session Manager with an appropriately configured instance role, agent and network path; the basic lab does <strong>not</strong> provision SSM permissions, so Session Manager will not work automatically.</p>
+<h1 id="chapter-12-capstone-project-terraform-managed-aws-web-infrastructure">Chapter 12 — Capstone project: Terraform-managed AWS web infrastructure</h1>
+<p><strong>Deliverables:</strong></p>
+<ol>
+<li>A Git repository with <code>versions.tf</code>, <code>providers.tf</code>, <code>variables.tf</code>, <code>main.tf</code>, <code>outputs.tf</code>, README and <code>.gitignore</code>.</li>
+<li>VPC <code>10.20.0.0/16</code>, public subnet, IGW, route table, web SG, EC2 with Nginx.</li>
+<li>Parameterized region, project and instance type.</li>
+<li>Plan output reviewed before apply.</li>
+<li>HTTP health verification and CLI resource inventory.</li>
+<li>Screenshots/log evidence of plan, apply, output and destroy (no credentials/state contents).</li>
+<li>Module refactor for VPC and subnet, with a reviewed migration plan.</li>
+<li>Optional separate S3 backend bootstrap and safe state migration.</li>
+<li>CI validation workflow and pull request review checklist.</li>
+<li>Clean <code>terraform destroy</code> and AWS cost verification.</li>
+</ol>
+<p><strong>Acceptance criteria:</strong> <code>terraform fmt -check</code> passes; <code>terraform validate</code> passes; plan shows expected resources; apply completes; <code>curl</code> returns the page; subsequent plan is empty absent drift; destroy removes managed resources; no secrets committed.</p>
+<p><strong>Stretch goal (additional AWS cost):</strong> Expand to a two-AZ application architecture with ALB, target group, launch template and Auto Scaling Group. Add private subnet routing, NAT/endpoints and RDS only after reviewing AWS costs and HA/security requirements. These are advanced exercises, not included in the low-cost runnable lab.</p>
+<h1 id="chapter-13-interview-q-a-senior-devops-focus">Chapter 13 — Interview Q&amp;A (senior DevOps focus)</h1>
+<p><strong>Q1. Terraform vs Ansible?</strong> Terraform mainly manages desired infrastructure objects and lifecycle via providers; Ansible focuses on configuration and procedural automation. They complement each other.</p>
+<p><strong>Q2. <code>init</code> vs <code>plan</code> vs <code>apply</code>?</strong> <code>init</code> sets up provider/modules/backend; <code>plan</code> proposes changes; <code>apply</code> executes changes and updates state.</p>
+<p><strong>Q3. Why state?</strong> To map config resource addresses to real remote objects and track attributes for planning.</p>
+<p><strong>Q4. What if state is deleted?</strong> Terraform loses the mapping; do not blindly apply. Recover versioned remote state or reconstruct/import resources with care.</p>
+<p><strong>Q5. What is drift?</strong> Actual infrastructure differs from recorded/configured desired state, often due to manual changes.</p>
+<p><strong>Q6. How is resource order decided?</strong> Terraform creates a dependency graph from references and explicit dependencies, then schedules independent operations concurrently.</p>
+<p><strong>Q7. <code>count</code> vs <code>for_each</code>?</strong> <code>count</code> addresses resources by numeric index; <code>for_each</code> uses stable map/set keys, generally better for named resources.</p>
+<p><strong>Q8. Data source vs resource?</strong> Data source reads existing external information; resource manages an object's lifecycle.</p>
+<p><strong>Q9. Module?</strong> Reusable configuration package with inputs, resources and outputs; modules enable standardized deployments.</p>
+<p><strong>Q10. What is state locking?</strong> Prevents conflicting concurrent state writes. For S3 backend, current Terraform can use an S3 lockfile.</p>
+<p><strong>Q11. What is <code>terraform import</code>?</strong> Brings an existing object under Terraform state management, paired with matching configuration.</p>
+<p><strong>Q12. How do you protect secrets?</strong> Use IAM roles/OIDC, avoid hardcoded secrets, restrict encrypted state access, minimize plan artifact exposure and use managed secret services.</p>
+<p><strong>Q13. How do you safely deploy production changes?</strong> Version-control, validate, scan, plan, peer review, approve, apply saved plan in trusted runner, monitor and have rollback/recovery steps.</p>
+<p><strong>Q14. What does <code>prevent_destroy</code> do?</strong> Terraform lifecycle protection that rejects planned destruction of a resource while the rule is present; not an absolute protection against manual/cloud deletion.</p>
+<p><strong>Q15. Why does a resource replace instead of update?</strong> Some provider attributes are immutable or changes require recreation. Read plan's replacement reason and provider docs.</p>
+<p><strong>Q16. Can Terraform manage Kubernetes?</strong> Yes via Kubernetes/Helm providers, but consider cluster bootstrap dependencies, state ownership and GitOps separation.</p>
+<p><strong>Q17. How would you manage dev/test/prod?</strong> Separate state, IAM roles, environment config, approvals and cost boundaries; shared versioned modules.</p>
+<p><strong>Q18. Terraform in Jenkins?</strong> Jenkins checks out code, initializes backend, validates/scans, creates plan, requests approval, applies reviewed plan with scoped temporary credentials, and records audit results.</p>
+<p><strong>Q19. Terraform <code>taint</code>?</strong> Legacy workflow to mark replacement; modern usage prefers <code>terraform apply -replace=ADDRESS</code>.</p>
+<p><strong>Q20. How to debug provider errors?</strong> Confirm versions, credentials, region, permissions, API quotas and request details. Use <code>TF_LOG=DEBUG</code> only temporarily and protect logs because they may expose sensitive data.</p>
+<p><strong>Q21. Why commit <code>.terraform.lock.hcl</code>?</strong> It records provider selections/checksums to improve reproducibility across machines.</p>
+<p><strong>Q22. What is a backend migration?</strong> Moving state storage from one backend to another, e.g., local to S3, using <code>terraform init -migrate-state</code> after verifying destination and backups.</p>
+<p><strong>Q23. What happens if apply partially fails?</strong> Some resources may have been created; inspect state and cloud, correct the root issue, re-plan and reconcile. Never assume automatic rollback.</p>
+<p><strong>Q24. What is a saved plan?</strong> <code>terraform plan -out=...</code> writes a binary plan for subsequent <code>terraform apply &lt;file&gt;</code>; sensitive, and must match appropriate state/context.</p>
+<p><strong>Q25. How would you review a Terraform PR?</strong> Check blast radius, replacements, IAM scope, network exposure, encryption, tagging, module versions, cost, outputs, backend isolation and rollback path.</p>
+<h1 id="final-quick-reference-command-sheet">Final quick-reference command sheet</h1>
+<pre><code class="language-bash">terraform version                 # CLI version
+terraform fmt -recursive         # Format HCL
+terraform init                   # Initialize backend/providers/modules
+terraform init -upgrade          # Re-select allowed provider versions
+terraform validate               # Validate configuration
+terraform plan                   # Preview changes
+terraform plan -out=deploy.tfplan # Save plan
+terraform show deploy.tfplan     # Inspect saved plan
+terraform apply deploy.tfplan    # Apply reviewed saved plan
+terraform output                 # Show outputs
+terraform output -raw web_url    # Read string output
+terraform state list             # List managed addresses
+terraform state show ADDRESS     # Inspect resource in state
+terraform graph                  # Dependency graph DOT
+terraform plan -destroy          # Preview deletion
+terraform destroy               # Destroy managed infrastructure
+terraform init -migrate-state    # Migrate state backend
+terraform plan -refresh-only     # Preview refresh-only state changes
+terraform apply -replace=ADDRESS # Deliberately replace one resource
+terraform providers              # Show provider requirements
+terraform workspace list         # List workspaces
+</code></pre>
+<h1 id="final-self-test">Final self-test</h1>
+<p>Without copying code, explain (1) why <code>terraform init</code> is needed, (2) what is inside state, (3) why VPC must exist before subnet, (4) how an EC2 in a public subnet reaches the internet, (5) how to keep AWS credentials out of Git, (6) how to review destructive plans, (7) why module outputs are needed, (8) what remote locking prevents, (9) what happens on partial apply failure, and (10) how you would add Terraform to a Jenkins pipeline.</p>
+<h2 id="authoritative-references">Authoritative references</h2>
+<ul>
+<li>Terraform language: <a href="https://developer.hashicorp.com/terraform/language">https://developer.hashicorp.com/terraform/language</a></li>
+<li>Terraform CLI: <a href="https://developer.hashicorp.com/terraform/cli">https://developer.hashicorp.com/terraform/cli</a></li>
+<li>AWS provider: <a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs">https://registry.terraform.io/providers/hashicorp/aws/latest/docs</a></li>
+<li>S3 backend: <a href="https://developer.hashicorp.com/terraform/language/backend/s3">https://developer.hashicorp.com/terraform/language/backend/s3</a></li>
+<li>AWS CLI: <a href="https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html">https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html</a></li>
+<li>AWS pricing: <a href="https://aws.amazon.com/pricing/">https://aws.amazon.com/pricing/</a></li>
+</ul>
+<p><strong>Version note:</strong> Provider/API behavior changes over time. This manual intentionally pins the AWS provider to the 5.x major series for reproducible labs. For new production projects, evaluate the latest supported provider and Terraform versions, update constraints deliberately, and review migration guides.</p>
+<hr/>
+<h1 id="extended-practical-lab-workbook-labs-5-30">Extended Practical Lab Workbook — Labs 5–30</h1>
+<p><strong>How to use:</strong> Labs 1–4 are in the original chapters above. These 26 additional labs make <strong>30 numbered labs total</strong>. Code fragments in intermediate AWS labs deliberately reuse previously built resources; they are not standalone <code>main.tf</code> files. Work in a fresh directory/state for each independent lab, or extend the same stack intentionally. Never copy a fragment into a directory where it duplicates an existing resource. The final capstone combines the pieces.</p>
+<h2 id="pre-flight-safety-and-aws-setup">Pre-flight safety and AWS setup</h2>
+<ul>
+<li>Terraform CLI and AWS CLI installed; use an AWS sandbox account with a budget alarm and MFA.</li>
+<li>Authenticate using AWS IAM Identity Center/SSO or short-lived role credentials, <strong>not root keys</strong>. Check <code>aws sts get-caller-identity</code>.</li>
+<li>Set <code>AWS_REGION=ap-south-1</code> and check availability/quotas in your account; examples assume this region.</li>
+<li>Before each AWS lab, run <code>terraform plan</code>; after each isolated lab run <code>terraform destroy</code> and verify resources are gone in AWS. Some resources and backups may survive destruction.</li>
+<li><strong>Cost alert:</strong> NAT Gateway, ALB, RDS, public IPv4, EC2 and data transfer may incur charges even during short labs.</li>
+<li>Do not commit <code>.tfstate</code>, <code>.tfvars</code> with secrets, <code>.terraform/</code>, <code>tfplan</code>, debug logs, or credential files. Do commit <code>.terraform.lock.hcl</code>.</li>
+</ul>
+<p>Common provider bootstrap (<code>versions.tf</code>):</p>
+<pre><code class="language-hcl">terraform {
+  required_version = "&gt;= 1.6.0"
+  required_providers { aws = { source = "hashicorp/aws"; version = "~&gt; 5.0" } }
+}
+provider "aws" { region = var.aws_region }
+variable "aws_region" { type = string; default = "ap-south-1" }
+</code></pre>
+<p><strong>Version note:</strong> Provider constraints above are a training baseline, not a claim that 5.x is the newest. Check current provider documentation before a new project.</p>
+<h2 id="lab-5-terraform-lifecycle-and-saved-plans">Lab 5 — Terraform lifecycle and saved plans</h2>
+<p><strong>Level / environment:</strong> Local<br/>
+<strong>Objective:</strong> Understand validate, plan files, apply and destroy.</p>
+<h3 id="theory-in-hinglish">Theory in Hinglish</h3>
+<p>Saved plan ek specific configuration aur state snapshot se linked hota hai; plan file secrets contain kar sakti hai. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-05 &amp;&amp; cd ~/terraform-course/lab-05</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="commands-where-and-why">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">terraform fmt -recursive
+terraform validate
+terraform plan -out=tfplan
+terraform show tfplan
+terraform apply tfplan
+terraform state list
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h2 id="lab-6-sensitive-variables-and-tfvars">Lab 6 — Sensitive variables and tfvars</h2>
+<p><strong>Level / environment:</strong> Local<br/>
+<strong>Objective:</strong> Use typed variables without hardcoding secrets.</p>
+<h3 id="theory-in-hinglish-1">Theory in Hinglish</h3>
+<p>sensitive=true CLI output ko redact karta hai, state ko encrypt nahi karta. Secrets ko tfvars Git mein commit mat karo. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow-1">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-06 &amp;&amp; cd ~/terraform-course/lab-06</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="reference-configuration-key-fragment">Reference configuration / key fragment</h3>
+<pre><code class="language-hcl">variable "environment" { type = string; validation { condition = contains(["dev", "prod"], var.environment); error_message = "Use dev or prod" } }
+variable "api_token" { type = string; sensitive = true }
+output "environment" { value = var.environment }
+</code></pre>
+<p><strong>Dependency note:</strong> <code>aws_vpc.lab</code>, <code>aws_subnet.public</code>, <code>aws_subnet.private</code>, <code>aws_subnet.public_a/b</code>, <code>aws_subnet.private_a/b</code>, <code>aws_security_group.alb/db/web</code> and similar names refer to resources built in earlier labs. For two-AZ labs, create additional subnets in distinct AZs and appropriate SG rules before applying the fragment. Replace placeholders; adjust version-specific arguments using provider docs.</p>
+<h3 id="commands-where-and-why-1">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">terraform plan -var-file=dev.tfvars
+terraform console
+terraform output
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting-1">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice-1">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h2 id="lab-7-data-sources-and-outputs">Lab 7 — Data sources and outputs</h2>
+<p><strong>Level / environment:</strong> AWS<br/>
+<strong>Objective:</strong> Read existing AWS account/region metadata.</p>
+<h3 id="theory-in-hinglish-2">Theory in Hinglish</h3>
+<p>Data source existing resources ko read karta hai; resource new infrastructure manage karta hai. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow-2">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-07 &amp;&amp; cd ~/terraform-course/lab-07</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="reference-configuration-key-fragment-1">Reference configuration / key fragment</h3>
+<pre><code class="language-hcl">data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
+output "account_id" { value = data.aws_caller_identity.current.account_id }
+output "region" { value = data.aws_region.current.name }
+</code></pre>
+<p><strong>Dependency note:</strong> <code>aws_vpc.lab</code>, <code>aws_subnet.public</code>, <code>aws_subnet.private</code>, <code>aws_subnet.public_a/b</code>, <code>aws_subnet.private_a/b</code>, <code>aws_security_group.alb/db/web</code> and similar names refer to resources built in earlier labs. For two-AZ labs, create additional subnets in distinct AZs and appropriate SG rules before applying the fragment. Replace placeholders; adjust version-specific arguments using provider docs.</p>
+<h3 id="commands-where-and-why-2">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">aws sts get-caller-identity
+terraform init
+terraform plan
+terraform apply
+terraform output
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting-2">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice-2">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h2 id="lab-8-vpc-and-cidr-planning">Lab 8 — VPC and CIDR planning</h2>
+<p><strong>Level / environment:</strong> AWS<br/>
+<strong>Objective:</strong> Create isolated 10.40.0.0/16 VPC.</p>
+<h3 id="theory-in-hinglish-3">Theory in Hinglish</h3>
+<p>CIDR overlap routing aur peering ko block kar sakta hai; IP range pehle plan karo. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow-3">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-08 &amp;&amp; cd ~/terraform-course/lab-08</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="reference-configuration-key-fragment-2">Reference configuration / key fragment</h3>
+<pre><code class="language-hcl">resource "aws_vpc" "lab" { cidr_block = "10.40.0.0/16"; enable_dns_support = true; enable_dns_hostnames = true; tags = { Name = "tf-lab-vpc" } }
+output "vpc_id" { value = aws_vpc.lab.id }
+</code></pre>
+<p><strong>Dependency note:</strong> <code>aws_vpc.lab</code>, <code>aws_subnet.public</code>, <code>aws_subnet.private</code>, <code>aws_subnet.public_a/b</code>, <code>aws_subnet.private_a/b</code>, <code>aws_security_group.alb/db/web</code> and similar names refer to resources built in earlier labs. For two-AZ labs, create additional subnets in distinct AZs and appropriate SG rules before applying the fragment. Replace placeholders; adjust version-specific arguments using provider docs.</p>
+<h3 id="commands-where-and-why-3">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">terraform init
+terraform plan
+terraform apply
+aws ec2 describe-vpcs --filters Name=tag:Name,Values=tf-lab-vpc
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting-3">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice-3">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h2 id="lab-9-public-and-private-subnets">Lab 9 — Public and private subnets</h2>
+<p><strong>Level / environment:</strong> AWS<br/>
+<strong>Objective:</strong> Create two subnets with distinct CIDRs.</p>
+<h3 id="theory-in-hinglish-4">Theory in Hinglish</h3>
+<p>Public subnet ka matlab IGW tak route; sirf map_public_ip_on_launch=true se public subnet nahi banta. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow-4">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-09 &amp;&amp; cd ~/terraform-course/lab-09</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="reference-configuration-key-fragment-3">Reference configuration / key fragment</h3>
+<pre><code class="language-hcl">resource "aws_subnet" "public" { vpc_id = aws_vpc.lab.id; cidr_block = "10.40.1.0/24"; availability_zone = "${var.aws_region}a"; map_public_ip_on_launch = true }
+resource "aws_subnet" "private" { vpc_id = aws_vpc.lab.id; cidr_block = "10.40.11.0/24"; availability_zone = "${var.aws_region}a" }
+</code></pre>
+<p><strong>Dependency note:</strong> <code>aws_vpc.lab</code>, <code>aws_subnet.public</code>, <code>aws_subnet.private</code>, <code>aws_subnet.public_a/b</code>, <code>aws_subnet.private_a/b</code>, <code>aws_security_group.alb/db/web</code> and similar names refer to resources built in earlier labs. For two-AZ labs, create additional subnets in distinct AZs and appropriate SG rules before applying the fragment. Replace placeholders; adjust version-specific arguments using provider docs.</p>
+<h3 id="commands-where-and-why-4">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">terraform plan
+terraform apply
+aws ec2 describe-subnets --filters Name=vpc-id,Values=&lt;VPC_ID&gt;
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting-4">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice-4">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h2 id="lab-10-internet-gateway-and-routing">Lab 10 — Internet gateway and routing</h2>
+<p><strong>Level / environment:</strong> AWS<br/>
+<strong>Objective:</strong> Connect public subnet to Internet Gateway.</p>
+<h3 id="theory-in-hinglish-5">Theory in Hinglish</h3>
+<p>Route table mein 0.0.0.0/0 -&gt; IGW aur public IP required hota hai. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow-5">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-10 &amp;&amp; cd ~/terraform-course/lab-10</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="reference-configuration-key-fragment-4">Reference configuration / key fragment</h3>
+<pre><code class="language-hcl">resource "aws_internet_gateway" "igw" { vpc_id = aws_vpc.lab.id }
+resource "aws_route_table" "public" { vpc_id = aws_vpc.lab.id; route { cidr_block = "0.0.0.0/0"; gateway_id = aws_internet_gateway.igw.id } }
+resource "aws_route_table_association" "public" { subnet_id = aws_subnet.public.id; route_table_id = aws_route_table.public.id }
+</code></pre>
+<p><strong>Dependency note:</strong> <code>aws_vpc.lab</code>, <code>aws_subnet.public</code>, <code>aws_subnet.private</code>, <code>aws_subnet.public_a/b</code>, <code>aws_subnet.private_a/b</code>, <code>aws_security_group.alb/db/web</code> and similar names refer to resources built in earlier labs. For two-AZ labs, create additional subnets in distinct AZs and appropriate SG rules before applying the fragment. Replace placeholders; adjust version-specific arguments using provider docs.</p>
+<h3 id="commands-where-and-why-5">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">terraform plan
+terraform apply
+aws ec2 describe-route-tables --filters Name=vpc-id,Values=&lt;VPC_ID&gt;
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting-5">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice-5">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h2 id="lab-11-ec2-instance-and-user-data">Lab 11 — EC2 instance and user_data</h2>
+<p><strong>Level / environment:</strong> AWS<br/>
+<strong>Objective:</strong> Deploy a small Linux web server.</p>
+<h3 id="theory-in-hinglish-6">Theory in Hinglish</h3>
+<p>user_data first boot par run hota hai; cloud-init logs /var/log/cloud-init-output.log mein check karo. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow-6">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-11 &amp;&amp; cd ~/terraform-course/lab-11</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="reference-configuration-key-fragment-5">Reference configuration / key fragment</h3>
+<pre><code class="language-hcl">data "aws_ami" "al2023" { most_recent = true; owners = ["amazon"]; filter { name = "name"; values = ["al2023-ami-2023.*-x86_64"] }; filter { name = "virtualization-type"; values = ["hvm"] } }
+resource "aws_instance" "web" { ami = data.aws_ami.al2023.id; instance_type = "t3.micro"; subnet_id = aws_subnet.public.id; vpc_security_group_ids = [aws_security_group.web.id]; user_data = &lt;&lt;-EOF
+#!/bin/bash
+dnf install -y nginx
+systemctl enable --now nginx
+EOF
+}
+output "web_ip" { value = aws_instance.web.public_ip }
+</code></pre>
+<p><strong>Dependency note:</strong> <code>aws_vpc.lab</code>, <code>aws_subnet.public</code>, <code>aws_subnet.private</code>, <code>aws_subnet.public_a/b</code>, <code>aws_subnet.private_a/b</code>, <code>aws_security_group.alb/db/web</code> and similar names refer to resources built in earlier labs. For two-AZ labs, create additional subnets in distinct AZs and appropriate SG rules before applying the fragment. Replace placeholders; adjust version-specific arguments using provider docs.</p>
+<h3 id="commands-where-and-why-6">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">terraform plan
+terraform apply
+terraform output -raw web_ip
+curl -I http://&lt;PUBLIC_IP&gt;
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting-6">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice-6">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h2 id="lab-12-security-groups-and-least-privilege">Lab 12 — Security groups and least privilege</h2>
+<p><strong>Level / environment:</strong> AWS<br/>
+<strong>Objective:</strong> Allow HTTP and limited SSH access.</p>
+<h3 id="theory-in-hinglish-7">Theory in Hinglish</h3>
+<p>Security group stateful firewall hai; SSH 0.0.0.0/0 se avoid karo. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow-7">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-12 &amp;&amp; cd ~/terraform-course/lab-12</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="reference-configuration-key-fragment-6">Reference configuration / key fragment</h3>
+<pre><code class="language-hcl">variable "admin_cidr" { type = string; description = "Your public IPv4 /32" }
+resource "aws_security_group" "web" { name_prefix = "tf-web-"; vpc_id = aws_vpc.lab.id; ingress { from_port = 80; to_port = 80; protocol = "tcp"; cidr_blocks = ["0.0.0.0/0"] }; ingress { from_port = 22; to_port = 22; protocol = "tcp"; cidr_blocks = [var.admin_cidr] }; egress { from_port = 0; to_port = 0; protocol = "-1"; cidr_blocks = ["0.0.0.0/0"] } }
+</code></pre>
+<p><strong>Dependency note:</strong> <code>aws_vpc.lab</code>, <code>aws_subnet.public</code>, <code>aws_subnet.private</code>, <code>aws_subnet.public_a/b</code>, <code>aws_subnet.private_a/b</code>, <code>aws_security_group.alb/db/web</code> and similar names refer to resources built in earlier labs. For two-AZ labs, create additional subnets in distinct AZs and appropriate SG rules before applying the fragment. Replace placeholders; adjust version-specific arguments using provider docs.</p>
+<h3 id="commands-where-and-why-7">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">terraform plan
+terraform apply
+aws ec2 describe-security-groups --group-ids &lt;SG_ID&gt;
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting-7">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice-7">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h2 id="lab-13-iam-role-and-ec2-instance-profile">Lab 13 — IAM role and EC2 instance profile</h2>
+<p><strong>Level / environment:</strong> AWS<br/>
+<strong>Objective:</strong> Give EC2 scoped AWS API permissions without static keys.</p>
+<h3 id="theory-in-hinglish-8">Theory in Hinglish</h3>
+<p>EC2 role STS temporary credentials deta hai; IAM permissions ko least privilege rakho. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow-8">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-13 &amp;&amp; cd ~/terraform-course/lab-13</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="reference-configuration-key-fragment-7">Reference configuration / key fragment</h3>
+<pre><code class="language-hcl">data "aws_iam_policy_document" "assume" { statement { actions = ["sts:AssumeRole"]; principals { type = "Service"; identifiers = ["ec2.amazonaws.com"] } } }
+resource "aws_iam_role" "app" { name_prefix = "tf-lab-ec2-"; assume_role_policy = data.aws_iam_policy_document.assume.json }
+resource "aws_iam_instance_profile" "app" { name_prefix = "tf-lab-profile-"; role = aws_iam_role.app.name }
+</code></pre>
+<p><strong>Dependency note:</strong> <code>aws_vpc.lab</code>, <code>aws_subnet.public</code>, <code>aws_subnet.private</code>, <code>aws_subnet.public_a/b</code>, <code>aws_subnet.private_a/b</code>, <code>aws_security_group.alb/db/web</code> and similar names refer to resources built in earlier labs. For two-AZ labs, create additional subnets in distinct AZs and appropriate SG rules before applying the fragment. Replace placeholders; adjust version-specific arguments using provider docs.</p>
+<h3 id="commands-where-and-why-8">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">terraform plan
+terraform apply
+aws iam get-role --role-name &lt;ROLE_NAME&gt;
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting-8">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice-8">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h2 id="lab-14-s3-bucket-and-versioning">Lab 14 — S3 bucket and versioning</h2>
+<p><strong>Level / environment:</strong> AWS<br/>
+<strong>Objective:</strong> Create versioned S3 bucket with public access blocked.</p>
+<h3 id="theory-in-hinglish-9">Theory in Hinglish</h3>
+<p>Versioning recovery mein help karti hai; bucket globally unique hona chahiye. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow-9">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-14 &amp;&amp; cd ~/terraform-course/lab-14</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="reference-configuration-key-fragment-8">Reference configuration / key fragment</h3>
+<pre><code class="language-hcl">resource "aws_s3_bucket" "lab" { bucket_prefix = "tf-training-"; force_destroy = true }
+resource "aws_s3_bucket_public_access_block" "lab" { bucket = aws_s3_bucket.lab.id; block_public_acls = true; block_public_policy = true; ignore_public_acls = true; restrict_public_buckets = true }
+resource "aws_s3_bucket_versioning" "lab" { bucket = aws_s3_bucket.lab.id; versioning_configuration { status = "Enabled" } }
+</code></pre>
+<p><strong>Dependency note:</strong> <code>aws_vpc.lab</code>, <code>aws_subnet.public</code>, <code>aws_subnet.private</code>, <code>aws_subnet.public_a/b</code>, <code>aws_subnet.private_a/b</code>, <code>aws_security_group.alb/db/web</code> and similar names refer to resources built in earlier labs. For two-AZ labs, create additional subnets in distinct AZs and appropriate SG rules before applying the fragment. Replace placeholders; adjust version-specific arguments using provider docs.</p>
+<h3 id="commands-where-and-why-9">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">terraform plan
+terraform apply
+aws s3api get-bucket-versioning --bucket &lt;BUCKET&gt;
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting-9">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice-9">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h2 id="lab-15-s3-backend-and-state-locking">Lab 15 — S3 backend and state locking</h2>
+<p><strong>Level / environment:</strong> AWS<br/>
+<strong>Objective:</strong> Migrate local state to encrypted remote backend.</p>
+<h3 id="theory-in-hinglish-10">Theory in Hinglish</h3>
+<p>Modern S3 backend use_lockfile=true support karta hai; old DynamoDB locking deprecated hai. Backend bucket pehle create karo. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow-10">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-15 &amp;&amp; cd ~/terraform-course/lab-15</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="reference-configuration-key-fragment-9">Reference configuration / key fragment</h3>
+<pre><code class="language-hcl">terraform { backend "s3" { bucket = "REPLACE_EXISTING_STATE_BUCKET"; key = "terraform/dev/terraform.tfstate"; region = "ap-south-1"; encrypt = true; use_lockfile = true } }
+</code></pre>
+<p><strong>Dependency note:</strong> <code>aws_vpc.lab</code>, <code>aws_subnet.public</code>, <code>aws_subnet.private</code>, <code>aws_subnet.public_a/b</code>, <code>aws_subnet.private_a/b</code>, <code>aws_security_group.alb/db/web</code> and similar names refer to resources built in earlier labs. For two-AZ labs, create additional subnets in distinct AZs and appropriate SG rules before applying the fragment. Replace placeholders; adjust version-specific arguments using provider docs.</p>
+<h3 id="commands-where-and-why-10">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">terraform init -migrate-state
+terraform state list
+aws s3api list-object-versions --bucket &lt;STATE_BUCKET&gt;
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting-10">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice-10">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h2 id="lab-16-module-design-and-composition">Lab 16 — Module design and composition</h2>
+<p><strong>Level / environment:</strong> Local/AWS<br/>
+<strong>Objective:</strong> Extract VPC into reusable module.</p>
+<h3 id="theory-in-hinglish-11">Theory in Hinglish</h3>
+<p>Module inputs/outputs explicit rakho; root module resource addresses change hone par state mv/moved blocks consider karo. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow-11">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-16 &amp;&amp; cd ~/terraform-course/lab-16</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="reference-configuration-key-fragment-10">Reference configuration / key fragment</h3>
+<pre><code class="language-hcl">module "network" { source = "./modules/network"; cidr = "10.50.0.0/16" }
+# modules/network/variables.tf: variable "cidr" { type = string }
+# modules/network/main.tf: resource "aws_vpc" "this" { cidr_block = var.cidr }
+# modules/network/outputs.tf: output "id" { value = aws_vpc.this.id }
+</code></pre>
+<p><strong>Dependency note:</strong> <code>aws_vpc.lab</code>, <code>aws_subnet.public</code>, <code>aws_subnet.private</code>, <code>aws_subnet.public_a/b</code>, <code>aws_subnet.private_a/b</code>, <code>aws_security_group.alb/db/web</code> and similar names refer to resources built in earlier labs. For two-AZ labs, create additional subnets in distinct AZs and appropriate SG rules before applying the fragment. Replace placeholders; adjust version-specific arguments using provider docs.</p>
+<h3 id="commands-where-and-why-11">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">terraform init
+terraform validate
+terraform plan
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting-11">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice-11">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h2 id="lab-17-for-each-and-count">Lab 17 — for_each and count</h2>
+<p><strong>Level / environment:</strong> Local/AWS<br/>
+<strong>Objective:</strong> Create predictable resource instances from map.</p>
+<h3 id="theory-in-hinglish-12">Theory in Hinglish</h3>
+<p>for_each stable map keys use karta hai; count index shift par replacements ho sakte hain. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow-12">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-17 &amp;&amp; cd ~/terraform-course/lab-17</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="reference-configuration-key-fragment-11">Reference configuration / key fragment</h3>
+<pre><code class="language-hcl">variable "buckets" { type = set(string); default = ["logs", "artifacts"] }
+resource "aws_s3_bucket" "items" { for_each = var.buckets; bucket = "REPLACE-UNIQUE-PREFIX-${each.key}" }
+</code></pre>
+<p><strong>Dependency note:</strong> <code>aws_vpc.lab</code>, <code>aws_subnet.public</code>, <code>aws_subnet.private</code>, <code>aws_subnet.public_a/b</code>, <code>aws_subnet.private_a/b</code>, <code>aws_security_group.alb/db/web</code> and similar names refer to resources built in earlier labs. For two-AZ labs, create additional subnets in distinct AZs and appropriate SG rules before applying the fragment. Replace placeholders; adjust version-specific arguments using provider docs.</p>
+<h3 id="commands-where-and-why-12">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">terraform plan
+terraform state list
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting-12">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice-12">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h2 id="lab-18-nat-gateway-and-private-egress">Lab 18 — NAT Gateway and private egress</h2>
+<p><strong>Level / environment:</strong> AWS - costly<br/>
+<strong>Objective:</strong> Allow private subnet outbound connectivity.</p>
+<h3 id="theory-in-hinglish-13">Theory in Hinglish</h3>
+<p>NAT Gateway hourly + data processing charges; lab ke turant baad destroy karo. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow-13">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-18 &amp;&amp; cd ~/terraform-course/lab-18</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="reference-configuration-key-fragment-12">Reference configuration / key fragment</h3>
+<pre><code class="language-hcl">resource "aws_eip" "nat" { domain = "vpc" }
+resource "aws_nat_gateway" "nat" { allocation_id = aws_eip.nat.id; subnet_id = aws_subnet.public.id; depends_on = [aws_internet_gateway.igw] }
+resource "aws_route_table" "private" { vpc_id = aws_vpc.lab.id; route { cidr_block = "0.0.0.0/0"; nat_gateway_id = aws_nat_gateway.nat.id } }
+resource "aws_route_table_association" "private" { subnet_id = aws_subnet.private.id; route_table_id = aws_route_table.private.id }
+</code></pre>
+<p><strong>Dependency note:</strong> <code>aws_vpc.lab</code>, <code>aws_subnet.public</code>, <code>aws_subnet.private</code>, <code>aws_subnet.public_a/b</code>, <code>aws_subnet.private_a/b</code>, <code>aws_security_group.alb/db/web</code> and similar names refer to resources built in earlier labs. For two-AZ labs, create additional subnets in distinct AZs and appropriate SG rules before applying the fragment. Replace placeholders; adjust version-specific arguments using provider docs.</p>
+<h3 id="commands-where-and-why-13">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">terraform plan
+terraform apply
+aws ec2 describe-nat-gateways
+terraform destroy
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting-13">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice-13">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h2 id="lab-19-application-load-balancer">Lab 19 — Application Load Balancer</h2>
+<p><strong>Level / environment:</strong> AWS - costly<br/>
+<strong>Objective:</strong> Route HTTP traffic through ALB to EC2.</p>
+<h3 id="theory-in-hinglish-14">Theory in Hinglish</h3>
+<p>ALB health check fail ho to SG, target port, app process aur health path check karo. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow-14">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-19 &amp;&amp; cd ~/terraform-course/lab-19</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="reference-configuration-key-fragment-13">Reference configuration / key fragment</h3>
+<pre><code class="language-hcl">resource "aws_lb" "web" { name = "tf-lab-alb"; load_balancer_type = "application"; internal = false; subnets = [aws_subnet.public_a.id, aws_subnet.public_b.id]; security_groups = [aws_security_group.alb.id] }
+resource "aws_lb_target_group" "web" { name = "tf-lab-tg"; port = 80; protocol = "HTTP"; vpc_id = aws_vpc.lab.id; health_check { path = "/" } }
+resource "aws_lb_listener" "http" { load_balancer_arn = aws_lb.web.arn; port = 80; protocol = "HTTP"; default_action { type = "forward"; target_group_arn = aws_lb_target_group.web.arn } }
+</code></pre>
+<p><strong>Dependency note:</strong> <code>aws_vpc.lab</code>, <code>aws_subnet.public</code>, <code>aws_subnet.private</code>, <code>aws_subnet.public_a/b</code>, <code>aws_subnet.private_a/b</code>, <code>aws_security_group.alb/db/web</code> and similar names refer to resources built in earlier labs. For two-AZ labs, create additional subnets in distinct AZs and appropriate SG rules before applying the fragment. Replace placeholders; adjust version-specific arguments using provider docs.</p>
+<h3 id="commands-where-and-why-14">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">terraform plan
+terraform apply
+curl -I http://&lt;ALB_DNS&gt;
+terraform destroy
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting-14">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice-14">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h2 id="lab-20-auto-scaling-group-and-launch-template">Lab 20 — Auto Scaling Group and launch template</h2>
+<p><strong>Level / environment:</strong> AWS - costly<br/>
+<strong>Objective:</strong> Scale instances using desired/min/max.</p>
+<h3 id="theory-in-hinglish-15">Theory in Hinglish</h3>
+<p>ASG replaces unhealthy EC2; desired capacity cost aur availability impact karti hai. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow-15">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-20 &amp;&amp; cd ~/terraform-course/lab-20</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="reference-configuration-key-fragment-14">Reference configuration / key fragment</h3>
+<pre><code class="language-hcl">resource "aws_launch_template" "web" { name_prefix = "tf-lab-"; image_id = data.aws_ami.al2023.id; instance_type = "t3.micro"; user_data = base64encode("#!/bin/bash\ndnf install -y nginx\nsystemctl enable --now nginx") }
+resource "aws_autoscaling_group" "web" { name = "tf-lab-asg"; min_size = 1; max_size = 2; desired_capacity = 1; vpc_zone_identifier = [aws_subnet.public_a.id, aws_subnet.public_b.id]; target_group_arns = [aws_lb_target_group.web.arn]; launch_template { id = aws_launch_template.web.id; version = "$Latest" } }
+</code></pre>
+<p><strong>Dependency note:</strong> <code>aws_vpc.lab</code>, <code>aws_subnet.public</code>, <code>aws_subnet.private</code>, <code>aws_subnet.public_a/b</code>, <code>aws_subnet.private_a/b</code>, <code>aws_security_group.alb/db/web</code> and similar names refer to resources built in earlier labs. For two-AZ labs, create additional subnets in distinct AZs and appropriate SG rules before applying the fragment. Replace placeholders; adjust version-specific arguments using provider docs.</p>
+<h3 id="commands-where-and-why-15">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">terraform plan
+terraform apply
+aws autoscaling describe-auto-scaling-groups
+terraform destroy
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting-15">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice-15">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h2 id="lab-21-rds-postgresql-in-private-subnet">Lab 21 — RDS PostgreSQL in private subnet</h2>
+<p><strong>Level / environment:</strong> AWS - costly<br/>
+<strong>Objective:</strong> Provision private RDS with DB subnet group.</p>
+<h3 id="theory-in-hinglish-16">Theory in Hinglish</h3>
+<p>RDS public accessibility false rakho, database password secrets manager se do; deletion protection lab mein false. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow-16">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-21 &amp;&amp; cd ~/terraform-course/lab-21</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="reference-configuration-key-fragment-15">Reference configuration / key fragment</h3>
+<pre><code class="language-hcl">resource "aws_db_subnet_group" "db" { name = "tf-lab-db-subnets"; subnet_ids = [aws_subnet.private_a.id, aws_subnet.private_b.id] }
+resource "aws_db_instance" "pg" { identifier = "tf-lab-pg"; engine = "postgres"; instance_class = "db.t3.micro"; allocated_storage = 20; username = "labadmin"; manage_master_user_password = true; db_subnet_group_name = aws_db_subnet_group.db.name; vpc_security_group_ids = [aws_security_group.db.id]; publicly_accessible = false; skip_final_snapshot = true; deletion_protection = false }
+</code></pre>
+<p><strong>Dependency note:</strong> <code>aws_vpc.lab</code>, <code>aws_subnet.public</code>, <code>aws_subnet.private</code>, <code>aws_subnet.public_a/b</code>, <code>aws_subnet.private_a/b</code>, <code>aws_security_group.alb/db/web</code> and similar names refer to resources built in earlier labs. For two-AZ labs, create additional subnets in distinct AZs and appropriate SG rules before applying the fragment. Replace placeholders; adjust version-specific arguments using provider docs.</p>
+<h3 id="commands-where-and-why-16">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">terraform plan
+terraform apply
+aws rds describe-db-instances
+terraform destroy
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting-16">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice-16">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h2 id="lab-22-multi-environment-dev-and-prod">Lab 22 — Multi-environment dev and prod</h2>
+<p><strong>Level / environment:</strong> Local/AWS<br/>
+<strong>Objective:</strong> Separate dev/prod state and variables.</p>
+<h3 id="theory-in-hinglish-17">Theory in Hinglish</h3>
+<p>Workspaces isolation ka limited mechanism hain; serious prod ke liye separate root modules/accounts/backends better. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow-17">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-22 &amp;&amp; cd ~/terraform-course/lab-22</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="reference-configuration-key-fragment-16">Reference configuration / key fragment</h3>
+<pre><code class="language-hcl">variable "environment" { type = string }
+locals { name_prefix = "demo-${var.environment}" }
+output "environment" { value = local.name_prefix }
+</code></pre>
+<p><strong>Dependency note:</strong> <code>aws_vpc.lab</code>, <code>aws_subnet.public</code>, <code>aws_subnet.private</code>, <code>aws_subnet.public_a/b</code>, <code>aws_subnet.private_a/b</code>, <code>aws_security_group.alb/db/web</code> and similar names refer to resources built in earlier labs. For two-AZ labs, create additional subnets in distinct AZs and appropriate SG rules before applying the fragment. Replace placeholders; adjust version-specific arguments using provider docs.</p>
+<h3 id="commands-where-and-why-17">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">terraform workspace list
+terraform workspace new dev
+terraform workspace select dev
+terraform plan -var-file=dev.tfvars
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting-17">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice-17">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h2 id="lab-23-terraform-import-existing-resource">Lab 23 — Terraform import existing resource</h2>
+<p><strong>Level / environment:</strong> AWS<br/>
+<strong>Objective:</strong> Adopt existing manually created resource.</p>
+<h3 id="theory-in-hinglish-18">Theory in Hinglish</h3>
+<p>Import state attach karta hai, complete config automatically guarantee nahi karta; plan review zaroori hai. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow-18">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-23 &amp;&amp; cd ~/terraform-course/lab-23</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="commands-where-and-why-18">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">terraform import aws_s3_bucket.existing &lt;BUCKET_NAME&gt;
+terraform plan
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting-18">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice-18">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h2 id="lab-24-drift-detection-and-refresh-only">Lab 24 — Drift detection and refresh-only</h2>
+<p><strong>Level / environment:</strong> AWS<br/>
+<strong>Objective:</strong> Detect console-side modifications safely.</p>
+<h3 id="theory-in-hinglish-19">Theory in Hinglish</h3>
+<p>Refresh-only state ko actual cloud se align karta hai; desired config changes nahi karta. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow-19">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-24 &amp;&amp; cd ~/terraform-course/lab-24</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="commands-where-and-why-19">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">terraform plan -refresh-only
+terraform apply -refresh-only
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting-19">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice-19">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h2 id="lab-25-refactor-resources-with-moved-blocks">Lab 25 — Refactor resources with moved blocks</h2>
+<p><strong>Level / environment:</strong> Local<br/>
+<strong>Objective:</strong> Rename Terraform address without recreating.</p>
+<h3 id="theory-in-hinglish-20">Theory in Hinglish</h3>
+<p>moved block purane address ko naye address se map karta hai; refactor pe plan carefully inspect karo. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow-20">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-25 &amp;&amp; cd ~/terraform-course/lab-25</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="reference-configuration-key-fragment-17">Reference configuration / key fragment</h3>
+<pre><code class="language-hcl">moved { from = aws_s3_bucket.old_name; to = aws_s3_bucket.new_name }
+# Rename the resource block to aws_s3_bucket.new_name in configuration too.
+</code></pre>
+<p><strong>Dependency note:</strong> <code>aws_vpc.lab</code>, <code>aws_subnet.public</code>, <code>aws_subnet.private</code>, <code>aws_subnet.public_a/b</code>, <code>aws_subnet.private_a/b</code>, <code>aws_security_group.alb/db/web</code> and similar names refer to resources built in earlier labs. For two-AZ labs, create additional subnets in distinct AZs and appropriate SG rules before applying the fragment. Replace placeholders; adjust version-specific arguments using provider docs.</p>
+<h3 id="commands-where-and-why-20">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">terraform state list
+terraform plan
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting-20">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice-20">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h2 id="lab-26-terraform-validation-and-security-checks">Lab 26 — Terraform validation and security checks</h2>
+<p><strong>Level / environment:</strong> Local<br/>
+<strong>Objective:</strong> Add fmt, validate, tfsec/checkov style checks.</p>
+<h3 id="theory-in-hinglish-21">Theory in Hinglish</h3>
+<p>Plan exit codes 0 no diff, 2 diff, 1 error; CI pipeline 2 ko expected changes treat kare. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow-21">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-26 &amp;&amp; cd ~/terraform-course/lab-26</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="commands-where-and-why-21">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">terraform fmt -check -recursive
+terraform validate
+terraform plan -detailed-exitcode
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting-21">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice-21">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h2 id="lab-27-jenkins-ci-cd-terraform-pipeline">Lab 27 — Jenkins CI/CD Terraform pipeline</h2>
+<p><strong>Level / environment:</strong> Local/AWS<br/>
+<strong>Objective:</strong> Implement plan on PR and gated apply.</p>
+<h3 id="theory-in-hinglish-22">Theory in Hinglish</h3>
+<p>Jenkins credential store/OIDC use karo, approval gate lagao, untrusted PR ko AWS write access mat do. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow-22">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-27 &amp;&amp; cd ~/terraform-course/lab-27</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="reference-configuration-key-fragment-18">Reference configuration / key fragment</h3>
+<pre><code class="language-hcl">pipeline { agent any; stages { stage('Validate') { steps { sh 'terraform fmt -check &amp;&amp; terraform init -input=false &amp;&amp; terraform validate' } }; stage('Plan') { steps { sh 'terraform plan -out=tfplan -input=false'; archiveArtifacts artifacts: 'tfplan', fingerprint: true } }; stage('Approve') { steps { input message: 'Apply reviewed plan?' } }; stage('Apply') { steps { sh 'terraform apply -input=false tfplan' } } } }
+</code></pre>
+<p><strong>Dependency note:</strong> <code>aws_vpc.lab</code>, <code>aws_subnet.public</code>, <code>aws_subnet.private</code>, <code>aws_subnet.public_a/b</code>, <code>aws_subnet.private_a/b</code>, <code>aws_security_group.alb/db/web</code> and similar names refer to resources built in earlier labs. For two-AZ labs, create additional subnets in distinct AZs and appropriate SG rules before applying the fragment. Replace placeholders; adjust version-specific arguments using provider docs.</p>
+<h3 id="commands-where-and-why-22">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">terraform init -input=false
+terraform plan -out=tfplan -input=false
+terraform apply -input=false tfplan
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting-22">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice-22">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h2 id="lab-28-recovery-from-state-mistakes">Lab 28 — Recovery from state mistakes</h2>
+<p><strong>Level / environment:</strong> Local<br/>
+<strong>Objective:</strong> Practice backups and safe state inspection.</p>
+<h3 id="theory-in-hinglish-23">Theory in Hinglish</h3>
+<p>State sensitive hai: backup ko encrypted secure storage mein rakho; state rm infrastructure delete nahi karta. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow-23">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-28 &amp;&amp; cd ~/terraform-course/lab-28</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="commands-where-and-why-23">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">terraform state pull &gt; state-backup.json
+terraform state list
+terraform show
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting-23">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice-23">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h2 id="lab-29-troubleshooting-failure-scenarios">Lab 29 — Troubleshooting failure scenarios</h2>
+<p><strong>Level / environment:</strong> AWS<br/>
+<strong>Objective:</strong> Diagnose credentials, provider, network, lock and drift.</p>
+<h3 id="theory-in-hinglish-24">Theory in Hinglish</h3>
+<p>Debug logs secrets expose kar sakte hain; sharing se pehle redact karo. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow-24">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-29 &amp;&amp; cd ~/terraform-course/lab-29</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="commands-where-and-why-24">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">aws sts get-caller-identity
+terraform providers
+terraform validate
+terraform plan
+TF_LOG=DEBUG terraform plan 2&gt;terraform-debug.log
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting-24">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice-24">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h2 id="lab-30-production-style-capstone-and-teardown">Lab 30 — Production-style capstone and teardown</h2>
+<p><strong>Level / environment:</strong> AWS - costly<br/>
+<strong>Objective:</strong> Deploy two-AZ VPC, ALB, ASG, private RDS, remote state, CI.</p>
+<h3 id="theory-in-hinglish-25">Theory in Hinglish</h3>
+<p>Real production mein TLS, WAF, backups, monitoring, budgets, separate accounts aur approvals add karo. Terraform ka <code>plan</code> proposed diff dikhata hai; <code>apply</code> provider ke through APIs call karke real infrastructure aur state update karta hai. Is lab mein resource dependency aur rollback/cleanup dono samajhna important hai.</p>
+<h3 id="workflow-25">Workflow</h3>
+<ol>
+<li>Prerequisites confirm karo: credentials, region, resource quota, aur previous lab resources.</li>
+<li>Dedicated directory <code>mkdir -p ~/terraform-course/lab-30 &amp;&amp; cd ~/terraform-course/lab-30</code> use karo. Agar previous stack extend kar rahe ho, usi directory/state mein code add karo instead.</li>
+<li>Configuration likho, <code>terraform fmt</code> aur <code>terraform validate</code> run karo.</li>
+<li>Plan inspect karo: resources <code>+</code> create, <code>~</code> update, <code>-/+</code> replace, <code>-</code> destroy.</li>
+<li>Apply only after cost/security review; AWS CLI se independently verify karo.</li>
+<li>Notes mein expected vs actual behavior aur error/root cause likho; standalone resources destroy karo.</li>
+</ol>
+<h3 id="commands-where-and-why-25">Commands — where and why</h3>
+<p>Run in the Terraform root module directory unless <code>aws</code> command is shown:</p>
+<pre><code class="language-bash">terraform fmt -recursive
+terraform validate
+terraform plan -out=release.tfplan
+terraform apply release.tfplan
+terraform output
+terraform destroy
+</code></pre>
+<p><strong>Command flow:</strong> <code>init</code> downloads providers/configures backend → <code>validate</code> checks syntax/schema → <code>plan</code> reads state and cloud to calculate changes → <code>apply</code> calls AWS APIs → <code>state list</code>/AWS CLI verify. <code>destroy</code> performs a dependency-aware teardown; always inspect its plan.</p>
+<h3 id="verification-and-troubleshooting-25">Verification and troubleshooting</h3>
+<ul>
+<li><strong>Pass:</strong> The plan is understandable, apply succeeds, AWS console/CLI confirms expected configuration, and subsequent plan shows no unexpected drift.</li>
+<li><strong>Failure drill:</strong> Intentionally introduce an invalid reference or wrong input, run <code>terraform validate</code> or <code>plan</code>, identify the error, then correct it.</li>
+<li><strong>If access denied:</strong> <code>aws sts get-caller-identity</code>, inspect IAM policy and SCP, check region/account.</li>
+<li><strong>If networking fails:</strong> inspect routes, SG, NACL, public IP, service process, health checks, and DNS.</li>
+<li><strong>Cleanup:</strong> In the matching state directory, <code>terraform plan -destroy</code> then <code>terraform destroy</code> (except remote-state bootstrap resources you intentionally retain); verify chargeable resources are deleted.</li>
+</ul>
+<h3 id="interview-practice-25">Interview practice</h3>
+<ol>
+<li>Explain how this lab differs when run in a team using a shared remote backend.</li>
+<li>What happens when someone changes the resource manually in the AWS console?</li>
+<li>How do you debug a failed apply without blindly deleting state?</li>
+</ol>
+<h1 id="final-capstone-acceptance-checklist">Final capstone acceptance checklist</h1>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Terraform code passes <code>fmt</code> and <code>validate</code> and uses pinned provider constraints.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Network includes two AZs, public/private subnet separation and correct routes.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>ALB targets are healthy; instances have only necessary ingress.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>RDS is private, uses managed password, and is not reachable from the public internet.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Backend is encrypted, versioned and uses state locking; state is not in Git.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>CI produces a reviewable plan and requires approval for apply.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>All resources are tagged; budget alarms and cleanup are verified.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Document a simulated failure, RCA, corrective action and rollback strategy.</li>
+</ul>
+<h2 id="useful-official-references">Useful official references</h2>
+<ul>
+<li><a href="https://developer.hashicorp.com/terraform/language">https://developer.hashicorp.com/terraform/language</a></li>
+<li><a href="https://developer.hashicorp.com/terraform/cli">https://developer.hashicorp.com/terraform/cli</a></li>
+<li><a href="https://developer.hashicorp.com/terraform/language/backend/s3">https://developer.hashicorp.com/terraform/language/backend/s3</a></li>
+<li><a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs">https://registry.terraform.io/providers/hashicorp/aws/latest/docs</a></li>
+<li><a href="https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html">https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html</a></li>
+</ul>
+<p><strong>Important:</strong> This is a learning workbook with executable starter fragments, not a fully assembled production repository. Production requires additional testing, organization policies, observability, encrypted backups, TLS and hardened IAM.</p>
+</article></main><footer>ARTHA Gurukul · Source material preserved as educational notes</footer></body></html>

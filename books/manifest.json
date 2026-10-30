@@ -1,0 +1,484 @@
+[
+  {
+    "title": "DevOps & Infrastructure Foundations",
+    "path": "01-devops-and-infrastructure-foundations.html",
+    "type": "html",
+    "tags": [
+      "devops",
+      "linux",
+      "git",
+      "docker"
+    ],
+    "source": "01-DevOps-and-Infrastructure-Foundations.md",
+    "size": 20476
+  },
+  {
+    "title": "Linux Networking, YAML & JSON",
+    "path": "02-linux-networking-yaml-and-json-foundations.html",
+    "type": "html",
+    "tags": [
+      "linux",
+      "network",
+      "yaml",
+      "json"
+    ],
+    "source": "02-Linux-Networking-YAML-and-JSON-Foundations.md",
+    "size": 29446
+  },
+  {
+    "title": "AWS IAM Fundamentals to Production",
+    "path": "04-aws-iam-fundamentals-to-production.html",
+    "type": "html",
+    "tags": [
+      "aws",
+      "iam",
+      "sts",
+      "rbac",
+      "security"
+    ],
+    "source": "04-AWS-IAM-Fundamentals-to-Production.md",
+    "size": 52658
+  },
+  {
+    "title": "Advanced PyTorch Internals",
+    "path": "05-advanced-pytorch-internals.html",
+    "type": "html",
+    "tags": [
+      "pytorch",
+      "gpu",
+      "deep learning",
+      "ai",
+      "torch"
+    ],
+    "source": "05_Advanced_PyTorch_Internals.md",
+    "size": 22353
+  },
+  {
+    "title": "Real Linux Log Ingestion",
+    "path": "06-real-linux-log-ingestion.html",
+    "type": "html",
+    "tags": [
+      "linux",
+      "filebeat",
+      "elastic",
+      "logstash",
+      "siem",
+      "soc"
+    ],
+    "source": "06_Real_Linux_Log_Ingestion.md",
+    "size": 21804
+  },
+  {
+    "title": "AWS VPC Networking in Depth",
+    "path": "08-aws-vpc-networking-in-depth.html",
+    "type": "html",
+    "tags": [
+      "aws",
+      "vpc",
+      "subnet",
+      "routing",
+      "network"
+    ],
+    "source": "08-AWS-VPC-Networking-in-Depth.md",
+    "size": 60185
+  },
+  {
+    "title": "Production AWS VPC Design Lab",
+    "path": "09-production-vpc-design-lab.html",
+    "type": "html",
+    "tags": [
+      "aws",
+      "vpc",
+      "infrastructure",
+      "network"
+    ],
+    "source": "09-Production-VPC-Design-Lab.md",
+    "size": 71631
+  },
+  {
+    "title": "AI/ML/GenAI — 64 Lesson Master Workbook",
+    "path": "ai-ml-genai-64-lesson-master-workbook.html",
+    "type": "html",
+    "tags": [
+      "ai",
+      "genai",
+      "machine learning",
+      "neural",
+      "pytorch",
+      "llm",
+      "rag"
+    ],
+    "source": "AI_ML_GenAI_64_Lesson_Master_Workbook.md",
+    "size": 71999
+  },
+  {
+    "title": "ARTHA Systems Academy V2 — Original Interactive Lessons",
+    "path": "artha-systems-academy-v2-offline.html",
+    "type": "html",
+    "tags": [
+      "linux",
+      "python",
+      "elasticsearch",
+      "elk",
+      "postgresql",
+      "rhcsa",
+      "rhce"
+    ],
+    "source": "ARTHA_Systems_Academy_V2_Offline.html",
+    "size": 829560
+  },
+  {
+    "title": "AWS RDS — Six Volume Syllabus",
+    "path": "aws-rds-masterclass-syllabus.html",
+    "type": "html",
+    "tags": [
+      "rds",
+      "postgresql",
+      "database",
+      "aws"
+    ],
+    "source": "AWS_RDS_Masterclass_Syllabus.md",
+    "size": 5219
+  },
+  {
+    "title": "AWS RDS Masterclass — Volume 1",
+    "path": "aws-rds-masterclass-volume-1.html",
+    "type": "html",
+    "tags": [
+      "rds",
+      "postgresql",
+      "database",
+      "aws",
+      "backup"
+    ],
+    "source": "AWS_RDS_Masterclass_Volume_1.md",
+    "size": 62036
+  },
+  {
+    "title": "AWS RDS Masterclass — Volume 2",
+    "path": "aws-rds-masterclass-volume-2.html",
+    "type": "html",
+    "tags": [
+      "rds",
+      "postgresql",
+      "database",
+      "aws",
+      "backup"
+    ],
+    "source": "AWS_RDS_Masterclass_Volume_2.md",
+    "size": 74984
+  },
+  {
+    "title": "AWS RDS Masterclass — Volume 3",
+    "path": "aws-rds-masterclass-volume-3.html",
+    "type": "html",
+    "tags": [
+      "rds",
+      "postgresql",
+      "database",
+      "aws",
+      "backup"
+    ],
+    "source": "AWS_RDS_Masterclass_Volume_3.md",
+    "size": 27963
+  },
+  {
+    "title": "AWS RDS Masterclass — Volume 4",
+    "path": "aws-rds-masterclass-volume-4.html",
+    "type": "html",
+    "tags": [
+      "rds",
+      "postgresql",
+      "database",
+      "aws",
+      "backup"
+    ],
+    "source": "AWS_RDS_Masterclass_Volume_4.md",
+    "size": 42986
+  },
+  {
+    "title": "AWS RDS Masterclass — Volume 5",
+    "path": "aws-rds-masterclass-volume-5.html",
+    "type": "html",
+    "tags": [
+      "rds",
+      "postgresql",
+      "database",
+      "aws",
+      "backup"
+    ],
+    "source": "AWS_RDS_Masterclass_Volume_5.md",
+    "size": 44520
+  },
+  {
+    "title": "AWS RDS Masterclass — Volume 6",
+    "path": "aws-rds-masterclass-volume-6.html",
+    "type": "html",
+    "tags": [
+      "rds",
+      "postgresql",
+      "database",
+      "aws",
+      "backup"
+    ],
+    "source": "AWS_RDS_Masterclass_Volume_6.md",
+    "size": 74125
+  },
+  {
+    "title": "CI/CD 30 Hands-on Labs",
+    "path": "ci-cd-30-hands-on-labs-hinglish-lead-devops.html",
+    "type": "html",
+    "tags": [
+      "ci/cd",
+      "jenkins",
+      "pipeline",
+      "gitops",
+      "devops",
+      "github"
+    ],
+    "source": "CI_CD_30_Hands_On_Labs_Hinglish_Lead_DevOps.md",
+    "size": 99184
+  },
+  {
+    "title": "DevAI V34 — Classical AI to GenAI",
+    "path": "classical-to-genai-v34.html",
+    "type": "html",
+    "tags": [
+      "ai",
+      "genai",
+      "machine learning",
+      "classical ai"
+    ],
+    "source": "CLASSICAL_TO_GENAI_V34.md",
+    "size": 9586
+  },
+  {
+    "title": "Modern Programming + AI Course Book",
+    "path": "course-book.html",
+    "type": "html",
+    "tags": [
+      "python",
+      "c++",
+      "ai",
+      "algorithms"
+    ],
+    "source": "COURSE_BOOK.md",
+    "size": 49398
+  },
+  {
+    "title": "C++ Masterbook Volume 1",
+    "path": "cpp-masterbook-volume-01-expanded.html",
+    "type": "html",
+    "tags": [
+      "c++",
+      "cpp",
+      "memory",
+      "programming"
+    ],
+    "source": "CPP_Masterbook_Volume_01_Expanded.md",
+    "size": 32342
+  },
+  {
+    "title": "CampusX 100 Days ML — Hinglish Notes",
+    "path": "campusx-100-days-ml-complete-hinglish-notes.html",
+    "type": "html",
+    "tags": [
+      "campusx",
+      "machine learning",
+      "ml",
+      "pandas",
+      "numpy",
+      "eda",
+      "data cleaning"
+    ],
+    "source": "CampusX_100_Days_ML_Complete_Hinglish_Notes.md",
+    "size": 90042
+  },
+  {
+    "title": "CampusX AI/ML/LLM/RAG Master Index",
+    "path": "campusx-ai-ml-llm-python-pytorch-rag-mcp-master-index.html",
+    "type": "html",
+    "tags": [
+      "campusx",
+      "rag",
+      "mcp",
+      "pytorch",
+      "llm",
+      "agent"
+    ],
+    "source": "CampusX_AI_ML_LLM_Python_PyTorch_RAG_MCP_Master_Index.md",
+    "size": 21117
+  },
+  {
+    "title": "CampusX DSMP — Hinglish Notes",
+    "path": "campusx-dsmp-hinglish-master-notes.html",
+    "type": "html",
+    "tags": [
+      "campusx",
+      "data",
+      "python",
+      "sql",
+      "statistics",
+      "machine learning"
+    ],
+    "source": "CampusX_DSMP_Hinglish_Master_Notes.md",
+    "size": 51309
+  },
+  {
+    "title": "AWS Bedrock + RAG Crash Course",
+    "path": "infosys-genai-aws-bedrock-rag-crash-course.html",
+    "type": "html",
+    "tags": [
+      "bedrock",
+      "genai",
+      "rag",
+      "aws"
+    ],
+    "source": "Infosys_GenAI_AWS_Bedrock_RAG_Crash_Course.md",
+    "size": 40950
+  },
+  {
+    "title": "GenAI + AWS Bedrock + Python Engineering Masterbook",
+    "path": "infosys-genai-aws-cloud-full-masterbook-deep-training-troubleshooting.html",
+    "type": "html",
+    "tags": [
+      "bedrock",
+      "genai",
+      "aws",
+      "python",
+      "rag",
+      "ai"
+    ],
+    "source": "Infosys_GenAI_AWS_Cloud_Full_Masterbook_Deep_Training_Troubleshooting.md",
+    "size": 177322
+  },
+  {
+    "title": "Kubernetes Deep Lessons PDF",
+    "path": "kubernetes-engineering-expanded-deep-lessons-2026.pdf",
+    "type": "pdf",
+    "tags": [
+      "kubernetes",
+      "k8s",
+      "helm",
+      "ingress"
+    ],
+    "source": "Kubernetes_Engineering_Expanded_Deep_Lessons_2026.pdf",
+    "size": 1284006
+  },
+  {
+    "title": "Kubernetes Engineering Master Course",
+    "path": "kubernetes-engineering-master-course-2026.html",
+    "type": "html",
+    "tags": [
+      "kubernetes",
+      "k8s",
+      "kubeflow",
+      "container",
+      "ingress",
+      "helm"
+    ],
+    "source": "Kubernetes_Engineering_Master_Course_2026.md",
+    "size": 185099
+  },
+  {
+    "title": "Linux Kernel Engineering",
+    "path": "linux-kernel-development-revised-engineering-edition.html",
+    "type": "html",
+    "tags": [
+      "linux",
+      "kernel",
+      "module",
+      "operating system",
+      "drivers"
+    ],
+    "source": "Linux_Kernel_Development_Revised_Engineering_Edition.md",
+    "size": 393231
+  },
+  {
+    "title": "OpenShift 4.20 Senior Administrator",
+    "path": "openshift-4-20-combined-senior-admin-masterbook-expanded.pdf",
+    "type": "pdf",
+    "tags": [
+      "openshift",
+      "etcd",
+      "scc",
+      "aws upi"
+    ],
+    "source": "OpenShift_4_20_Combined_Senior_Admin_Masterbook_Expanded.pdf",
+    "size": 377342
+  },
+  {
+    "title": "Production Cloud + AI Infrastructure — 6 Volumes",
+    "path": "production-cloud-ai-infrastructure-master-book-volumes-1-to-6.html",
+    "type": "html",
+    "tags": [
+      "cloud",
+      "aws",
+      "azure",
+      "gcp",
+      "gpu",
+      "llm",
+      "ai infrastructure",
+      "production cloud",
+      "mlops"
+    ],
+    "source": "Production_Cloud_AI_Infrastructure_Master_Book_Volumes_1_to_6.md",
+    "size": 617737
+  },
+  {
+    "title": "RHEL RHCSA/RHCE Engineering",
+    "path": "red-hat-linux-administrator-engineer-advanced-edition.html",
+    "type": "html",
+    "tags": [
+      "rh",
+      "rhel",
+      "linux",
+      "selinux",
+      "ansible"
+    ],
+    "source": "Red_Hat_Linux_Administrator_Engineer_Advanced_Edition.md",
+    "size": 67921
+  },
+  {
+    "title": "Senior Linux Infrastructure",
+    "path": "senior-linux-infrastructure-masterbook-web-audited.html",
+    "type": "html",
+    "tags": [
+      "linux",
+      "network",
+      "ha",
+      "storage",
+      "incident",
+      "performance"
+    ],
+    "source": "Senior_Linux_Infrastructure_Masterbook_Web_Audited.md",
+    "size": 233296
+  },
+  {
+    "title": "Terraform 30 Labs",
+    "path": "terraform-30-labs-hinglish-cloud-deployment-manual.html",
+    "type": "html",
+    "tags": [
+      "terraform",
+      "aws infrastructure",
+      "infrastructure as code",
+      "iac"
+    ],
+    "source": "Terraform_30_Labs_Hinglish_Cloud_Deployment_Manual.md",
+    "size": 121465
+  },
+  {
+    "title": "GenAI Agents + MCP Job-Ready Course",
+    "path": "genai-ml-agents-mcp-cloud-job-ready-course-1.html",
+    "type": "html",
+    "tags": [
+      "genai",
+      "agent",
+      "mcp",
+      "rag",
+      "llm"
+    ],
+    "source": "genai_ml_agents_mcp_cloud_job_ready_course(1).md",
+    "size": 14706
+  }
+]

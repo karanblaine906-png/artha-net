@@ -1,0 +1,463 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AWS RDS Masterclass — Volume 4 | ARTHA Gurukul</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><a class="brand" href="../index.html">✦ ARTHA GURUKUL</a><nav><a href="../index.html#courses">All Courses</a><a href="index.html">Source Library</a></nav></header><main class="book-layout"><aside class="book-toc"><div class="eyebrow">Original material · offline copy</div><h2>AWS RDS Masterclass — Volume 4</h2><a href="../index.html">⌂ Course library</a><div class="toc"><a href="#aws-rds-masterclass-volume-4">AWS RDS Masterclass — Volume 4</a><a href="#high-availability-replication-backup-disaster-recovery-aurora-and-performance-sc">High Availability, Replication, Backup, Disaster Recovery, Aurora and Performance Sca</a><a href="#chapter-22-storage-architecture-gp3-io1-io2-iops-and-latency">Chapter 22 — Storage architecture, gp3/io1/io2, IOPS and latency</a><a href="#chapter-23-multi-az-db-instances-and-multi-az-db-clusters">Chapter 23 — Multi-AZ DB instances and Multi-AZ DB clusters</a><a href="#chapter-24-read-replicas-and-replication-internals">Chapter 24 — Read replicas and replication internals</a><a href="#chapter-25-automated-backups-snapshots-and-pitr">Chapter 25 — Automated backups, snapshots and PITR</a><a href="#chapter-26-dr-strategy-cross-region-replication-and-rto-rpo">Chapter 26 — DR strategy, cross-region replication and RTO/RPO</a><a href="#chapter-27-vertical-read-scaling-and-capacity-planning">Chapter 27 — Vertical/read scaling and capacity planning</a><a href="#chapter-28-amazon-aurora-and-aurora-serverless">Chapter 28 — Amazon Aurora and Aurora Serverless</a><a href="#chapter-29-production-failure-simulations-and-runbooks">Chapter 29 — Production failure simulations and runbooks</a><a href="#chapter-30-capstone-production-grade-order-service">Chapter 30 — Capstone: production-grade order service</a></div></aside><article class="book-prose"><p class="source-note">Historical course notes converted into searchable offline HTML. Some content may be a draft; exercises requiring cloud accounts need credentials and may incur costs.</p><h1 id="aws-rds-masterclass-volume-4">AWS RDS Masterclass — Volume 4</h1>
+<h2 id="high-availability-replication-backup-disaster-recovery-aurora-and-performance-sc">High Availability, Replication, Backup, Disaster Recovery, Aurora and Performance Scaling</h2>
+<p><strong>Audience:</strong> Senior software engineers, SREs, DBAs, cloud architects | <strong>Reference engine:</strong> Amazon RDS for PostgreSQL | <strong>Edition:</strong> October 2026</p>
+<blockquote>
+<p><strong>Important:</strong> This is an independent engineering textbook, not AWS documentation. AWS features, availability, quotas, costs, failover behavior and supported combinations change. Verify all examples against the current AWS documentation for your region and engine version before production use. Labs are illustrative and have not been executed in a live account. Never run destructive exercises against production. Some labs create billable resources.</p>
+</blockquote>
+<h3 id="learning-outcomes">Learning outcomes</h3>
+<p>Design an HA and DR architecture; explain synchronous versus asynchronous replication; select between Multi-AZ instance, Multi-AZ cluster, read replicas and Aurora; perform backups and restores; calculate RTO/RPO; diagnose storage and replication bottlenecks; automate using CLI/Terraform; and defend tradeoffs in senior-level interviews.</p>
+<h3 id="contents">Contents</h3>
+<ol start="22">
+<li>Storage architecture, gp3/io1/io2, IOPS and latency</li>
+<li>Multi-AZ DB instances and Multi-AZ DB clusters</li>
+<li>Read replicas and replication internals</li>
+<li>Automated backups, snapshots and PITR</li>
+<li>DR strategy, cross-region replication and RTO/RPO</li>
+<li>Vertical/read scaling and capacity planning</li>
+<li>Amazon Aurora and Aurora Serverless</li>
+<li>Production failure simulations and runbooks</li>
+<li>Capstone, interviews, glossary and index</li>
+</ol>
+<h2 id="chapter-22-storage-architecture-gp3-io1-io2-iops-and-latency">Chapter 22 — Storage architecture, gp3/io1/io2, IOPS and latency</h2>
+<h3 id="concepts-and-internal-mechanisms">Concepts and internal mechanisms</h3>
+<p>An RDS database is not merely an EC2 VM plus a disk. RDS manages the DB instance lifecycle and storage integration. For traditional RDS engines, storage is provisioned independently from instance compute and typically backed by managed block-storage technologies. Aurora uses a fundamentally different distributed cluster storage design, covered later.</p>
+<p><strong>Four critical metrics:</strong> IOPS = completed I/O operations per second; throughput = bytes transferred per second; latency = time to complete an operation; queue depth = outstanding operations. These are related but not interchangeable. 8 KiB random reads at 10,000 IOPS yield approximately 78 MiB/s of payload, whereas large sequential I/O may hit throughput ceilings before IOPS ceilings. Real workload behavior also depends on cache hits, page size, WAL flushes, concurrency and engine internals.</p>
+<p><strong>Storage classes:</strong> gp3 is general-purpose SSD with independently provisionable performance subject to AWS-specific limits and configuration rules; io1/io2 are provisioned-IOPS SSD options for workloads requiring more predictable I/O performance, with io2 Block Express support dependent on deployment and engine. Never assume a particular IOPS-to-GiB ratio or maximum without checking the engine/region/storage configuration. Storage autoscaling increases allocated storage when thresholds are met; it does not reduce storage and is not a cure for runaway writes.</p>
+<p><strong>Inside a commit:</strong> client issues COMMIT → engine generates WAL/redo records → durable logging requirements are met → transaction can be acknowledged. Data pages may be flushed later. In a Multi-AZ instance deployment, the durability path also depends on the synchronous standby mechanism. Distinguish application-perceived commit latency from disk-level write latency.</p>
+<p><strong>Lab:</strong> record a baseline before changing anything. Use <code>aws rds describe-db-instances --db-instance-identifier "$DB_ID" --query 'DBInstances[0].{Storage:StorageType,GiB:AllocatedStorage,IOPS:Iops,Throughput:StorageThroughput,AZ:AvailabilityZone}'</code>. Compare CloudWatch <code>ReadIOPS</code>, <code>WriteIOPS</code>, <code>ReadLatency</code>, <code>WriteLatency</code>, <code>ReadThroughput</code>, <code>WriteThroughput</code>, <code>DiskQueueDepth</code>, <code>FreeStorageSpace</code> and <code>FreeableMemory</code>. Correlate with PostgreSQL <code>pg_stat_database</code>, <code>pg_stat_bgwriter</code>/<code>pg_stat_checkpointer</code> (version dependent), <code>pg_stat_wal</code>, and <code>pg_stat_statements</code> when enabled.</p>
+<p><strong>Decision rule:</strong> If latency is high but IOPS low, investigate lock waits, query plans, connection saturation and application latency before purchasing more IOPS. If latency and queue depth rise together under sustained storage load, test a suitable storage/performance upgrade after checking workload and cost.</p>
+<h3 id="architecture-workflow-diagram-chapter-22">Architecture / workflow diagram — Chapter 22</h3>
+<pre><code class="language-mermaid">flowchart LR
+    A[Application and business SLO] --&gt; B[Database writer]
+    B --&gt; C[Storage / durability path]
+    B --&gt; D[HA or read replica path]
+    C --&gt; E[Metrics and recovery evidence]
+    D --&gt; E
+    E --&gt; F{Meet RTO, RPO and latency targets?}
+    F --&gt;|No| G[Diagnose, redesign, retest]
+    G --&gt; A
+    F --&gt;|Yes| H[Document and monitor]
+</code></pre>
+<h3 id="senior-engineering-review">Senior engineering review</h3>
+<ol>
+<li>Identify the failure domain (instance, AZ, region, operator error, application error).</li>
+<li>Explain which component acknowledges commits and what happens to in-flight requests.</li>
+<li>Define how you would <em>measure</em> recovery and data correctness, not just availability.</li>
+<li>State cost, operational complexity, security and consistency tradeoffs.</li>
+</ol>
+<h3 id="interview-q-a">Interview Q&amp;A</h3>
+<p><strong>Q: How would you validate this design before launch?</strong><br/>
+<strong>A:</strong> Establish a workload baseline, test normal and failure paths in a nonproduction environment, measure p95/p99 latency and observed RTO/RPO, verify permissions and backups, and capture rollback procedures.</p>
+<p><strong>Q: What should a senior engineer do when a dashboard is green but users report errors?</strong><br/>
+<strong>A:</strong> Correlate end-to-end request traces, DB connections, DNS/endpoint changes, query waits and application retries. Infrastructure health does not guarantee correct or timely business transactions.</p>
+<h2 id="chapter-23-multi-az-db-instances-and-multi-az-db-clusters">Chapter 23 — Multi-AZ DB instances and Multi-AZ DB clusters</h2>
+<h3 id="concepts-and-internal-mechanisms-1">Concepts and internal mechanisms</h3>
+<p><strong>Multi-AZ DB instance:</strong> one writer in one AZ and a synchronously replicated standby in another AZ. The standby is not a normal read endpoint. RDS detects qualifying failures and performs a managed failover. Applications should connect via the DB endpoint hostname and must reconnect/retry appropriately after DNS and connection transitions.</p>
+<p><strong>Multi-AZ DB cluster:</strong> supported RDS engines/configurations use a writer and two readable standby instances across three AZs, with different replication/failover mechanics and reader access from a classic Multi-AZ DB instance. It is not the same as Aurora, even though both have writer/reader concepts. Confirm engine version, region, limitations and pricing.</p>
+<p><strong>What HA is not:</strong> Multi-AZ does not guarantee zero downtime, zero lost transactions under every conceivable failure, protection against accidental <code>DROP TABLE</code>, immunity to regional failure, or an automatic solution to application retry logic.</p>
+<p><strong>Application sequence:</strong> (1) open connection with reasonable timeouts, (2) begin transaction, (3) issue SQL, (4) commit, (5) on network error or failover, discard broken connection and retry only when operation is safe. For non-idempotent payments, use an idempotency key and verify committed state before replaying.</p>
+<p><strong>Failure timeline:</strong> detection → promotion/role transition → DNS/endpoint changes → client DNS refresh and reconnection → application recovery. The total user-visible outage includes every stage. Do not promise a fixed failover duration; measure it.</p>
+<p><strong>CLI inspection:</strong> <code>aws rds describe-db-instances --db-instance-identifier "$DB_ID" --query 'DBInstances[0].{MultiAZ:MultiAZ,Endpoint:Endpoint.Address,AZ:AvailabilityZone,SecondaryAZ:SecondaryAvailabilityZone,Status:DBInstanceStatus}'</code>.</p>
+<p><strong>Safe nonproduction test:</strong> <code>aws rds reboot-db-instance --db-instance-identifier "$DB_ID" --force-failover</code> applies to supported Multi-AZ DB instance configurations. Do not assume it applies to Multi-AZ DB clusters or Aurora; use the deployment-specific failover API. Run only with change approval, telemetry and a recovery plan.</p>
+<p><strong>Verification:</strong> continuously issue a read and an idempotent write from the application, record request errors, connection recovery time, DB event notifications and DNS behavior. Verify committed records after recovery.</p>
+<h3 id="architecture-workflow-diagram-chapter-23">Architecture / workflow diagram — Chapter 23</h3>
+<pre><code class="language-mermaid">flowchart LR
+    A[Application and business SLO] --&gt; B[Database writer]
+    B --&gt; C[Storage / durability path]
+    B --&gt; D[HA or read replica path]
+    C --&gt; E[Metrics and recovery evidence]
+    D --&gt; E
+    E --&gt; F{Meet RTO, RPO and latency targets?}
+    F --&gt;|No| G[Diagnose, redesign, retest]
+    G --&gt; A
+    F --&gt;|Yes| H[Document and monitor]
+</code></pre>
+<h3 id="senior-engineering-review-1">Senior engineering review</h3>
+<ol>
+<li>Identify the failure domain (instance, AZ, region, operator error, application error).</li>
+<li>Explain which component acknowledges commits and what happens to in-flight requests.</li>
+<li>Define how you would <em>measure</em> recovery and data correctness, not just availability.</li>
+<li>State cost, operational complexity, security and consistency tradeoffs.</li>
+</ol>
+<h3 id="interview-q-a-1">Interview Q&amp;A</h3>
+<p><strong>Q: How would you validate this design before launch?</strong><br/>
+<strong>A:</strong> Establish a workload baseline, test normal and failure paths in a nonproduction environment, measure p95/p99 latency and observed RTO/RPO, verify permissions and backups, and capture rollback procedures.</p>
+<p><strong>Q: What should a senior engineer do when a dashboard is green but users report errors?</strong><br/>
+<strong>A:</strong> Correlate end-to-end request traces, DB connections, DNS/endpoint changes, query waits and application retries. Infrastructure health does not guarantee correct or timely business transactions.</p>
+<h2 id="chapter-24-read-replicas-and-replication-internals">Chapter 24 — Read replicas and replication internals</h2>
+<h3 id="concepts-and-internal-mechanisms-2">Concepts and internal mechanisms</h3>
+<p><strong>Core distinction:</strong> High availability and read scaling are different requirements. A read replica may serve reads and support a promotion strategy, but standard asynchronous read replication introduces lag and does not provide strong read-after-write guarantees on replica reads.</p>
+<p><strong>Physical versus logical replication:</strong> PostgreSQL physical replication replays WAL and preserves physical database state; logical replication streams selected data changes using publication/subscription semantics, with different DDL and conflict considerations. RDS read replica implementation varies by engine and deployment. MySQL uses engine-specific binary log replication approaches. Aurora readers consume the shared Aurora cluster storage architecture rather than being identical to conventional RDS read replicas.</p>
+<p><strong>Why lag happens:</strong> primary write throughput exceeds replica replay capacity; long-running queries on a replica; network interruption; storage pressure; large transactions; CPU saturation; vacuum and replay conflicts. ReplicaLag is a useful signal but is not a complete proof of transaction-level freshness.</p>
+<p><strong>Read routing:</strong> write requests and consistency-sensitive reads go to the writer; analytics/search and eventually consistent reads may use replicas. For a user who just updated a profile, route the immediate read to the writer or implement a consistency-aware strategy.</p>
+<p><strong>Lab:</strong> create a test replica through the console or an engine-supported <code>aws rds create-db-instance-read-replica --db-instance-identifier "$REPLICA_ID" --source-db-instance-identifier "$DB_ID"</code> with appropriate subnet, encryption, region and configuration. Wait for <code>available</code>, then compare a marker inserted on the primary with its visibility on the replica. Inspect <code>aws rds describe-db-instances --db-instance-identifier "$REPLICA_ID" --query 'DBInstances[0].{Status:DBInstanceStatus,Source:ReadReplicaSourceDBInstanceIdentifier,Endpoint:Endpoint.Address}'</code>.</p>
+<p><strong>Promotion:</strong> <code>aws rds promote-read-replica --db-instance-identifier "$REPLICA_ID"</code> is a disruptive topology change, not an automatic failback plan. Validate replica catch-up, application write routing, data reconciliation and old-writer fencing. Cross-region read replicas have added network, compliance and recovery concerns.</p>
+<h3 id="architecture-workflow-diagram-chapter-24">Architecture / workflow diagram — Chapter 24</h3>
+<pre><code class="language-mermaid">flowchart LR
+    A[Application and business SLO] --&gt; B[Database writer]
+    B --&gt; C[Storage / durability path]
+    B --&gt; D[HA or read replica path]
+    C --&gt; E[Metrics and recovery evidence]
+    D --&gt; E
+    E --&gt; F{Meet RTO, RPO and latency targets?}
+    F --&gt;|No| G[Diagnose, redesign, retest]
+    G --&gt; A
+    F --&gt;|Yes| H[Document and monitor]
+</code></pre>
+<h3 id="senior-engineering-review-2">Senior engineering review</h3>
+<ol>
+<li>Identify the failure domain (instance, AZ, region, operator error, application error).</li>
+<li>Explain which component acknowledges commits and what happens to in-flight requests.</li>
+<li>Define how you would <em>measure</em> recovery and data correctness, not just availability.</li>
+<li>State cost, operational complexity, security and consistency tradeoffs.</li>
+</ol>
+<h3 id="interview-q-a-2">Interview Q&amp;A</h3>
+<p><strong>Q: How would you validate this design before launch?</strong><br/>
+<strong>A:</strong> Establish a workload baseline, test normal and failure paths in a nonproduction environment, measure p95/p99 latency and observed RTO/RPO, verify permissions and backups, and capture rollback procedures.</p>
+<p><strong>Q: What should a senior engineer do when a dashboard is green but users report errors?</strong><br/>
+<strong>A:</strong> Correlate end-to-end request traces, DB connections, DNS/endpoint changes, query waits and application retries. Infrastructure health does not guarantee correct or timely business transactions.</p>
+<h2 id="chapter-25-automated-backups-snapshots-and-pitr">Chapter 25 — Automated backups, snapshots and PITR</h2>
+<h3 id="concepts-and-internal-mechanisms-3">Concepts and internal mechanisms</h3>
+<p><strong>Automated backups</strong> support recovery to a point within the configured retention window by combining backups with transaction logs as supported by the engine. <strong>Manual snapshots</strong> are explicitly retained until deleted and capture a restorable database state. <strong>PITR</strong> creates a <em>new</em> DB instance/cluster at the selected recoverable point; it does not rewind the original in place.</p>
+<p><strong>RPO versus backup frequency:</strong> A nightly snapshot alone may imply substantial data loss. PITR can provide a much smaller recoverable gap within the available log/restore constraints, but <code>LatestRestorableTime</code> and engine behavior govern the actual latest point. Always inspect rather than assume zero RPO.</p>
+<p><strong>CLI:</strong> <code>aws rds describe-db-instances --db-instance-identifier "$DB_ID" --query 'DBInstances[0].{Retention:BackupRetentionPeriod,LatestRestorableTime:LatestRestorableTime,Encrypted:StorageEncrypted}'</code>; <code>aws rds create-db-snapshot --db-instance-identifier "$DB_ID" --db-snapshot-identifier "$SNAPSHOT_ID"</code>; <code>aws rds describe-db-snapshots --db-snapshot-identifier "$SNAPSHOT_ID"</code>.</p>
+<p><strong>PITR drill:</strong> inject an unmistakable test row at T1, record time T2, intentionally delete it at T3 in a <em>nonproduction</em> DB, then restore to a valid point between T1 and T3 using <code>aws rds restore-db-instance-to-point-in-time --source-db-instance-identifier "$DB_ID" --target-db-instance-identifier "$RESTORE_ID" --restore-time '2026-10-01T10:05:00Z'</code> (example timestamp; substitute a real time inside the retention window). Restore may require explicit networking, security and parameter settings. Wait until available, connect to the new endpoint and verify the row.</p>
+<p><strong>Snapshot restore:</strong> <code>aws rds restore-db-instance-from-db-snapshot --db-instance-identifier "$RESTORE_ID" --db-snapshot-identifier "$SNAPSHOT_ID" --db-instance-class db.t3.medium</code> is illustrative; verify supported classes, encryption/KMS access and other required settings.</p>
+<p><strong>Critical runbook:</strong> create isolated restore → verify schema/data counts and app smoke tests → reconcile post-restore transactions → choose cutover and rollback approach → update secrets/endpoints → monitor. Backup success is not recovery success. Run regular restore drills, verify backup access across accounts and preserve immutable/offline protections where appropriate.</p>
+<h3 id="architecture-workflow-diagram-chapter-25">Architecture / workflow diagram — Chapter 25</h3>
+<pre><code class="language-mermaid">flowchart LR
+    A[Application and business SLO] --&gt; B[Database writer]
+    B --&gt; C[Storage / durability path]
+    B --&gt; D[HA or read replica path]
+    C --&gt; E[Metrics and recovery evidence]
+    D --&gt; E
+    E --&gt; F{Meet RTO, RPO and latency targets?}
+    F --&gt;|No| G[Diagnose, redesign, retest]
+    G --&gt; A
+    F --&gt;|Yes| H[Document and monitor]
+</code></pre>
+<h3 id="senior-engineering-review-3">Senior engineering review</h3>
+<ol>
+<li>Identify the failure domain (instance, AZ, region, operator error, application error).</li>
+<li>Explain which component acknowledges commits and what happens to in-flight requests.</li>
+<li>Define how you would <em>measure</em> recovery and data correctness, not just availability.</li>
+<li>State cost, operational complexity, security and consistency tradeoffs.</li>
+</ol>
+<h3 id="interview-q-a-3">Interview Q&amp;A</h3>
+<p><strong>Q: How would you validate this design before launch?</strong><br/>
+<strong>A:</strong> Establish a workload baseline, test normal and failure paths in a nonproduction environment, measure p95/p99 latency and observed RTO/RPO, verify permissions and backups, and capture rollback procedures.</p>
+<p><strong>Q: What should a senior engineer do when a dashboard is green but users report errors?</strong><br/>
+<strong>A:</strong> Correlate end-to-end request traces, DB connections, DNS/endpoint changes, query waits and application retries. Infrastructure health does not guarantee correct or timely business transactions.</p>
+<h2 id="chapter-26-dr-strategy-cross-region-replication-and-rto-rpo">Chapter 26 — DR strategy, cross-region replication and RTO/RPO</h2>
+<h3 id="concepts-and-internal-mechanisms-4">Concepts and internal mechanisms</h3>
+<p><strong>RTO</strong> is maximum acceptable time to restore service. <strong>RPO</strong> is maximum acceptable data loss measured in time. They are business targets, not properties you get merely by checking Multi-AZ.</p>
+<p><strong>Example:</strong> last recoverable committed transaction at 13:56, disaster at 14:00, recovered service at 14:42. Observed RPO = 4 minutes and RTO = 42 minutes. Compare with contractual objectives such as RPO ≤ 5 minutes and RTO ≤ 60 minutes; use actual incident measurements, not vendor averages.</p>
+<p><strong>DR patterns:</strong> backup-and-restore (lower ongoing cost, longer RTO); pilot light (core data/infra warm); warm standby (reduced recovery time, ongoing cost); active-active (complex consistency/conflict management and higher operational cost). Cross-region read replica or Aurora Global Database may reduce recovery times for suitable engines but still require promotion, write fencing, DNS, credentials, networking, application readiness and data-loss assessment.</p>
+<p><strong>Region failure checklist:</strong> determine blast radius → declare incident → freeze conflicting writes → establish replica freshness or last restorable point → promote/restore target → verify data and security → route application traffic → smoke test → reconcile pending transactions → announce status → document new primary and failback strategy.</p>
+<p><strong>Data correctness:</strong> If an old writer becomes reachable after a region failover, prevent split-brain writes. Payment/order systems should use durable request IDs and downstream reconciliation. Avoid claiming asynchronous cross-region replication has zero RPO.</p>
+<p><strong>Security:</strong> replicate or reconstruct required secrets, KMS permissions, IAM policies, parameter groups, network controls, observability and backup retention. A restored encrypted snapshot requires appropriate KMS key access. Test cross-account/cross-region copy requirements in advance.</p>
+<p><strong>Exercise:</strong> draw the dependency graph for API, DB, Secrets Manager, DNS, queue, object storage and identity. Assign RTO/RPO per dependency, then run a tabletop scenario where the primary region is unavailable and one replica is 90 seconds behind.</p>
+<h3 id="architecture-workflow-diagram-chapter-26">Architecture / workflow diagram — Chapter 26</h3>
+<pre><code class="language-mermaid">flowchart LR
+    A[Application and business SLO] --&gt; B[Database writer]
+    B --&gt; C[Storage / durability path]
+    B --&gt; D[HA or read replica path]
+    C --&gt; E[Metrics and recovery evidence]
+    D --&gt; E
+    E --&gt; F{Meet RTO, RPO and latency targets?}
+    F --&gt;|No| G[Diagnose, redesign, retest]
+    G --&gt; A
+    F --&gt;|Yes| H[Document and monitor]
+</code></pre>
+<h3 id="senior-engineering-review-4">Senior engineering review</h3>
+<ol>
+<li>Identify the failure domain (instance, AZ, region, operator error, application error).</li>
+<li>Explain which component acknowledges commits and what happens to in-flight requests.</li>
+<li>Define how you would <em>measure</em> recovery and data correctness, not just availability.</li>
+<li>State cost, operational complexity, security and consistency tradeoffs.</li>
+</ol>
+<h3 id="interview-q-a-4">Interview Q&amp;A</h3>
+<p><strong>Q: How would you validate this design before launch?</strong><br/>
+<strong>A:</strong> Establish a workload baseline, test normal and failure paths in a nonproduction environment, measure p95/p99 latency and observed RTO/RPO, verify permissions and backups, and capture rollback procedures.</p>
+<p><strong>Q: What should a senior engineer do when a dashboard is green but users report errors?</strong><br/>
+<strong>A:</strong> Correlate end-to-end request traces, DB connections, DNS/endpoint changes, query waits and application retries. Infrastructure health does not guarantee correct or timely business transactions.</p>
+<h2 id="chapter-27-vertical-read-scaling-and-capacity-planning">Chapter 27 — Vertical/read scaling and capacity planning</h2>
+<h3 id="concepts-and-internal-mechanisms-5">Concepts and internal mechanisms</h3>
+<p><strong>Vertical scaling</strong> changes DB instance class to add CPU/memory/network capacity, potentially with a maintenance interruption or failover depending on configuration. <strong>Read scaling</strong> adds read capacity through replicas or reader instances where supported; it does not increase writer throughput or solve hot-row contention. <strong>Sharding</strong> can distribute writes but creates complex query, transaction and operational tradeoffs.</p>
+<p><strong>Capacity model:</strong> Estimate peak requests/s × SQL statements/request × average execution time, then apply concurrency/queueing reasoning. Little's Law: L = λW, where L is average in-flight work, λ is throughput and W is mean response time in consistent units. Example: 800 DB operations/s × 0.025 s = 20 concurrent in-flight operations on average, <em>not</em> necessarily 20 DB connections. Pool sizing must account for think time, blocking, multiple services and resource limits.</p>
+<p><strong>Performance priorities:</strong> measure query plans and indexes first; eliminate N+1 queries; batch writes carefully; avoid long transactions; right-size connection pools; add caching with explicit consistency semantics; then evaluate class/storage/read scaling. Oversized connection pools often increase memory pressure and contention.</p>
+<p><strong>Planning worksheet:</strong> capture peak QPS/TPS, p50/p95/p99 SQL latency, CPU, freeable memory, connections, WAL generation, IOPS, storage growth per day, replication lag, lock waits, and backup restore time. Model 30/90/365-day growth and test 2× peak workload.</p>
+<p><strong>CLI resize example:</strong> <code>aws rds modify-db-instance --db-instance-identifier "$DB_ID" --db-instance-class db.m6i.large --apply-immediately</code> (class illustrative, may not be supported for selected engine/region; can cause disruption). Prefer a reviewed change window and tested rollback strategy. Note that downsizing storage is not a normal RDS operation.</p>
+<h3 id="architecture-workflow-diagram-chapter-27">Architecture / workflow diagram — Chapter 27</h3>
+<pre><code class="language-mermaid">flowchart LR
+    A[Application and business SLO] --&gt; B[Database writer]
+    B --&gt; C[Storage / durability path]
+    B --&gt; D[HA or read replica path]
+    C --&gt; E[Metrics and recovery evidence]
+    D --&gt; E
+    E --&gt; F{Meet RTO, RPO and latency targets?}
+    F --&gt;|No| G[Diagnose, redesign, retest]
+    G --&gt; A
+    F --&gt;|Yes| H[Document and monitor]
+</code></pre>
+<h3 id="senior-engineering-review-5">Senior engineering review</h3>
+<ol>
+<li>Identify the failure domain (instance, AZ, region, operator error, application error).</li>
+<li>Explain which component acknowledges commits and what happens to in-flight requests.</li>
+<li>Define how you would <em>measure</em> recovery and data correctness, not just availability.</li>
+<li>State cost, operational complexity, security and consistency tradeoffs.</li>
+</ol>
+<h3 id="interview-q-a-5">Interview Q&amp;A</h3>
+<p><strong>Q: How would you validate this design before launch?</strong><br/>
+<strong>A:</strong> Establish a workload baseline, test normal and failure paths in a nonproduction environment, measure p95/p99 latency and observed RTO/RPO, verify permissions and backups, and capture rollback procedures.</p>
+<p><strong>Q: What should a senior engineer do when a dashboard is green but users report errors?</strong><br/>
+<strong>A:</strong> Correlate end-to-end request traces, DB connections, DNS/endpoint changes, query waits and application retries. Infrastructure health does not guarantee correct or timely business transactions.</p>
+<h2 id="chapter-28-amazon-aurora-and-aurora-serverless">Chapter 28 — Amazon Aurora and Aurora Serverless</h2>
+<h3 id="concepts-and-internal-mechanisms-6">Concepts and internal mechanisms</h3>
+<p><strong>Aurora</strong> is a MySQL/PostgreSQL-compatible managed relational database family with a distributed, fault-tolerant storage layer. Its compute instances connect to a cluster storage volume replicated across multiple AZs; Aurora reader instances share the cluster storage rather than maintaining completely separate conventional DB volumes. Storage-level replication is not the same thing as SQL transaction replication to a normal RDS read replica.</p>
+<p><strong>Endpoints:</strong> cluster/writer endpoint routes to the current writer; reader endpoint balances connections across available readers, but does not guarantee per-query load balancing or read-your-writes; instance endpoints address individual instances; custom endpoints can target selected groups. DNS changes and pooled connections require failover-aware behavior.</p>
+<p><strong>Aurora Serverless v2:</strong> adjusts compute capacity within configured minimum/maximum ACU ranges, subject to supported engine versions and deployment configurations. It is not an automatic guarantee of unlimited scaling, no cold-start effects, or zero cost when idle. Inspect scaling, connection limits, workload variability and pricing.</p>
+<p><strong>Aurora Global Database:</strong> provides cross-region architecture for supported Aurora configurations, with asynchronous replication to secondary regions and defined switchover/failover operations. Understand planned switchover versus unplanned failover and data-loss implications.</p>
+<p><strong>Selection matrix:</strong> conventional RDS PostgreSQL is attractive for familiar PostgreSQL behavior and straightforward operations; RDS Multi-AZ DB cluster may offer HA plus readable standbys on supported engines; Aurora is attractive when its storage architecture, failover/read scaling, features or Global Database meet requirements; Serverless v2 can help variable demand. Benchmark <em>your</em> workload and validate extension/engine compatibility, pricing and migration complexity.</p>
+<p><strong>Inspection:</strong> <code>aws rds describe-db-clusters --db-cluster-identifier "$CLUSTER_ID" --query 'DBClusters[0].{Engine:Engine,Writer:Endpoint,Reader:ReaderEndpoint,Members:DBClusterMembers,StorageEncrypted:StorageEncrypted}'</code>.</p>
+<p><strong>Common misconception:</strong> Aurora storage resilience does not replace backups, application idempotency, monitoring or DR testing.</p>
+<h3 id="architecture-workflow-diagram-chapter-28">Architecture / workflow diagram — Chapter 28</h3>
+<pre><code class="language-mermaid">flowchart LR
+    A[Application and business SLO] --&gt; B[Database writer]
+    B --&gt; C[Storage / durability path]
+    B --&gt; D[HA or read replica path]
+    C --&gt; E[Metrics and recovery evidence]
+    D --&gt; E
+    E --&gt; F{Meet RTO, RPO and latency targets?}
+    F --&gt;|No| G[Diagnose, redesign, retest]
+    G --&gt; A
+    F --&gt;|Yes| H[Document and monitor]
+</code></pre>
+<h3 id="senior-engineering-review-6">Senior engineering review</h3>
+<ol>
+<li>Identify the failure domain (instance, AZ, region, operator error, application error).</li>
+<li>Explain which component acknowledges commits and what happens to in-flight requests.</li>
+<li>Define how you would <em>measure</em> recovery and data correctness, not just availability.</li>
+<li>State cost, operational complexity, security and consistency tradeoffs.</li>
+</ol>
+<h3 id="interview-q-a-6">Interview Q&amp;A</h3>
+<p><strong>Q: How would you validate this design before launch?</strong><br/>
+<strong>A:</strong> Establish a workload baseline, test normal and failure paths in a nonproduction environment, measure p95/p99 latency and observed RTO/RPO, verify permissions and backups, and capture rollback procedures.</p>
+<p><strong>Q: What should a senior engineer do when a dashboard is green but users report errors?</strong><br/>
+<strong>A:</strong> Correlate end-to-end request traces, DB connections, DNS/endpoint changes, query waits and application retries. Infrastructure health does not guarantee correct or timely business transactions.</p>
+<h2 id="chapter-29-production-failure-simulations-and-runbooks">Chapter 29 — Production failure simulations and runbooks</h2>
+<h3 id="lab-prerequisites-and-safety">Lab prerequisites and safety</h3>
+<p>Use a dedicated sandbox AWS account and a disposable PostgreSQL RDS instance. Choose a region and engine version supported by your account. Use private subnets, restrictive security groups, IAM least privilege, encryption, deletion protection where appropriate, a budget alarm and tagged resources. Set environment variables <code>AWS_REGION</code>, <code>DB_ID</code>, <code>REPLICA_ID</code>, <code>SNAPSHOT_ID</code>, <code>RESTORE_ID</code>, <code>CLUSTER_ID</code> only after confirming actual identifiers. Commands beginning with <code>aws rds</code> run from a workstation or CI runner with configured AWS CLI credentials; SQL runs inside <code>psql</code> against the intended database. <strong>Do not paste placeholder names or timestamps unchanged.</strong></p>
+<h3 id="lab-a-observe-multi-az-failover">Lab A — Observe Multi-AZ failover</h3>
+<ol>
+<li>Confirm instance Multi-AZ status and application endpoint.</li>
+<li>Generate a low-rate synthetic transaction with an idempotency key every second and record UTC timestamps.</li>
+<li>Enable app logs for connection errors, reconnects, commit ambiguity and response latency.</li>
+<li>With change approval, force failover only on a compatible nonproduction Multi-AZ DB instance.</li>
+<li>Observe DB events, CloudWatch and app traces. Reconnect using the endpoint hostname, not a pinned IP.</li>
+<li>Query unique keys after recovery to detect lost/duplicate operations.</li>
+<li>Calculate observed downtime and recovery steps; record uncertainty around in-flight commits.</li>
+</ol>
+<p><strong>Representative output (illustrative, not actual AWS output):</strong></p>
+<pre><code class="language-text">2026-10-01T10:00:00Z write key=ha-001 status=committed latency_ms=18
+2026-10-01T10:00:17Z write key=ha-018 status=connection_lost
+2026-10-01T10:01:03Z reconnect status=success
+2026-10-01T10:01:04Z write key=ha-019 status=committed latency_ms=25
+</code></pre>
+<p><strong>Interpretation:</strong> <code>connection_lost</code> does not establish whether an in-flight transaction committed. Query by idempotency key before retrying.</p>
+<h3 id="lab-b-read-after-write-consistency">Lab B — Read-after-write consistency</h3>
+<ol>
+<li>Create a primary table: <code>CREATE TABLE replication_probe(id uuid PRIMARY KEY, created_at timestamptz NOT NULL DEFAULT clock_timestamp());</code>.</li>
+<li>Connect separately to primary and replica using <code>psql</code>.</li>
+<li>Insert a UUID into the primary and poll for it on the replica with UTC timestamps.</li>
+<li>Under a controlled write load, plot distribution of visibility delay and CloudWatch ReplicaLag.</li>
+<li>Document why a dashboard's aggregate lag metric is not a per-request freshness guarantee.</li>
+</ol>
+<h3 id="lab-c-pitr-after-accidental-delete">Lab C — PITR after accidental delete</h3>
+<ol>
+<li>Enable and confirm automated backup retention.</li>
+<li>Insert test records, record UTC time and <code>LatestRestorableTime</code>.</li>
+<li>Delete test rows on a disposable instance only.</li>
+<li>Restore to a <em>new</em> instance at a valid point before the deletion.</li>
+<li>Check restored counts, constraints and application reads; log elapsed recovery time and estimated data loss.</li>
+<li>Tear down the restored resources after saving evidence.</li>
+</ol>
+<h3 id="lab-d-storage-latency-investigation">Lab D — Storage latency investigation</h3>
+<ol>
+<li>Capture SQL p95, CPU, memory, IOPS, latency, queue depth and active sessions.</li>
+<li>Run <code>EXPLAIN (ANALYZE, BUFFERS) SELECT ...</code> on a safe representative query, not unbounded on production.</li>
+<li>Compare index plan versus sequential scan, rows estimated versus actual, and shared buffer hits/reads.</li>
+<li>Inspect long transactions and lock waits before changing provisioned IOPS.</li>
+<li>Change one variable in a controlled load test and record whether user-visible latency improved.</li>
+</ol>
+<h3 id="incident-runbook-writer-unavailable">Incident runbook — writer unavailable</h3>
+<p><strong>Trigger:</strong> elevated 5xx, DB connection failures, DB instance status transition.<br/>
+<strong>Triage:</strong> determine AZ/region scope, endpoint DNS, security group changes, DB events, connection pool state, app deploy changes.<br/>
+<strong>Contain:</strong> stop unsafe retries and duplicate payment/order processing.<br/>
+<strong>Recovery:</strong> use managed failover where applicable; restore/promote only according to approved topology and RPO plan.<br/>
+<strong>Verify:</strong> unique business keys, critical read/write flows, latency and downstream reconciliation.<br/>
+<strong>Aftercare:</strong> preserve timeline, quantify RTO/RPO, record root cause and corrective actions.</p>
+<h3 id="incident-runbook-replication-lag">Incident runbook — replication lag</h3>
+<p><strong>Trigger:</strong> ReplicaLag exceeds freshness budget.<br/>
+<strong>Triage:</strong> write volume, large transactions, replica CPU/storage pressure, long-running read queries, network, engine logs.<br/>
+<strong>Mitigate:</strong> route consistency-sensitive reads to writer; reduce heavy replica workload; increase capacity only if measured bottleneck.<br/>
+<strong>Verify:</strong> lag returns below SLO and end-to-end data freshness tests pass.</p>
+<h3 id="incident-runbook-storage-full">Incident runbook — storage full</h3>
+<p><strong>Trigger:</strong> FreeStorageSpace falls rapidly, writes fail or storage autoscaling limit approaches.<br/>
+<strong>Triage:</strong> table/index growth, temporary files, transaction log retention, replication slots, unexpected bulk ingestion.<br/>
+<strong>Mitigate:</strong> stop runaway workload, preserve data, evaluate storage modification, fix retention/queries with engine-safe methods.<br/>
+<strong>Verify:</strong> writes resume, free space stabilizes, backups remain viable. Avoid dangerous manual deletion of engine-managed files.</p>
+<h2 id="chapter-30-capstone-production-grade-order-service">Chapter 30 — Capstone: production-grade order service</h2>
+<h3 id="business-requirements">Business requirements</h3>
+<p>An order API processes 250 writes/s peak and 1,500 reads/s peak. Target p99 read latency &lt; 150 ms, business RTO 30 minutes, RPO 5 minutes for regional disaster, and no duplicate charge/order processing. All values are hypothetical design inputs, not RDS guarantees.</p>
+<h3 id="proposed-architecture">Proposed architecture</h3>
+<pre><code class="language-mermaid">flowchart TB
+    U[Clients] --&gt; ALB[ALB]
+    ALB --&gt; APP[Stateless API in two AZs]
+    APP --&gt; PROXY[RDS Proxy / connection pool]
+    PROXY --&gt; W[(RDS writer)]
+    W --&gt; HA[(Multi-AZ standby or cluster standbys)]
+    APP --&gt; READ[Consistency-aware read router]
+    READ --&gt; REP[(Read replica)]
+    W --&gt; BK[Automated backups + PITR]
+    BK --&gt; DR[Cross-region restore plan]
+    W --&gt; OBS[CloudWatch + DB telemetry]
+    APP --&gt; OBS
+</code></pre>
+<h3 id="architecture-decisions">Architecture decisions</h3>
+<ul>
+<li>Private DB subnet group spanning required AZs; security groups permit DB port only from authorized application tier.</li>
+<li>TLS, secrets rotation, least-privilege SQL roles, encrypted storage and audit controls.</li>
+<li>Writer handles payments, orders and read-after-write; replica handles tolerant catalog/reporting queries.</li>
+<li>Idempotency key unique index protects retries; outbox pattern decouples DB commit from asynchronous events.</li>
+<li>Tested backup/PITR and cross-region recovery process; RTO/RPO validated with drills.</li>
+<li>IaC and immutable application releases; database migrations follow expand–migrate–contract.</li>
+</ul>
+<h3 id="example-sql">Example SQL</h3>
+<pre><code class="language-sql">CREATE TABLE orders (
+  id uuid PRIMARY KEY,
+  idempotency_key text NOT NULL UNIQUE,
+  customer_id uuid NOT NULL,
+  total_cents bigint NOT NULL CHECK (total_cents &gt;= 0),
+  status text NOT NULL CHECK (status IN ('pending','paid','cancelled')),
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX orders_customer_created_idx ON orders(customer_id, created_at DESC);
+</code></pre>
+<p><strong>Explanation:</strong> UUID primary key provides stable order identity; unique idempotency key prevents duplicate logical requests; bigint stores money in minor units; CHECK constraints reject invalid states/negative totals; composite index supports customer order history in descending date order. Constraints alone do not guarantee payment gateway idempotency; coordinate with the provider and transaction boundary.</p>
+<h3 id="example-terraform-review-before-applying">Example Terraform — review before applying</h3>
+<pre><code class="language-hcl">terraform {
+  required_providers {
+    aws = { source = "hashicorp/aws", version = "~&gt; 5.0" }
+  }
+}
+provider "aws" { region = var.aws_region }
+variable "aws_region" { type = string }
+variable "private_subnet_ids" { type = list(string) }
+variable "app_security_group_id" { type = string }
+variable "vpc_id" { type = string }
+variable "db_password" { type = string; sensitive = true }
+resource "aws_security_group" "db" {
+  name_prefix = "rds-vol4-"
+  vpc_id = var.vpc_id
+  ingress {
+    from_port = 5432
+    to_port = 5432
+    protocol = "tcp"
+    security_groups = [var.app_security_group_id]
+  }
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+resource "aws_db_subnet_group" "private" {
+  name_prefix = "rds-vol4-"
+  subnet_ids = var.private_subnet_ids
+}
+resource "aws_db_instance" "primary" {
+  identifier = "rds-vol4-sandbox"
+  engine = "postgres"
+  instance_class = "db.t3.medium"
+  allocated_storage = 30
+  storage_type = "gp3"
+  username = "labadmin"
+  password = var.db_password
+  db_subnet_group_name = aws_db_subnet_group.private.name
+  vpc_security_group_ids = [aws_security_group.db.id]
+  publicly_accessible = false
+  multi_az = true
+  storage_encrypted = true
+  backup_retention_period = 7
+  deletion_protection = true
+  skip_final_snapshot = false
+  final_snapshot_identifier = "rds-vol4-sandbox-final"
+}
+</code></pre>
+<p><strong>Important Terraform cautions:</strong> Provider version shown is an illustrative constraint, not a recommendation for the newest version. Choose a compatible provider/instance/storage/engine configuration; <code>db.t3.medium</code> may be unavailable for selected engine versions. A password passed as a sensitive Terraform variable may still reside in state: use secure remote state and consider RDS-managed master password in Secrets Manager. A static final snapshot identifier can collide on repeated destruction; use a lifecycle plan. The example is intentionally not a complete networking deployment. Terraform state must be protected. Deletion protection must be deliberately disabled before approved teardown.</p>
+<p><strong>Commands (run in IaC directory):</strong></p>
+<pre><code class="language-bash">terraform fmt -check
+terraform init
+terraform validate
+terraform plan -out=lab.tfplan
+terraform apply lab.tfplan
+</code></pre>
+<p><code>fmt</code> checks formatting, <code>init</code> installs provider and initializes backend, <code>validate</code> checks configuration syntax/structure, <code>plan</code> previews changes, <code>apply</code> provisions billable infrastructure. Review the plan and security before apply. Never store real passwords in shell history or commit them to Git.</p>
+<h3 id="acceptance-tests">Acceptance tests</h3>
+<ol>
+<li>App can write and read via TLS, without public DB access.</li>
+<li>Multi-AZ failover test recovers within measured application SLO or produces a documented gap.</li>
+<li>Read routing meets freshness contract; replica lag alarms fire under injected lag.</li>
+<li>PITR restore produces correct records and measured recovery time.</li>
+<li>DR tabletop demonstrates region-loss decision path, promotion/restore and split-brain prevention.</li>
+<li>Load test captures p95/p99 latency and capacity bottlenecks; estimate monthly cost with current regional prices.</li>
+</ol>
+<h3 id="senior-interview-scenario-questions-with-model-answers">Senior interview — scenario questions with model answers</h3>
+<p><strong>Q1. Multi-AZ enabled: why did clients still see 90 seconds of errors?</strong><br/>
+A. HA requires detection, promotion, endpoint resolution, pool reconnection and application retry. Measure each stage; investigate DNS caching and stale connections.</p>
+<p><strong>Q2. Can you send all SELECT statements to replicas?</strong><br/>
+A. No. Transactions and read-after-write operations often require the writer; replicas can lag. Classify consistency needs per query.</p>
+<p><strong>Q3. Does synchronous replication mean zero data loss in every disaster?</strong><br/>
+A. No universal guarantee. Clarify failure model, commit acknowledgment, region scope, application behavior and backup/DR boundaries.</p>
+<p><strong>Q4. ReplicaLag is low but users see stale data. Why?</strong><br/>
+A. Metric aggregation, request timing, caching, wrong endpoint, transaction snapshots or application routing can all cause stale observations.</p>
+<p><strong>Q5. How do you choose gp3 versus io2?</strong><br/>
+A. Benchmark real I/O profile and latency, check AWS support/limits, evaluate predictability, cost and headroom. Don't optimize solely for peak IOPS.</p>
+<p><strong>Q6. What is the difference between snapshot and PITR?</strong><br/>
+A. Snapshot restores to the captured point; PITR reconstructs a new DB at a selected recoverable point using backups/logs within retention limits.</p>
+<p><strong>Q7. You have RTO 15 min and RPO 1 min across regions. What next?</strong><br/>
+A. Assess data criticality and failure modes, benchmark suitable cross-region replication, define promotion/fencing, test network/app dependencies, measure achieved RTO/RPO and identify gaps.</p>
+<p><strong>Q8. How can you prevent duplicate charges after failover?</strong><br/>
+A. Use stable idempotency keys, unique DB constraints, payment-provider idempotency and reconciliation. Do not blindly replay ambiguous commits.</p>
+<p><strong>Q9. Why can more read replicas increase complexity?</strong><br/>
+A. They introduce lag, routing, monitoring, cost, capacity and promotion/failback concerns; they do not scale writes.</p>
+<p><strong>Q10. What is your first action when WriteLatency spikes?</strong><br/>
+A. Correlate query waits, I/O, WAL flushes, CPU, lock contention, traffic and deployments before modifying storage.</p>
+<p><strong>Q11. What happens when you restore PITR?</strong><br/>
+A. A new DB endpoint is created. You must verify data, security, connection strings and cutover; the original is not automatically replaced.</p>
+<p><strong>Q12. Is Aurora always faster than RDS PostgreSQL?</strong><br/>
+A. No. Performance depends on workload, configuration, SQL, storage behavior, network and engine features. Benchmark representative transactions.</p>
+<p><strong>Q13. Can a reader endpoint guarantee load balancing per query?</strong><br/>
+A. No. It distributes connection placement under documented behavior; long-lived pooled connections may skew distribution.</p>
+<p><strong>Q14. How would you estimate database concurrency?</strong><br/>
+A. Use measured arrival rate and response time (Little's Law), then account for waiting, transaction scope, connection pooling and service count.</p>
+<p><strong>Q15. How do you prove a backup strategy works?</strong><br/>
+A. Repeated restore drills, application integrity checks, access/key verification, measured RTO/RPO and evidence retention.</p>
+<h3 id="glossary">Glossary</h3>
+<p><strong>ACU:</strong> Aurora Capacity Unit. <strong>AZ:</strong> Availability Zone. <strong>Commit ambiguity:</strong> inability to tell whether a transaction committed after a lost connection. <strong>DNS TTL:</strong> duration DNS responses may be cached. <strong>HA:</strong> High availability. <strong>IOPS:</strong> I/O operations per second. <strong>PITR:</strong> Point-in-time recovery. <strong>Read replica:</strong> asynchronously updated read-oriented copy in conventional RDS configurations. <strong>RPO:</strong> maximum tolerable data loss. <strong>RTO:</strong> maximum tolerable restoration time. <strong>WAL:</strong> write-ahead log. <strong>Writer fencing:</strong> preventing an old writer from accepting conflicting writes after failover.</p>
+<h3 id="index">Index</h3>
+<p>Aurora—28; Aurora Global Database—28; backups—25; capacity—27; commit ambiguity—23,29,30; cross-region DR—26; failover—23,29; gp3/io2—22; IOPS—22; Multi-AZ—23; PITR—25,29; read replicas—24; replication lag—24,29; RPO/RTO—26; snapshots—25; Terraform—30; WAL—22,24.</p>
+<h3 id="primary-documentation-to-consult-for-live-implementation">Primary documentation to consult for live implementation</h3>
+<ul>
+<li>AWS RDS User Guide: <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html">https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html</a></li>
+<li>Multi-AZ deployments: <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html">https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html</a></li>
+<li>Read replicas: <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html">https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html</a></li>
+<li>Backup and restore: <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_CommonTasks.BackupRestore.html">https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_CommonTasks.BackupRestore.html</a></li>
+<li>Aurora User Guide: <a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/CHAP_AuroraOverview.html">https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/CHAP_AuroraOverview.html</a></li>
+<li>AWS CLI RDS commands: <a href="https://docs.aws.amazon.com/cli/latest/reference/rds/">https://docs.aws.amazon.com/cli/latest/reference/rds/</a></li>
+<li>Terraform AWS provider RDS resources: <a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance</a></li>
+</ul>
+<p><strong>End of Volume 4.</strong></p>
+</article></main><footer>ARTHA Gurukul · Source material preserved as educational notes</footer></body></html>

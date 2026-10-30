@@ -1,0 +1,833 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AWS RDS Masterclass — Volume 1 | ARTHA Gurukul</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><a class="brand" href="../index.html">✦ ARTHA GURUKUL</a><nav><a href="../index.html#courses">All Courses</a><a href="index.html">Source Library</a></nav></header><main class="book-layout"><aside class="book-toc"><div class="eyebrow">Original material · offline copy</div><h2>AWS RDS Masterclass — Volume 1</h2><a href="../index.html">⌂ Course library</a><div class="toc"><a href="#aws-rds-masterclass-volume-1-foundations-and-postgresql-internals">AWS RDS Masterclass — Volume 1: Foundations and PostgreSQL Internals</a><a href="#how-to-use-this-book">How to use this book</a><a href="#table-of-contents">Table of contents</a><a href="#conventions">Conventions</a><a href="#chapter-1-relational-databases-sql-acid-and-transactions">Chapter 1 — Relational databases, SQL, ACID and transactions</a><a href="#1-1-why-databases-exist">1.1 Why databases exist</a><a href="#1-2-relational-theory-in-practical-terms">1.2 Relational theory in practical terms</a><a href="#1-3-acid-carefully-defined">1.3 ACID, carefully defined</a><a href="#1-4-normalization-denormalization-and-indexes">1.4 Normalization, denormalization and indexes</a><a href="#chapter-2-amazon-rds-fundamentals-and-responsibility-model">Chapter 2 — Amazon RDS fundamentals and responsibility model</a><a href="#2-1-what-rds-is-and-is-not">2.1 What RDS is and is not</a><a href="#2-2-shared-responsibility-and-the-security-boundary">2.2 Shared responsibility and the security boundary</a><a href="#2-3-rds-lifecycle">2.3 RDS lifecycle</a><a href="#2-4-fundamental-resource-vocabulary">2.4 Fundamental resource vocabulary</a><a href="#chapter-3-rds-database-engines-and-architectural-selection">Chapter 3 — RDS database engines and architectural selection</a><a href="#3-1-engine-families">3.1 Engine families</a><a href="#3-2-decision-framework">3.2 Decision framework</a><a href="#3-3-compatibility-traps">3.3 Compatibility traps</a><a href="#chapter-4-rds-architecture-control-plane-and-data-plane">Chapter 4 — RDS architecture, control plane and data plane</a><a href="#4-1-control-plane-versus-data-plane">4.1 Control plane versus data plane</a><a href="#4-2-network-request-lifecycle">4.2 Network request lifecycle</a><a href="#4-3-failure-and-failover-semantics">4.3 Failure and failover semantics</a><a href="#4-4-performance-anatomy">4.4 Performance anatomy</a><a href="#chapter-5-aws-identity-cli-budget-and-secure-lab-networking">Chapter 5 — AWS identity, CLI, budget and secure lab networking</a><a href="#5-1-preflight-and-cost-safety">5.1 Preflight and cost safety</a><a href="#5-2-minimal-secure-topology">5.2 Minimal secure topology</a><a href="#5-3-security-groups-least-privilege-and-secrets">5.3 Security groups, least privilege and secrets</a><a href="#5-4-iam-policy-example-for-inventory-only-automation">5.4 IAM policy example for inventory-only automation</a><a href="#chapter-6-provision-connect-test-and-remove-postgresql-rds">Chapter 6 — Provision, connect, test and remove PostgreSQL RDS</a><a href="#6-1-lab-contract">6.1 Lab contract</a><a href="#6-2-create-db-subnet-group">6.2 Create DB subnet group</a><a href="#6-3-create-encrypted-rds-postgresql">6.3 Create encrypted RDS PostgreSQL</a><a href="#6-4-connect-securely-from-ec2-using-session-manager">6.4 Connect securely from EC2 using Session Manager</a><a href="#6-5-cloudwatch-and-operational-inspection">6.5 CloudWatch and operational inspection</a><a href="#6-6-troubleshooting-matrix">6.6 Troubleshooting matrix</a><a href="#6-7-mandatory-teardown">6.7 Mandatory teardown</a><a href="#chapter-7-postgresql-internals-mvcc-wal-buffers-and-vacuum">Chapter 7 — PostgreSQL internals, MVCC, WAL, buffers and vacuum</a><a href="#7-1-postgresql-process-and-memory-model">7.1 PostgreSQL process and memory model</a><a href="#7-2-a-select-request-internally">7.2 A SELECT request internally</a><a href="#7-3-mvcc-and-row-versions">7.3 MVCC and row versions</a><a href="#7-4-write-ahead-logging-and-crash-recovery">7.4 Write-ahead logging and crash recovery</a><a href="#7-5-vacuum-bloat-and-autovacuum">7.5 Vacuum, bloat and autovacuum</a><a href="#7-6-locks-waits-and-deadlocks">7.6 Locks, waits and deadlocks</a><a href="#7-7-database-connections-and-pooling">7.7 Database connections and pooling</a><a href="#capstone-lab">Capstone lab</a><a href="#build-a-small-private-secure-rds-backed-service">Build a small private, secure RDS-backed service</a><a href="#engineering-review-rubric">Engineering review rubric</a><a href="#troubleshooting-decision-trees">Troubleshooting decision trees</a><a href="#interview-question-bank">Interview question bank</a><a href="#glossary">Glossary</a><a href="#index">Index</a><a href="#references">References</a></div></aside><article class="book-prose"><p class="source-note">Historical course notes converted into searchable offline HTML. Some content may be a draft; exercises requiring cloud accounts need credentials and may incur costs.</p><h1 id="aws-rds-masterclass-volume-1-foundations-and-postgresql-internals">AWS RDS Masterclass — Volume 1: Foundations and PostgreSQL Internals</h1>
+<p><strong>From beginner to senior software engineer | Chapters 1–7 | Edition: October 2026</strong></p>
+<blockquote>
+<p>This is an instructional textbook, not a claim that a live AWS deployment was executed. Sample outputs are illustrative; check region, engine versions, prices, quotas, and AWS documentation before executing. Labs can incur charges. All passwords, account IDs, IP addresses and ARNs shown are placeholders.</p>
+</blockquote>
+<h2 id="how-to-use-this-book">How to use this book</h2>
+<ol>
+<li>Read the <strong>mechanism</strong> sections before copying commands.</li>
+<li>Run commands only in the named environment (local Linux shell, AWS CLI shell, or PostgreSQL <code>psql</code>).</li>
+<li>Predict output first; then validate with the checks given.</li>
+<li>Write an incident report for each troubleshooting scenario.</li>
+<li>Destroy lab resources at the end. Never place database credentials in Git.</li>
+</ol>
+<p><strong>Prerequisites:</strong> basic Linux shell, internet connectivity to AWS, AWS account with permission to create VPC/EC2/RDS resources, AWS CLI v2, PostgreSQL <code>psql</code>, a code editor, and an approved lab budget. Use an IAM identity with least privilege and MFA; do not use root credentials for labs.</p>
+<h2 id="table-of-contents">Table of contents</h2>
+<ul>
+<li><a href="#chapter-1--relational-databases-sql-acid-and-transactions">Chapter 1 — Relational databases, SQL, ACID and transactions</a></li>
+<li><a href="#chapter-2--amazon-rds-fundamentals-and-responsibility-model">Chapter 2 — Amazon RDS fundamentals and responsibility model</a></li>
+<li><a href="#chapter-3--rds-database-engines-and-architectural-selection">Chapter 3 — RDS database engines and architectural selection</a></li>
+<li><a href="#chapter-4--rds-architecture-control-plane-and-data-plane">Chapter 4 — RDS architecture, control plane and data plane</a></li>
+<li><a href="#chapter-5--aws-identity-cli-budget-and-secure-lab-networking">Chapter 5 — AWS identity, CLI, budget and secure lab networking</a></li>
+<li><a href="#chapter-6--provision-connect-test-and-remove-postgresql-rds">Chapter 6 — Provision, connect, test and remove PostgreSQL RDS</a></li>
+<li><a href="#chapter-7--postgresql-internals-mvcc-wal-buffers-and-vacuum">Chapter 7 — PostgreSQL internals, MVCC, WAL, buffers and vacuum</a></li>
+<li><a href="#capstone-lab">Capstone lab</a></li>
+<li><a href="#troubleshooting-decision-trees">Troubleshooting decision trees</a></li>
+<li><a href="#interview-question-bank">Interview question bank</a></li>
+<li><a href="#glossary">Glossary</a></li>
+<li><a href="#index">Index</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+<h2 id="conventions">Conventions</h2>
+<p><code>$</code> = Linux shell; <code>aws ...</code> = AWS CLI v2; <code>postgres=&gt;</code> = PostgreSQL <code>psql</code>. <code>&lt;...&gt;</code> = placeholder, never type the brackets literally. Every SQL example is PostgreSQL-flavored unless noted. The security model in this book favors <strong>private RDS, a temporary EC2 jump host with SSM Session Manager, TLS, and Secrets Manager</strong>. A direct public database is not necessary.</p>
+<h3 id="architecture-at-a-glance">Architecture at a glance</h3>
+<pre><code class="language-mermaid">flowchart TB
+  U[Developer laptop] --&gt;|AWS CLI with MFA| C[AWS RDS control plane]
+  U --&gt;|SSM Session Manager| E[EC2 admin host in VPC]
+  E --&gt;|TLS 5432| D[(Private PostgreSQL RDS)]
+  C -.provision / modify / backup.-&gt; D
+  D --&gt; B[(Automated backup storage)]
+  CW[CloudWatch and RDS events] --- D
+</code></pre>
+<p>The dotted control-plane arrow is a conceptual relationship, not a direct SQL connection.</p>
+<h1 id="chapter-1-relational-databases-sql-acid-and-transactions">Chapter 1 — Relational databases, SQL, ACID and transactions</h1>
+<h2 id="1-1-why-databases-exist">1.1 Why databases exist</h2>
+<p>A database stores related data durably and lets concurrent clients query or modify it. A <strong>DBMS</strong> is the software that manages data, transactions, recovery, security and query execution. An <strong>RDBMS</strong> represents logical data as relations (tables) and exposes a relational query language, typically SQL. PostgreSQL is a DBMS; Amazon RDS is a managed service that can operate PostgreSQL for you.</p>
+<p>A table has rows (tuples) and columns (attributes). A <strong>primary key</strong> uniquely identifies a row; a <strong>foreign key</strong> enforces a relationship between tables. A unique constraint prevents duplicates, a check constraint limits accepted values, and <code>NOT NULL</code> rejects missing values. Referential integrity is enforced by the database even if application code has a bug.</p>
+<p><strong>Example:</strong> a commerce application stores <code>customers</code>, <code>orders</code>, and <code>order_items</code>. An order belongs to one customer; an item belongs to one order. Storing customer names on every order creates update anomalies, whereas storing <code>customer_id</code> makes relationships explicit.</p>
+<pre><code class="language-mermaid">erDiagram
+  CUSTOMERS ||--o{ ORDERS : places
+  ORDERS ||--|{ ORDER_ITEMS : contains
+  PRODUCTS ||--o{ ORDER_ITEMS : referenced_by
+  CUSTOMERS { bigint id PK
+              text email UK }
+  ORDERS { bigint id PK
+           bigint customer_id FK
+           text status }
+  ORDER_ITEMS { bigint order_id FK
+                bigint product_id FK
+                int quantity }
+</code></pre>
+<h2 id="1-2-relational-theory-in-practical-terms">1.2 Relational theory in practical terms</h2>
+<p>A relation is a set of tuples in the formal model; real SQL tables have bag (multiset) semantics unless <code>DISTINCT</code> is used. The logical query describes <strong>what</strong> to return; the planner chooses <strong>how</strong> to get it. Projection chooses columns, selection filters rows, joins combine relationships, and aggregation summarizes groups. Query results have no guaranteed order without <code>ORDER BY</code>.</p>
+<h3 id="sql-families">SQL families</h3>
+<ul>
+<li><strong>DDL</strong>: <code>CREATE</code>, <code>ALTER</code>, <code>DROP</code> — define structures.</li>
+<li><strong>DML</strong>: <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code> — change data.</li>
+<li><strong>DQL</strong>: <code>SELECT</code> — read data (terminology varies).</li>
+<li><strong>DCL</strong>: <code>GRANT</code>, <code>REVOKE</code> — privileges.</li>
+<li><strong>TCL</strong>: <code>BEGIN</code>, <code>COMMIT</code>, <code>ROLLBACK</code>, <code>SAVEPOINT</code> — transactions.</li>
+</ul>
+<h3 id="lab-1a-schema-and-constraints">Lab 1A — Schema and constraints</h3>
+<p><strong>Where:</strong> <code>psql</code> connected to a disposable PostgreSQL database (local PostgreSQL is fine for this chapter).</p>
+<pre><code class="language-sql">CREATE SCHEMA IF NOT EXISTS shop;
+CREATE TABLE shop.customers (
+  customer_id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  email text NOT NULL UNIQUE,
+  full_name text NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE shop.orders (
+  order_id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  customer_id bigint NOT NULL REFERENCES shop.customers(customer_id),
+  status text NOT NULL DEFAULT 'pending'
+    CHECK (status IN ('pending','paid','cancelled')),
+  amount numeric(12,2) NOT NULL CHECK (amount &gt;= 0),
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+INSERT INTO shop.customers(email,full_name)
+VALUES ('ada@example.test','Ada Lovelace');
+INSERT INTO shop.orders(customer_id,amount)
+SELECT customer_id, 1499.00 FROM shop.customers WHERE email='ada@example.test';
+SELECT c.email,o.order_id,o.amount FROM shop.customers c
+JOIN shop.orders o ON o.customer_id=c.customer_id;
+</code></pre>
+<p><strong>Line-by-line:</strong> <code>CREATE SCHEMA</code> creates a namespace; <code>IF NOT EXISTS</code> permits reruns; <code>IDENTITY</code> generates keys; <code>PRIMARY KEY</code> requires uniqueness and non-null values; <code>UNIQUE</code> rejects duplicate emails; <code>REFERENCES</code> enforces parent existence; <code>CHECK</code> enforces domain rules; <code>numeric(12,2)</code> stores exact decimal values; <code>DEFAULT now()</code> supplies timestamps; <code>INSERT ... SELECT</code> derives a foreign key safely; <code>JOIN ... ON</code> connects related rows.</p>
+<p><strong>Representative output:</strong></p>
+<pre><code class="language-text">CREATE SCHEMA
+CREATE TABLE
+CREATE TABLE
+INSERT 0 1
+INSERT 0 1
+      email       | order_id | amount
+------------------+----------+---------
+ ada@example.test |        1 | 1499.00
+(1 row)
+</code></pre>
+<p><strong>Negative test:</strong> <code>INSERT INTO shop.orders(customer_id,amount) VALUES (999999,20);</code> should fail with a foreign-key violation; this is evidence the invariant is enforced in the database.</p>
+<h2 id="1-3-acid-carefully-defined">1.3 ACID, carefully defined</h2>
+<ul>
+<li><strong>Atomicity</strong>: a transaction's changes commit together or are rolled back together.</li>
+<li><strong>Consistency</strong>: a transaction takes the database from one state satisfying declared invariants to another; application-level business rules still need design.</li>
+<li><strong>Isolation</strong>: concurrent transactions interact according to the selected isolation level, not necessarily as if every transaction ran serially.</li>
+<li><strong>Durability</strong>: committed changes survive failures under the database's configured durability guarantees; backups are still necessary.</li>
+</ul>
+<p>A transaction is a logical unit of work. <code>BEGIN</code> starts it, <code>COMMIT</code> makes it permanent, <code>ROLLBACK</code> undoes uncommitted changes. PostgreSQL defaults to <code>READ COMMITTED</code>, where each statement normally sees a new snapshot. PostgreSQL <code>REPEATABLE READ</code> uses a stable transaction snapshot; <code>SERIALIZABLE</code> detects dangerous dependency patterns and may abort transactions with SQLSTATE <code>40001</code>, requiring a retry of the <strong>whole transaction</strong>.</p>
+<h3 id="lab-1b-atomic-transfer">Lab 1B — Atomic transfer</h3>
+<pre><code class="language-sql">CREATE TABLE shop.accounts (
+  account_id int PRIMARY KEY,
+  balance numeric(12,2) NOT NULL CHECK (balance &gt;= 0)
+);
+INSERT INTO shop.accounts VALUES (1,1000),(2,200);
+BEGIN;
+UPDATE shop.accounts SET balance=balance-150 WHERE account_id=1;
+UPDATE shop.accounts SET balance=balance+150 WHERE account_id=2;
+COMMIT;
+SELECT * FROM shop.accounts ORDER BY account_id;
+</code></pre>
+<p><strong>Expected:</strong> account 1 = <code>850.00</code>, account 2 = <code>350.00</code>; sum remains <code>1200.00</code>. <strong>Failure experiment:</strong> begin a transfer of 2000 from account 1; the <code>CHECK</code> fails. <code>ROLLBACK</code> the transaction; verify no partial transfer remains. Production financial workflows also need authorization, idempotency, concurrency controls, and ledger design.</p>
+<h2 id="1-4-normalization-denormalization-and-indexes">1.4 Normalization, denormalization and indexes</h2>
+<p>First normal form asks for atomic field values in a table design; second normal form removes dependencies on part of a composite key; third normal form removes non-key transitive dependencies. Normalize transactional data first; denormalize deliberately when measured reads justify the maintenance cost. An index speeds certain predicates and orderings but consumes space and slows writes. A B-tree index on <code>orders(customer_id, created_at DESC)</code> helps customer history queries; it may not help <code>WHERE status='paid'</code> without an appropriate access path.</p>
+<h3 id="troubleshooting-case">Troubleshooting case</h3>
+<p><strong>Symptom:</strong> duplicate orders after API retry. <strong>Cause candidates:</strong> no idempotency key, retrying non-idempotent inserts, missing unique constraint. <strong>Fix:</strong> require a unique client request key, enforce it with a database unique constraint, and return the prior result on replay. Merely increasing isolation is not a substitute for idempotency.</p>
+<h3 id="senior-interview-practice">Senior interview practice</h3>
+<p><strong>Q: Can a foreign key replace application validation?</strong> A: It protects referential integrity, but not authentication, authorization or domain-specific workflows. Use both database constraints and application checks.</p>
+<p><strong>Q: Why use <code>numeric</code> instead of <code>float</code> for money?</strong> A: Decimal fixed-scale calculations avoid binary floating-point representation surprises; still define rounding and currency rules.</p>
+<p><strong>Q: Why can a transaction fail at <code>COMMIT</code>?</strong> A: Serialization conflicts, deferred constraints, I/O failures and other errors may surface then. Clients must handle failures and retry safely when appropriate.</p>
+<h1 id="chapter-2-amazon-rds-fundamentals-and-responsibility-model">Chapter 2 — Amazon RDS fundamentals and responsibility model</h1>
+<h2 id="2-1-what-rds-is-and-is-not">2.1 What RDS is and is not</h2>
+<p>Amazon Relational Database Service (RDS) provisions and operates supported relational engines. It automates or simplifies tasks such as instance provisioning, infrastructure maintenance, automated backups, monitoring integration, storage configuration, failover orchestration and some patch workflows. <strong>RDS is not a new SQL language</strong> and does not automatically repair inefficient schemas, poorly written queries, broken access policies or flawed application transactions.</p>
+<p>RDS database <strong>instances</strong> are managed compute endpoints running database engines; storage and networking are configured through RDS resource settings. Some deployments use a <strong>DB cluster</strong> model (for example Multi-AZ DB clusters), and Aurora has a different storage/compute architecture. Never assume that all RDS deployment types share identical failover, read endpoint or storage behavior.</p>
+<h3 id="managed-versus-self-managed">Managed versus self-managed</h3>
+<table>
+<thead>
+<tr>
+<th>Concern</th>
+<th>Self-managed PostgreSQL on EC2</th>
+<th>RDS for PostgreSQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OS patching</td>
+<td>Customer</td>
+<td>AWS-managed underlying host</td>
+</tr>
+<tr>
+<td>DB schema/indexes</td>
+<td>Customer</td>
+<td>Customer</td>
+</tr>
+<tr>
+<td>DB query tuning</td>
+<td>Customer</td>
+<td>Customer</td>
+</tr>
+<tr>
+<td>Backup orchestration</td>
+<td>Customer</td>
+<td>RDS features configured by customer</td>
+</tr>
+<tr>
+<td>IAM/VPC/security group design</td>
+<td>Customer</td>
+<td>Customer</td>
+</tr>
+<tr>
+<td>Physical facilities</td>
+<td>AWS</td>
+<td>AWS</td>
+</tr>
+<tr>
+<td>Engine version upgrade decision</td>
+<td>Customer</td>
+<td>Customer controls maintenance settings/upgrade plan</td>
+</tr>
+<tr>
+<td>Superuser/root access</td>
+<td>Usually available</td>
+<td>Restricted managed privileges</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-2-shared-responsibility-and-the-security-boundary">2.2 Shared responsibility and the security boundary</h2>
+<p>AWS is responsible for security <strong>of</strong> the cloud (facilities, managed infrastructure). The customer is responsible for security <strong>in</strong> the cloud: IAM permissions, subnet placement, database users, TLS clients, data classification, retention, application vulnerabilities, backups/restore tests and monitoring. RDS administrative roles are not unrestricted OS root or PostgreSQL superuser. Extensions, parameters and host access may be constrained.</p>
+<h2 id="2-3-rds-lifecycle">2.3 RDS lifecycle</h2>
+<pre><code class="language-mermaid">stateDiagram-v2
+  [*] --&gt; Creating
+  Creating --&gt; Available
+  Available --&gt; Modifying
+  Modifying --&gt; Available
+  Available --&gt; BackingUp
+  BackingUp --&gt; Available
+  Available --&gt; Deleting
+  Deleting --&gt; [*]
+</code></pre>
+<p>Actual statuses include additional states and differ by engine and operation. The DB endpoint may remain the same logical DNS name across maintenance/failover while its underlying IP changes. Applications should reconnect and re-resolve DNS, not pin an IP.</p>
+<h2 id="2-4-fundamental-resource-vocabulary">2.4 Fundamental resource vocabulary</h2>
+<ul>
+<li><strong>DB instance identifier</strong>: RDS resource name, not SQL database name.</li>
+<li><strong>DB name</strong>: database created within the engine (for engines/settings that support initial creation).</li>
+<li><strong>DB instance class</strong>: compute capacity and memory profile.</li>
+<li><strong>Storage type</strong>: gp3, io1/io2 or other supported options depending on engine/deployment.</li>
+<li><strong>DB subnet group</strong>: selected VPC subnets in different Availability Zones; actual DB placement depends on deployment.</li>
+<li><strong>VPC security group</strong>: stateful network access policy attached to RDS.</li>
+<li><strong>Parameter group</strong>: database configuration values, some requiring restart.</li>
+<li><strong>Option group</strong>: engine-specific features where applicable.</li>
+<li><strong>Backup retention</strong>: how long automated backups are retained, subject to engine/deployment rules.</li>
+<li><strong>Maintenance window</strong>: preferred time for applicable maintenance, not a guarantee of zero disruption.</li>
+</ul>
+<h3 id="lab-2a-read-only-inventory">Lab 2A — Read-only inventory</h3>
+<p><strong>Where:</strong> AWS CLI v2 on laptop after configuring a named profile.</p>
+<pre><code class="language-bash">aws sts get-caller-identity --profile rds-lab
+aws rds describe-db-instances --region ap-south-1 --profile rds-lab   --query 'DBInstances[].{Name:DBInstanceIdentifier,Engine:Engine,Status:DBInstanceStatus,Public:PubliclyAccessible}'   --output table
+aws rds describe-db-engine-versions --engine postgres --region ap-south-1   --profile rds-lab --query 'DBEngineVersions[].EngineVersion' --output text
+</code></pre>
+<p><strong>Explanation:</strong> <code>sts get-caller-identity</code> verifies the account/principal; <code>describe-db-instances</code> is read-only inventory; <code>--query</code> filters returned JSON client-side using JMESPath; <code>--output table</code> formats it; <code>describe-db-engine-versions</code> lists engine versions available in the chosen region, which change over time.</p>
+<p><strong>Expected:</strong> an account/ARN JSON object, zero or more DB rows, and a list of supported PostgreSQL versions. Never assume an example version is still offered.</p>
+<h3 id="failure-modes">Failure modes</h3>
+<p><strong>AccessDenied:</strong> inspect principal, IAM policy, permission boundary and organization SCP. <strong>Empty inventory:</strong> verify account, profile, region and whether the account truly has RDS instances. <strong>Wrong engine expectation:</strong> Aurora resources use cluster APIs and should not be inferred from a simple instance list alone.</p>
+<h3 id="senior-interview-practice-1">Senior interview practice</h3>
+<p><strong>Q: Does RDS mean zero DBA work?</strong> A: No. Query plans, schema design, capacity, access policies, maintenance testing and data recovery decisions remain engineering responsibilities.</p>
+<p><strong>Q: Can you SSH to an RDS host?</strong> A: Not to standard managed RDS database hosts; use documented management APIs, logs and SQL observability instead.</p>
+<p><strong>Q: Is Multi-AZ the same as a backup?</strong> A: No. High availability protects against certain infrastructure failures; backups and PITR protect against accidental deletion/corruption and support historical recovery.</p>
+<h1 id="chapter-3-rds-database-engines-and-architectural-selection">Chapter 3 — RDS database engines and architectural selection</h1>
+<h2 id="3-1-engine-families">3.1 Engine families</h2>
+<p>Amazon RDS supports managed relational engines including PostgreSQL, MySQL, MariaDB, Oracle Database, Microsoft SQL Server and Db2, subject to region, edition and current AWS support. Amazon Aurora is a separately architected AWS relational engine compatible with PostgreSQL or MySQL APIs; compare its architecture explicitly rather than treating it as an ordinary RDS PostgreSQL instance.</p>
+<table>
+<thead>
+<tr>
+<th>Engine</th>
+<th>Typical fit</th>
+<th>Major consideration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PostgreSQL</td>
+<td>Complex SQL, JSONB, rich indexing, extensibility</td>
+<td>Extension availability and tuning limits on RDS</td>
+</tr>
+<tr>
+<td>MySQL</td>
+<td>Web apps, common ORM workloads</td>
+<td>Transaction/isolation/replication behavior differs from PostgreSQL</td>
+</tr>
+<tr>
+<td>MariaDB</td>
+<td>MySQL-family applications</td>
+<td>Version/feature compatibility must be tested</td>
+</tr>
+<tr>
+<td>SQL Server</td>
+<td>Microsoft/.NET and T-SQL ecosystems</td>
+<td>Editions, licensing, feature availability</td>
+</tr>
+<tr>
+<td>Oracle</td>
+<td>Oracle-dependent enterprise workloads</td>
+<td>Licensing and migration constraints</td>
+</tr>
+<tr>
+<td>Db2</td>
+<td>Existing IBM Db2 workloads</td>
+<td>Engine-specific operational and licensing constraints</td>
+</tr>
+<tr>
+<td>Aurora PostgreSQL/MySQL</td>
+<td>Higher-scale managed architectures</td>
+<td>Distinct distributed storage, pricing and operational semantics</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-2-decision-framework">3.2 Decision framework</h2>
+<p>Ask: (1) which SQL dialect and driver does the application require? (2) how much downtime is tolerable? (3) peak reads, writes, connections and dataset growth? (4) data residency and regulatory requirements? (5) existing DBA expertise? (6) licensing and total cost? (7) migration complexity? (8) feature and extension requirements? (9) recovery objectives? (10) lock-in tolerance?</p>
+<p><strong>Scenario A — Greenfield SaaS:</strong> PostgreSQL is a strong starting point when advanced SQL, transactions and JSONB are useful. <strong>Scenario B — Legacy .NET application with stored procedures:</strong> SQL Server may reduce migration risk. <strong>Scenario C — Large write-heavy globally deployed service:</strong> benchmark Aurora and alternative architectures; global distribution does not automatically make every read or write strongly consistent.</p>
+<h2 id="3-3-compatibility-traps">3.3 Compatibility traps</h2>
+<p><code>SERIAL</code>, identity columns, <code>ON CONFLICT</code>, JSON syntax, collation, time zones, isolation behavior and index types vary. ORM portability is partial; vendor-specific migrations must be reviewed. A successful connection test does not prove functional compatibility. Licensing may materially change the economics of Oracle and SQL Server.</p>
+<h3 id="lab-3a-engine-selection-exercise">Lab 3A — Engine selection exercise</h3>
+<p>Prepare a one-page architecture decision record (ADR): workload = 1500 writes/s peak, 10k reads/s peak, 500 GiB data, 99.95% service objective, RPO 5 minutes, RTO 30 minutes, team proficient in PostgreSQL. Compare standard RDS PostgreSQL Multi-AZ, Multi-AZ DB cluster and Aurora PostgreSQL. <strong>Do not choose solely from these invented workload numbers:</strong> measure query patterns, storage and connection behavior and verify each option's capabilities and prices in your region.</p>
+<p><strong>Deliverable:</strong> context, options, expected performance test, failure/recovery test, cost assumptions, security implications and reversible migration strategy.</p>
+<h3 id="senior-interview-practice-2">Senior interview practice</h3>
+<p><strong>Q: Why not always choose Aurora?</strong> A: Different costs, migration compatibility, feature behavior, operational constraints and workload characteristics may favor standard RDS.</p>
+<p><strong>Q: What makes an engine migration risky?</strong> A: SQL dialect, stored procedures, data types, collations, extensions, driver behavior, transaction semantics and operational cutover.</p>
+<p><strong>Q: How do you evaluate vendor lock-in?</strong> A: Inventory proprietary features, define export paths, rehearse migrations and price the operational benefit against switching cost.</p>
+<h1 id="chapter-4-rds-architecture-control-plane-and-data-plane">Chapter 4 — RDS architecture, control plane and data plane</h1>
+<h2 id="4-1-control-plane-versus-data-plane">4.1 Control plane versus data plane</h2>
+<p>The <strong>control plane</strong> accepts AWS API operations: <code>CreateDBInstance</code>, <code>ModifyDBInstance</code>, <code>DescribeDBInstances</code>, <code>CreateDBSnapshot</code> and deletion. It orchestrates resources and returns status asynchronously. The <strong>data plane</strong> is the database protocol endpoint: a client resolves the RDS DNS endpoint and sends PostgreSQL wire-protocol messages over TCP/TLS to the DB. <code>aws rds describe-db-instances</code> is not a SQL query and does not read application rows.</p>
+<pre><code class="language-mermaid">sequenceDiagram
+  participant Dev as Engineer/CI
+  participant API as RDS API control plane
+  participant RDS as RDS managed infrastructure
+  participant App as App inside VPC
+  participant DB as PostgreSQL data plane
+  Dev-&gt;&gt;API: CreateDBInstance request
+  API--&gt;&gt;Dev: Creating / resource ID
+  API-&gt;&gt;RDS: Orchestrate compute, storage, network
+  RDS--&gt;&gt;API: Available and endpoint
+  App-&gt;&gt;DB: TLS + authentication
+  App-&gt;&gt;DB: SELECT / INSERT / COMMIT
+  DB--&gt;&gt;App: Rows / transaction result
+</code></pre>
+<h2 id="4-2-network-request-lifecycle">4.2 Network request lifecycle</h2>
+<ol>
+<li>Application resolves <code>mydb.abc123.region.rds.amazonaws.com</code> using DNS.</li>
+<li>Client attempts TCP connection to port 5432 (PostgreSQL default).</li>
+<li>VPC routing, security groups and NACLs must allow the path.</li>
+<li>TLS negotiates if configured/requested; use certificate validation for production.</li>
+<li>PostgreSQL authenticates user and selects a database.</li>
+<li>SQL parser, planner and executor process the statement.</li>
+<li>Data is read from buffers/storage or modified through transaction machinery.</li>
+<li>Commit confirmation is sent according to durability settings.</li>
+</ol>
+<p><strong>Private RDS</strong> means it has no direct public accessibility; clients require VPC-reachable network paths. An RDS security group permitting 5432 from an EC2 security group is safer than opening 5432 to <code>0.0.0.0/0</code>. A public RDS endpoint is not a substitute for access controls.</p>
+<h2 id="4-3-failure-and-failover-semantics">4.3 Failure and failover semantics</h2>
+<p>Single-AZ instances do not provide the same infrastructure failover characteristics as Multi-AZ. Multi-AZ DB instance standby infrastructure typically is not a read-serving replica. Multi-AZ DB clusters have different topology and read-capable instances. Read replicas support read scaling and are commonly asynchronous; replication lag means reads can be stale. Failover can interrupt sessions and roll back in-flight transactions; design clients for reconnection and idempotent retry. Never assume exactly-once execution after a timeout: a commit may have succeeded even if its acknowledgement was lost.</p>
+<h2 id="4-4-performance-anatomy">4.4 Performance anatomy</h2>
+<p>Latency comprises application queuing, network round trips, connection acquisition, server CPU, lock waits, buffer/cache misses, storage I/O and result transfer. Throughput is constrained by the bottleneck, not simply the instance's vCPU count. A slow endpoint can result from exhausted app connection pools even when DB CPU is low. Distinguish metrics: CPU utilization, freeable memory, database connections, read/write latency, disk queue depth, free storage, and transaction/lock waits.</p>
+<h3 id="lab-4a-follow-a-query-end-to-end">Lab 4A — Follow a query end-to-end</h3>
+<p><strong>Where:</strong> application host with <code>psql</code> and database credentials; database from Chapter 6 or local PostgreSQL.</p>
+<pre><code class="language-bash">getent ahostsv4 "$RDS_ENDPOINT"   # Linux DNS resolution
+nc -vz "$RDS_ENDPOINT" 5432       # TCP reachability; nc may need installation
+psql "host=$RDS_ENDPOINT port=5432 dbname=appdb user=app_reader sslmode=verify-full sslrootcert=$HOME/.postgresql/global-bundle.pem" -c 'SELECT current_database(), inet_server_addr(), now();'
+</code></pre>
+<p><strong>Explanation:</strong> <code>getent</code> queries system DNS; <code>nc -vz</code> tests TCP without authenticating; <code>psql</code> performs a real PostgreSQL connection; <code>sslmode=verify-full</code> validates the CA and hostname; <code>sslrootcert</code> points to AWS's RDS CA bundle downloaded from the official AWS trust store. <code>app_reader</code> must already exist. Avoid passing passwords in command arguments; use a protected <code>PGPASSFILE</code> or interactive prompt.</p>
+<p><strong>Sample output:</strong> <code>Connection ... succeeded!</code>, then one SQL result row. DNS success + TCP failure points toward network filtering/routing; TCP success + <code>password authentication failed</code> points toward credentials; TLS certificate errors point toward trust/hostname/time configuration.</p>
+<h3 id="senior-interview-practice-3">Senior interview practice</h3>
+<p><strong>Q: Can a successful <code>nc</code> prove RDS is healthy?</strong> A: No. It proves a TCP connection can be established, not that SQL, auth, storage or queries work.</p>
+<p><strong>Q: Why should apps not cache the RDS endpoint IP?</strong> A: Failover or maintenance can change the resolved address; DNS name and connection retry are required.</p>
+<p><strong>Q: Is an RDS read replica an HA replacement?</strong> A: Not automatically; asynchronous replication and manual/engine-specific promotion considerations differ from Multi-AZ HA mechanisms.</p>
+<h1 id="chapter-5-aws-identity-cli-budget-and-secure-lab-networking">Chapter 5 — AWS identity, CLI, budget and secure lab networking</h1>
+<h2 id="5-1-preflight-and-cost-safety">5.1 Preflight and cost safety</h2>
+<p>RDS, EC2, EBS, backups, public IPv4, data transfer and other resources can cost money. <strong>Set an AWS Budget and alert before deployment</strong> and consult the current AWS Pricing Calculator; budgets are alerts, not hard spending caps. Free-tier eligibility varies by account and date; do not assume these labs are free. Use one disposable lab account, a tagged resource prefix and a planned teardown. Avoid production accounts.</p>
+<p><strong>Where:</strong> Debian 12 or comparable Linux shell with AWS CLI v2 installed from AWS's official instructions. Verify:</p>
+<pre><code class="language-bash">aws --version
+psql --version
+aws configure list-profiles
+aws sts get-caller-identity --profile rds-lab
+</code></pre>
+<p>Use IAM Identity Center or a short-lived role session where possible. Avoid long-lived access keys. Region for examples is <code>ap-south-1</code>; substitute your own. Set <code>AWS_PROFILE=rds-lab</code> and <code>AWS_REGION=ap-south-1</code> for a shell session after validating the identity.</p>
+<h2 id="5-2-minimal-secure-topology">5.2 Minimal secure topology</h2>
+<pre><code class="language-mermaid">flowchart TB
+  Dev[Laptop] --&gt;|IAM authenticated| SSM[AWS Systems Manager]
+  subgraph VPC[Lab VPC]
+    subgraph AZ1[Availability Zone A]
+      E[EC2 SSM managed host]
+      P1[Private DB subnet A]
+    end
+    subgraph AZ2[Availability Zone B]
+      P2[Private DB subnet B]
+    end
+    DB[(RDS PostgreSQL private)]
+    P1 --- DB
+    P2 --- DB
+    E --&gt;|SG source to SG 5432| DB
+  end
+  SSM --&gt; E
+</code></pre>
+<p>For the lab, you may reuse a pre-existing approved VPC and SSM-managed EC2 host. If building from scratch, create a VPC, two DB subnets in separate AZs, a DB subnet group, an EC2 instance profile with <code>AmazonSSMManagedInstanceCore</code>, SSM network access via appropriate VPC endpoints or NAT/internet egress, and security groups. <strong>A private EC2 instance without NAT or SSM endpoints may be unreachable by Session Manager.</strong> An EC2 instance with a public IP can reach SSM via outbound internet if correctly secured; it still must be in a network path to RDS. No inbound SSH is needed for Session Manager.</p>
+<h2 id="5-3-security-groups-least-privilege-and-secrets">5.3 Security groups, least privilege and secrets</h2>
+<p>Define an RDS security group that allows inbound TCP 5432 <strong>only from the application/admin EC2 security group</strong>. SGs are stateful. Network ACLs are stateless and can block return traffic if customized. IAM permission to create RDS is different from PostgreSQL role permission to execute SQL. Keep the master credential in Secrets Manager or use the RDS-managed master password feature; do not paste passwords into Terraform state or shell history.</p>
+<h3 id="lab-5a-inspect-your-environment">Lab 5A — Inspect your environment</h3>
+<pre><code class="language-bash">export AWS_PROFILE=rds-lab AWS_REGION=ap-south-1
+aws ec2 describe-vpcs --query 'Vpcs[].{VpcId:VpcId,Cidr:CidrBlock,Default:IsDefault}' --output table
+aws ec2 describe-subnets --filters Name=vpc-id,Values=&lt;VPC_ID&gt;   --query 'Subnets[].{Subnet:SubnetId,AZ:AvailabilityZone,CIDR:CidrBlock}' --output table
+aws ec2 describe-security-groups --filters Name=vpc-id,Values=&lt;VPC_ID&gt;   --query 'SecurityGroups[].{ID:GroupId,Name:GroupName}' --output table
+</code></pre>
+<p><strong>Line-by-line:</strong> <code>export</code> supplies profile/region; <code>describe-vpcs</code> inventories VPCs; <code>--filters Name=vpc-id</code> scopes subnets/security groups; <code>--query</code> selects columns. Replace <code>&lt;VPC_ID&gt;</code> with an actual VPC ID; the placeholder syntax is explanatory.</p>
+<h3 id="lab-5b-create-a-dedicated-db-security-group">Lab 5B — Create a dedicated DB security group</h3>
+<pre><code class="language-bash">DB_SG=$(aws ec2 create-security-group   --group-name rds-v1-db-sg --description 'RDS Volume 1 PostgreSQL access'   --vpc-id "$VPC_ID" --query GroupId --output text)
+aws ec2 authorize-security-group-ingress   --group-id "$DB_SG" --protocol tcp --port 5432   --source-group "$APP_SG"
+aws ec2 describe-security-groups --group-ids "$DB_SG"   --query 'SecurityGroups[0].IpPermissions' --output json
+</code></pre>
+<p><strong>Prerequisites:</strong> <code>VPC_ID</code> is an existing VPC; <code>APP_SG</code> is the security group attached to the SSM-managed EC2 host in the same VPC (or otherwise valid SG reference topology). <code>create-security-group</code> creates the target SG and prints its ID; <code>authorize-security-group-ingress</code> allows source-group traffic on PostgreSQL's port; <code>describe</code> verifies it. No internet-wide inbound rule is created.</p>
+<p><strong>Representative output:</strong> an <code>IpPermissions</code> entry with <code>FromPort: 5432</code>, <code>ToPort: 5432</code>, and <code>UserIdGroupPairs</code> containing the app SG ID.</p>
+<h2 id="5-4-iam-policy-example-for-inventory-only-automation">5.4 IAM policy example for inventory-only automation</h2>
+<pre><code class="language-json">{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Sid": "RdsReadOnlyInventory",
+    "Effect": "Allow",
+    "Action": ["rds:DescribeDBInstances", "rds:DescribeDBSubnetGroups", "rds:DescribeDBSnapshots"],
+    "Resource": "*"
+  }]
+}
+</code></pre>
+<p><strong>Line-by-line:</strong> <code>Version</code> is the IAM policy grammar version; <code>Statement</code> holds grants; <code>Sid</code> is an optional label; <code>Effect: Allow</code> grants listed actions; <code>Action</code> enumerates read-only RDS API permissions; <code>Resource: *</code> is used here because some describe actions do not support resource-level restriction. Add write permissions only to a dedicated lab provisioning role and constrain resources/tags where AWS action support allows.</p>
+<h3 id="troubleshooting">Troubleshooting</h3>
+<p><strong>SSM target not online:</strong> inspect EC2 IAM instance profile, SSM Agent, VPC endpoint/NAT connectivity, DNS and endpoint SGs. <strong>RDS subnet group invalid:</strong> ensure suitable subnets across at least two AZs and supported VPC configuration. <strong>Security group rule fails:</strong> validate SG IDs, VPC, permissions and group-reference restrictions. <strong>Budget alert did not stop billing:</strong> expected—budgets are alerts, not hard limits.</p>
+<h3 id="senior-interview-practice-4">Senior interview practice</h3>
+<p><strong>Q: Why use SG-to-SG rules?</strong> A: Access tracks workload membership without relying on dynamic private IPs; still control who can attach or modify those groups.</p>
+<p><strong>Q: Can IAM alone allow PostgreSQL SQL access?</strong> A: No. SQL access also needs a reachable endpoint and database authentication/authorization; IAM DB authentication is an optional supported authentication path, not blanket SQL permission.</p>
+<h1 id="chapter-6-provision-connect-test-and-remove-postgresql-rds">Chapter 6 — Provision, connect, test and remove PostgreSQL RDS</h1>
+<h2 id="6-1-lab-contract">6.1 Lab contract</h2>
+<p><strong>Goal:</strong> create a private, encrypted, Single-AZ PostgreSQL DB instance in an approved lab VPC, connect from an SSM-managed EC2 host, run SQL, inspect metrics and delete everything. <strong>Prerequisites:</strong> completed Chapter 5; AWS CLI v2; VPC with two suitable subnets in distinct AZs; app EC2 security group; EC2 host reachable via Session Manager; adequate IAM rights; current cost review. <strong>Caution:</strong> instance class, storage options, and version support vary by region. The values below are examples, not guaranteed availability.</p>
+<h2 id="6-2-create-db-subnet-group">6.2 Create DB subnet group</h2>
+<p><strong>Where:</strong> AWS CLI on laptop.</p>
+<pre><code class="language-bash">export AWS_PROFILE=rds-lab AWS_REGION=ap-south-1
+export DB_ID=rds-v1-pg-lab
+aws rds create-db-subnet-group   --db-subnet-group-name rds-v1-private-subnets   --db-subnet-group-description 'Private DB subnets for Volume 1'   --subnet-ids "$DB_SUBNET_A" "$DB_SUBNET_B"   --tags Key=Project,Value=RDSMasterclass Key=Environment,Value=Lab
+</code></pre>
+<p><strong>Explanation:</strong> <code>create-db-subnet-group</code> registers candidate DB subnets; name and description identify the resource; <code>--subnet-ids</code> supplies two IDs from different AZs; <code>--tags</code> enable inventory and cost allocation. Both subnets should be private by routing/design; subnet group membership alone does not prove privacy.</p>
+<h2 id="6-3-create-encrypted-rds-postgresql">6.3 Create encrypted RDS PostgreSQL</h2>
+<pre><code class="language-bash">aws rds create-db-instance   --db-instance-identifier "$DB_ID"   --engine postgres   --db-instance-class db.t3.micro   --allocated-storage 20   --storage-type gp3   --master-username labadmin   --manage-master-user-password   --db-name appdb   --db-subnet-group-name rds-v1-private-subnets   --vpc-security-group-ids "$DB_SG"   --no-publicly-accessible   --storage-encrypted   --backup-retention-period 1   --no-multi-az   --tags Key=Project,Value=RDSMasterclass Key=Environment,Value=Lab
+</code></pre>
+<p><strong>Line-by-line:</strong> <code>create-db-instance</code> requests asynchronous provisioning; <code>--db-instance-identifier</code> is the AWS resource ID; <code>--engine postgres</code> chooses PostgreSQL; <code>--db-instance-class</code> selects CPU/memory capacity; <code>--allocated-storage</code> specifies initial GiB; <code>--storage-type gp3</code> selects general-purpose SSD (verify support); <code>--master-username</code> names the initial administrator; <code>--manage-master-user-password</code> asks RDS to store/manage the master password in Secrets Manager (this can incur Secrets Manager charges); <code>--db-name</code> requests an initial database; <code>--db-subnet-group-name</code> selects networking; <code>--vpc-security-group-ids</code> attaches DB SG; <code>--no-publicly-accessible</code> disables public accessibility; <code>--storage-encrypted</code> enables at-rest encryption; <code>--backup-retention-period 1</code> retains automated backups for one day; <code>--no-multi-az</code> makes this a deliberately non-HA, lower-complexity lab; <code>--tags</code> labels resources.</p>
+<p><strong>Important:</strong> <code>db.t3.micro</code> with <code>gp3</code> and other settings might not be a supported combination in your region/engine version. Before creating, inspect <code>describe-orderable-db-instance-options</code>, <code>describe-db-engine-versions</code>, and pricing; select an offered class/storage combination. Do not add <code>--engine-version</code> until checking current available versions.</p>
+<pre><code class="language-bash">aws rds wait db-instance-available --db-instance-identifier "$DB_ID"
+aws rds describe-db-instances --db-instance-identifier "$DB_ID"   --query 'DBInstances[0].{Status:DBInstanceStatus,Endpoint:Endpoint.Address,Port:Endpoint.Port,Public:PubliclyAccessible,Encrypted:StorageEncrypted,Secret:MasterUserSecret.SecretArn}'   --output json
+</code></pre>
+<p><strong>Expected shape (illustrative):</strong></p>
+<pre><code class="language-json">{
+  "Status": "available",
+  "Endpoint": "rds-v1-pg-lab.xxxxxx.ap-south-1.rds.amazonaws.com",
+  "Port": 5432,
+  "Public": false,
+  "Encrypted": true,
+  "Secret": "arn:aws:secretsmanager:ap-south-1:123456789012:secret:..."
+}
+</code></pre>
+<h2 id="6-4-connect-securely-from-ec2-using-session-manager">6.4 Connect securely from EC2 using Session Manager</h2>
+<p><strong>Where:</strong> local AWS CLI for the first command; then shell on SSM-managed EC2. You need Session Manager plugin installed locally for CLI sessions and <code>AmazonSSMManagedInstanceCore</code> on EC2.</p>
+<pre><code class="language-bash">aws ssm start-session --target "$EC2_INSTANCE_ID"
+</code></pre>
+<p>On the EC2 shell install PostgreSQL client with the appropriate package manager (Debian/Ubuntu: <code>sudo apt-get update &amp;&amp; sudo apt-get install -y postgresql-client</code>; RHEL-based distributions may use <code>dnf</code>). Obtain the RDS master secret ARN from the prior output and retrieve it only from a principal authorized to call Secrets Manager; do not print or log the secret in shared terminals. Use the master account only for initial setup; create a less-privileged application role.</p>
+<pre><code class="language-bash">export RDS_ENDPOINT='&lt;actual-endpoint-from-describe&gt;'
+mkdir -p "$HOME/.postgresql"
+chmod 700 "$HOME/.postgresql"
+# Download the current AWS RDS CA bundle from the official AWS documentation link.
+# Save it as $HOME/.postgresql/global-bundle.pem and verify the source.
+psql "host=$RDS_ENDPOINT port=5432 dbname=appdb user=labadmin sslmode=verify-full sslrootcert=$HOME/.postgresql/global-bundle.pem"
+</code></pre>
+<p><code>psql</code> prompts for a password; enter the secret securely. <strong>Never</strong> put a plaintext password in a shell command, committed file or application log. RDS-managed secrets are retrievable via Secrets Manager under IAM permissions. Consult the AWS RDS SSL/TLS guide for the authoritative bundle URL and certificate rotation instructions.</p>
+<p>In <code>psql</code>:</p>
+<pre><code class="language-sql">SELECT current_user, current_database(), version();
+SHOW ssl;
+SELECT ssl, version, cipher FROM pg_stat_ssl WHERE pid = pg_backend_pid();
+CREATE ROLE app_reader LOGIN PASSWORD 'REPLACE_WITH_UNIQUE_TEMPORARY_SECRET';
+GRANT CONNECT ON DATABASE appdb TO app_reader;
+CREATE SCHEMA IF NOT EXISTS training;
+CREATE TABLE training.events (id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY, message text NOT NULL);
+INSERT INTO training.events(message) VALUES ('first RDS write');
+GRANT USAGE ON SCHEMA training TO app_reader;
+GRANT SELECT ON training.events TO app_reader;
+SELECT * FROM training.events;
+</code></pre>
+<p><strong>Explanation:</strong> <code>current_user</code> identifies the DB principal; <code>version()</code> shows PostgreSQL engine build; <code>SHOW ssl</code> indicates server TLS support, not whether <em>your session</em> is encrypted; <code>pg_stat_ssl</code> confirms current session TLS; <code>CREATE ROLE ... LOGIN</code> creates a user with password (replace placeholder); <code>GRANT CONNECT</code> allows database access; <code>CREATE SCHEMA</code> creates a namespace; <code>CREATE TABLE</code> stores data; <code>GRANT USAGE</code> permits schema name resolution; <code>GRANT SELECT</code> permits reading only the named table. Prefer a managed secret or secure prompt over embedding the <code>CREATE ROLE</code> password in reusable scripts.</p>
+<p><strong>Representative SQL output:</strong></p>
+<pre><code class="language-text"> id |     message
+----+-----------------
+  1 | first RDS write
+(1 row)
+</code></pre>
+<p>Verify that <code>app_reader</code> can <code>SELECT</code> but cannot <code>INSERT</code>. For production, also define default privileges, revoke unnecessary public privileges, rotate credentials and audit grants.</p>
+<h2 id="6-5-cloudwatch-and-operational-inspection">6.5 CloudWatch and operational inspection</h2>
+<pre><code class="language-bash">aws rds describe-db-instances --db-instance-identifier "$DB_ID"   --query 'DBInstances[0].{Status:DBInstanceStatus,Class:DBInstanceClass,Storage:AllocatedStorage,MultiAZ:MultiAZ}'
+aws cloudwatch get-metric-statistics   --namespace AWS/RDS --metric-name CPUUtilization   --dimensions Name=DBInstanceIdentifier,Value="$DB_ID"   --start-time '&lt;UTC_ISO_START&gt;' --end-time '&lt;UTC_ISO_END&gt;'   --period 300 --statistics Average
+</code></pre>
+<p><strong>Explanation:</strong> first command verifies actual provisioned capacity and HA status; CloudWatch query requests average CPU utilization in 5-minute periods for an explicit UTC window. Replace timestamps such as <code>2026-10-16T02:00:00Z</code>; expect empty datapoints when outside retention or before metrics are published. Other key metrics: <code>DatabaseConnections</code>, <code>FreeableMemory</code>, <code>FreeStorageSpace</code>, <code>ReadLatency</code>, <code>WriteLatency</code>.</p>
+<h2 id="6-6-troubleshooting-matrix">6.6 Troubleshooting matrix</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Likely resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AccessDenied</code> on create</td>
+<td>STS principal, IAM, SCP, boundaries</td>
+<td>Grant constrained provisioning rights</td>
+</tr>
+<tr>
+<td><code>InvalidParameterCombination</code></td>
+<td>Instance class/storage/engine compatibility</td>
+<td>Choose offered options</td>
+</tr>
+<tr>
+<td><code>DBSubnetGroupDoesNotCoverEnoughAZs</code></td>
+<td>Subnet AZs</td>
+<td>Use supported distinct AZ subnets</td>
+</tr>
+<tr>
+<td>Timeout on 5432</td>
+<td>EC2 placement, SGs, NACLs, DNS, routing</td>
+<td>Allow source SG to DB SG; check path</td>
+</tr>
+<tr>
+<td>Password failure</td>
+<td>Secret, username, database</td>
+<td>Retrieve current secret; check role</td>
+</tr>
+<tr>
+<td><code>no pg_hba.conf entry</code> or TLS-related error</td>
+<td>Client TLS settings and RDS auth behavior</td>
+<td>Use supported SSL/TLS settings and verify certificate</td>
+</tr>
+<tr>
+<td><code>permission denied for table</code></td>
+<td>Schema USAGE and table privileges</td>
+<td>Grant least privilege to correct role</td>
+</tr>
+<tr>
+<td>High connection count</td>
+<td>Pool size, idle connections, app retries</td>
+<td>Bound pools; consider RDS Proxy</td>
+</tr>
+</tbody>
+</table>
+<h2 id="6-7-mandatory-teardown">6.7 Mandatory teardown</h2>
+<p><strong>Warning:</strong> the following commands destroy the disposable lab database. Never run against production. The <code>--skip-final-snapshot</code> and <code>--delete-automated-backups</code> choices deliberately discard recovery paths and are appropriate <strong>only for an explicitly disposable lab</strong>.</p>
+<pre><code class="language-bash">aws rds delete-db-instance --db-instance-identifier "$DB_ID"   --skip-final-snapshot --delete-automated-backups
+aws rds wait db-instance-deleted --db-instance-identifier "$DB_ID"
+aws rds delete-db-subnet-group --db-subnet-group-name rds-v1-private-subnets
+aws ec2 delete-security-group --group-id "$DB_SG"
+</code></pre>
+<p>Check for retained manual snapshots, Secrets Manager secrets (including any RDS-managed master secret and its deletion state), CloudWatch logs, EC2 hosts, NAT gateways, public IPv4 addresses, EBS volumes, VPC endpoints and other resources. Delete <strong>only resources you created for this lab</strong>; avoid deleting shared subnets/VPCs/SGs. Verify in the billing console afterward; charges may appear with a delay.</p>
+<h3 id="senior-interview-practice-5">Senior interview practice</h3>
+<p><strong>Q: Why private subnets for databases?</strong> A: Minimize direct internet attack surface, limit network paths and enforce workload-to-database access via SGs and private connectivity.</p>
+<p><strong>Q: Why not use the master DB account in application code?</strong> A: Its broad privileges amplify compromise impact; use narrow roles with separate secrets and rotation.</p>
+<p><strong>Q: What would you change before production?</strong> A: Multi-AZ HA, appropriate backup/PITR policy, tested restores, monitoring, parameter review, TLS enforcement, IAM boundaries, Secrets Manager, application pools, capacity/performance tests and documented RTO/RPO.</p>
+<h1 id="chapter-7-postgresql-internals-mvcc-wal-buffers-and-vacuum">Chapter 7 — PostgreSQL internals, MVCC, WAL, buffers and vacuum</h1>
+<h2 id="7-1-postgresql-process-and-memory-model">7.1 PostgreSQL process and memory model</h2>
+<p>PostgreSQL uses a server process architecture: a postmaster (main server process) coordinates background processes and typically one backend process per client connection. The backend parses, plans and executes SQL, uses shared buffers, consults catalogs and participates in transaction/locking mechanisms. Important components include checkpointer, background writer, WAL writer, autovacuum launcher/workers and statistics mechanisms. Exact process names/behavior vary by PostgreSQL version and managed engine settings.</p>
+<pre><code class="language-mermaid">flowchart TB
+  C[Application client] --&gt; P[PostgreSQL backend process]
+  P --&gt; Parser[Parser / rewrite / planner / executor]
+  Parser --&gt; SB[(Shared buffers)]
+  Parser --&gt; WAL[(WAL buffers)]
+  SB &lt;--&gt; Pages[(Table/index pages on storage)]
+  WAL --&gt; WALDisk[(WAL files)]
+  CK[Checkpointer / background writer] --&gt; Pages
+  V[Autovacuum workers] --&gt; Pages
+</code></pre>
+<p><strong>Shared buffers</strong> cache database pages. PostgreSQL also benefits from the OS page cache; <code>shared_buffers</code> is not the entirety of cached data. <strong>Work memory</strong> (<code>work_mem</code>) is per sort/hash operation rather than a global total; setting it too high with many concurrent queries can cause memory pressure. <strong>Maintenance memory</strong> is used by operations such as vacuum and index creation, subject to operation-specific settings.</p>
+<h2 id="7-2-a-select-request-internally">7.2 A SELECT request internally</h2>
+<ol>
+<li>Client sends query over the wire protocol.</li>
+<li>Parser checks syntax and creates a parse tree.</li>
+<li>Analyzer resolves names/types and privileges.</li>
+<li>Rewriter applies rewrite rules/views.</li>
+<li>Planner estimates costs/cardinality and selects access paths.</li>
+<li>Executor runs scans, joins, filters, aggregates and sorts.</li>
+<li>Buffer manager finds needed pages in shared buffers or requests storage reads.</li>
+<li>MVCC snapshot determines visible row versions.</li>
+<li>Result rows are serialized back to the client.</li>
+</ol>
+<p><strong>Key insight:</strong> <code>EXPLAIN</code> reports estimated plan; <code>EXPLAIN (ANALYZE, BUFFERS)</code> actually executes the query and reports observed timing/buffer activity. Avoid <code>EXPLAIN ANALYZE</code> on a destructive DML statement unless enclosed in a rollback transaction and you understand side effects.</p>
+<h3 id="lab-7a-query-plans">Lab 7A — Query plans</h3>
+<pre><code class="language-sql">CREATE TABLE training.measurements (
+  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  device_id int NOT NULL,
+  recorded_at timestamptz NOT NULL,
+  reading numeric(10,2) NOT NULL
+);
+INSERT INTO training.measurements(device_id,recorded_at,reading)
+SELECT (g % 100), now() - (g || ' seconds')::interval, (g % 1000)::numeric / 10
+FROM generate_series(1,100000) AS g;
+ANALYZE training.measurements;
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT * FROM training.measurements WHERE device_id=42
+ORDER BY recorded_at DESC LIMIT 10;
+CREATE INDEX idx_measurements_device_time
+  ON training.measurements(device_id,recorded_at DESC);
+ANALYZE training.measurements;
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT * FROM training.measurements WHERE device_id=42
+ORDER BY recorded_at DESC LIMIT 10;
+</code></pre>
+<p><strong>Line-by-line:</strong> <code>GENERATED ... IDENTITY</code> supplies IDs; <code>generate_series</code> creates test rows; <code>%</code> distributes device IDs; <code>ANALYZE</code> refreshes statistics; <code>EXPLAIN (ANALYZE, BUFFERS)</code> measures real execution and cache usage; composite B-tree index matches equality on <code>device_id</code> followed by descending time order. Planner may still select a sequential scan depending on table size, cache, costs and selectivity. <strong>Expected pattern:</strong> first plan often scans/sorts; second may use an index scan and reduce scanned rows. Compare actual rows, planning time, execution time and buffer hits/reads, not just the operator name.</p>
+<h2 id="7-3-mvcc-and-row-versions">7.3 MVCC and row versions</h2>
+<p>Multi-Version Concurrency Control lets readers see a consistent snapshot while writers create new row versions. PostgreSQL heap tuples carry transaction metadata (<code>xmin</code>/<code>xmax</code>); updates generally create new row versions rather than overwriting the old version in place. Old versions remain until safe to reclaim. This reduces reader/writer blocking but makes vacuum essential. Visibility is not determined by timestamps alone: transaction IDs, commit state and snapshots matter.</p>
+<pre><code class="language-mermaid">sequenceDiagram
+  participant T1 as Transaction A
+  participant DB as PostgreSQL
+  participant T2 as Transaction B
+  T1-&gt;&gt;DB: BEGIN; SELECT balance (snapshot)
+  T2-&gt;&gt;DB: UPDATE balance; COMMIT
+  T1-&gt;&gt;DB: SELECT balance again
+  Note over T1,DB: READ COMMITTED can see new value on next statement
+  Note over T1,DB: REPEATABLE READ keeps stable transaction snapshot
+</code></pre>
+<h3 id="lab-7b-two-sessions-and-isolation">Lab 7B — Two sessions and isolation</h3>
+<p><strong>Where:</strong> two separate <code>psql</code> sessions connected to same disposable DB.</p>
+<p>Session A:</p>
+<pre><code class="language-sql">CREATE TABLE IF NOT EXISTS training.counter (id int PRIMARY KEY, value int NOT NULL);
+INSERT INTO training.counter VALUES (1,10) ON CONFLICT (id) DO UPDATE SET value=10;
+BEGIN ISOLATION LEVEL REPEATABLE READ;
+SELECT value FROM training.counter WHERE id=1;
+</code></pre>
+<p>Session B:</p>
+<pre><code class="language-sql">UPDATE training.counter SET value=20 WHERE id=1;
+SELECT value FROM training.counter WHERE id=1;
+</code></pre>
+<p>Session A:</p>
+<pre><code class="language-sql">SELECT value FROM training.counter WHERE id=1;
+COMMIT;
+SELECT value FROM training.counter WHERE id=1;
+</code></pre>
+<p><strong>Expected:</strong> first two Session A reads return <code>10</code>; after <code>COMMIT</code>, next statement sees <code>20</code>. Repeat using <code>READ COMMITTED</code>: the second SELECT in the transaction should normally see <code>20</code> after B commits. For a full isolation exercise, add concurrent updates and observe lock waits, serialization errors and deadlock detection.</p>
+<h2 id="7-4-write-ahead-logging-and-crash-recovery">7.4 Write-ahead logging and crash recovery</h2>
+<p>WAL records changes before modified data pages must be flushed to permanent storage. During a commit, PostgreSQL ensures required WAL is flushed according to configured durability settings, so crash recovery can replay committed changes even if corresponding heap pages had not yet been written. A checkpoint bounds recovery work by flushing dirty pages and recording a recovery starting point. WAL also supports replication and point-in-time recovery workflows. RDS controls many underlying backup and storage details, so do not assume self-managed filesystem access.</p>
+<p><strong>Important distinctions:</strong> WAL is not a backup by itself; a replica is not a backup; synchronous replication is not the same as a zero-data-loss guarantee under every failure scenario. Verify actual engine/deployment guarantees and recovery tests.</p>
+<h3 id="lab-7c-wal-and-transactions">Lab 7C — WAL and transactions</h3>
+<pre><code class="language-sql">SHOW wal_level;
+SHOW synchronous_commit;
+SHOW shared_buffers;
+SHOW work_mem;
+SELECT pg_current_wal_lsn();
+BEGIN;
+INSERT INTO training.events(message) VALUES ('wal experiment');
+COMMIT;
+SELECT pg_current_wal_lsn();
+</code></pre>
+<p><strong>Explanation:</strong> <code>SHOW</code> reads active configuration; <code>pg_current_wal_lsn()</code> displays a log sequence number; insert/commit produces WAL activity; the second LSN may advance. Exact values are nondeterministic and may advance due to other concurrent activity. Do not equate the difference with only your transaction's WAL bytes without controlled measurement.</p>
+<h2 id="7-5-vacuum-bloat-and-autovacuum">7.5 Vacuum, bloat and autovacuum</h2>
+<p>Updates and deletes leave row versions that may become dead to all active snapshots. <code>VACUUM</code> reclaims reusable space and helps maintain transaction ID health; autovacuum automates this. Long-running transactions, replication slots and other retention conditions can prevent cleanup and contribute to bloat. <code>VACUUM FULL</code> rewrites a table and takes an intrusive lock; do not schedule it casually. <code>ANALYZE</code> refreshes planner statistics; autovacuum may run both vacuum and analyze operations. PostgreSQL's transaction ID wraparound protection makes vacuum an availability concern, not just a performance optimization.</p>
+<h3 id="lab-7d-observe-dead-tuples">Lab 7D — Observe dead tuples</h3>
+<pre><code class="language-sql">SELECT relname,n_live_tup,n_dead_tup,last_autovacuum,last_autoanalyze
+FROM pg_stat_user_tables WHERE schemaname='training';
+UPDATE training.measurements SET reading=reading+1 WHERE id &lt;= 10000;
+SELECT relname,n_live_tup,n_dead_tup FROM pg_stat_user_tables
+WHERE schemaname='training' AND relname='measurements';
+VACUUM (ANALYZE) training.measurements;
+SELECT relname,n_live_tup,n_dead_tup,last_vacuum FROM pg_stat_user_tables
+WHERE schemaname='training' AND relname='measurements';
+</code></pre>
+<p><strong>Explanation:</strong> statistics views expose approximate, asynchronously updated estimates; <code>UPDATE</code> creates new row versions; <code>VACUUM (ANALYZE)</code> reclaims eligible tuples and refreshes statistics; post-vacuum dead-tuple counts may not immediately be zero if old snapshots still need tuples or stats lag. Do not run manual vacuum aggressively in production without investigating workload, table size and locking.</p>
+<h2 id="7-6-locks-waits-and-deadlocks">7.6 Locks, waits and deadlocks</h2>
+<p>Row locks protect concurrent updates; table locks protect structural and data operations. A deadlock occurs when transactions wait cyclically on resources; PostgreSQL detects it and aborts one participant. <code>pg_stat_activity</code> exposes sessions and wait events; <code>pg_locks</code> exposes lock state. Avoid killing sessions without determining the owning application, business transaction and rollback cost.</p>
+<h3 id="lab-7e-lock-wait-investigation">Lab 7E — Lock wait investigation</h3>
+<p>Session A:</p>
+<pre><code class="language-sql">BEGIN;
+UPDATE training.counter SET value=value+1 WHERE id=1;
+-- Keep transaction open temporarily; DO NOT do this in production.
+</code></pre>
+<p>Session B:</p>
+<pre><code class="language-sql">SET lock_timeout='3s';
+UPDATE training.counter SET value=value+1 WHERE id=1;
+</code></pre>
+<p>Expected in B: <code>ERROR: canceling statement due to lock timeout</code>. Session A: <code>ROLLBACK;</code>. Observe while waiting in a third session:</p>
+<pre><code class="language-sql">SELECT pid,usename,state,wait_event_type,wait_event,
+       pg_blocking_pids(pid) AS blockers, left(query,120) AS query
+FROM pg_stat_activity
+WHERE datname=current_database();
+</code></pre>
+<p><strong>Troubleshooting:</strong> find blocker PID and transaction age; ask why the transaction remains open; shorten transaction scope; ensure appropriate indexes; set sensible statement/lock timeouts; avoid blind session termination.</p>
+<h2 id="7-7-database-connections-and-pooling">7.7 Database connections and pooling</h2>
+<p>A PostgreSQL backend per client connection consumes memory and scheduler overhead. Hundreds of idle connections can still matter. Use bounded application connection pools, reasonable idle timeouts, and consider RDS Proxy where supported. Connection pool sizing must reflect total application replicas × per-replica pool size, plus operational sessions, migration jobs and failover headroom. The database <code>max_connections</code> limit is not a target to saturate.</p>
+<h3 id="senior-interview-practice-6">Senior interview practice</h3>
+<p><strong>Q: What is the difference between WAL and data files?</strong> A: WAL is an ordered change record used for recovery/replication; data files contain heap/index pages that may be flushed later.</p>
+<p><strong>Q: Why does a read-only SELECT sometimes wait?</strong> A: DDL locks, resource contention, I/O, buffer pin waits or other mechanisms; MVCC does not eliminate every wait.</p>
+<p><strong>Q: Why is high <code>n_dead_tup</code> concerning?</strong> A: It can signal vacuum lag, long snapshots or high churn, increasing bloat and I/O; verify estimates and blockers before tuning.</p>
+<p><strong>Q: What does a buffer hit prove?</strong> A: PostgreSQL found a page in shared buffers; it does not mean the query is necessarily efficient or that all underlying system cache effects are captured.</p>
+<p><strong>Q: How do you respond to a deadlock?</strong> A: Capture logs/SQLSTATE, identify lock order, ensure transactions acquire resources consistently, shorten critical sections and retry aborted transactions with bounded backoff.</p>
+<h1 id="capstone-lab">Capstone lab</h1>
+<h2 id="build-a-small-private-secure-rds-backed-service">Build a small private, secure RDS-backed service</h2>
+<p><strong>Business requirement:</strong> an internal event ingestion service must persist audit events with no duplicate event IDs, expose read-only queries, and recover from a transient DB disconnect.</p>
+<p><strong>Acceptance criteria:</strong></p>
+<ol>
+<li>A private PostgreSQL RDS instance is accessible only from an approved app/SSM security group.</li>
+<li>The application uses a least-privileged database role and TLS certificate verification.</li>
+<li>Table <code>events(event_id uuid PRIMARY KEY, occurred_at timestamptz, payload jsonb)</code> rejects duplicate IDs.</li>
+<li>A transaction inserts data; a repeated request with the same event ID does not create a second row.</li>
+<li>SQL logs or safe application metrics show query latency without leaking secrets.</li>
+<li>CloudWatch shows DB CPU and connections; alerts and backups are documented.</li>
+<li>A simulated connection failure produces a bounded retry with jitter for safe/idempotent operations.</li>
+<li>A teardown checklist identifies all chargeable resources.</li>
+</ol>
+<p><strong>Suggested SQL:</strong></p>
+<pre><code class="language-sql">CREATE TABLE training.audit_events (
+  event_id uuid PRIMARY KEY,
+  occurred_at timestamptz NOT NULL DEFAULT now(),
+  payload jsonb NOT NULL
+);
+INSERT INTO training.audit_events(event_id,payload)
+VALUES ('00000000-0000-4000-8000-000000000001','{"action":"login"}'::jsonb)
+ON CONFLICT (event_id) DO NOTHING;
+SELECT count(*) FROM training.audit_events;
+</code></pre>
+<p>Run the insert twice: count should remain <code>1</code>. <strong>Senior extension:</strong> explain how to handle a lost commit acknowledgement without duplicating side effects, and how to distinguish DB unavailability from an overloaded connection pool.</p>
+<h2 id="engineering-review-rubric">Engineering review rubric</h2>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Junior</th>
+<th>Mid-level</th>
+<th>Senior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Schema</td>
+<td>Works</td>
+<td>Constraints/indexes</td>
+<td>Invariants, migrations, growth</td>
+</tr>
+<tr>
+<td>Networking</td>
+<td>Connects</td>
+<td>Private SG rules</td>
+<td>Threat model, least privilege</td>
+</tr>
+<tr>
+<td>Transactions</td>
+<td>Basic COMMIT</td>
+<td>Correct rollback</td>
+<td>Retry/idempotency/isolation reasoning</td>
+</tr>
+<tr>
+<td>Operations</td>
+<td>Can deploy</td>
+<td>Metrics/backups</td>
+<td>Restore test, SLO, incident response</td>
+</tr>
+<tr>
+<td>Performance</td>
+<td>Query runs</td>
+<td>EXPLAIN</td>
+<td>Cardinality, waits, capacity planning</td>
+</tr>
+</tbody>
+</table>
+<h1 id="troubleshooting-decision-trees">Troubleshooting decision trees</h1>
+<pre><code class="language-mermaid">flowchart TD
+  A[Application cannot connect] --&gt; B{DNS resolves?}
+  B -- No --&gt; C[Check DNS / endpoint / VPC resolver]
+  B -- Yes --&gt; D{TCP 5432 succeeds?}
+  D -- No --&gt; E[Check SG, NACL, routes, DB status]
+  D -- Yes --&gt; F{TLS succeeds?}
+  F -- No --&gt; G[Check CA bundle, hostname, TLS policy]
+  F -- Yes --&gt; H{Authentication succeeds?}
+  H -- No --&gt; I[Check secret, user, auth method]
+  H -- Yes --&gt; J[Check grants, SQL errors, pool exhaustion]
+</code></pre>
+<pre><code class="language-mermaid">flowchart TD
+  A[Slow SQL request] --&gt; B{DB CPU high?}
+  B -- Yes --&gt; C[Query plan, CPU saturation, parallelism]
+  B -- No --&gt; D{Lock waits?}
+  D -- Yes --&gt; E[Find blockers and long transactions]
+  D -- No --&gt; F{Storage latency high?}
+  F -- Yes --&gt; G[IOPS, throughput, cache, storage metrics]
+  F -- No --&gt; H[Connection pool, network, app timing]
+</code></pre>
+<h1 id="interview-question-bank">Interview question bank</h1>
+<ol>
+<li><strong>Explain ACID with a bank transfer.</strong> Atomic debit/credit, constraints, isolation and durable commit; also describe retries and idempotency.</li>
+<li><strong>What does RDS manage?</strong> Infrastructure lifecycle, backups and selected maintenance operations; not app SQL correctness or access design.</li>
+<li><strong>RDS versus EC2 PostgreSQL?</strong> RDS reduces OS/backup operational burden but restricts host access and some extensions/settings.</li>
+<li><strong>RDS versus Aurora?</strong> Aurora has a distinct storage architecture and deployment/price characteristics; choose by measured workload.</li>
+<li><strong>Can a private RDS be accessed from a laptop?</strong> Yes through secure VPC connectivity such as VPN, approved tunnel or SSM host, not direct public internet exposure.</li>
+<li><strong>Why two AZs in DB subnet group?</strong> To give RDS eligible placement across AZs; actual failover depends on deployment.</li>
+<li><strong>What is an RDS endpoint?</strong> DNS hostname for the DB service; not a fixed IP address.</li>
+<li><strong>How do you verify TLS?</strong> Client <code>sslmode=verify-full</code> with trusted CA plus <code>pg_stat_ssl</code> session check.</li>
+<li><strong>What is MVCC?</strong> Visibility of multiple row versions under transaction snapshots.</li>
+<li><strong>What is WAL?</strong> Write-ahead change log used for crash recovery and replication.</li>
+<li><strong>Why can PostgreSQL grow after DELETE?</strong> Dead tuples may remain until vacuum can reclaim space; physical file size need not shrink.</li>
+<li><strong>Why is <code>EXPLAIN ANALYZE</code> potentially dangerous?</strong> It executes the statement and can modify data or create heavy load.</li>
+<li><strong>What causes connection exhaustion?</strong> Too many clients, leaked pools, scaling replicas or long-held sessions.</li>
+<li><strong>What is an idempotent API?</strong> Repeating the same request has the same intended effect; use stable request keys and DB uniqueness.</li>
+<li><strong>How do you debug slow RDS queries?</strong> Correlate app latency, pool waits, DB CPU/I/O/locks, query plans and load trends.</li>
+<li><strong>How do you prevent SQL injection?</strong> Parameterized queries and least-privileged roles, never string-concatenate untrusted SQL.</li>
+<li><strong>What is a DB parameter group?</strong> Engine configuration settings; some apply immediately, others require reboot.</li>
+<li><strong>Why not use public RDS for convenience?</strong> Expands exposure and complicates network threat model; use private connectivity.</li>
+<li><strong>Why are backups not enough without restore drills?</strong> Recovery time, completeness and procedural correctness are unproven until tested.</li>
+<li><strong>What happens when a client loses connection during COMMIT?</strong> Commit outcome may be ambiguous; query by idempotency key or reconcile before retrying side effects.</li>
+<li><strong>What is read replica lag?</strong> Delay between source commits and replica visibility; stale reads are possible.</li>
+<li><strong>What does Multi-AZ protect against?</strong> Certain infrastructure/AZ failures, not application bugs or all logical corruption.</li>
+<li><strong>What is a lock timeout?</strong> Maximum wait for a lock; it protects request latency but doesn't repair contention.</li>
+<li><strong>What is transaction ID wraparound?</strong> Finite transaction IDs require vacuum/freeze maintenance to preserve visibility safety.</li>
+<li><strong>How would you present a production design review?</strong> Requirements, workload measurements, RPO/RTO, security, HA, tests, cost, rollback and observability.</li>
+</ol>
+<h1 id="glossary">Glossary</h1>
+<p><strong>ACID:</strong> Atomicity, Consistency, Isolation, Durability. <strong>ADR:</strong> Architecture Decision Record. <strong>AZ:</strong> Availability Zone. <strong>Backend:</strong> PostgreSQL server process serving a client. <strong>Bloat:</strong> Excess storage from obsolete tuples/index entries. <strong>CloudWatch:</strong> AWS metrics/logs/alarms service. <strong>Control plane:</strong> Management API/orchestration. <strong>Data plane:</strong> Runtime SQL access path. <strong>DB subnet group:</strong> RDS subnet selection. <strong>DDL:</strong> Data Definition Language. <strong>DML:</strong> Data Manipulation Language. <strong>DNS:</strong> Domain Name System. <strong>Foreign key:</strong> Referential integrity constraint. <strong>IAM:</strong> Identity and Access Management. <strong>IOPS:</strong> I/O operations per second. <strong>KMS:</strong> AWS Key Management Service. <strong>LSN:</strong> Log Sequence Number. <strong>MVCC:</strong> Multi-Version Concurrency Control. <strong>NACL:</strong> Network Access Control List. <strong>PITR:</strong> Point-in-time recovery. <strong>RDBMS:</strong> Relational DBMS. <strong>RDS:</strong> Amazon Relational Database Service. <strong>RPO:</strong> Recovery Point Objective. <strong>RTO:</strong> Recovery Time Objective. <strong>SG:</strong> Security Group. <strong>SQLSTATE:</strong> Standardized SQL error code. <strong>SSM:</strong> AWS Systems Manager. <strong>TLS:</strong> Transport Layer Security. <strong>Vacuum:</strong> PostgreSQL maintenance that reclaims dead tuple space. <strong>VPC:</strong> Virtual Private Cloud. <strong>WAL:</strong> Write-Ahead Log.</p>
+<h1 id="index">Index</h1>
+<ul>
+<li>ACID — Chapter 1; interview bank</li>
+<li>Amazon Aurora — Chapters 2–3</li>
+<li>Authentication — Chapters 4–6</li>
+<li>Autovacuum — Chapter 7</li>
+<li>Backups — Chapters 2, 6</li>
+<li>Budget — Chapter 5</li>
+<li>CloudWatch — Chapters 4, 6</li>
+<li>Connection pooling — Chapters 4, 7</li>
+<li>Control plane — Chapter 4</li>
+<li>Database engine selection — Chapter 3</li>
+<li>DB subnet groups — Chapters 5–6</li>
+<li>Deadlocks — Chapter 7</li>
+<li>Encryption — Chapters 5–6</li>
+<li>IAM — Chapters 2, 5</li>
+<li>Indexes — Chapters 1, 7</li>
+<li>Isolation levels — Chapters 1, 7</li>
+<li>MVCC — Chapter 7</li>
+<li>PostgreSQL <code>psql</code> — Chapters 1, 6–7</li>
+<li>RDS Proxy — Chapter 7 (intro)</li>
+<li>Read replicas — Chapters 2, 4</li>
+<li>Security groups — Chapters 4–6</li>
+<li>SQL constraints — Chapter 1</li>
+<li>TLS — Chapters 4, 6</li>
+<li>Troubleshooting — Chapters 4–7; decision trees</li>
+<li>Vacuum — Chapter 7</li>
+<li>WAL — Chapter 7</li>
+</ul>
+<h1 id="references">References</h1>
+<p>The following official documentation is the primary reference for version-sensitive AWS and PostgreSQL behavior. This book is not a live verification of regional availability or prices.</p>
+<ol>
+<li>AWS RDS User Guide — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html">https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html</a></li>
+<li>RDS for PostgreSQL — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html">https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html</a></li>
+<li>RDS security — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.html">https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.html</a></li>
+<li>RDS SSL/TLS — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html">https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html</a></li>
+<li>RDS backups — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_CommonTasks.BackupRestore.html">https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_CommonTasks.BackupRestore.html</a></li>
+<li>AWS CLI RDS reference — <a href="https://docs.aws.amazon.com/cli/latest/reference/rds/">https://docs.aws.amazon.com/cli/latest/reference/rds/</a></li>
+<li>AWS Systems Manager Session Manager — <a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html">https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html</a></li>
+<li>PostgreSQL official documentation — <a href="https://www.postgresql.org/docs/current/">https://www.postgresql.org/docs/current/</a></li>
+<li>PostgreSQL MVCC — <a href="https://www.postgresql.org/docs/current/mvcc.html">https://www.postgresql.org/docs/current/mvcc.html</a></li>
+<li>PostgreSQL WAL — <a href="https://www.postgresql.org/docs/current/wal-intro.html">https://www.postgresql.org/docs/current/wal-intro.html</a></li>
+<li>PostgreSQL routine vacuuming — <a href="https://www.postgresql.org/docs/current/routine-vacuuming.html">https://www.postgresql.org/docs/current/routine-vacuuming.html</a></li>
+<li>AWS RDS pricing — <a href="https://aws.amazon.com/rds/pricing/">https://aws.amazon.com/rds/pricing/</a></li>
+</ol>
+<p><strong>End of Volume 1.</strong> Volume 2 covers advanced SQL, schema evolution, indexing, isolation, Python/Java/Node.js integration and production migration strategies.</p>
+</article></main><footer>ARTHA Gurukul · Source material preserved as educational notes</footer></body></html>

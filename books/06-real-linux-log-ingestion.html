@@ -1,0 +1,365 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Real Linux Log Ingestion | ARTHA Gurukul</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><a class="brand" href="../index.html">✦ ARTHA GURUKUL</a><nav><a href="../index.html#courses">All Courses</a><a href="index.html">Source Library</a></nav></header><main class="book-layout"><aside class="book-toc"><div class="eyebrow">Original material · offline copy</div><h2>Real Linux Log Ingestion</h2><a href="../index.html">⌂ Course library</a><div class="toc"><a href="#pytorch-master-course-chapter-6">PyTorch Master Course — Chapter 6</a><a href="#real-linux-log-ingestion-parsing-feature-engineering-dataset-creation-and-datalo">Real Linux Log Ingestion, Parsing, Feature Engineering, Dataset Creation and DataLoad</a><a href="#6-1-why-a-log-pipeline-is-part-of-machine-learning">6.1 Why a log pipeline is part of machine learning</a><a href="#6-2-locate-ssh-logs-on-debian">6.2 Locate SSH logs on Debian</a><a href="#6-3-why-journal-json-is-better-than-parsing-the-displayed-timestamp">6.3 Why journal JSON is better than parsing the displayed timestamp</a><a href="#6-4-create-the-project">6.4 Create the project</a><a href="#6-5-complete-runnable-parser-and-feature-builder-ingest-py">6.5 Complete runnable parser and feature builder — ingest.py</a><a href="#6-6-create-sample-journal-data-without-ssh-attacks">6.6 Create sample journal data without SSH attacks</a><a href="#6-7-convert-csv-into-pytorch-tensors-prepare-torch-py">6.7 Convert CSV into PyTorch tensors — prepare_torch.py</a><a href="#6-8-how-to-obtain-trustworthy-labels">6.8 How to obtain trustworthy labels</a><a href="#6-9-production-scenarios-and-troubleshooting">6.9 Production scenarios and troubleshooting</a><a href="#6-10-unit-tests-test-ingest-py">6.10 Unit tests — test_ingest.py</a><a href="#6-11-interview-questions-and-model-answers">6.11 Interview questions and model answers</a><a href="#6-12-exercises">6.12 Exercises</a><a href="#6-13-summary-and-next-chapter">6.13 Summary and next chapter</a></div></aside><article class="book-prose"><p class="source-note">Historical course notes converted into searchable offline HTML. Some content may be a draft; exercises requiring cloud accounts need credentials and may incur costs.</p><h1 id="pytorch-master-course-chapter-6">PyTorch Master Course — Chapter 6</h1>
+<h2 id="real-linux-log-ingestion-parsing-feature-engineering-dataset-creation-and-datalo">Real Linux Log Ingestion, Parsing, Feature Engineering, Dataset Creation and DataLoader</h2>
+<p><strong>Level:</strong> beginner → production-aware intermediate. <strong>Platform:</strong> Debian/Ubuntu Linux, Python 3.10+, CPU sufficient. <strong>Outcome:</strong> Convert SSH authentication events from <code>journalctl -o json</code> into numerical, time-windowed observations ready for PyTorch.</p>
+<blockquote>
+<p><strong>Security and scientific limitation:</strong> This chapter produces <strong>unlabeled</strong> feature records. It does not invent ground-truth attack labels. Real model evaluation requires independently verified labels, representative normal traffic, and a time-separated test set. Never treat high failure counts as proof of an attack.</p>
+</blockquote>
+<h2 id="6-1-why-a-log-pipeline-is-part-of-machine-learning">6.1 Why a log pipeline is part of machine learning</h2>
+<p>A neural network does not consume the meaning of <code>Failed password for root</code> automatically. The pipeline transforms raw evidence into numeric measurements. Data quality, consistent time handling, and feature reproducibility matter as much as model architecture.</p>
+<pre><code class="language-text">Linux hosts → journald → JSON export → event parser → normalization
+→ group by source IP + 5-minute UTC bucket → numeric feature CSV
+→ validated feature order → train-only scaler → PyTorch DataLoader
+→ trained model → SOC investigation
+</code></pre>
+<h3 id="key-concepts">Key concepts</h3>
+<ul>
+<li><strong>Event:</strong> One journal record, e.g. one failed SSH login.</li>
+<li><strong>Observation:</strong> One aggregated IP/time-window row, potentially containing many events.</li>
+<li><strong>Feature:</strong> Numeric property such as failed logins or username diversity.</li>
+<li><strong>Label:</strong> Externally verified outcome, e.g. suspicious vs normal. <em>Not</em> produced by this parser.</li>
+<li><strong>Ingestion:</strong> Reading records from the source.</li>
+<li><strong>Normalization:</strong> Mapping varied messages to a stable event schema.</li>
+<li><strong>Aggregation:</strong> Summarizing events within a defined time window.</li>
+<li><strong>Data leakage:</strong> Accidentally letting information from validation/test periods influence training.</li>
+<li><strong>Idempotence:</strong> Re-running ingestion without unintentionally duplicating the same source events.</li>
+</ul>
+<h2 id="6-2-locate-ssh-logs-on-debian">6.2 Locate SSH logs on Debian</h2>
+<p>Run on the <strong>Linux host</strong>, not inside the Python virtual environment:</p>
+<pre><code class="language-bash">sudo systemctl status ssh
+sudo journalctl -u ssh.service --since '1 hour ago' --no-pager
+sudo journalctl -o json -u ssh.service -n 3 --no-pager
+sudo test -f /var/log/auth.log &amp;&amp; sudo tail -n 5 /var/log/auth.log
+</code></pre>
+<p><code>auth.log</code> depends on rsyslog and distribution configuration; it may not exist. A journal unit filter is not guaranteed to include all sshd events on every system. Verify the returned <code>SYSLOG_IDENTIFIER</code>, <code>_COMM</code>, <code>_SYSTEMD_UNIT</code>, and <code>MESSAGE</code> fields before building a collector. On some systems <code>sshd.service</code> is the unit name.</p>
+<h3 id="production-ingestion-alternatives">Production ingestion alternatives</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Strength</th>
+<th>Tradeoff</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>journalctl -o json</code></td>
+<td>Structured timestamps and metadata</td>
+<td>Permissions, retention, filtering</td>
+</tr>
+<tr>
+<td><code>auth.log</code> / <code>secure</code></td>
+<td>Familiar file-based collection</td>
+<td>Rotation, timestamp year ambiguity</td>
+</tr>
+<tr>
+<td>Filebeat / Fluent Bit</td>
+<td>Shipping and buffering</td>
+<td>Operational components and configuration</td>
+</tr>
+<tr>
+<td>journald API</td>
+<td>Cursor-based processing</td>
+<td>Library dependencies and deployment complexity</td>
+</tr>
+</tbody>
+</table>
+<p>For a one-time lab, export a bounded journal snapshot:</p>
+<pre><code class="language-bash">sudo journalctl -u ssh.service --since '24 hours ago' -o json --no-pager &gt; ssh-journal.jsonl
+chmod 600 ssh-journal.jsonl
+</code></pre>
+<p>The file may contain usernames, source addresses and other sensitive metadata. Restrict permissions, retention and access. In production, use a dedicated least-privilege collection identity rather than making the model service root.</p>
+<h2 id="6-3-why-journal-json-is-better-than-parsing-the-displayed-timestamp">6.3 Why journal JSON is better than parsing the displayed timestamp</h2>
+<p>Traditional syslog lines can look like <code>Oct 08 10:15:01</code> and omit the year and timezone. Journal JSON provides <code>__REALTIME_TIMESTAMP</code>, a Unix epoch timestamp in <strong>microseconds</strong>, which we can convert to timezone-aware UTC. It avoids guessing the year. Note that wall clocks can still jump due to clock corrections; use a sound time synchronization strategy and account for late events.</p>
+<p>Example (documentation IP addresses):</p>
+<pre><code class="language-json">{"__REALTIME_TIMESTAMP":"1791454501000000","SYSLOG_IDENTIFIER":"sshd","MESSAGE":"Failed password for root from 192.0.2.10 port 51001 ssh2"}
+</code></pre>
+<h2 id="6-4-create-the-project">6.4 Create the project</h2>
+<p>Run in your <strong>Debian terminal</strong>:</p>
+<pre><code class="language-bash">mkdir -p ~/pytorch-ssh-lab
+cd ~/pytorch-ssh-lab
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install torch pandas scikit-learn
+</code></pre>
+<p>Files:</p>
+<pre><code class="language-text">pytorch-ssh-lab/
+├── ingest.py
+├── test_ingest.py
+├── ssh-journal.jsonl
+├── ssh_features.csv
+└── prepare_torch.py
+</code></pre>
+<h2 id="6-5-complete-runnable-parser-and-feature-builder-ingest-py">6.5 Complete runnable parser and feature builder — <code>ingest.py</code></h2>
+<p>The parser supports <code>Failed password</code> and <code>Accepted password</code> messages, including <code>invalid user</code>, IPv4 and IPv6. Other authentication mechanisms and message formats require explicit extension; unmatched messages are counted, not silently assumed to be normal.</p>
+<pre><code class="language-python">#!/usr/bin/env python3
+"""Convert SSH journald JSON lines into unlabeled 5-minute feature windows."""
+import argparse
+import csv
+import ipaddress
+import json
+import re
+from collections import defaultdict
+from datetime import datetime, timezone
+from pathlib import Path
+
+# Match SSH password authentication messages; named groups clarify extraction.
+AUTH_RE = re.compile(
+    r"^(?P&lt;result&gt;Failed|Accepted) password for "
+    r"(?:(?:invalid user) )?"
+    r"(?P&lt;username&gt;\S+) from (?P&lt;ip&gt;\S+) port (?P&lt;port&gt;\d+) ssh2(?:\b|$)"
+)
+FEATURE_NAMES = [
+    "failed_count", "success_count", "unique_users",
+    "failure_ratio", "off_hours", "attempts_per_minute",
+]
+WINDOW_SECONDS = 300
+
+
+def parse_event(line):
+    """Return normalized event or None if unsupported/invalid."""
+    try:
+        record = json.loads(line)
+        if record.get("SYSLOG_IDENTIFIER") not in ("sshd", "ssh"):
+            return None
+        match = AUTH_RE.search(record.get("MESSAGE", ""))
+        if not match:
+            return None
+        address = str(ipaddress.ip_address(match.group("ip")))
+        micros = int(record["__REALTIME_TIMESTAMP"])
+        if micros &lt; 0:
+            return None
+        return {
+            "timestamp_us": micros,
+            "ip": address,
+            "username": match.group("username"),
+            "result": match.group("result").lower(),
+        }
+    except (ValueError, TypeError, KeyError, json.JSONDecodeError):
+        return None
+
+
+def aggregate(events):
+    """Group by source address and non-overlapping 5-minute UTC windows."""
+    buckets = defaultdict(list)
+    for event in events:
+        seconds = event["timestamp_us"] // 1_000_000
+        bucket_start = (seconds // WINDOW_SECONDS) * WINDOW_SECONDS
+        buckets[(event["ip"], bucket_start)].append(event)
+
+    rows = []
+    for (ip, start), group in sorted(buckets.items(), key=lambda kv: (kv[0][1], kv[0][0])):
+        failures = sum(e["result"] == "failed" for e in group)
+        successes = sum(e["result"] == "accepted" for e in group)
+        count = failures + successes
+        hour_utc = datetime.fromtimestamp(start, tz=timezone.utc).hour
+        rows.append({
+            "source_ip": ip,
+            "window_start_utc": datetime.fromtimestamp(start, tz=timezone.utc).isoformat(),
+            "failed_count": failures,
+            "success_count": successes,
+            "unique_users": len({e["username"] for e in group}),
+            "failure_ratio": round(failures / count, 6),
+            # Illustrative UTC off-hours only. Production should use host/business timezone.
+            "off_hours": int(hour_utc &lt; 6 or hour_utc &gt;= 22),
+            "attempts_per_minute": round(count / (WINDOW_SECONDS / 60), 6),
+        })
+    return rows
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--input", required=True, type=Path)
+    parser.add_argument("--output", default=Path("ssh_features.csv"), type=Path)
+    args = parser.parse_args()
+    events = []
+    total = 0
+    with args.input.open("r", encoding="utf-8") as stream:
+        for line in stream:
+            total += 1
+            event = parse_event(line)
+            if event is not None:
+                events.append(event)
+    rows = aggregate(events)
+    with args.output.open("w", newline="", encoding="utf-8") as stream:
+        writer = csv.DictWriter(stream, fieldnames=["source_ip", "window_start_utc", *FEATURE_NAMES])
+        writer.writeheader()
+        writer.writerows(rows)
+    print(f"Read {total} records; parsed {len(events)} events; produced {len(rows)} windows")
+    print(f"Saved {args.output}")
+
+
+if __name__ == "__main__":
+    main()
+</code></pre>
+<h3 id="line-by-line-conceptual-explanation">Line-by-line conceptual explanation</h3>
+<ol>
+<li><code>argparse</code> accepts paths from the command line so source files are not hardcoded.</li>
+<li><code>csv</code> writes an interoperable feature dataset; <code>json</code> parses journal records.</li>
+<li><code>ipaddress.ip_address()</code> validates both IPv4 and IPv6 and canonicalizes address text.</li>
+<li><code>re.compile()</code> prepares a reusable pattern; named groups extract the outcome, username, IP and port.</li>
+<li><code>FEATURE_NAMES</code> is the <strong>schema contract</strong>. The neural network must consume these six features in exactly this order.</li>
+<li><code>parse_event()</code> converts each JSON record into a normalized dictionary. <code>None</code> means unsupported or malformed; it does <strong>not</strong> mean a legitimate login.</li>
+<li><code>int(record["__REALTIME_TIMESTAMP"])</code> reads microseconds; dividing by <code>1_000_000</code> converts to Unix seconds.</li>
+<li><code>defaultdict(list)</code> groups normalized events into windows without pre-creating each key.</li>
+<li><code>seconds // 300 * 300</code> rounds a timestamp down to the beginning of its five-minute UTC bucket.</li>
+<li><code>sum(condition for e in group)</code> counts matches because Python booleans behave as <code>1</code> and <code>0</code> in arithmetic.</li>
+<li>A set <code>{e["username"] for e in group}</code> measures username diversity without counting duplicates.</li>
+<li><code>failure_ratio</code> divides failures by all parsed password authentication events in that window; the denominator cannot be zero for a nonempty group.</li>
+<li><code>off_hours</code> is a simplistic <strong>UTC</strong> flag for demonstration. It must be configured for the host or organization before operational use.</li>
+<li><code>attempts_per_minute</code> uses a fixed five-minute denominator. It measures event frequency across the window, not the instantaneous peak rate.</li>
+<li><code>csv.DictWriter</code> preserves the field names and their order; <code>newline=""</code> prevents extra blank lines on some platforms.</li>
+<li>The final counters make parser coverage visible. Investigate unexpected drops in the parsed/total ratio.</li>
+</ol>
+<h3 id="important-production-gaps">Important production gaps</h3>
+<p>The parser deliberately handles only password authentication messages. Modern SSH environments may use public-key authentication, PAM, keyboard-interactive, MFA, <code>Invalid user</code> messages, connection resets, or vendor-specific log formats. Expand supported event types with fixtures and tests before relying on its coverage. Large inputs should be streamed into incremental aggregates rather than accumulating all events in memory. A production collector also needs durable cursors, rotation/retention handling, deduplication, late-arrival policy, and bounded retries.</p>
+<h2 id="6-6-create-sample-journal-data-without-ssh-attacks">6.6 Create sample journal data without SSH attacks</h2>
+<p>Use this small generator to create safe <strong>synthetic</strong> log events. No real login attempts are performed:</p>
+<pre><code class="language-python"># save as make_sample.py
+import json
+from datetime import datetime, timezone, timedelta
+
+start = datetime(2026, 10, 8, 10, 0, tzinfo=timezone.utc)
+messages = [
+    "Failed password for root from 192.0.2.10 port 50001 ssh2",
+    "Failed password for invalid user test from 192.0.2.10 port 50002 ssh2",
+    "Accepted password for alice from 198.51.100.7 port 50003 ssh2",
+    "Failed password for root from 192.0.2.10 port 50004 ssh2",
+]
+with open("ssh-journal.jsonl", "w", encoding="utf-8") as output:
+    for i, message in enumerate(messages):
+        timestamp = start + timedelta(seconds=i * 30)
+        output.write(json.dumps({
+            "SYSLOG_IDENTIFIER": "sshd",
+            "__REALTIME_TIMESTAMP": str(int(timestamp.timestamp() * 1_000_000)),
+            "MESSAGE": message,
+        }) + "\n")
+</code></pre>
+<p>Run:</p>
+<pre><code class="language-bash">python make_sample.py
+python ingest.py --input ssh-journal.jsonl --output ssh_features.csv
+cat ssh_features.csv
+</code></pre>
+<p>Expected terminal summary:</p>
+<pre><code class="language-text">Read 4 records; parsed 4 events; produced 2 windows
+Saved ssh_features.csv
+</code></pre>
+<p>The two rows correspond to source <code>192.0.2.10</code> (three failures, two distinct usernames) and <code>198.51.100.7</code> (one success). Both belong to the 10:00–10:05 UTC window. Their respective attempts/minute values are <code>0.6</code> and <code>0.2</code>.</p>
+<h2 id="6-7-convert-csv-into-pytorch-tensors-prepare-torch-py">6.7 Convert CSV into PyTorch tensors — <code>prepare_torch.py</code></h2>
+<pre><code class="language-python">import pandas as pd
+import torch
+from torch.utils.data import TensorDataset, DataLoader
+
+FEATURE_NAMES = [
+    "failed_count", "success_count", "unique_users",
+    "failure_ratio", "off_hours", "attempts_per_minute",
+]
+
+df = pd.read_csv("ssh_features.csv")
+if df.empty:
+    raise ValueError("No supported SSH events found")
+
+X = torch.tensor(df[FEATURE_NAMES].to_numpy(dtype="float32"))
+assert X.ndim == 2 and X.shape[1] == 6
+assert torch.isfinite(X).all(), "Missing or non-finite features"
+
+dataset = TensorDataset(X)
+loader = DataLoader(dataset, batch_size=32, shuffle=False)
+
+for (batch_x,) in loader:
+    print("Batch shape:", tuple(batch_x.shape))
+    print(batch_x)
+</code></pre>
+<p>Run <code>python prepare_torch.py</code>. For the four sample events, the batch shape is <code>(2, 6)</code>: two source-IP windows, six features each. <code>TensorDataset</code> exposes tensor rows as dataset items; <code>DataLoader</code> assembles batches. There are <strong>no labels</strong>, so this dataset is suitable for inference or further labeling, <strong>not supervised training</strong>.</p>
+<h3 id="why-not-fit-a-scaler-to-this-entire-dataset">Why not fit a scaler to this entire dataset?</h3>
+<p>For supervised learning, split observations first. Fit <code>StandardScaler</code> <strong>only on the training split</strong>, then reuse its saved mean and variance for validation, test and inference. Fitting it on the whole dataset leaks statistical information from the future. For log events, use time-based splits and consider separating related IPs/sessions to avoid inflated scores. Never fit a fresh scaler separately in production.</p>
+<h3 id="why-feature-engineering-can-fail">Why feature engineering can fail</h3>
+<ul>
+<li><strong>High cardinality:</strong> Usernames and IPs should not be assigned arbitrary numerical IDs as if they have a meaningful numeric ordering.</li>
+<li><strong>Skewed counts:</strong> Failed-login counts may be heavy-tailed; <code>log1p</code> transformations can help, if applied consistently.</li>
+<li><strong>Missing data:</strong> No journal entries may mean missing collection rather than zero authentication attempts.</li>
+<li><strong>Clock skew:</strong> Host clock drift and ingestion delays can place events into the wrong windows.</li>
+<li><strong>Class imbalance:</strong> Real incidents may be rare; accuracy alone can be misleading.</li>
+<li><strong>Label contamination:</strong> Treating a heuristic threshold as ground truth merely trains the network to mimic that heuristic.</li>
+</ul>
+<h2 id="6-8-how-to-obtain-trustworthy-labels">6.8 How to obtain trustworthy labels</h2>
+<p>Collect analyst-reviewed cases, authorized test scenarios and well-documented incident records. Preserve the reason, provenance, event time and review status for each label. Separate known malicious, known benign and unknown cases; do not automatically label unknown traffic benign. Use an explicit labeling policy, inter-analyst checks, and a held-out future-period evaluation dataset.</p>
+<p>Useful metrics include precision, recall, PR-AUC, false positives per host-day, detection latency and alert volume. Tune the decision threshold on validation data based on the cost of missed incidents and analyst workload, not on the test set.</p>
+<h2 id="6-9-production-scenarios-and-troubleshooting">6.9 Production scenarios and troubleshooting</h2>
+<p><strong>Scenario A — No <code>auth.log</code> file:</strong> Check <code>journalctl</code>, rsyslog installation/configuration, service name and journal retention. Do not create an empty file and assume no events occurred.</p>
+<p><strong>Scenario B — CSV contains zero rows:</strong> Check JSON export fields and <code>SYSLOG_IDENTIFIER</code>; inspect representative <code>MESSAGE</code> values. SSH may use <code>sshd</code> under a different unit or non-password authentication.</p>
+<p><strong>Scenario C — Duplicate alerts after collector restart:</strong> Persist the journal cursor and processed event identity. Deduplicate on stable event identity and source metadata, not on IP alone.</p>
+<p><strong>Scenario D — Memory usage rises on a busy bastion:</strong> The lab code accumulates all events and buckets. Stream batches, flush closed windows and apply backpressure. Avoid unbounded dictionaries.</p>
+<p><strong>Scenario E — Off-hours alerts fire during business hours:</strong> UTC was used for the demonstration. Define the relevant local timezone and daylight-saving rules, and decide whether off-hours means host-local or user-local.</p>
+<p><strong>Scenario F — Training accuracy is 99% but SOC receives poor alerts:</strong> Check class imbalance, temporal leakage, threshold selection, precision-recall and data drift. Evaluate on a future time period and report absolute false-positive volume.</p>
+<p><strong>Scenario G — Training model has six inputs but API expects five:</strong> Validate the feature schema at startup, store feature order and preprocessing metadata alongside model weights, and fail closed on incompatible versions.</p>
+<h2 id="6-10-unit-tests-test-ingest-py">6.10 Unit tests — <code>test_ingest.py</code></h2>
+<pre><code class="language-python">import json
+import unittest
+from ingest import parse_event, aggregate
+
+
+def record(message, micros=1791453600000000):
+    return json.dumps({
+        "SYSLOG_IDENTIFIER": "sshd",
+        "__REALTIME_TIMESTAMP": str(micros),
+        "MESSAGE": message,
+    })
+
+
+class IngestTests(unittest.TestCase):
+    def test_failed_password(self):
+        event = parse_event(record(
+            "Failed password for invalid user bob from 192.0.2.10 port 50001 ssh2"
+        ))
+        self.assertEqual(event["result"], "failed")
+        self.assertEqual(event["username"], "bob")
+
+    def test_invalid_ip_rejected(self):
+        event = parse_event(record(
+            "Failed password for root from not_an_ip port 50001 ssh2"
+        ))
+        self.assertIsNone(event)
+
+    def test_aggregation(self):
+        e1 = parse_event(record("Failed password for root from 192.0.2.10 port 50001 ssh2"))
+        e2 = parse_event(record("Accepted password for alice from 192.0.2.10 port 50002 ssh2"))
+        rows = aggregate([e1, e2])
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["failed_count"], 1)
+        self.assertEqual(rows[0]["success_count"], 1)
+        self.assertEqual(rows[0]["failure_ratio"], 0.5)
+
+
+if __name__ == "__main__":
+    unittest.main()
+</code></pre>
+<p>Run:</p>
+<pre><code class="language-bash">python -m unittest -v test_ingest.py
+</code></pre>
+<p>Expected result: three tests pass.</p>
+<h2 id="6-11-interview-questions-and-model-answers">6.11 Interview questions and model answers</h2>
+<p><strong>Q1. Why use event-time rather than ingestion-time windows?</strong> Event time represents when authentication occurred. Ingestion time can be delayed by networking or collectors, distorting attack sequences. Late arrivals need a documented handling policy.</p>
+<p><strong>Q2. What is a watermark?</strong> In stream processing, a watermark expresses progress in event time and helps determine when a window is sufficiently complete despite late data.</p>
+<p><strong>Q3. Why group by source IP?</strong> It is a useful initial behavioral key, but NAT, proxies, IPv6 privacy addresses and distributed attacks limit its reliability. More advanced detectors use multiple entity relationships.</p>
+<p><strong>Q4. What is a feature schema?</strong> A versioned contract specifying feature names, order, types, transformations and missing-value behavior. Mismatched schemas cause unreliable inference.</p>
+<p><strong>Q5. What is the difference between a parser and a model?</strong> The parser extracts and normalizes evidence; the model learns statistical relationships between numerical inputs and outcomes.</p>
+<p><strong>Q6. Why is <code>DataLoader</code> useful?</strong> It batches examples and can shuffle or parallelize loading for training, reducing the need to load every training example into accelerator memory at once.</p>
+<p><strong>Q7. Why is random train/test splitting risky for security logs?</strong> Adjacent events, the same campaigns and the same entities can appear in both sets. Time-separated validation better approximates future deployment.</p>
+<p><strong>Q8. How do you avoid duplicate log processing?</strong> Use stable event identities or journal cursors, checkpoint progress and make downstream writes idempotent.</p>
+<p><strong>Q9. Can you label all windows with &gt;10 failures as attacks?</strong> Not as verified ground truth. That creates heuristic labels; the model may only reproduce the threshold and miss other attack patterns.</p>
+<p><strong>Q10. Why is 99% accuracy sometimes poor?</strong> If only 1% of windows are attacks, a model predicting 'normal' for everything achieves 99% accuracy but detects no attacks.</p>
+<p><strong>Q11. What is training-serving skew?</strong> Differences in feature computation or preprocessing between training and production inference, which can silently degrade model behavior.</p>
+<p><strong>Q12. What is data drift?</strong> A change in the statistical distribution of incoming features; it may or may not reduce predictive quality. Monitor both feature distributions and labeled outcomes.</p>
+<h2 id="6-12-exercises">6.12 Exercises</h2>
+<ol>
+<li>Add a <code>publickey</code> authentication parser with tests; distinguish success and failure and preserve the auth method.</li>
+<li>Implement streaming window flushes and a durable checkpoint to avoid unbounded memory.</li>
+<li>Add local timezone configuration using Python's <code>zoneinfo</code>, documenting DST behavior.</li>
+<li>Design a schema-versioned feature registry and reject mismatched inference requests.</li>
+<li>Create an analyst labeling form with <code>normal</code>, <code>suspicious</code>, and <code>unknown</code> labels plus evidence and review timestamp.</li>
+<li>Implement chronological train/validation/test splits after obtaining independently verified labels.</li>
+</ol>
+<h2 id="6-13-summary-and-next-chapter">6.13 Summary and next chapter</h2>
+<p>You now have a reproducible path from journal JSON to six numerical features per source-IP/time window, a PyTorch <code>DataLoader</code>, unit tests and explicit limitations. The next step is <strong>Chapter 7: supervised training on independently labeled log windows, imbalanced datasets, evaluation and alert threshold selection</strong>.</p>
+</article></main><footer>ARTHA Gurukul · Source material preserved as educational notes</footer></body></html>

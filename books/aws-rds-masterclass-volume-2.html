@@ -1,0 +1,1196 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AWS RDS Masterclass — Volume 2 | ARTHA Gurukul</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><a class="brand" href="../index.html">✦ ARTHA GURUKUL</a><nav><a href="../index.html#courses">All Courses</a><a href="index.html">Source Library</a></nav></header><main class="book-layout"><aside class="book-toc"><div class="eyebrow">Original material · offline copy</div><h2>AWS RDS Masterclass — Volume 2</h2><a href="../index.html">⌂ Course library</a><div class="toc"><a href="#aws-rds-masterclass-volume-2">AWS RDS Masterclass — Volume 2</a><a href="#advanced-sql-schema-engineering-application-integration-performance-and-safe-del">Advanced SQL, Schema Engineering, Application Integration, Performance, and Safe Deli</a><a href="#learning-contract">Learning contract</a><a href="#table-of-contents">Table of contents</a><a href="#lab-environment-and-conventions">Lab environment and conventions</a><a href="#chapter-8-advanced-sql-and-analytics">Chapter 8 — Advanced SQL and Analytics</a><a href="#8-1-mental-model-sql-is-declarative">8.1 Mental model: SQL is declarative</a><a href="#8-2-reproducible-order-dataset">8.2 Reproducible order dataset</a><a href="#8-3-joins-and-cardinality">8.3 Joins and cardinality</a><a href="#8-4-aggregation-and-filter">8.4 Aggregation and FILTER</a><a href="#8-5-window-functions">8.5 Window functions</a><a href="#8-6-ctes-and-recursive-queries">8.6 CTEs and recursive queries</a><a href="#8-7-safe-upserts-and-returning">8.7 Safe upserts and RETURNING</a><a href="#8-8-pagination-offset-vs-keyset">8.8 Pagination: OFFSET vs keyset</a><a href="#8-9-jsonb-arrays-and-boundaries">8.9 JSONB, arrays, and boundaries</a><a href="#chapter-9-relational-schema-design">Chapter 9 — Relational Schema Design</a><a href="#9-1-start-from-invariants-not-tables">9.1 Start from invariants, not tables</a><a href="#9-2-entities-relationships-and-cardinality">9.2 Entities, relationships, and cardinality</a><a href="#9-3-normal-forms">9.3 Normal forms</a><a href="#9-4-keys-and-data-types">9.4 Keys and data types</a><a href="#9-5-constraints-and-referential-actions">9.5 Constraints and referential actions</a><a href="#9-6-multi-tenancy">9.6 Multi-tenancy</a><a href="#9-7-partitioning-and-lifecycle">9.7 Partitioning and lifecycle</a><a href="#chapter-10-indexing-statistics-and-query-optimization">Chapter 10 — Indexing, Statistics, and Query Optimization</a><a href="#10-1-why-an-index-works">10.1 Why an index works</a><a href="#10-2-index-types">10.2 Index types</a><a href="#10-3-composite-and-covering-indexes">10.3 Composite and covering indexes</a><a href="#10-4-query-plans">10.4 Query plans</a><a href="#10-5-query-tuning-workflow">10.5 Query tuning workflow</a><a href="#10-6-statistics-and-autovacuum">10.6 Statistics and autovacuum</a><a href="#10-7-sargability-and-pitfalls">10.7 Sargability and pitfalls</a><a href="#chapter-11-transactions-isolation-mvcc-and-locking">Chapter 11 — Transactions, Isolation, MVCC, and Locking</a><a href="#11-1-acid-in-an-application">11.1 ACID in an application</a><a href="#11-2-mvcc-internals">11.2 MVCC internals</a><a href="#11-3-isolation-levels-in-postgresql">11.3 Isolation levels in PostgreSQL</a><a href="#11-4-inventory-safe-update">11.4 Inventory-safe update</a><a href="#11-5-row-locks-and-deadlocks">11.5 Row locks and deadlocks</a><a href="#11-6-session-diagnostics">11.6 Session diagnostics</a><a href="#11-7-idempotency-and-the-outbox-pattern">11.7 Idempotency and the outbox pattern</a><a href="#chapter-12-python-fastapi-psycopg-and-sqlalchemy">Chapter 12 — Python, FastAPI, psycopg, and SQLAlchemy</a><a href="#12-1-production-oriented-service-layout">12.1 Production-oriented service layout</a><a href="#12-2-install-dependencies">12.2 Install dependencies</a><a href="#12-3-app-db-py">12.3 app/db.py</a><a href="#12-4-app-models-py">12.4 app/models.py</a><a href="#12-5-app-schemas-py">12.5 app/schemas.py</a><a href="#12-6-app-main-py-complete-synchronous-api">12.6 app/main.py — complete synchronous API</a><a href="#12-7-psycopg-3-parameterized-queries">12.7 psycopg 3 parameterized queries</a><a href="#12-8-async-considerations">12.8 Async considerations</a><a href="#chapter-13-java-spring-boot-jdbc-jpa-and-hibernate">Chapter 13 — Java, Spring Boot, JDBC, JPA, and Hibernate</a><a href="#13-1-stack-and-boundaries">13.1 Stack and boundaries</a><a href="#13-2-create-project">13.2 Create project</a><a href="#13-3-application-yml">13.3 application.yml</a><a href="#13-4-minimal-entity">13.4 Minimal entity</a><a href="#13-5-repository-and-service">13.5 Repository and service</a><a href="#13-6-controller">13.6 Controller</a><a href="#13-7-jdbc-transaction-example">13.7 JDBC transaction example</a><a href="#chapter-14-node-js-typescript-pg-and-prisma">Chapter 14 — Node.js, TypeScript, pg, and Prisma</a><a href="#14-1-event-loop-and-database-work">14.1 Event loop and database work</a><a href="#14-2-install-and-configure">14.2 Install and configure</a><a href="#14-3-src-db-ts">14.3 src/db.ts</a><a href="#14-4-src-server-ts-complete-basic-api">14.4 src/server.ts — complete basic API</a><a href="#14-5-correct-transaction-usage">14.5 Correct transaction usage</a><a href="#14-6-prisma-concepts">14.6 Prisma concepts</a><a href="#chapter-15-migrations-testing-pooling-and-production-delivery">Chapter 15 — Migrations, Testing, Pooling, and Production Delivery</a><a href="#15-1-expand-migrate-contract">15.1 Expand–migrate–contract</a><a href="#15-2-lock-aware-ddl">15.2 Lock-aware DDL</a><a href="#15-3-alembic">15.3 Alembic</a><a href="#15-4-flyway-and-prisma">15.4 Flyway and Prisma</a><a href="#15-5-connection-budget-and-little-s-law">15.5 Connection budget and Little&#x27;s Law</a><a href="#15-6-timeout-hierarchy">15.6 Timeout hierarchy</a><a href="#15-7-testing-pyramid">15.7 Testing pyramid</a><a href="#15-8-production-deployment-checklist">15.8 Production deployment checklist</a><a href="#integrated-capstone">Integrated Capstone</a><a href="#project-production-minded-online-order-api">Project: Production-minded online-order API</a><a href="#troubleshooting-playbooks">Troubleshooting Playbooks</a><a href="#playbook-a-api-latency-jumps-from-80-ms-to-2-seconds">Playbook A — API latency jumps from 80 ms to 2 seconds</a><a href="#playbook-b-remaining-connection-slots-are-reserved">Playbook B — remaining connection slots are reserved</a><a href="#playbook-c-deadlocks-after-a-feature-launch">Playbook C — Deadlocks after a feature launch</a><a href="#playbook-d-query-regression-after-data-growth">Playbook D — Query regression after data growth</a><a href="#playbook-e-rds-connectivity-fails">Playbook E — RDS connectivity fails</a><a href="#playbook-f-orm-returns-too-many-sql-statements">Playbook F — ORM returns too many SQL statements</a><a href="#playbook-g-migration-blocked-during-deploy">Playbook G — Migration blocked during deploy</a><a href="#playbook-h-tls-connection-errors-after-certificate-rotation">Playbook H — TLS connection errors after certificate rotation</a><a href="#senior-engineering-interview-bank">Senior Engineering Interview Bank</a><a href="#mock-senior-system-design-exercise-60-minutes">Mock senior system-design exercise (60 minutes)</a><a href="#glossary-and-index">Glossary and Index</a><a href="#glossary">Glossary</a><a href="#topic-index">Topic index</a><a href="#references">References</a></div></aside><article class="book-prose"><p class="source-note">Historical course notes converted into searchable offline HTML. Some content may be a draft; exercises requiring cloud accounts need credentials and may incur costs.</p><h1 id="aws-rds-masterclass-volume-2">AWS RDS Masterclass — Volume 2</h1>
+<h2 id="advanced-sql-schema-engineering-application-integration-performance-and-safe-del">Advanced SQL, Schema Engineering, Application Integration, Performance, and Safe Delivery</h2>
+<p><strong>Edition:</strong> October 2026  | <strong>Level:</strong> Intermediate → Senior Software Engineer  | <strong>Reference engine:</strong> Amazon RDS for PostgreSQL (PostgreSQL 16/17-compatible patterns; confirm supported versions in your AWS Region)<br/>
+<strong>Companion:</strong> Volume 1, Foundations &amp; Database Internals</p>
+<blockquote>
+<p><strong>Scope and safety:</strong> This is a reproducible engineering textbook, not a claim that examples were deployed to your AWS account. All outputs are representative. AWS pricing, feature support, engine versions, defaults, and quotas change; verify in official documentation before production use. Never run destructive SQL against production without approval, tested backups, and a rollback plan.</p>
+</blockquote>
+<h2 id="learning-contract">Learning contract</h2>
+<p>By the end, you will design an online-order schema; write window, recursive, and analytical SQL; interpret PostgreSQL plans; explain MVCC and isolation; build three application services; configure safe connection pools; manage backward-compatible migrations; test concurrency; and defend architectural tradeoffs in senior-level interviews.</p>
+<h2 id="table-of-contents">Table of contents</h2>
+<ol>
+<li><a href="#chapter-8--advanced-sql-and-analytics">Chapter 8 — Advanced SQL and Analytics</a></li>
+<li><a href="#chapter-9--relational-schema-design">Chapter 9 — Relational Schema Design</a></li>
+<li><a href="#chapter-10--indexing-statistics-and-query-optimization">Chapter 10 — Indexing, Statistics, and Query Optimization</a></li>
+<li><a href="#chapter-11--transactions-isolation-mvcc-and-locking">Chapter 11 — Transactions, Isolation, MVCC, and Locking</a></li>
+<li><a href="#chapter-12--python-fastapi-psycopg-and-sqlalchemy">Chapter 12 — Python, FastAPI, psycopg, and SQLAlchemy</a></li>
+<li><a href="#chapter-13--java-spring-boot-jdbc-jpa-and-hibernate">Chapter 13 — Java, Spring Boot, JDBC, JPA, and Hibernate</a></li>
+<li><a href="#chapter-14--nodejs-typescript-pg-and-prisma">Chapter 14 — Node.js, TypeScript, pg, and Prisma</a></li>
+<li><a href="#chapter-15--migrations-testing-pooling-and-production-delivery">Chapter 15 — Migrations, Testing, Pooling, and Production Delivery</a></li>
+<li><a href="#integrated-capstone">Integrated Capstone</a></li>
+<li><a href="#troubleshooting-playbooks">Troubleshooting Playbooks</a></li>
+<li><a href="#senior-engineering-interview-bank">Senior Engineering Interview Bank</a></li>
+<li><a href="#glossary-and-index">Glossary and Index</a></li>
+<li><a href="#references">References</a></li>
+</ol>
+<h2 id="lab-environment-and-conventions">Lab environment and conventions</h2>
+<ul>
+<li>Workstation: Linux/macOS/Windows WSL with PostgreSQL client (<code>psql</code>), Python 3.11+, Java 21+, Node.js 20+, Docker (optional), AWS CLI v2.</li>
+<li>Database: local PostgreSQL for most labs; optionally an <strong>existing private</strong> Amazon RDS PostgreSQL instance with authorized connectivity. RDS is not free by default.</li>
+<li><strong>Never put a public RDS endpoint, password, or access key in source control.</strong> For AWS access prefer VPN/bastion/SSM port forwarding with least-privilege networking; use TLS with certificate verification.</li>
+<li>In code samples <code>DATABASE_URL</code> is an illustrative local DSN. For RDS, use <code>sslmode=verify-full</code> and the current AWS RDS CA bundle; hostname verification must match the actual RDS endpoint.</li>
+<li>Expected outputs are examples; timing, query plans, generated IDs, and lock timing will vary.</li>
+</ul>
+<h3 id="setup-on-debian-ubuntu-local-learning">Setup on Debian/Ubuntu (local learning)</h3>
+<pre><code class="language-bash">sudo apt-get update
+sudo apt-get install -y postgresql-client python3-venv git curl
+psql --version
+# For local PostgreSQL server (optional):
+sudo apt-get install -y postgresql
+sudo -u postgres psql -c "CREATE ROLE appuser LOGIN PASSWORD 'local-only-change-me';"
+sudo -u postgres createdb -O appuser shoplab
+export DATABASE_URL='postgresql://appuser:local-only-change-me@127.0.0.1:5432/shoplab'
+psql "$DATABASE_URL" -c 'SELECT current_database(), current_user, version();'
+</code></pre>
+<p><strong>Command explanations:</strong> <code>apt-get</code> installs packages; <code>psql --version</code> verifies client availability; <code>CREATE ROLE ... LOGIN</code> makes a login role; <code>createdb -O</code> assigns database ownership; <code>DATABASE_URL</code> is a local development-only connection string; <code>-c</code> executes a SQL statement and exits. Prefer a secret store over environment variables for highly sensitive production deployments; environment variables can be exposed via process or diagnostics.</p>
+<h3 id="architecture-shared-learning-system">Architecture: shared learning system</h3>
+<pre><code class="language-mermaid">flowchart TB
+  C[Browser / API client] --&gt; L[Load balancer]
+  L --&gt; PY[FastAPI / SQLAlchemy]
+  L --&gt; JA[Spring Boot / Hibernate]
+  L --&gt; NO[Node.js / pg or Prisma]
+  PY --&gt; P[Per-process connection pool]
+  JA --&gt; P
+  NO --&gt; P
+  P --&gt; RP[Optional RDS Proxy: compatibility-dependent]
+  RP --&gt; DB[(Amazon RDS PostgreSQL primary)]
+  DB -. physical standby .-&gt; AZ[(Multi-AZ standby)]
+  DB -. async replication .-&gt; RR[(Read replica)]
+  DB --&gt; CW[CloudWatch / DB telemetry]
+</code></pre>
+<blockquote>
+<p>The diagram is conceptual: one deployed service normally owns its own pool; an RDS Proxy does not magically combine language runtimes into one application pool. Standby is not a read endpoint in a traditional Multi-AZ DB instance deployment. Replicas may lag.</p>
+</blockquote>
+<h1 id="chapter-8-advanced-sql-and-analytics">Chapter 8 — Advanced SQL and Analytics</h1>
+<h2 id="8-1-mental-model-sql-is-declarative">8.1 Mental model: SQL is declarative</h2>
+<p>SQL specifies <strong>what result</strong> is required; the optimizer selects <strong>how</strong> to produce it. Logical processing roughly follows <code>FROM</code>/<code>JOIN</code> → <code>WHERE</code> → <code>GROUP BY</code> → <code>HAVING</code> → window evaluation → <code>SELECT</code> → <code>ORDER BY</code> → <code>LIMIT</code> (actual query syntax order differs). A window function does not collapse rows like <code>GROUP BY</code>. A CTE (<code>WITH</code>) names a query subexpression; in modern PostgreSQL some non-recursive CTEs may be inlined. Do not assume a CTE is always materialized or always faster.</p>
+<h2 id="8-2-reproducible-order-dataset">8.2 Reproducible order dataset</h2>
+<p>Save the following as <code>01_schema.sql</code> and execute with <code>psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f 01_schema.sql</code>.</p>
+<pre><code class="language-sql">BEGIN;
+CREATE TABLE IF NOT EXISTS customers (
+  customer_id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  email text NOT NULL UNIQUE,
+  full_name text NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS products (
+  product_id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  sku text NOT NULL UNIQUE,
+  title text NOT NULL,
+  price_cents bigint NOT NULL CHECK (price_cents &gt;= 0),
+  stock_on_hand integer NOT NULL CHECK (stock_on_hand &gt;= 0)
+);
+CREATE TABLE IF NOT EXISTS orders (
+  order_id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  customer_id bigint NOT NULL REFERENCES customers(customer_id),
+  status text NOT NULL CHECK (status IN ('pending','paid','cancelled')),
+  idempotency_key uuid NOT NULL UNIQUE,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS order_items (
+  order_id bigint NOT NULL REFERENCES orders(order_id) ON DELETE RESTRICT,
+  product_id bigint NOT NULL REFERENCES products(product_id),
+  quantity integer NOT NULL CHECK (quantity &gt; 0),
+  unit_price_cents bigint NOT NULL CHECK (unit_price_cents &gt;= 0),
+  PRIMARY KEY (order_id, product_id)
+);
+INSERT INTO customers(email,full_name) VALUES
+('ada@example.test','Ada'),('grace@example.test','Grace'),('linus@example.test','Linus')
+ON CONFLICT(email) DO NOTHING;
+INSERT INTO products(sku,title,price_cents,stock_on_hand) VALUES
+('BK-001','Database Book',2999,100),('KB-002','Keyboard',5999,25),('MS-003','Mouse',1999,40)
+ON CONFLICT(sku) DO NOTHING;
+COMMIT;
+</code></pre>
+<p><strong>Line-by-line design notes:</strong> <code>BEGIN</code> and <code>COMMIT</code> make DDL and seed operations atomic; <code>IDENTITY</code> delegates key allocation; <code>UNIQUE</code> creates a supporting uniqueness index; <code>timestamptz</code> stores instants (displayed in session timezone); <code>CHECK</code> rejects invalid states; foreign keys enforce referential integrity; <code>ON DELETE RESTRICT</code> avoids silent item loss; <code>(order_id,product_id)</code> enforces one line per product per order; <code>ON CONFLICT DO NOTHING</code> allows repeatable seeding without duplicating email/SKU. <code>IF NOT EXISTS</code> does <strong>not</strong> validate an existing table's structure—use migrations to evolve schemas.</p>
+<h2 id="8-3-joins-and-cardinality">8.3 Joins and cardinality</h2>
+<pre><code class="language-sql">SELECT c.email, o.order_id, o.status
+FROM customers AS c
+LEFT JOIN orders AS o ON o.customer_id = c.customer_id
+ORDER BY c.email, o.order_id;
+</code></pre>
+<p><code>LEFT JOIN</code> keeps customers with zero orders; matching order columns are NULL. <code>INNER JOIN</code> removes unmatched customers. An accidental many-to-many join multiplies rows: if one customer has 3 orders and 4 addresses, joining both child tables without care can produce 12 rows. Always reason about <strong>grain</strong>: one row per customer, order, or item?</p>
+<h2 id="8-4-aggregation-and-filter">8.4 Aggregation and FILTER</h2>
+<pre><code class="language-sql">SELECT o.customer_id,
+       count(*) AS order_count,
+       count(*) FILTER (WHERE o.status = 'paid') AS paid_orders
+FROM orders AS o
+GROUP BY o.customer_id
+HAVING count(*) &gt;= 1;
+</code></pre>
+<p><code>WHERE</code> filters input rows before aggregation; <code>HAVING</code> filters groups after aggregation. <code>count(*)</code> counts rows, whereas <code>count(nullable_col)</code> counts non-null values.</p>
+<h2 id="8-5-window-functions">8.5 Window functions</h2>
+<pre><code class="language-sql">SELECT order_id, customer_id, created_at,
+       row_number() OVER (PARTITION BY customer_id ORDER BY created_at DESC, order_id DESC) AS newest_rank,
+       lag(created_at) OVER (PARTITION BY customer_id ORDER BY created_at, order_id) AS previous_order
+FROM orders;
+</code></pre>
+<p><code>PARTITION BY</code> resets the window for each customer; the order determines row sequence; the <code>order_id</code> tie-breaker makes ordering deterministic. <code>row_number</code> enumerates rows; <code>rank</code> leaves gaps for ties; <code>dense_rank</code> does not. <code>lag</code> accesses the prior row without a self-join.</p>
+<h2 id="8-6-ctes-and-recursive-queries">8.6 CTEs and recursive queries</h2>
+<pre><code class="language-sql">WITH RECURSIVE numbers(n) AS (
+  SELECT 1
+  UNION ALL
+  SELECT n + 1 FROM numbers WHERE n &lt; 5
+)
+SELECT n FROM numbers ORDER BY n;
+</code></pre>
+<p>Expected rows: <code>1, 2, 3, 4, 5</code>. Recursive queries need a termination condition; cyclic graph traversal may require cycle detection.</p>
+<h2 id="8-7-safe-upserts-and-returning">8.7 Safe upserts and RETURNING</h2>
+<pre><code class="language-sql">INSERT INTO products(sku,title,price_cents,stock_on_hand)
+VALUES ('BK-001','Database Book (2nd ed.)',3499,100)
+ON CONFLICT(sku) DO UPDATE SET
+ title = EXCLUDED.title, price_cents = EXCLUDED.price_cents
+RETURNING product_id, sku, price_cents;
+</code></pre>
+<p><code>EXCLUDED</code> refers to proposed incoming values; <code>RETURNING</code> avoids a second lookup. Beware that upsert semantics do not replace a full business transaction when stock and payments span multiple rows.</p>
+<h2 id="8-8-pagination-offset-vs-keyset">8.8 Pagination: OFFSET vs keyset</h2>
+<pre><code class="language-sql">-- Offset becomes progressively expensive and is unstable under concurrent inserts.
+SELECT order_id, created_at FROM orders
+ORDER BY created_at DESC, order_id DESC LIMIT 20 OFFSET 20000;
+-- Keyset: supply the last seen tuple from previous page.
+SELECT order_id, created_at FROM orders
+WHERE (created_at, order_id) &lt; (TIMESTAMPTZ '2026-10-01 00:00:00+00', 900)
+ORDER BY created_at DESC, order_id DESC LIMIT 20;
+</code></pre>
+<p>For keyset performance, create an index matching <code>(created_at DESC, order_id DESC)</code>. <code>OFFSET</code> still has valid uses for small admin datasets.</p>
+<h2 id="8-9-jsonb-arrays-and-boundaries">8.9 JSONB, arrays, and boundaries</h2>
+<pre><code class="language-sql">CREATE TABLE IF NOT EXISTS product_attributes (
+  product_id bigint PRIMARY KEY REFERENCES products(product_id),
+  attrs jsonb NOT NULL DEFAULT '{}'::jsonb
+);
+INSERT INTO product_attributes(product_id,attrs)
+SELECT product_id, '{"color":"black","layout":"US"}'::jsonb
+FROM products WHERE sku='KB-002'
+ON CONFLICT(product_id) DO UPDATE SET attrs=EXCLUDED.attrs;
+SELECT product_id FROM product_attributes WHERE attrs @&gt; '{"color":"black"}'::jsonb;
+</code></pre>
+<p>Use JSONB for flexible attributes, not as an excuse to avoid constraints or normalized relationships. Consider a GIN index for frequent containment searches; verify workload selectivity first.</p>
+<h3 id="lab-8-analytics-practice">Lab 8 — analytics practice</h3>
+<ol>
+<li>Seed two paid and one pending orders with unique UUIDs (see <code>INSERT INTO orders ...</code> syntax).</li>
+<li>Report revenue as <code>sum(quantity * unit_price_cents)</code> <strong>only for paid orders</strong>.</li>
+<li>Find customers with no orders via <code>LEFT JOIN ... WHERE o.order_id IS NULL</code> or <code>NOT EXISTS</code>.</li>
+<li>Return latest order per customer with <code>row_number() ... WHERE newest_rank=1</code> in an outer query.</li>
+<li>Run <code>EXPLAIN (ANALYZE, BUFFERS)</code> on a SELECT, not on a destructive DML statement in production.</li>
+</ol>
+<h3 id="troubleshooting-sql">Troubleshooting: SQL</h3>
+<ul>
+<li><strong>Duplicate result rows:</strong> inspect join cardinality and key uniqueness; <code>DISTINCT</code> may conceal a modeling bug.</li>
+<li><strong>Wrong revenue:</strong> ensure status filter, historical unit price, currency representation, and returns/refunds semantics.</li>
+<li><strong>Unexpected NULL:</strong> check outer joins and three-valued logic (<code>NULL = NULL</code> is unknown; use <code>IS NULL</code>).</li>
+<li><strong>Pagination gaps:</strong> use stable ordering, keyset cursor, and define concurrency consistency guarantees.</li>
+</ul>
+<h3 id="senior-interview-q-a">Senior interview Q&amp;A</h3>
+<p><strong>Q: Why store money as integer cents instead of float?</strong> A: Binary floating-point cannot represent many decimal amounts exactly; integers or <code>numeric(p,s)</code> avoid rounding surprises. Define currency and rounding rules explicitly.</p>
+<p><strong>Q: When is a CTE slower than a subquery?</strong> A: Materialization can block predicate pushdown, but modern PostgreSQL may inline eligible CTEs. Examine the actual plan and version rather than generalizing.</p>
+<p><strong>Q: Why do window functions matter for API backends?</strong> A: They efficiently express rankings, deduplication, running totals, and latest-per-group retrieval while preserving detail rows.</p>
+<h1 id="chapter-9-relational-schema-design">Chapter 9 — Relational Schema Design</h1>
+<h2 id="9-1-start-from-invariants-not-tables">9.1 Start from invariants, not tables</h2>
+<p>A senior engineer writes business invariants first: an email is unique within a tenant; an order belongs to exactly one customer; item quantities are positive; order prices are historical snapshots; payment retries must not create duplicate charges; deletion must respect legal retention. Convert each invariant into constraints, transaction boundaries, and tests.</p>
+<h2 id="9-2-entities-relationships-and-cardinality">9.2 Entities, relationships, and cardinality</h2>
+<pre><code class="language-mermaid">erDiagram
+  CUSTOMERS ||--o{ ORDERS : places
+  ORDERS ||--|{ ORDER_ITEMS : contains
+  PRODUCTS ||--o{ ORDER_ITEMS : referenced_by
+  ORDERS ||--o{ PAYMENTS : attempts
+  CUSTOMERS { bigint customer_id PK
+              text email UK }
+  ORDERS { bigint order_id PK
+           bigint customer_id FK
+           uuid idempotency_key UK }
+  ORDER_ITEMS { bigint order_id PK,FK
+                bigint product_id PK,FK }
+</code></pre>
+<p>An order can have many items; a product can appear in many orders; the intersection table resolves many-to-many. A conceptual ERD cannot itself guarantee every order has an item—enforce this in the transaction/service or with appropriate advanced database constraints.</p>
+<h2 id="9-3-normal-forms">9.3 Normal forms</h2>
+<ul>
+<li><strong>1NF:</strong> columns contain values treated as atomic for the modeled domain; avoid comma-separated product IDs.</li>
+<li><strong>2NF:</strong> with a composite candidate key, non-key attributes depend on the whole key (not just <code>order_id</code> or <code>product_id</code>).</li>
+<li><strong>3NF:</strong> non-key attributes should not depend transitively on a key through another non-key attribute.</li>
+<li><strong>BCNF:</strong> every determinant of a nontrivial functional dependency is a superkey (stronger than 3NF).
+Normalization limits update anomalies; purposeful denormalization can improve read performance but creates consistency obligations.</li>
+</ul>
+<h2 id="9-4-keys-and-data-types">9.4 Keys and data types</h2>
+<p>Surrogate <code>bigint IDENTITY</code> keys are compact and easy to index; UUIDs help with distributed creation and public identifiers, but random UUID insertion may fragment B-trees and add storage overhead. Use <code>timestamptz</code> for event instants; <code>date</code> for calendar dates; <code>numeric</code> for exact fractional money; <code>text</code> for unconstrained strings; <code>varchar(n)</code> only for meaningful length limits. Always define the semantic meaning of NULL.</p>
+<h2 id="9-5-constraints-and-referential-actions">9.5 Constraints and referential actions</h2>
+<pre><code class="language-sql">CREATE TABLE IF NOT EXISTS payments (
+  payment_id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  order_id bigint NOT NULL REFERENCES orders(order_id) ON DELETE RESTRICT,
+  provider_request_id text NOT NULL UNIQUE,
+  amount_cents bigint NOT NULL CHECK(amount_cents &gt; 0),
+  state text NOT NULL CHECK(state IN ('initiated','captured','failed')),
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_payments_order_created ON payments(order_id, created_at DESC);
+</code></pre>
+<p>A payment provider request ID is an idempotency boundary. <code>ON DELETE CASCADE</code> is appropriate only when child data truly must be deleted with parent data. For financial records, restrictive deletion and explicit retention policies are often safer.</p>
+<h2 id="9-6-multi-tenancy">9.6 Multi-tenancy</h2>
+<p><strong>Database-per-tenant:</strong> strongest logical separation and customizable maintenance, expensive at high tenant count. <strong>Schema-per-tenant:</strong> moderate separation, operational complexity and migration fan-out. <strong>Shared schema + tenant_id:</strong> efficient, requires consistent tenant scoping and often row-level security (RLS). RLS is defense-in-depth, not a replacement for application authorization; pooled sessions must reset tenant context safely.</p>
+<pre><code class="language-sql">-- Illustrative pattern for a new multi-tenant table:
+CREATE TABLE IF NOT EXISTS tenant_notes (
+  tenant_id uuid NOT NULL,
+  note_id bigint GENERATED ALWAYS AS IDENTITY,
+  body text NOT NULL,
+  PRIMARY KEY(tenant_id, note_id)
+);
+CREATE INDEX IF NOT EXISTS idx_tenant_notes ON tenant_notes(tenant_id, note_id);
+</code></pre>
+<h2 id="9-7-partitioning-and-lifecycle">9.7 Partitioning and lifecycle</h2>
+<p>Partition large time-series tables when pruning, retention, and maintenance benefits justify complexity. Partitioning does not automatically make all queries faster; unique constraints on partitioned tables have restrictions. Design partitions around actual predicates and retention. For hot transactional tables, start with good indexing and archiving before introducing partition maintenance.</p>
+<h3 id="lab-9-schema-design-review">Lab 9 — schema design review</h3>
+<p>Design subscriptions, invoices, invoice_lines, and payment_attempts. Specify keys, FKs, uniqueness, nullable fields, cascade behavior, audit columns, and retention. Write tests that attempt duplicate provider IDs, negative quantities, and orphan rows; confirm constraints reject each.</p>
+<h3 id="troubleshooting-modeling">Troubleshooting: modeling</h3>
+<ul>
+<li><strong>Missing FK indexes:</strong> PostgreSQL does not automatically index referencing columns; deletion/update of referenced rows may scan children.</li>
+<li><strong>Large table rewrites:</strong> assess DDL lock level and version-dependent behavior before adding defaults or changing types.</li>
+<li><strong>Hot tenant:</strong> evaluate tenant-specific query plans, skewed distributions, partitioning or isolation strategies.</li>
+</ul>
+<h3 id="senior-interview-q-a-1">Senior interview Q&amp;A</h3>
+<p><strong>Q: When would you denormalize?</strong> A: After measuring a read bottleneck, defining update ownership, consistency rules, backfill, reconciliation, and rollback.</p>
+<p><strong>Q: Why not use a UUID as every clustered key?</strong> A: PostgreSQL heap storage is not clustered by primary key automatically; index size/locality and insertion patterns still matter. Pick keys based on access patterns, privacy, and distribution needs.</p>
+<p><strong>Q: What makes schema design production-ready?</strong> A: Constraints, lifecycle, migration strategy, indexing, ownership, security, observability, and tested failure handling.</p>
+<h1 id="chapter-10-indexing-statistics-and-query-optimization">Chapter 10 — Indexing, Statistics, and Query Optimization</h1>
+<h2 id="10-1-why-an-index-works">10.1 Why an index works</h2>
+<p>A B-tree maintains sorted search keys pointing to table rows. Instead of reading every heap page, PostgreSQL can descend the tree, find matching tuple identifiers, then fetch visible rows from heap pages. For small tables, sequential scans may be cheaper. Indexes consume disk, WAL, cache, and write amplification; they are not free.</p>
+<pre><code class="language-mermaid">flowchart TB
+  R[Root page] --&gt; A[Internal page: lower keys]
+  R --&gt; B[Internal page: higher keys]
+  A --&gt; L1[Leaf: key + tuple pointer]
+  A --&gt; L2[Leaf: key + tuple pointer]
+  B --&gt; L3[Leaf: key + tuple pointer]
+  L2 --&gt; H[(Heap page)]
+</code></pre>
+<h2 id="10-2-index-types">10.2 Index types</h2>
+<table>
+<thead>
+<tr>
+<th>Index</th>
+<th>Typical fit</th>
+<th>Important limitation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B-tree</td>
+<td>equality, ranges, sorting</td>
+<td>less suitable for arbitrary substring patterns</td>
+</tr>
+<tr>
+<td>GIN</td>
+<td>JSONB containment, arrays, full-text</td>
+<td>heavier writes and maintenance</td>
+</tr>
+<tr>
+<td>GiST</td>
+<td>geometry, ranges, exclusion</td>
+<td>operator-class-specific behavior</td>
+</tr>
+<tr>
+<td>BRIN</td>
+<td>huge physically correlated append-only data</td>
+<td>lossy, may recheck many rows</td>
+</tr>
+<tr>
+<td>Hash</td>
+<td>equality-only niche</td>
+<td>usually B-tree is more flexible</td>
+</tr>
+</tbody>
+</table>
+<h2 id="10-3-composite-and-covering-indexes">10.3 Composite and covering indexes</h2>
+<pre><code class="language-sql">CREATE INDEX IF NOT EXISTS idx_orders_customer_time
+ON orders(customer_id, created_at DESC, order_id DESC);
+CREATE INDEX IF NOT EXISTS idx_orders_paid_customer
+ON orders(customer_id, created_at DESC)
+WHERE status = 'paid';
+CREATE INDEX IF NOT EXISTS idx_products_sku_include
+ON products(sku) INCLUDE(title,price_cents);
+</code></pre>
+<p><strong>Explanation:</strong> the composite index starts with <code>customer_id</code>, then orders by timestamp and ID; a query filtering one customer and sorting newest-first can benefit. The partial index stores only paid orders, but a parameterized plan may not always prove a parameter implies the partial predicate. <code>INCLUDE</code> adds payload columns without making them search keys; index-only scans also depend on visibility-map state.</p>
+<h2 id="10-4-query-plans">10.4 Query plans</h2>
+<pre><code class="language-sql">EXPLAIN (ANALYZE, BUFFERS, VERBOSE)
+SELECT order_id, created_at FROM orders
+WHERE customer_id = 1 ORDER BY created_at DESC, order_id DESC LIMIT 20;
+</code></pre>
+<p>Illustrative output (small datasets may prefer Seq Scan):</p>
+<pre><code class="language-text">Limit  (cost=0.15..8.20 rows=20 width=16) (actual time=0.02..0.03 rows=3 loops=1)
+  -&gt; Index Scan using idx_orders_customer_time on public.orders
+       Index Cond: (customer_id = 1)
+Planning Time: 0.3 ms
+Execution Time: 0.1 ms
+</code></pre>
+<p><code>cost</code> is planner-relative estimated work, <strong>not milliseconds</strong>; <code>actual time</code> is measured milliseconds; <code>rows</code> shows estimated and actual cardinality; <code>loops</code> indicates repeated execution; <code>BUFFERS</code> shows shared/local/temp block accesses. A huge estimate mismatch suggests stale statistics, correlation, skew, or missing extended statistics.</p>
+<h2 id="10-5-query-tuning-workflow">10.5 Query tuning workflow</h2>
+<ol>
+<li>Capture endpoint latency p50/p95/p99 and throughput, not just SQL timing.</li>
+<li>Identify costly SQL via <code>pg_stat_statements</code> where available/enabled (RDS parameter group and extension prerequisites vary).</li>
+<li>Record exact parameter shapes and <code>EXPLAIN (ANALYZE, BUFFERS)</code> on representative non-destructive queries.</li>
+<li>Check row estimate vs actual, joins, sorts, temp spills, loops, buffer reads, and network/lock waits.</li>
+<li>Rewrite predicate or schema, or add a targeted index; test on production-like cardinality.</li>
+<li>Compare before/after under concurrent load; account for insert/update cost and maintenance.</li>
+<li>Roll out with monitoring and a rollback plan.</li>
+</ol>
+<h2 id="10-6-statistics-and-autovacuum">10.6 Statistics and autovacuum</h2>
+<p><code>ANALYZE</code> collects statistics used by planner. Autovacuum reclaims reusable dead tuples, helps prevent transaction-ID wraparound, and may analyze tables. Vacuum is not simply a disk-shrinking operation: regular <code>VACUUM</code> typically makes space reusable, while <code>VACUUM FULL</code> rewrites and takes an exclusive lock. On RDS, monitor storage growth and long-running transactions that prevent cleanup.</p>
+<pre><code class="language-sql">SELECT relname, n_live_tup, n_dead_tup, last_autoanalyze, last_autovacuum
+FROM pg_stat_user_tables ORDER BY n_dead_tup DESC LIMIT 10;
+ANALYZE orders;
+</code></pre>
+<h2 id="10-7-sargability-and-pitfalls">10.7 Sargability and pitfalls</h2>
+<p>Bad: <code>WHERE lower(email)='ada@example.test'</code> without a matching expression index. Options: store normalized email, create a suitable expression index, or use case-insensitive types with carefully chosen semantics. Bad: <code>WHERE created_at::date = CURRENT_DATE</code> if it prevents an ordinary timestamp range scan. Better:</p>
+<pre><code class="language-sql">WHERE created_at &gt;= CURRENT_DATE::timestamptz
+  AND created_at &lt; (CURRENT_DATE + 1)::timestamptz
+</code></pre>
+<p>Timezone semantics must match your business requirement.</p>
+<h3 id="lab-10-benchmark-fairly">Lab 10 — benchmark fairly</h3>
+<p>Create 100k+ synthetic orders on a disposable database, <code>ANALYZE</code>, capture baseline plan, add the composite index, rerun with warm and cold cache considerations. Record rows, buffers, execution time, write overhead, and index size via <code>pg_relation_size</code>. <strong>Do not</strong> benchmark only a 3-row table and claim a production improvement.</p>
+<h3 id="troubleshooting-slow-queries">Troubleshooting: slow queries</h3>
+<ul>
+<li><strong>Sequential scan:</strong> may be optimal; check table size, selectivity, statistics, and predicate.</li>
+<li><strong>Sort spilled to disk:</strong> inspect temp I/O and work memory; raising <code>work_mem</code> globally can multiply memory usage across concurrent sorts.</li>
+<li><strong>Nested loop explosion:</strong> inspect misestimated join cardinality and indexes; avoid blindly disabling join methods.</li>
+<li><strong>Index not used:</strong> consider parameter types, function wrappers, selectivity, partial-index implication, and stale stats.</li>
+</ul>
+<h3 id="senior-interview-q-a-2">Senior interview Q&amp;A</h3>
+<p><strong>Q: Why is <code>EXPLAIN ANALYZE</code> risky for UPDATE/DELETE?</strong> A: It actually executes the statement. On a disposable environment, use a transaction and <code>ROLLBACK</code> when safe; side effects outside the transaction may still exist.</p>
+<p><strong>Q: Does an index guarantee an index scan?</strong> A: No. Planner chooses based on estimated cost and data distribution.</p>
+<p><strong>Q: Why can adding an index worsen performance?</strong> A: It increases write/WAL/maintenance work and may alter planner choices; each index needs a measured use case.</p>
+<h1 id="chapter-11-transactions-isolation-mvcc-and-locking">Chapter 11 — Transactions, Isolation, MVCC, and Locking</h1>
+<h2 id="11-1-acid-in-an-application">11.1 ACID in an application</h2>
+<p>Atomicity: either all inventory/order writes commit or none do. Consistency: database constraints plus application invariants hold. Isolation: concurrency anomalies are controlled at the chosen level. Durability: committed data survives within the system's durability model; distinguish database commit from cross-region disaster recovery guarantees.</p>
+<h2 id="11-2-mvcc-internals">11.2 MVCC internals</h2>
+<p>PostgreSQL stores row versions with transaction metadata. A reader's snapshot determines which versions are visible. Writers create new tuple versions on UPDATE; dead versions are eventually reclaimed by VACUUM. MVCC reduces reader/writer interference but does <strong>not</strong> eliminate write locks, unique-index conflicts, deadlocks, or serialization failures.</p>
+<pre><code class="language-mermaid">sequenceDiagram
+  participant A as Session A
+  participant DB as PostgreSQL
+  participant B as Session B
+  A-&gt;&gt;DB: BEGIN; read stock=1
+  B-&gt;&gt;DB: BEGIN; read stock=1
+  A-&gt;&gt;DB: UPDATE stock=0; COMMIT
+  B-&gt;&gt;DB: UPDATE stock=0 with predicate stock&gt;=1
+  DB--&gt;&gt;B: 0 rows updated (predicate rechecked)
+  B-&gt;&gt;DB: ROLLBACK
+</code></pre>
+<h2 id="11-3-isolation-levels-in-postgresql">11.3 Isolation levels in PostgreSQL</h2>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Dirty reads</th>
+<th>Non-repeatable reads</th>
+<th>Phantom / serialization behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Read Committed (default)</td>
+<td>prevented</td>
+<td>possible</td>
+<td>new matching rows may appear in later statements</td>
+</tr>
+<tr>
+<td>Repeatable Read</td>
+<td>prevented</td>
+<td>prevented</td>
+<td>PostgreSQL snapshot isolation prevents ordinary phantoms; write skew can remain</td>
+</tr>
+<tr>
+<td>Serializable</td>
+<td>prevented</td>
+<td>prevented</td>
+<td>serial-equivalent result; serialization failures require retry</td>
+</tr>
+</tbody>
+</table>
+<p>PostgreSQL accepts <code>READ UNCOMMITTED</code> but treats it as <code>READ COMMITTED</code>. Do not assume identical behavior across MySQL, SQL Server, or Oracle.</p>
+<h2 id="11-4-inventory-safe-update">11.4 Inventory-safe update</h2>
+<pre><code class="language-sql">BEGIN;
+UPDATE products
+SET stock_on_hand = stock_on_hand - 1
+WHERE product_id = 1 AND stock_on_hand &gt;= 1
+RETURNING stock_on_hand;
+-- If zero rows returned, ROLLBACK and report out-of-stock.
+-- Otherwise INSERT order + item and COMMIT in the same transaction.
+COMMIT;
+</code></pre>
+<p>The conditional update atomically enforces stock &gt;= 0. A naïve read-then-write outside a transaction can oversell. The example does not include payment processing; external payments need idempotency and reconciliation rather than pretending one DB transaction covers a third-party API.</p>
+<h2 id="11-5-row-locks-and-deadlocks">11.5 Row locks and deadlocks</h2>
+<pre><code class="language-sql">BEGIN;
+SELECT product_id, stock_on_hand FROM products
+WHERE product_id IN (1,2) ORDER BY product_id FOR UPDATE;
+-- Update both products in consistent order.
+COMMIT;
+</code></pre>
+<p>A deadlock occurs when sessions form a cycle of lock waits; PostgreSQL detects it and aborts one transaction. Prevent with consistent lock ordering, short transactions, indexes, and no network calls while holding locks. Handle SQLSTATE <code>40P01</code> with bounded retry and jitter. Serialization failure SQLSTATE <code>40001</code> also requires retrying the <strong>entire</strong> transaction.</p>
+<h2 id="11-6-session-diagnostics">11.6 Session diagnostics</h2>
+<pre><code class="language-sql">SELECT pid, usename, state, wait_event_type, wait_event,
+       now()-xact_start AS transaction_age, left(query,120) AS query
+FROM pg_stat_activity
+WHERE datname=current_database()
+ORDER BY xact_start NULLS LAST;
+SELECT blocked.pid AS blocked_pid, pg_blocking_pids(blocked.pid) AS blockers
+FROM pg_stat_activity AS blocked
+WHERE cardinality(pg_blocking_pids(blocked.pid)) &gt; 0;
+</code></pre>
+<p>Requires appropriate privileges to view details of other sessions. In production, capture evidence and assess business impact before terminating backends. A long <code>idle in transaction</code> session can retain snapshots and block cleanup.</p>
+<h2 id="11-7-idempotency-and-the-outbox-pattern">11.7 Idempotency and the outbox pattern</h2>
+<p>A retryable <code>POST /orders</code> should accept an idempotency key and persist a unique record. To publish events reliably, insert an <code>outbox_events</code> row <strong>inside the same database transaction</strong> as the order; a separate worker publishes and marks it processed. Delivery is often at least once; consumers must be idempotent. Avoid claiming exactly-once semantics across arbitrary distributed systems.</p>
+<h3 id="lab-11-two-terminal-concurrency">Lab 11 — two-terminal concurrency</h3>
+<p>Terminal A: <code>BEGIN; UPDATE products SET stock_on_hand=stock_on_hand-1 WHERE product_id=1 AND stock_on_hand&gt;0;</code> (do not commit yet). Terminal B: run the same update and observe waiting using <code>pg_stat_activity</code>. Commit A and observe B resume. Repeat with stock=1 and verify B updates zero rows. Reset test data on a disposable database.</p>
+<h3 id="troubleshooting-transactions">Troubleshooting: transactions</h3>
+<ul>
+<li><strong>Lock timeout:</strong> locate blocker, long transaction, and missing index; avoid raising timeouts blindly.</li>
+<li><strong>Deadlock:</strong> read database logs, identify lock order inversion, add consistent ordering and retry.</li>
+<li><strong>Serialization failure:</strong> retry full unit of work, not only the failed SQL statement.</li>
+<li><strong>Too many idle transactions:</strong> ensure <code>commit</code>/<code>rollback</code> on all exception paths; configure timeouts carefully.</li>
+</ul>
+<h3 id="senior-interview-q-a-3">Senior interview Q&amp;A</h3>
+<p><strong>Q: Is Repeatable Read always serializable?</strong> A: No. Snapshot isolation may allow write skew; Serializable adds conflict detection and can abort transactions.</p>
+<p><strong>Q: What is the safe approach to retries?</strong> A: Use idempotent operations, bounded exponential backoff/jitter, and full-transaction retries for retryable SQLSTATEs.</p>
+<p><strong>Q: Why not hold a DB transaction while charging a card?</strong> A: External latency and uncertainty hold locks and consume connections; use explicit state transitions, provider idempotency keys, outbox, and reconciliation.</p>
+<h1 id="chapter-12-python-fastapi-psycopg-and-sqlalchemy">Chapter 12 — Python, FastAPI, psycopg, and SQLAlchemy</h1>
+<h2 id="12-1-production-oriented-service-layout">12.1 Production-oriented service layout</h2>
+<pre><code class="language-text">python-service/
+  app/
+    __init__.py
+    db.py
+    models.py
+    schemas.py
+    main.py
+  tests/
+  requirements.txt
+  alembic/
+  alembic.ini
+</code></pre>
+<p>Use SQLAlchemy 2.x typed mappings and psycopg 3. A <code>Session</code> is a unit of work and is <strong>not</strong> thread-safe; create one per request/task. Connection pools are process-local; 4 workers × pool_size 5 × max_overflow 5 can open up to 40 connections.</p>
+<h2 id="12-2-install-dependencies">12.2 Install dependencies</h2>
+<pre><code class="language-bash">python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install 'fastapi&gt;=0.110,&lt;1' 'uvicorn[standard]&gt;=0.27,&lt;1'  'SQLAlchemy&gt;=2.0,&lt;3' 'psycopg[binary]&gt;=3.1,&lt;4' 'pydantic&gt;=2,&lt;3'  'alembic&gt;=1.13,&lt;2' 'pytest&gt;=8,&lt;10' 'httpx&gt;=0.27,&lt;1'
+</code></pre>
+<p>These ranges are examples, <strong>not a tested lockfile</strong>. Pin and scan exact dependency versions in real deployments. Psycopg binary wheels are convenient for labs; choose packaging based on platform/security requirements.</p>
+<h2 id="12-3-app-db-py">12.3 <code>app/db.py</code></h2>
+<pre><code class="language-python">import os
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+DATABASE_URL = os.environ["DATABASE_URL"]
+engine = create_engine(
+    DATABASE_URL,
+    pool_size=5,
+    max_overflow=2,
+    pool_timeout=5,
+    pool_pre_ping=True,
+    pool_recycle=1800,
+    connect_args={"connect_timeout": 5},
+)
+SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
+
+def get_session():
+    with SessionLocal() as session:
+        yield session
+</code></pre>
+<p><strong>Explanation:</strong> <code>create_engine</code> configures dialect, DBAPI and pool; it does not necessarily open a connection immediately. <code>pool_size</code> is retained connections per process; <code>max_overflow</code> allows temporary extra; <code>pool_timeout</code> bounds waits for a free pool slot; <code>pool_pre_ping</code> tests a checked-out connection; <code>pool_recycle</code> retires old connections on checkout; <code>connect_timeout</code> limits initial connection establishment; <code>SessionLocal</code> creates independent units of work; <code>with</code> closes the session even on exceptions. <strong>For RDS</strong>, use an RDS endpoint, TLS verification, and secret injection, not the local DSN from the setup section.</p>
+<h2 id="12-4-app-models-py">12.4 <code>app/models.py</code></h2>
+<pre><code class="language-python">from sqlalchemy import BigInteger, ForeignKey, String, Text, CheckConstraint
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+
+class Base(DeclarativeBase):
+    pass
+
+class Customer(Base):
+    __tablename__ = "customers"
+    customer_id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    email: Mapped[str] = mapped_column(Text, unique=True, nullable=False)
+    full_name: Mapped[str] = mapped_column(Text, nullable=False)
+</code></pre>
+<p>The table already exists from Chapter 8. <strong>Do not call <code>Base.metadata.create_all()</code> as a substitute for production migrations</strong>. This model intentionally maps a subset of columns; database defaults supply <code>created_at</code>. A fully managed schema should be tracked in Alembic and tested against the actual database.</p>
+<h2 id="12-5-app-schemas-py">12.5 <code>app/schemas.py</code></h2>
+<pre><code class="language-python">from pydantic import BaseModel, EmailStr, Field
+class CustomerIn(BaseModel):
+    email: str = Field(min_length=3, max_length=320)
+    full_name: str = Field(min_length=1, max_length=200)
+class CustomerOut(BaseModel):
+    customer_id: int
+    email: str
+    full_name: str
+</code></pre>
+<p>Validate inputs at the API boundary, but keep database constraints as final defense. <code>EmailStr</code> needs an additional email-validator dependency, so this executable example uses <code>str</code> and demonstrates structural validation only; add robust email normalization/validation per product requirements.</p>
+<h2 id="12-6-app-main-py-complete-synchronous-api">12.6 <code>app/main.py</code> — complete synchronous API</h2>
+<pre><code class="language-python">from fastapi import FastAPI, Depends, HTTPException, status
+from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+from sqlalchemy.orm import Session
+from .db import get_session
+from .models import Customer
+from .schemas import CustomerIn, CustomerOut
+
+app = FastAPI(title="RDS Shop API")
+
+@app.get("/health/live")
+def live():
+    return {"status": "alive"}
+
+@app.get("/customers/{customer_id}", response_model=CustomerOut)
+def get_customer(customer_id: int, db: Session = Depends(get_session)):
+    obj = db.get(Customer, customer_id)
+    if obj is None:
+        raise HTTPException(status_code=404, detail="Customer not found")
+    return CustomerOut(customer_id=obj.customer_id, email=obj.email,
+                       full_name=obj.full_name)
+
+@app.post("/customers", response_model=CustomerOut, status_code=201)
+def create_customer(payload: CustomerIn, db: Session = Depends(get_session)):
+    obj = Customer(email=payload.email, full_name=payload.full_name)
+    db.add(obj)
+    try:
+        db.commit()
+        db.refresh(obj)
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Customer already exists")
+    except SQLAlchemyError:
+        db.rollback()
+        raise HTTPException(status_code=503, detail="Database unavailable")
+    return CustomerOut(customer_id=obj.customer_id, email=obj.email,
+                       full_name=obj.full_name)
+</code></pre>
+<p><strong>Important limitation:</strong> not every integrity error is a duplicate email; production code should inspect the SQLSTATE/constraint and map only known uniqueness violations to HTTP 409, log correlation IDs without leaking secrets, and treat unexpected errors separately. An API should also implement authentication, authorization, request limits, tracing, and graceful shutdown before production use.</p>
+<p>Run and verify:</p>
+<pre><code class="language-bash">uvicorn app.main:app --host 127.0.0.1 --port 8000
+curl -s -X POST http://127.0.0.1:8000/customers  -H 'content-type: application/json'  -d '{"email":"new@example.test","full_name":"New User"}'
+# Example: {"customer_id":4,"email":"new@example.test","full_name":"New User"}
+curl -s http://127.0.0.1:8000/customers/4
+</code></pre>
+<h2 id="12-7-psycopg-3-parameterized-queries">12.7 psycopg 3 parameterized queries</h2>
+<pre><code class="language-python">import os
+import psycopg
+with psycopg.connect(os.environ["DATABASE_URL"]) as conn:
+    with conn.cursor() as cur:
+        cur.execute("SELECT customer_id, email FROM customers WHERE email = %s", ("ada@example.test",))
+        print(cur.fetchone())
+</code></pre>
+<p>The <code>%s</code> placeholder is bound by the driver, preventing values from being interpolated as SQL code. Never build SQL with user input via f-strings. Dynamic identifiers require allowlisting or psycopg SQL composition helpers.</p>
+<h2 id="12-8-async-considerations">12.8 Async considerations</h2>
+<p>Async I/O can improve throughput when requests wait on network/database I/O, but does not make a slow query faster. Use SQLAlchemy <code>AsyncEngine</code> with an async-capable driver, <code>AsyncSession</code> per task, and no blocking DB calls in event-loop handlers. Synchronous <code>def</code> FastAPI routes run in a threadpool; the above sample is intentionally synchronous for consistency.</p>
+<h3 id="lab-12-build-and-test">Lab 12 — build and test</h3>
+<ol>
+<li>Start local PostgreSQL and apply <code>01_schema.sql</code>.</li>
+<li>Create the four files above and start Uvicorn.</li>
+<li>POST a unique customer, GET it, then POST the same email; expect 409.</li>
+<li>Kill the database briefly and observe error handling; restore and confirm pool recovery.</li>
+<li>Add structured request IDs, readiness endpoint that performs a bounded <code>SELECT 1</code>, and a test using a disposable database.</li>
+</ol>
+<h3 id="troubleshooting-python">Troubleshooting: Python</h3>
+<ul>
+<li><strong><code>ModuleNotFoundError</code></strong>: activate the virtualenv and install dependencies.</li>
+<li><strong><code>OperationalError: connection refused</code></strong>: check hostname/port/service/VPC route/security group.</li>
+<li><strong>Pool timeout</strong>: sessions may be leaked or database too slow; examine checkout duration and worker count.</li>
+<li><strong><code>PendingRollbackError</code></strong>: rollback failed transactions before reusing a session.</li>
+</ul>
+<h3 id="senior-interview-q-a-4">Senior interview Q&amp;A</h3>
+<p><strong>Q: What is the difference between an Engine and Session?</strong> A: Engine manages connectivity/pooling and dialect; Session manages ORM identity map and transaction/unit of work.</p>
+<p><strong>Q: Why is <code>pool_pre_ping</code> not enough for resilience?</strong> A: Connections can fail mid-transaction; retries must respect idempotency and transaction boundaries.</p>
+<p><strong>Q: How do you prevent N+1 ORM queries?</strong> A: Measure SQL counts, use appropriate <code>selectinload</code>/<code>joinedload</code>, and validate cardinality and pagination semantics.</p>
+<h1 id="chapter-13-java-spring-boot-jdbc-jpa-and-hibernate">Chapter 13 — Java, Spring Boot, JDBC, JPA, and Hibernate</h1>
+<h2 id="13-1-stack-and-boundaries">13.1 Stack and boundaries</h2>
+<p>Spring Boot provides application configuration and lifecycle; JDBC executes SQL; Spring Data JPA offers repository abstractions; Hibernate implements JPA ORM behavior. <strong>JPA is a specification, not a database.</strong> Hibernate session/persistence context tracks entities; flush sends SQL, and transaction commit makes changes durable. Lazy-loading outside a transaction can fail; over-eager fetching can cause join explosions.</p>
+<pre><code class="language-mermaid">flowchart LR
+  HTTP[HTTP request] --&gt; CTRL[Controller]
+  CTRL --&gt; SVC[Service @Transactional]
+  SVC --&gt; REP[Spring Data JPA Repository]
+  REP --&gt; H[Hibernate ORM]
+  H --&gt; HIK[HikariCP pool]
+  HIK --&gt; RDS[(RDS PostgreSQL)]
+</code></pre>
+<h2 id="13-2-create-project">13.2 Create project</h2>
+<p>Generate a Spring Boot Maven project from Spring Initializr with dependencies: Spring Web, Spring Data JPA, PostgreSQL Driver, Validation, Actuator, and Flyway. Choose a supported Spring Boot release and Java 21; exact compatible dependency versions should be resolved through the chosen Boot BOM. Avoid copying arbitrary old versions into <code>pom.xml</code>.</p>
+<h2 id="13-3-application-yml">13.3 <code>application.yml</code></h2>
+<pre><code class="language-yaml">spring:
+  datasource:
+    url: ${JDBC_DATABASE_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 8
+      minimum-idle: 2
+      connection-timeout: 5000
+      max-lifetime: 1800000
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+</code></pre>
+<p><strong>Line-by-line:</strong> <code>url</code>, <code>username</code>, <code>password</code> come from deployment configuration; <code>maximum-pool-size</code> caps per-instance Hikari connections; <code>minimum-idle</code> retains warm connections; timeouts are milliseconds; <code>open-in-view:false</code> prevents hidden lazy SQL during response serialization; <code>ddl-auto:validate</code> checks mappings rather than altering schema; Flyway owns migrations. Expose Actuator endpoints only behind appropriate access controls; <code>prometheus</code> requires a registry dependency. Use <code>sslmode=verify-full</code> plus trusted RDS CA on the JDBC URL for AWS connections, with proper Java trust-store handling.</p>
+<h2 id="13-4-minimal-entity">13.4 Minimal entity</h2>
+<pre><code class="language-java">package com.example.shop;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "customers")
+public class Customer {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "customer_id")
+  private Long id;
+
+  @Column(name = "email", nullable = false, unique = true)
+  private String email;
+
+  @Column(name = "full_name", nullable = false)
+  private String fullName;
+
+  protected Customer() {}
+  public Customer(String email, String fullName) {
+    this.email = email;
+    this.fullName = fullName;
+  }
+  public Long getId() { return id; }
+  public String getEmail() { return email; }
+  public String getFullName() { return fullName; }
+}
+</code></pre>
+<p><strong>Notes:</strong> <code>@Entity</code> makes the class managed; <code>@Table</code> maps to existing table; <code>@Id</code> declares identity; <code>GenerationType.IDENTITY</code> relies on database-generated key; <code>@Column</code> maps field names; protected no-arg constructor is required for JPA; getters are used for reading. Avoid returning JPA entities directly from public APIs; use DTOs.</p>
+<h2 id="13-5-repository-and-service">13.5 Repository and service</h2>
+<pre><code class="language-java">package com.example.shop;
+import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+public interface CustomerRepository extends JpaRepository&lt;Customer, Long&gt; {
+  Optional&lt;Customer&gt; findByEmail(String email);
+}
+</code></pre>
+<pre><code class="language-java">package com.example.shop;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class CustomerService {
+  private final CustomerRepository repository;
+  public CustomerService(CustomerRepository repository) { this.repository = repository; }
+  @Transactional
+  public Customer create(String email, String fullName) {
+    return repository.save(new Customer(email, fullName));
+  }
+  @Transactional(readOnly = true)
+  public Customer get(long id) {
+    return repository.findById(id).orElseThrow(
+      () -&gt; new IllegalArgumentException("Customer not found"));
+  }
+}
+</code></pre>
+<p><code>@Transactional</code> starts/joins a transaction via Spring proxy interception. Beware self-invocation: calling another <code>@Transactional</code> method within the same instance may bypass proxy behavior. <code>readOnly=true</code> is an optimization hint, not a security enforcement. Map exceptions to proper HTTP status codes in a controller advice; catch unique-constraint violations, not all data access exceptions as conflicts.</p>
+<h2 id="13-6-controller">13.6 Controller</h2>
+<pre><code class="language-java">package com.example.shop;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+record NewCustomer(@NotBlank String email, @NotBlank String fullName) {}
+record CustomerResponse(Long id, String email, String fullName) {}
+
+@RestController
+@RequestMapping("/customers")
+public class CustomerController {
+  private final CustomerService service;
+  CustomerController(CustomerService service) { this.service = service; }
+  @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
+  CustomerResponse create(@Valid @RequestBody NewCustomer input) {
+    Customer c = service.create(input.email(), input.fullName());
+    return new CustomerResponse(c.getId(), c.getEmail(), c.getFullName());
+  }
+  @GetMapping("/{id}")
+  CustomerResponse get(@PathVariable long id) {
+    Customer c = service.get(id);
+    return new CustomerResponse(c.getId(), c.getEmail(), c.getFullName());
+  }
+}
+</code></pre>
+<p>For a complete application, place classes in proper package files and include the generated <code>@SpringBootApplication</code> main class. Map <code>IllegalArgumentException</code> to 404 (or use a domain-specific exception), and duplicate emails to 409. <strong>This sample is educational scaffolding, not a complete secure API.</strong></p>
+<h2 id="13-7-jdbc-transaction-example">13.7 JDBC transaction example</h2>
+<pre><code class="language-java">try (var connection = dataSource.getConnection()) {
+  connection.setAutoCommit(false);
+  try (var stmt = connection.prepareStatement(
+      "UPDATE products SET stock_on_hand=stock_on_hand-? WHERE product_id=? AND stock_on_hand&gt;=?")) {
+    stmt.setInt(1, qty);
+    stmt.setLong(2, productId);
+    stmt.setInt(3, qty);
+    if (stmt.executeUpdate() != 1) throw new IllegalStateException("Insufficient stock");
+    connection.commit();
+  } catch (Exception e) {
+    connection.rollback();
+    throw e;
+  }
+}
+</code></pre>
+<p>This is a method-body excerpt requiring <code>dataSource</code>, <code>qty</code>, and <code>productId</code> variables. It demonstrates prepared statements and rollback; real order creation must also insert the order and items before commit. In Spring-managed transactions prefer <code>@Transactional</code> and repository/JdbcTemplate integration rather than mixing unmanaged connections with transaction-managed work.</p>
+<h3 id="lab-13-java-application">Lab 13 — Java application</h3>
+<ol>
+<li>Generate Spring project and configure local PostgreSQL JDBC URL.</li>
+<li>Add entity, repository, service, controller, and main application class.</li>
+<li>Run <code>./mvnw spring-boot:run</code> and test POST/GET.</li>
+<li>Add an integration test with Testcontainers PostgreSQL; verify unique constraint and rollback.</li>
+<li>Log SQL in a disposable environment and demonstrate N+1, then fix with a fetch plan.</li>
+</ol>
+<h3 id="troubleshooting-java">Troubleshooting: Java</h3>
+<ul>
+<li><strong>Hikari connection timeout:</strong> calculate pool budget across replicas; inspect blocked threads and slow transactions.</li>
+<li><strong>LazyInitializationException:</strong> define DTO projection/fetch strategy inside service transaction.</li>
+<li><strong>Schema validation failure:</strong> synchronize Flyway migrations and JPA mappings; never blindly set <code>ddl-auto=update</code> in production.</li>
+<li><strong>Unexpected non-transactional method:</strong> check proxy/self-invocation and method visibility.</li>
+</ul>
+<h3 id="senior-interview-q-a-5">Senior interview Q&amp;A</h3>
+<p><strong>Q: Why disable Open Session in View?</strong> A: It prevents unplanned database queries during HTTP response rendering and forces explicit data-fetch boundaries.</p>
+<p><strong>Q: What is the persistence context?</strong> A: An identity map and unit-of-work tracker that manages entity state and flushes changes.</p>
+<p><strong>Q: Why use Flyway with Hibernate?</strong> A: Explicit, reviewable, versioned schema evolution rather than implicit ORM-driven DDL.</p>
+<h1 id="chapter-14-node-js-typescript-pg-and-prisma">Chapter 14 — Node.js, TypeScript, pg, and Prisma</h1>
+<h2 id="14-1-event-loop-and-database-work">14.1 Event loop and database work</h2>
+<p>Node.js handles many I/O waits efficiently, but CPU-heavy synchronous work blocks its event loop. The <code>pg</code> driver is a low-level PostgreSQL client; Prisma adds a schema/model layer and generated client. Never open one connection per HTTP request without pooling. Database transactions must use <strong>one checked-out client</strong>, not arbitrary calls through the pool.</p>
+<h2 id="14-2-install-and-configure">14.2 Install and configure</h2>
+<pre><code class="language-bash">mkdir node-service &amp;&amp; cd node-service
+npm init -y
+npm install express pg dotenv
+npm install -D typescript tsx @types/node @types/express @types/pg
+npx tsc --init
+</code></pre>
+<p>For a reproducible build commit <code>package-lock.json</code>, run <code>npm ci</code> in CI, and audit dependencies. In a production project use a compatible <code>tsconfig</code> and module system; below uses <code>tsx</code> to run TypeScript directly for a lab.</p>
+<h2 id="14-3-src-db-ts">14.3 <code>src/db.ts</code></h2>
+<pre><code class="language-typescript">import { Pool } from 'pg';
+
+export const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  max: 8,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 5000,
+  application_name: 'rds-node-lab',
+});
+
+pool.on('error', (err) =&gt; {
+  console.error('Unexpected idle PostgreSQL connection error:', err.message);
+});
+</code></pre>
+<p><strong>Explanation:</strong> <code>Pool</code> reuses connections; <code>max</code> is a per-process upper bound; <code>idleTimeoutMillis</code> retires idle clients; <code>connectionTimeoutMillis</code> caps connection acquisition/establishment; <code>application_name</code> helps diagnostics; idle error handler avoids unhandled pool errors. Do not log credentials or full DSNs. For RDS, configure certificate verification using <code>ssl</code> options or appropriate libpq-compatible settings; test exact driver behavior and CA handling, especially when using <code>connectionString</code> and <code>ssl</code> together.</p>
+<h2 id="14-4-src-server-ts-complete-basic-api">14.4 <code>src/server.ts</code> — complete basic API</h2>
+<pre><code class="language-typescript">import express from 'express';
+import { pool } from './db';
+
+const app = express();
+app.use(express.json({ limit: '32kb' }));
+
+app.get('/health/live', (_req, res) =&gt; res.json({ status: 'alive' }));
+
+app.get('/customers/:id', async (req, res) =&gt; {
+  const id = Number(req.params.id);
+  if (!Number.isSafeInteger(id) || id &lt;= 0) {
+    res.status(400).json({ error: 'Invalid ID' }); return;
+  }
+  try {
+    const result = await pool.query(
+      'SELECT customer_id,email,full_name FROM customers WHERE customer_id=$1', [id]);
+    if (result.rowCount === 0) {
+      res.status(404).json({ error: 'Not found' }); return;
+    }
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Database query failed');
+    res.status(503).json({ error: 'Service temporarily unavailable' });
+  }
+});
+
+app.post('/customers', async (req, res) =&gt; {
+  const { email, full_name } = req.body ?? {};
+  if (typeof email !== 'string' || typeof full_name !== 'string' ||
+      email.length &gt; 320 || !email || !full_name || full_name.length &gt; 200) {
+    res.status(400).json({ error: 'Invalid customer' }); return;
+  }
+  try {
+    const result = await pool.query(
+      `INSERT INTO customers(email,full_name) VALUES($1,$2)
+       RETURNING customer_id,email,full_name`, [email, full_name]);
+    res.status(201).json(result.rows[0]);
+  } catch (err: any) {
+    if (err?.code === '23505') {
+      res.status(409).json({ error: 'Duplicate email' }); return;
+    }
+    console.error('Database insert failed');
+    res.status(503).json({ error: 'Service temporarily unavailable' });
+  }
+});
+
+const server = app.listen(3000, '127.0.0.1', () =&gt; console.log('Listening on 3000'));
+process.on('SIGTERM', () =&gt; {
+  server.close(() =&gt; { void pool.end().then(() =&gt; process.exit(0)); });
+});
+</code></pre>
+<p><strong>Line-by-line design:</strong> <code>express.json</code> caps payload size; parameter validation rejects unsafe IDs; <code>$1/$2</code> bind values (never concatenate user data into SQL); <code>rowCount</code> detects not-found; <code>23505</code> is PostgreSQL unique-violation SQLSTATE; generic failures return 503 without exposing internals; <code>SIGTERM</code> stops new requests and drains the pool. Production needs shutdown timeout, readiness checks, auth, rate limits, request IDs, telemetry, and structured error logging. The TypeScript <code>any</code> in error handling is shortened for readability; prefer typed narrowing.</p>
+<p>Run:</p>
+<pre><code class="language-bash">DATABASE_URL="$DATABASE_URL" npx tsx src/server.ts
+curl -s http://127.0.0.1:3000/customers/1
+</code></pre>
+<h2 id="14-5-correct-transaction-usage">14.5 Correct transaction usage</h2>
+<pre><code class="language-typescript">const client = await pool.connect();
+try {
+  await client.query('BEGIN');
+  const stock = await client.query(
+    `UPDATE products SET stock_on_hand=stock_on_hand-$1
+     WHERE product_id=$2 AND stock_on_hand &gt;= $1
+     RETURNING stock_on_hand`, [qty, productId]);
+  if (stock.rowCount !== 1) throw new Error('Out of stock');
+  // Insert order and order_items using this SAME client.
+  await client.query('COMMIT');
+} catch (err) {
+  await client.query('ROLLBACK');
+  throw err;
+} finally {
+  client.release();
+}
+</code></pre>
+<p>This is a method-body excerpt: <code>qty</code> and <code>productId</code> must be defined. <strong>Never use <code>pool.query()</code> for statements that belong to a checked-out client's transaction.</strong> For retryable failures (<code>40001</code>, <code>40P01</code>), repeat the whole transaction after a bounded delay and ensure idempotency.</p>
+<h2 id="14-6-prisma-concepts">14.6 Prisma concepts</h2>
+<p>Prisma schema defines datasource, generator, models, relations, and indexes. Use <code>prisma migrate dev</code> for development; <code>prisma migrate deploy</code> for approved production migrations. Prisma versions have evolved configuration conventions, so follow the docs for your pinned version. Be aware of query counts, implicit transactions, and client/pool multiplication across processes or serverless instances.</p>
+<h3 id="lab-14-node-service">Lab 14 — Node service</h3>
+<ol>
+<li>Build <code>src/db.ts</code> and <code>src/server.ts</code>.</li>
+<li>POST a customer and verify the unique constraint returns 409 on repeat.</li>
+<li>Write a stock-reservation transaction using one client.</li>
+<li>Add tests for invalid ID, DB outage, and pool exhaustion.</li>
+<li>Compare generated Prisma queries to hand-written SQL on the same workload.</li>
+</ol>
+<h3 id="troubleshooting-node">Troubleshooting: Node</h3>
+<ul>
+<li><strong>Event-loop stalls:</strong> inspect synchronous CPU work and excessive JSON serialization; use worker threads where justified.</li>
+<li><strong>Leaked clients:</strong> ensure <code>client.release()</code> in <code>finally</code>.</li>
+<li><strong>Too many clients:</strong> multiply <code>max</code> by replica/process count; include deploy overlap and admin reserve.</li>
+<li><strong>Transaction seems inconsistent:</strong> verify every statement uses the same checked-out client.</li>
+</ul>
+<h3 id="senior-interview-q-a-6">Senior interview Q&amp;A</h3>
+<p><strong>Q: Does async JavaScript remove database locks?</strong> A: No. It changes client concurrency, not database isolation or lock behavior.</p>
+<p><strong>Q: Why choose pg over Prisma?</strong> A: <code>pg</code> provides direct SQL control and fewer abstractions; Prisma speeds type-safe model development. Choose by query complexity, migrations, operational needs, and team expertise.</p>
+<p><strong>Q: Why are SQLSTATE codes better than parsing error text?</strong> A: They are stable, machine-readable error categories; text may vary by version/localization.</p>
+<h1 id="chapter-15-migrations-testing-pooling-and-production-delivery">Chapter 15 — Migrations, Testing, Pooling, and Production Delivery</h1>
+<h2 id="15-1-expand-migrate-contract">15.1 Expand–migrate–contract</h2>
+<p>Breaking schema changes are a deployment coordination problem. Old and new app versions may coexist during rolling deploys. Safe pattern:</p>
+<ol>
+<li><strong>Expand:</strong> add nullable <code>display_name</code>, index concurrently where appropriate, or new compatible table.</li>
+<li><strong>Deploy dual-write/read-compatible application</strong> with feature flags and observability.</li>
+<li><strong>Backfill</strong> in bounded batches; track progress and verify counts/hashes.</li>
+<li><strong>Switch reads</strong> after data parity is proven; monitor errors and latency.</li>
+<li><strong>Contract</strong> old columns in a later release after all old instances and consumers are retired.</li>
+</ol>
+<pre><code class="language-mermaid">flowchart LR
+  A[Schema v1] --&gt; B[Expand: additive migration]
+  B --&gt; C[Deploy compatible code]
+  C --&gt; D[Backfill + verify]
+  D --&gt; E[Switch readers]
+  E --&gt; F[Contract later]
+</code></pre>
+<h2 id="15-2-lock-aware-ddl">15.2 Lock-aware DDL</h2>
+<pre><code class="language-sql">-- Execute outside an explicit transaction block:
+CREATE INDEX CONCURRENTLY idx_orders_status_time
+ON orders(status, created_at DESC);
+</code></pre>
+<p><code>CONCURRENTLY</code> reduces blocking of writes but is slower and can leave an invalid index if interrupted. Check <code>pg_index.indisvalid</code> and follow cleanup guidance. Some migration tools wrap DDL in a transaction by default; configure the migration step accordingly. Avoid blanket <code>ALTER TABLE</code> changes without evaluating locks, table size, defaults, and PostgreSQL version.</p>
+<h2 id="15-3-alembic">15.3 Alembic</h2>
+<pre><code class="language-bash">alembic init alembic
+# Configure env.py to import Base.metadata and DATABASE_URL securely.
+alembic revision --autogenerate -m 'add customer display name'
+alembic upgrade head
+alembic current
+alembic history
+</code></pre>
+<p>Autogenerate is a <strong>draft</strong>, not an approval. Review DDL, data loss, indexes, locks, backfill, and downgrade assumptions. Test upgrade from the previous production schema snapshot, not only a fresh database.</p>
+<h2 id="15-4-flyway-and-prisma">15.4 Flyway and Prisma</h2>
+<p>Flyway versioned SQL migrations use filenames such as <code>V1__create_tables.sql</code>; checksum drift on already-applied migrations is a warning. Prisma production deployments should apply committed migration files, not mutate schema ad hoc. One service/team should own schema migration sequencing; avoid three frameworks racing to change the same tables.</p>
+<h2 id="15-5-connection-budget-and-little-s-law">15.5 Connection budget and Little's Law</h2>
+<p>Let average connection hold time be <code>W</code> seconds and throughput be <code>λ</code> DB transactions/sec. Approximate concurrently busy connections <code>L ≈ λW</code>. Example: 250 transactions/sec × 0.04 sec = 10 busy connections on average. Plan for burstiness, long tails, failover, transactions, background jobs, and deploy overlap. This is a sizing starting point, not a guaranteed pool size.</p>
+<p><strong>Budget example:</strong> DB <code>max_connections=200</code> (illustrative, engine/instance dependent); reserve 40 for admin/background/maintenance; 8 application pods × 2 worker processes × pool max 8 = 128 potential app connections, leaving 32 spare. During rolling deploys 16 pods could temporarily double demand; cap rollout surge or use suitable proxy/pool strategy. RDS Proxy can reduce connection churn for supported engines/configurations, but session pinning and transaction behavior may limit multiplexing.</p>
+<h2 id="15-6-timeout-hierarchy">15.6 Timeout hierarchy</h2>
+<ul>
+<li>API deadline should be greater than DB statement timeout plus network margin but bounded by user experience SLO.</li>
+<li>Connection acquisition timeout limits waiting for a pool slot.</li>
+<li>Connection establishment timeout limits TCP/TLS/auth establishment.</li>
+<li><code>statement_timeout</code> bounds SQL runtime; <code>lock_timeout</code> bounds waiting on locks; <code>idle_in_transaction_session_timeout</code> can clean up abandoned transactions.</li>
+<li>Retry budgets must fit overall request deadlines and avoid retry storms.</li>
+</ul>
+<pre><code class="language-sql">-- Session-local example, not a blanket production setting:
+SET statement_timeout = '3s';
+SET lock_timeout = '500ms';
+SELECT 1;
+</code></pre>
+<h2 id="15-7-testing-pyramid">15.7 Testing pyramid</h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Example</th>
+<th>What it catches</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unit</td>
+<td>price calculation, validation</td>
+<td>business rules</td>
+</tr>
+<tr>
+<td>Integration</td>
+<td>real PostgreSQL via Testcontainers</td>
+<td>SQL, transactions, constraints</td>
+</tr>
+<tr>
+<td>Contract</td>
+<td>API schemas and backward compatibility</td>
+<td>consumer breakage</td>
+</tr>
+<tr>
+<td>Migration</td>
+<td>upgrade from old snapshot</td>
+<td>DDL/backfill incompatibility</td>
+</tr>
+<tr>
+<td>Load</td>
+<td>p95/p99 at target concurrency</td>
+<td>pool/query saturation</td>
+</tr>
+<tr>
+<td>Chaos</td>
+<td>kill connection / simulate failover</td>
+<td>retries and recovery</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>auth, tenant isolation, secret scanning</td>
+<td>access/data leaks</td>
+</tr>
+</tbody>
+</table>
+<h2 id="15-8-production-deployment-checklist">15.8 Production deployment checklist</h2>
+<ul>
+<li>Private RDS subnet and least-privilege SG; TLS verification and secret rotation.</li>
+<li>App IAM permissions scoped; no credentials in images or logs.</li>
+<li>Multi-AZ and backups selected by RTO/RPO; restoration <strong>tested</strong>.</li>
+<li>Schema migration review, lock assessment, and feature flag rollback.</li>
+<li>Query/index baselines; alerts for CPU, storage, connections, latency, replica lag (where applicable).</li>
+<li>Per-service connection budget including scaling and rolling deploys.</li>
+<li>App health/readiness, graceful shutdown, tracing, error budgets, SLO dashboards.</li>
+<li>Incident runbooks, on-call ownership, and documented data retention.</li>
+</ul>
+<h3 id="lab-15-zero-downtime-column-change">Lab 15 — zero-downtime column change</h3>
+<ol>
+<li>Start with <code>customers.full_name</code>.</li>
+<li>Add nullable <code>display_name</code> in an additive migration.</li>
+<li>Deploy code that writes both fields but can read either.</li>
+<li>Backfill rows in batches, monitor lock waits and replication impact.</li>
+<li>Switch reads to new column; prove old version remains functional.</li>
+<li>Only after old versions retire, add appropriate constraints and remove old field in a later release.</li>
+<li>Simulate a failed migration and practice forward-fix; a database rollback is not always a safe inverse of a data migration.</li>
+</ol>
+<h3 id="troubleshooting-deployment">Troubleshooting: deployment</h3>
+<ul>
+<li><strong>Migration waiting on lock:</strong> inspect blockers, cancel safely, rerun during controlled window or redesign DDL.</li>
+<li><strong>Deploy doubles connections:</strong> limit surge/replicas and revisit pool budget.</li>
+<li><strong>App 500 after column rename:</strong> restore compatibility via additive schema or app rollback; avoid destructive rollbacks without data assessment.</li>
+<li><strong>Failover breaks transactions:</strong> clients must reconnect; in-flight transactions may need safe retry; do not assume connection pool retries are enough.</li>
+</ul>
+<h3 id="senior-interview-q-a-7">Senior interview Q&amp;A</h3>
+<p><strong>Q: Why is a migration's down script not necessarily a rollback?</strong> A: Data transformations and destructive changes may be irreversible; recovery may require restore, forward-fix, or reconciliation.</p>
+<p><strong>Q: How do you size connection pools?</strong> A: Measure hold time, throughput, CPU, wait queues, instance capacity, and total replicas; model deploy surges and background workloads.</p>
+<p><strong>Q: What makes a deployment zero downtime?</strong> A: Compatibility across old/new code, lock-aware schema changes, safe traffic shifting, observability, and recovery—not just a rolling deployment flag.</p>
+<h1 id="integrated-capstone">Integrated Capstone</h1>
+<h2 id="project-production-minded-online-order-api">Project: Production-minded online-order API</h2>
+<p><strong>Goal:</strong> implement <code>POST /orders</code> with idempotency, inventory reservation, customer/order relations, outbox event, and safe retries. Choose <strong>one</strong> stack (FastAPI, Spring Boot, or Node.js) as the primary implementation; compare architectural differences across all three.</p>
+<h3 id="target-data-flow">Target data flow</h3>
+<pre><code class="language-mermaid">sequenceDiagram
+  participant Client
+  participant API
+  participant DB as RDS PostgreSQL
+  participant Worker as Outbox Worker
+  participant Bus as Message Broker
+  Client-&gt;&gt;API: POST /orders + Idempotency-Key
+  API-&gt;&gt;DB: BEGIN; claim unique key
+  API-&gt;&gt;DB: conditional stock UPDATE
+  API-&gt;&gt;DB: INSERT order + items + outbox
+  API-&gt;&gt;DB: COMMIT
+  API--&gt;&gt;Client: 201 / replay previous result
+  Worker-&gt;&gt;DB: claim unpublished outbox rows
+  Worker-&gt;&gt;Bus: publish event (at least once)
+  Worker-&gt;&gt;DB: mark published
+</code></pre>
+<h3 id="outbox-schema">Outbox schema</h3>
+<pre><code class="language-sql">CREATE TABLE IF NOT EXISTS outbox_events (
+  event_id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  aggregate_type text NOT NULL,
+  aggregate_id bigint NOT NULL,
+  event_type text NOT NULL,
+  payload jsonb NOT NULL,
+  published_at timestamptz,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_outbox_unpublished
+ON outbox_events(created_at, event_id) WHERE published_at IS NULL;
+</code></pre>
+<p><strong>Critical edge case:</strong> a worker may publish successfully then crash before recording <code>published_at</code>; duplicates are possible. Consumers must deduplicate by stable event ID. For concurrent workers, consider <code>FOR UPDATE SKIP LOCKED</code> with bounded batches and appropriate transactions; do not hold row locks while performing slow external network calls without evaluating throughput and failure behavior.</p>
+<h3 id="acceptance-criteria">Acceptance criteria</h3>
+<ol>
+<li>Concurrent attempts to purchase the last item cannot both succeed.</li>
+<li>Replaying an idempotency key returns the original result (or an explicit in-progress state) without duplicate orders.</li>
+<li>Duplicate provider/payment callbacks do not duplicate state transitions.</li>
+<li>Every committed order produces a durable outbox row.</li>
+<li>Simulated DB outage returns bounded errors without hanging all workers.</li>
+<li>p95 API latency and error rates are measured at 10, 50, and 100 concurrent clients; record hardware and data volume.</li>
+<li>Migration from schema v1 to v2 succeeds with old/new application versions overlapping.</li>
+<li>Demonstrate restore rehearsal on a disposable database; document RTO/RPO measured in your environment.</li>
+</ol>
+<h3 id="suggested-repository">Suggested repository</h3>
+<pre><code class="language-text">rds-order-platform/
+  sql/01_schema.sql
+  sql/02_outbox.sql
+  python-service/
+  java-service/
+  node-service/
+  infra/terraform/            # Volume 5 expands this
+  tests/concurrency/
+  docs/architecture.md
+  docs/incident-runbook.md
+  docs/adr-001-database.md
+</code></pre>
+<h3 id="architecture-decision-record-prompts">Architecture decision record prompts</h3>
+<ul>
+<li>Why RDS PostgreSQL instead of DynamoDB or Aurora for this workload?</li>
+<li>What isolation level is sufficient for stock reservation?</li>
+<li>What is the connection budget during autoscaling?</li>
+<li>How are schema changes sequenced with rolling deploys?</li>
+<li>Which failures require retry, reconciliation, or manual intervention?</li>
+</ul>
+<h1 id="troubleshooting-playbooks">Troubleshooting Playbooks</h1>
+<h2 id="playbook-a-api-latency-jumps-from-80-ms-to-2-seconds">Playbook A — API latency jumps from 80 ms to 2 seconds</h2>
+<p><strong>Symptoms:</strong> p95 increases, connection wait queue grows, CPU may remain low. <strong>Investigate:</strong> request tracing → pool acquisition time → DB query duration → <code>pg_stat_activity</code> waits → <code>pg_stat_statements</code> → <code>EXPLAIN (ANALYZE, BUFFERS)</code> on representative SELECT → RDS CloudWatch storage/CPU/network. <strong>Possible causes:</strong> locks, I/O, temp spills, connection exhaustion, DNS/TLS handshakes, slow downstream service. <strong>Mitigate:</strong> reduce traffic/concurrency, cancel offending query with authorization, restore index/plan, or roll back change. <strong>Verify:</strong> p95, error rate, queue depth, and DB health recover.</p>
+<h2 id="playbook-b-remaining-connection-slots-are-reserved">Playbook B — <code>remaining connection slots are reserved</code></h2>
+<p><strong>Investigate:</strong> <code>SHOW max_connections; SELECT state,count(*) FROM pg_stat_activity GROUP BY state;</code> Compare app replicas × workers × pool maximum, cron jobs, and deploy surge. <strong>Mitigate:</strong> stop leak/scale down safely, tune pools, shorten transactions; use supported proxy where useful. <strong>Prevent:</strong> pool acquisition metrics and connection-budget tests.</p>
+<h2 id="playbook-c-deadlocks-after-a-feature-launch">Playbook C — Deadlocks after a feature launch</h2>
+<p><strong>Investigate:</strong> SQLSTATE <code>40P01</code>, lock graphs in DB logs, update order across tables. <strong>Mitigate:</strong> bounded full-transaction retry; ensure consistent lock order and short transactions. <strong>Prevent:</strong> concurrency tests and no network calls inside critical transaction.</p>
+<h2 id="playbook-d-query-regression-after-data-growth">Playbook D — Query regression after data growth</h2>
+<p><strong>Investigate:</strong> <code>EXPLAIN</code> estimated vs actual rows, table/index bloat, skew, stale statistics, missing predicate-aligned index. <strong>Mitigate:</strong> targeted index, query rewrite, <code>ANALYZE</code>, partition/archiving if justified. <strong>Prevent:</strong> realistic performance datasets and plan regression checks.</p>
+<h2 id="playbook-e-rds-connectivity-fails">Playbook E — RDS connectivity fails</h2>
+<p><strong>Investigate in order:</strong> DNS resolution → route/VPC/subnet → security group/NACL → port reachability → TLS CA/hostname → auth/IAM token lifetime → engine availability → max connections. <code>nc -vz host 5432</code> checks TCP only, not TLS/auth. <code>psql 'host=... dbname=... user=... sslmode=verify-full sslrootcert=...'</code> tests full connection. <strong>Do not</strong> make a production DB publicly accessible as a quick fix.</p>
+<h2 id="playbook-f-orm-returns-too-many-sql-statements">Playbook F — ORM returns too many SQL statements</h2>
+<p><strong>Investigate:</strong> SQL query count per request, lazy-loaded relations, join cardinality, pagination. <strong>Mitigate:</strong> DTO projections, batching, explicit eager loading appropriate to cardinality; benchmark memory and SQL count. <strong>Prevent:</strong> query-count assertions in integration tests.</p>
+<h2 id="playbook-g-migration-blocked-during-deploy">Playbook G — Migration blocked during deploy</h2>
+<p><strong>Investigate:</strong> active sessions, blockers, DDL lock type, transaction age. <strong>Mitigate:</strong> cancel/retry, split migration, create indexes concurrently, batch backfill. <strong>Prevent:</strong> rehearsal against production-like volume and lock-timeout budget.</p>
+<h2 id="playbook-h-tls-connection-errors-after-certificate-rotation">Playbook H — TLS connection errors after certificate rotation</h2>
+<p><strong>Investigate:</strong> trust-store contents, CA bundle age, client driver behavior, hostname verification, RDS certificate validity. <strong>Mitigate:</strong> distribute current trusted CA bundle and redeploy clients; never set <code>sslmode=disable</code> or disable verification to suppress the error. <strong>Prevent:</strong> certificate-expiration inventory and planned rotation tests.</p>
+<h1 id="senior-engineering-interview-bank">Senior Engineering Interview Bank</h1>
+<p>The following scenarios require architecture reasoning, failure handling, and tradeoffs—not memorized definitions.</p>
+<ol>
+<li><strong>Design an order system for 10k requests/sec.</strong> Start with real read/write mix, burst profile, order consistency, partitioning/tenant boundaries, connection limits, caching, and eventual scaling; never promise one RDS instance can handle unspecified workload.</li>
+<li><strong>Explain PostgreSQL MVCC.</strong> Snapshot visibility, row versions, vacuum, long-running transactions, and write contention.</li>
+<li><strong>Explain lost updates and prevention.</strong> Conditional UPDATE, row locks, optimistic version columns, or Serializable with retry.</li>
+<li><strong>Choose Read Committed vs Serializable.</strong> Default often sufficient with atomic constraints; use Serializable for complex cross-row invariants, accepting retry overhead.</li>
+<li><strong>Diagnose high CPU but low IOPS.</strong> Inspect expensive queries, sort/hash operations, parallelism, and application traffic.</li>
+<li><strong>Diagnose high IOPS but low CPU.</strong> Look for random reads, cache misses, index design, large scans, and storage latency.</li>
+<li><strong>What does a connection pool solve?</strong> Connection reuse and bounded concurrency; not query inefficiency or transaction correctness.</li>
+<li><strong>Why can RDS Proxy pin sessions?</strong> Session-specific state or behaviors may require dedicated backend connection, limiting multiplexing.</li>
+<li><strong>How do you handle a failover mid-transaction?</strong> Treat transaction outcome as uncertain until reconciled, reconnect, and retry only with idempotency.</li>
+<li><strong>Why not store passwords in code?</strong> Source leakage, rotation difficulty, and excessive credential spread; use scoped secret management.</li>
+<li><strong>How do you prove an index helps?</strong> Representative plans, buffer usage, latency distributions, and write-cost measurements.</li>
+<li><strong>Explain index-only scan limitations.</strong> Visibility map and heap visibility checks can still require heap access.</li>
+<li><strong>What is an N+1 query?</strong> One initial query plus N relation queries; solve with fetch planning/projections.</li>
+<li><strong>How do you safely rename a column?</strong> Expand/dual-write/backfill/switch/contract over separate releases.</li>
+<li><strong>What is an idempotency key?</strong> Stable identity for retryable logical request; enforce uniqueness and return consistent prior outcome.</li>
+<li><strong>Why does <code>OFFSET 100000</code> hurt?</strong> Database may still walk/discard skipped rows; keyset cursor can avoid large skips.</li>
+<li><strong>How do you debug a deadlock?</strong> Gather lock graph and statements; standardize lock order and bounded retry.</li>
+<li><strong>How do you prevent SQL injection?</strong> Bound parameters for values, allowlisted identifiers, least-privilege DB roles.</li>
+<li><strong>Explain RDS vs Aurora.</strong> Both managed relational services; Aurora uses a different distributed storage architecture and engine compatibility; choose based on workload and cost.</li>
+<li><strong>What makes a senior engineer's incident response strong?</strong> Impact assessment, evidence, safe mitigation, clear communication, validation, postmortem and prevention.</li>
+<li><strong>When would you use JSONB?</strong> Flexible sparse attributes with controlled validation and access patterns, not core relational keys by default.</li>
+<li><strong>Why is <code>count(*)</code> expensive on large tables?</strong> MVCC visibility means exact count may require scanning tuples/index entries; estimates may be sufficient for dashboards.</li>
+<li><strong>How do you handle schema drift?</strong> Versioned migrations, CI checks, schema diff review, no manual untracked DDL.</li>
+<li><strong>What is the outbox pattern?</strong> Persist business state and event intent in one DB transaction, publish asynchronously with deduplication.</li>
+<li><strong>How do you decide pool size for 20 pods?</strong> Budget total connections including workers and surge, measure wait/hold times, and load-test.</li>
+<li><strong>How does <code>@Transactional</code> work?</strong> Spring proxy and transaction manager; beware self-invocation and propagation.</li>
+<li><strong>What is SQLAlchemy's identity map?</strong> Session caches one mapped object identity per DB row in its unit of work.</li>
+<li><strong>Why must node-postgres transactions use one client?</strong> Transactions are connection-scoped; pool queries may use different backends.</li>
+<li><strong>What does <code>EXPLAIN</code> cost mean?</strong> Relative planner estimates, not direct time units.</li>
+<li><strong>How do you verify a backup?</strong> Restore to isolated instance, run integrity/application tests, measure restore duration and recovery point.</li>
+</ol>
+<h2 id="mock-senior-system-design-exercise-60-minutes">Mock senior system-design exercise (60 minutes)</h2>
+<p><strong>Prompt:</strong> A marketplace has 5 million users, 100k daily orders, flash-sale peaks, payment callbacks, and a 15-minute recovery-point objective. Design the relational data layer. <strong>Expected discussion:</strong> write path, inventory invariant, unique idempotency keys, indexes, transaction boundaries, RDS Multi-AZ, backup/PITR and measured RPO/RTO, scaling, connection budget, schema rollout, observability, and security. <strong>Rubric:</strong> correctness (30%), failure recovery (25%), performance evidence (20%), security (15%), tradeoffs/communication (10%).</p>
+<h1 id="glossary-and-index">Glossary and Index</h1>
+<h2 id="glossary">Glossary</h2>
+<ul>
+<li><strong>ACID:</strong> atomicity, consistency, isolation, durability.</li>
+<li><strong>B-tree:</strong> balanced ordered index structure.</li>
+<li><strong>BRIN:</strong> block-range index useful for physically correlated large data.</li>
+<li><strong>CTE:</strong> common table expression using <code>WITH</code>.</li>
+<li><strong>DDL:</strong> data definition language (CREATE/ALTER/DROP).</li>
+<li><strong>DML:</strong> data manipulation language (SELECT/INSERT/UPDATE/DELETE).</li>
+<li><strong>Deadlock:</strong> cycle of transactions waiting on each other's locks.</li>
+<li><strong>DTO:</strong> data transfer object used at API boundaries.</li>
+<li><strong>GIN:</strong> generalized inverted index, e.g., for JSONB.</li>
+<li><strong>Idempotency:</strong> repeat request has the same logical effect as one request.</li>
+<li><strong>Index-only scan:</strong> index scan that can avoid many heap fetches when visibility permits.</li>
+<li><strong>Isolation:</strong> rules controlling concurrent transaction observations.</li>
+<li><strong>MVCC:</strong> multi-version concurrency control.</li>
+<li><strong>N+1:</strong> ORM access pattern issuing N extra relation queries.</li>
+<li><strong>Outbox:</strong> table storing event intent atomically with business changes.</li>
+<li><strong>PITR:</strong> point-in-time recovery.</li>
+<li><strong>RDS Proxy:</strong> managed database proxy supporting pooling for eligible engines/configurations.</li>
+<li><strong>RPO:</strong> recovery point objective, tolerated data loss window.</li>
+<li><strong>RTO:</strong> recovery time objective, target restoration duration.</li>
+<li><strong>SQLSTATE:</strong> standardized machine-readable database error code.</li>
+<li><strong>Sargability:</strong> predicate structure allowing efficient index access.</li>
+<li><strong>WAL:</strong> write-ahead log used for durability and recovery.</li>
+</ul>
+<h2 id="topic-index">Topic index</h2>
+<ul>
+<li><strong>ACID, concurrency, locking:</strong> Chapter 11</li>
+<li><strong>Alembic, Flyway, Prisma migrations:</strong> Chapter 15</li>
+<li><strong>API examples:</strong> Chapters 12–14</li>
+<li><strong>B-tree, GIN, BRIN, indexes:</strong> Chapter 10</li>
+<li><strong>CTEs, windows, joins:</strong> Chapter 8</li>
+<li><strong>Connection pooling:</strong> Chapters 12–15</li>
+<li><strong>Database constraints and schema:</strong> Chapter 9</li>
+<li><strong>Deadlocks and SQLSTATE:</strong> Chapter 11; Playbook C</li>
+<li><strong>FastAPI and SQLAlchemy:</strong> Chapter 12</li>
+<li><strong>Hibernate and Spring Boot:</strong> Chapter 13</li>
+<li><strong>Node.js and TypeScript:</strong> Chapter 14</li>
+<li><strong>Performance tuning:</strong> Chapter 10; Playbooks A/D</li>
+<li><strong>Production capstone:</strong> Integrated Capstone</li>
+<li><strong>Zero-downtime migrations:</strong> Chapter 15</li>
+</ul>
+<h1 id="references">References</h1>
+<p>These are authoritative starting points for verifying version-specific behavior; check release notes and AWS Region/engine support before applying instructions.</p>
+<ol>
+<li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html">AWS Amazon RDS User Guide</a></li>
+<li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html">AWS RDS for PostgreSQL</a></li>
+<li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-proxy.html">AWS RDS Proxy</a></li>
+<li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/PostgreSQL.Concepts.General.SSL.html">AWS RDS SSL/TLS for PostgreSQL</a></li>
+<li><a href="https://www.postgresql.org/docs/17/">PostgreSQL 17 Documentation</a></li>
+<li><a href="https://www.postgresql.org/docs/current/using-explain.html">PostgreSQL: Using EXPLAIN</a></li>
+<li><a href="https://www.postgresql.org/docs/current/transaction-iso.html">PostgreSQL: Transaction Isolation</a></li>
+<li><a href="https://docs.sqlalchemy.org/en/20/">SQLAlchemy 2.0 Documentation</a></li>
+<li><a href="https://fastapi.tiangolo.com/">FastAPI Documentation</a></li>
+<li><a href="https://www.psycopg.org/psycopg3/docs/">Psycopg 3 Documentation</a></li>
+<li><a href="https://docs.spring.io/spring-data/jpa/reference/">Spring Data JPA Reference</a></li>
+<li><a href="https://hibernate.org/orm/documentation/">Hibernate ORM Documentation</a></li>
+<li><a href="https://node-postgres.com/">node-postgres Documentation</a></li>
+<li><a href="https://www.prisma.io/docs">Prisma Documentation</a></li>
+<li><a href="https://documentation.red-gate.com/fd">Flyway Documentation</a></li>
+<li><a href="https://alembic.sqlalchemy.org/en/latest/">Alembic Documentation</a></li>
+</ol>
+<hr/>
+<p><strong>End of Volume 2.</strong> Recommended next volume: Networking, Security, IAM Authentication, KMS, Secrets Manager, TLS, RDS Proxy, and production hardening.</p>
+</article></main><footer>ARTHA Gurukul · Source material preserved as educational notes</footer></body></html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AWS RDS — Six Volume Syllabus | ARTHA Gurukul</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><a class="brand" href="../index.html">✦ ARTHA GURUKUL</a><nav><a href="../index.html#courses">All Courses</a><a href="index.html">Source Library</a></nav></header><main class="book-layout"><aside class="book-toc"><div class="eyebrow">Original material · offline copy</div><h2>AWS RDS — Six Volume Syllabus</h2><a href="../index.html">⌂ Course library</a><div class="toc"><a href="#aws-rds-masterclass-beginner-to-senior-software-engineer">AWS RDS Masterclass — Beginner to Senior Software Engineer</a><a href="#course-outcomes">Course outcomes</a><a href="#volume-1-foundations">Volume 1 — Foundations</a><a href="#volume-2-sql-and-application-engineering">Volume 2 — SQL and Application Engineering</a><a href="#volume-3-networking-security-and-access">Volume 3 — Networking, Security and Access</a><a href="#volume-4-ha-scaling-and-recovery">Volume 4 — HA, Scaling and Recovery</a><a href="#volume-5-infrastructure-automation-and-operations">Volume 5 — Infrastructure Automation and Operations</a><a href="#volume-6-senior-engineering-and-production-mastery">Volume 6 — Senior Engineering and Production Mastery</a><a href="#standard-chapter-structure">Standard chapter structure</a><a href="#lab-progression">Lab progression</a><a href="#safety-and-cost-rules">Safety and cost rules</a><a href="#official-references">Official references</a></div></aside><article class="book-prose"><p class="source-note">Historical course notes converted into searchable offline HTML. Some content may be a draft; exercises requiring cloud accounts need credentials and may incur costs.</p><h1 id="aws-rds-masterclass-beginner-to-senior-software-engineer">AWS RDS Masterclass — Beginner to Senior Software Engineer</h1>
+<h2 id="course-outcomes">Course outcomes</h2>
+<p>Design, implement, secure, scale, monitor, troubleshoot, and recover production relational database systems on AWS. Primary lab engine: PostgreSQL on Amazon RDS; comparisons include MySQL, MariaDB, SQL Server, Oracle, Db2, and Amazon Aurora where relevant. Features vary by engine, region, version, and deployment type; verify current AWS documentation.</p>
+<h2 id="volume-1-foundations">Volume 1 — Foundations</h2>
+<ol>
+<li>Relational databases, DBMS, RDBMS, SQL and ACID</li>
+<li>Amazon RDS fundamentals and shared responsibility</li>
+<li>RDS-supported database engines and selection</li>
+<li>RDS architecture, control plane and data plane</li>
+<li>AWS account, IAM, CLI and billing safety</li>
+<li>Create and connect to your first PostgreSQL RDS</li>
+<li>Database internals: memory, WAL, storage and transactions</li>
+</ol>
+<h2 id="volume-2-sql-and-application-engineering">Volume 2 — SQL and Application Engineering</h2>
+<ol start="8">
+<li>SQL from beginner to advanced</li>
+<li>Schema design, normalization and constraints</li>
+<li>Indexes, B-trees, query planners and EXPLAIN</li>
+<li>Transactions, isolation levels, MVCC and locking</li>
+<li>Python, psycopg, SQLAlchemy and FastAPI</li>
+<li>Java, Spring Boot, JDBC, JPA and Hibernate</li>
+<li>Node.js, TypeScript, connection pools and ORMs</li>
+<li>Schema migrations, backward compatibility and testing</li>
+</ol>
+<h2 id="volume-3-networking-security-and-access">Volume 3 — Networking, Security and Access</h2>
+<ol start="16">
+<li>VPC, subnets, route tables and DNS</li>
+<li>Security groups, NACLs and private connectivity</li>
+<li>TLS, IAM database authentication and credentials</li>
+<li>Secrets Manager, rotation and AWS KMS</li>
+<li>RDS Proxy and connection management</li>
+<li>RDS security hardening, auditing and compliance</li>
+</ol>
+<h2 id="volume-4-ha-scaling-and-recovery">Volume 4 — HA, Scaling and Recovery</h2>
+<ol start="22">
+<li>RDS storage architecture, EBS and IOPS</li>
+<li>Multi-AZ DB instances and Multi-AZ DB clusters</li>
+<li>Read replicas, replication lag and read routing</li>
+<li>Automated backups, snapshots and PITR</li>
+<li>Disaster recovery, cross-region replication and RTO/RPO</li>
+<li>Vertical scaling, read scaling and capacity planning</li>
+<li>Amazon Aurora architecture and Aurora Serverless</li>
+</ol>
+<h2 id="volume-5-infrastructure-automation-and-operations">Volume 5 — Infrastructure Automation and Operations</h2>
+<ol start="29">
+<li>AWS CLI, boto3 and RDS APIs</li>
+<li>Terraform modules, state and infrastructure design</li>
+<li>CloudFormation, CDK and GitOps workflows</li>
+<li>Monitoring with CloudWatch and Database Insights</li>
+<li>Enhanced Monitoring, logs and alerting</li>
+<li>Engine upgrades, maintenance and patch management</li>
+<li>CI/CD database migrations and zero-downtime releases</li>
+<li>Cost optimization, reserved capacity and governance</li>
+</ol>
+<h2 id="volume-6-senior-engineering-and-production-mastery">Volume 6 — Senior Engineering and Production Mastery</h2>
+<ol start="37">
+<li>Deep PostgreSQL and MySQL performance tuning</li>
+<li>Deadlocks, slow queries and production incident response</li>
+<li>Vacuum, bloat, connection saturation and storage failures</li>
+<li>Database migration with AWS DMS and native tools</li>
+<li>Multi-tenant SaaS and microservices data architectures</li>
+<li>Security threat modeling and production design reviews</li>
+<li>Production capstone: highly available application platform</li>
+<li>Senior-level system design, interviews and operational readiness</li>
+<li>Final practical examination and production readiness review</li>
+</ol>
+<h2 id="standard-chapter-structure">Standard chapter structure</h2>
+<ul>
+<li>Learning objectives and prerequisites</li>
+<li>Concepts and architecture, including internal mechanisms</li>
+<li>Diagrams and realistic design tradeoffs</li>
+<li>Step-by-step lab with AWS Console, CLI, SQL, Python, and/or Terraform</li>
+<li>Commands and sample outputs, with explanation of each significant line</li>
+<li>Security, reliability, and cost considerations</li>
+<li>Verification and troubleshooting decision tree</li>
+<li>Interview questions with model answers</li>
+<li>Scenario-based production exercises and review checklist</li>
+</ul>
+<h2 id="lab-progression">Lab progression</h2>
+<ol>
+<li>Provision a private PostgreSQL RDS instance and connect via an EC2 bastion or SSM session.</li>
+<li>Build a CRUD FastAPI service using parameterized SQL and pooled connections.</li>
+<li>Diagnose slow SQL with EXPLAIN (ANALYZE, BUFFERS) and appropriate indexes.</li>
+<li>Configure TLS, Secrets Manager, least-privilege database roles and RDS Proxy.</li>
+<li>Configure Multi-AZ and practice controlled failover; measure recovery.</li>
+<li>Create a read replica and demonstrate eventual consistency and lag.</li>
+<li>Restore from snapshot and point-in-time recovery into separate test instances.</li>
+<li>Deploy using Terraform and CI/CD with migration safety checks.</li>
+<li>Set alarms and diagnose CPU, memory, I/O, storage and connection incidents.</li>
+<li>Deliver an architecture design, runbook, cost estimate and recovery evidence.</li>
+</ol>
+<h2 id="safety-and-cost-rules">Safety and cost rules</h2>
+<p>AWS resources can incur charges even in learning environments. Confirm current Free Tier eligibility, instance class and region pricing; set billing alerts, use private networking, avoid public exposure, and destroy test resources when done. Never put passwords in code, shell history, screenshots, or Terraform outputs/state without appropriate safeguards.</p>
+<h2 id="official-references">Official references</h2>
+<ul>
+<li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html">https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html</a></li>
+<li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_BestPractices.html">https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_BestPractices.html</a></li>
+<li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.html">https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.html</a></li>
+<li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html">https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html</a></li>
+<li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html">https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html</a></li>
+<li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Monitoring.html">https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Monitoring.html</a></li>
+</ul>
+</article></main><footer>ARTHA Gurukul · Source material preserved as educational notes</footer></body></html>

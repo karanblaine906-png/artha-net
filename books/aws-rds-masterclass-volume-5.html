@@ -1,0 +1,569 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AWS RDS Masterclass — Volume 5 | ARTHA Gurukul</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><a class="brand" href="../index.html">✦ ARTHA GURUKUL</a><nav><a href="../index.html#courses">All Courses</a><a href="index.html">Source Library</a></nav></header><main class="book-layout"><aside class="book-toc"><div class="eyebrow">Original material · offline copy</div><h2>AWS RDS Masterclass — Volume 5</h2><a href="../index.html">⌂ Course library</a><div class="toc"><a href="#aws-rds-masterclass-volume-5">AWS RDS Masterclass — Volume 5</a><a href="#infrastructure-as-code-automation-observability-ci-cd-and-production-operations">Infrastructure as Code, Automation, Observability, CI/CD and Production Operations</a><a href="#table-of-contents">Table of contents</a><a href="#learning-outcomes">Learning outcomes</a><a href="#reference-architecture">Reference architecture</a><a href="#chapter-31-aws-cli-and-boto3-automation">Chapter 31 — AWS CLI and boto3 automation</a><a href="#chapter-32-terraform-architecture-and-reusable-modules">Chapter 32 — Terraform architecture and reusable modules</a><a href="#chapter-33-cloudformation-and-aws-cdk">Chapter 33 — CloudFormation and AWS CDK</a><a href="#chapter-34-ci-cd-schema-migrations-and-zero-downtime-releases">Chapter 34 — CI/CD, schema migrations and zero-downtime releases</a><a href="#chapter-35-cloudwatch-database-insights-and-observability">Chapter 35 — CloudWatch, Database Insights and observability</a><a href="#chapter-36-performance-diagnostics-and-incident-response">Chapter 36 — Performance diagnostics and incident response</a><a href="#chapter-37-upgrades-maintenance-and-patching">Chapter 37 — Upgrades, maintenance and patching</a><a href="#chapter-38-automated-operations-and-event-driven-runbooks">Chapter 38 — Automated operations and event-driven runbooks</a><a href="#chapter-39-cost-optimization-and-governance">Chapter 39 — Cost optimization and governance</a><a href="#chapter-40-integrated-production-capstone">Chapter 40 — Integrated production capstone</a><a href="#senior-software-engineer-interview-questions-and-model-answers">Senior Software Engineer interview questions and model answers</a><a href="#scenario-based-practical-interview-drills">Scenario-based practical interview drills</a><a href="#scenario-a-api-p99-rises-after-deployment">Scenario A: API p99 rises after deployment</a><a href="#scenario-b-storage-drops-rapidly">Scenario B: Storage drops rapidly</a><a href="#scenario-c-terraform-wants-to-replace-production-rds">Scenario C: Terraform wants to replace production RDS</a><a href="#scenario-d-migration-blocks-checkout">Scenario D: Migration blocks checkout</a><a href="#scenario-e-a-new-instance-is-cheaper-but-slower">Scenario E: A new instance is cheaper but slower</a><a href="#glossary">Glossary</a><a href="#topic-index">Topic index</a><a href="#authoritative-references-and-validation-checklist">Authoritative references and validation checklist</a></div></aside><article class="book-prose"><p class="source-note">Historical course notes converted into searchable offline HTML. Some content may be a draft; exercises requiring cloud accounts need credentials and may incur costs.</p><h1 id="aws-rds-masterclass-volume-5">AWS RDS Masterclass — Volume 5</h1>
+<h2 id="infrastructure-as-code-automation-observability-ci-cd-and-production-operations">Infrastructure as Code, Automation, Observability, CI/CD and Production Operations</h2>
+<p><strong>Senior Software Engineer / Senior Cloud Engineer textbook</strong><br/>
+<strong>Edition:</strong> October 2026 | <strong>Primary engine:</strong> Amazon RDS for PostgreSQL<br/>
+<strong>Prerequisites:</strong> Volumes 1–4, AWS IAM/VPC basics, Python, SQL and Git.</p>
+<blockquote>
+<p><strong>Safety and accuracy:</strong> All outputs are illustrative, not captured from a live account. Validate current AWS service features, API options, quotas, engine versions, regions, and prices against AWS documentation before deployment. Labs incur charges. Use a sandbox account, least privilege, encryption, private networking, and explicit cleanup. This book is educational, not an audited production configuration.</p>
+</blockquote>
+<h2 id="table-of-contents">Table of contents</h2>
+<ol>
+<li>Chapter 31 — AWS CLI and boto3 automation</li>
+<li>Chapter 32 — Terraform architecture and reusable modules</li>
+<li>Chapter 33 — CloudFormation and AWS CDK</li>
+<li>Chapter 34 — CI/CD, schema migrations and zero-downtime releases</li>
+<li>Chapter 35 — CloudWatch, Database Insights and observability</li>
+<li>Chapter 36 — Performance diagnostics and incident response</li>
+<li>Chapter 37 — Upgrades, maintenance and patching</li>
+<li>Chapter 38 — Automated operations and event-driven runbooks</li>
+<li>Chapter 39 — Cost optimization and governance</li>
+<li>Chapter 40 — Integrated production capstone</li>
+<li>Senior interview bank and scenario drills</li>
+<li>Glossary, index and authoritative references</li>
+</ol>
+<h2 id="learning-outcomes">Learning outcomes</h2>
+<p>Build repeatable, testable and secure RDS environments; instrument application/database behavior; distinguish symptoms from causes; safely migrate schemas; plan and rehearse maintenance; automate guarded operations; and defend architecture choices during senior interviews.</p>
+<h2 id="reference-architecture">Reference architecture</h2>
+<pre><code class="language-mermaid">flowchart TB
+  Dev[Developer / Git pull request] --&gt; CI[CI: tests / scans / plan]
+  CI --&gt; Approval{Approval and policy gates}
+  Approval --&gt; CD[CD: IaC deploy and migration job]
+  CD --&gt; VPC
+  subgraph VPC[Private VPC]
+    ALB[Public ALB] --&gt; APP[App in private subnets]
+    APP --&gt; Proxy[RDS Proxy optional]
+    Proxy --&gt; DB[(RDS PostgreSQL primary)]
+    DB -. standby replication .-&gt; Standby[(Multi-AZ standby)]
+  end
+  DB --&gt; CW[CloudWatch / logs / alarms]
+  DB --&gt; SM[Secrets Manager and KMS]
+  CW --&gt; Event[EventBridge / SNS / incident routing]
+</code></pre>
+<p><strong>Important:</strong> The diagram is conceptual. An RDS Multi-AZ <em>DB instance</em> standby is not a read endpoint. Multi-AZ DB clusters, Aurora clusters and RDS Proxy use different endpoint/replication behaviors. A load balancer is not a database connection pool. Terraform is not a substitute for database migrations.</p>
+<h1 id="chapter-31-aws-cli-and-boto3-automation">Chapter 31 — AWS CLI and boto3 automation</h1>
+<h3 id="mental-model">Mental model</h3>
+<p>AWS CLI and boto3 call the RDS <strong>control-plane API</strong> to create, modify, describe, snapshot and delete DB resources. SQL clients such as <code>psql</code> and psycopg talk to the <strong>database data plane</strong>. <code>rds:DescribeDBInstances</code> IAM permission does not grant <code>SELECT</code> in PostgreSQL; IAM database authentication is a separate feature requiring configuration and database permissions.</p>
+<h3 id="prerequisites-and-safe-identity">Prerequisites and safe identity</h3>
+<pre><code class="language-bash">aws --version
+aws sts get-caller-identity
+aws configure list
+export AWS_REGION=ap-south-1
+export DB_ID=rds5-training-pg
+aws rds describe-db-instances --region "$AWS_REGION" \
+  --query 'DBInstances[].{ID:DBInstanceIdentifier,State:DBInstanceStatus,Engine:Engine,MultiAZ:MultiAZ}' --output table
+</code></pre>
+<p>Line by line: <code>sts get-caller-identity</code> confirms account and principal; <code>configure list</code> reveals credential/region sources; <code>DB_ID</code> isolates the lab resource; <code>describe-db-instances</code> is read-only; <code>--query</code> projects useful fields. <strong>Illustrative output:</strong> <code>rds5-training-pg | available | postgres | False</code>.</p>
+<h3 id="guarded-snapshot-workflow">Guarded snapshot workflow</h3>
+<pre><code class="language-bash">export SNAPSHOT_ID="${DB_ID}-manual-$(date -u +%Y%m%d%H%M%S)"
+aws rds create-db-snapshot --db-instance-identifier "$DB_ID" \
+  --db-snapshot-identifier "$SNAPSHOT_ID" --region "$AWS_REGION"
+aws rds wait db-snapshot-available --db-snapshot-identifier "$SNAPSHOT_ID" --region "$AWS_REGION"
+aws rds describe-db-snapshots --db-snapshot-identifier "$SNAPSHOT_ID" \
+  --query 'DBSnapshots[0].{Status:Status,Encrypted:Encrypted,SizeGiB:AllocatedStorage}'
+</code></pre>
+<p><code>create-db-snapshot</code> starts an asynchronous operation; <code>wait</code> polls until completion; the final query validates state. Snapshot creation can affect I/O depending on engine/storage and timing. Snapshot storage is billable. Never equate snapshot completion with a tested restore.</p>
+<h3 id="production-oriented-python-script-read-only-inventory">Production-oriented Python script: read-only inventory</h3>
+<pre><code class="language-python">#!/usr/bin/env python3
+import json
+import os
+import boto3
+from botocore.config import Config
+from botocore.exceptions import ClientError, BotoCoreError
+
+region = os.environ.get('AWS_REGION', 'ap-south-1')
+client = boto3.client('rds', region_name=region,
+                      config=Config(retries={'mode': 'standard', 'max_attempts': 8}))
+try:
+    for page in client.get_paginator('describe_db_instances').paginate():
+        for db in page.get('DBInstances', []):
+            print(json.dumps({
+                'id': db['DBInstanceIdentifier'],
+                'engine': db['Engine'],
+                'status': db['DBInstanceStatus'],
+                'encrypted': db.get('StorageEncrypted'),
+                'multi_az': db.get('MultiAZ'),
+                'public': db.get('PubliclyAccessible'),
+            }))
+except (ClientError, BotoCoreError) as exc:
+    raise SystemExit(f'Inventory failed: {exc}')
+</code></pre>
+<p><code>Config</code> controls retries; paginator avoids truncation; <code>get</code> tolerates optional fields; errors fail visibly rather than claiming success. Use roles/short-lived credentials, never hardcoded access keys.</p>
+<h3 id="lab">Lab</h3>
+<ol>
+<li>Verify principal and region. 2. Run read-only inventory. 3. Snapshot a disposable DB. 4. Wait and inspect encryption. 5. Restore snapshot to a <strong>new</strong> identifier in an approved isolated network. 6. Connect and verify a sentinel row. 7. Delete test resources only after explicit identifier/account confirmation.</li>
+</ol>
+<h3 id="failure-investigation">Failure investigation</h3>
+<p><code>AccessDenied</code> → inspect IAM/SCP/permission boundary; <code>DBInstanceNotFound</code> → account, region, identifier; <code>InvalidDBInstanceState</code> → pending operations; throttling → bounded exponential backoff; waiter timeout → inspect events and resource state. Never blindly retry non-idempotent create operations with new identifiers.</p>
+<h3 id="chapter-checkpoint">Chapter checkpoint</h3>
+<p>Explain the architecture, run the lab in an isolated environment, capture real evidence, document one failure mode and answer the related senior interview questions below.</p>
+<h1 id="chapter-32-terraform-architecture-and-reusable-modules">Chapter 32 — Terraform architecture and reusable modules</h1>
+<h3 id="core-principles">Core principles</h3>
+<p>Terraform builds a dependency graph and reconciles <strong>desired infrastructure state</strong>. Its state file may contain sensitive metadata; encrypt and restrict remote state. A saved plan must be reviewed in the same workspace and variable context in which it is applied. Drift detection is not database schema migration.</p>
+<h3 id="directory-design">Directory design</h3>
+<pre><code class="language-text">infra/
+  envs/dev/{main.tf,variables.tf,terraform.tfvars.example}
+  envs/prod/{main.tf,variables.tf}
+  modules/rds-postgres/{main.tf,variables.tf,outputs.tf}
+</code></pre>
+<p>Keep state isolated per environment/account, not just by branch. Production changes need peer review, policy gates and explicit approvals.</p>
+<h3 id="minimal-reusable-module-illustrative-not-production-complete">Minimal reusable module (illustrative, not production-complete)</h3>
+<pre><code class="language-hcl"># modules/rds-postgres/variables.tf
+variable "identifier" { type = string }
+variable "subnet_ids" { type = list(string) }
+variable "security_group_ids" { type = list(string) }
+variable "kms_key_arn" { type = string }
+variable "instance_class" { type = string  default = "db.t4g.micro" }
+variable "engine_version" { type = string }
+variable "secret_arn" { type = string }
+
+# modules/rds-postgres/main.tf
+resource "aws_db_subnet_group" "this" {
+  name       = "${var.identifier}-subnets"
+  subnet_ids = var.subnet_ids
+}
+resource "aws_db_instance" "this" {
+  identifier                 = var.identifier
+  engine                     = "postgres"
+  engine_version             = var.engine_version
+  instance_class             = var.instance_class
+  allocated_storage          = 20
+  storage_type               = "gp3"
+  db_subnet_group_name       = aws_db_subnet_group.this.name
+  vpc_security_group_ids     = var.security_group_ids
+  publicly_accessible        = false
+  storage_encrypted          = true
+  kms_key_id                 = var.kms_key_arn
+  username                   = "app_admin"
+  manage_master_user_password = true
+  backup_retention_period    = 7
+  deletion_protection        = true
+  skip_final_snapshot        = false
+  final_snapshot_identifier  = "${var.identifier}-final"
+  apply_immediately          = false
+}
+output "endpoint" { value = aws_db_instance.this.address }
+output "master_secret_arn" {
+  value = aws_db_instance.this.master_user_secret[0].secret_arn
+}
+</code></pre>
+<p><strong>Review before applying:</strong> <code>secret_arn</code> is unused and should be removed or wired into a separate application integration. <code>final_snapshot_identifier</code> must be unique for each actual deletion; a fixed name can cause destroy failure. Engine/class/storage support varies by region/version. <code>manage_master_user_password</code> is supported only for compatible engines and configurations. Protect the generated secret and check whether its lifecycle/cost is acceptable. For a lab, deliberately disable deletion protection only after backup verification and approval.</p>
+<h3 id="root-module-and-commands">Root module and commands</h3>
+<pre><code class="language-hcl">provider "aws" { region = "ap-south-1" }
+module "postgres" {
+  source             = "../../modules/rds-postgres"
+  identifier         = "rds5-dev"
+  subnet_ids         = var.private_subnet_ids
+  security_group_ids = [var.db_sg_id]
+  kms_key_arn        = var.kms_key_arn
+  engine_version     = var.postgres_version
+}
+</code></pre>
+<pre><code class="language-bash">terraform fmt -recursive
+terraform init
+terraform validate
+terraform plan -out=tfplan
+terraform show tfplan
+terraform apply tfplan
+terraform state list
+</code></pre>
+<p><code>fmt</code> standardizes syntax; <code>init</code> downloads providers and configures backend; <code>validate</code> checks structure; <code>plan</code> previews operations; <code>show</code> is a review gate; <code>apply</code> executes reviewed plan; <code>state list</code> inventories managed objects. Never publish plan/state files because they may include sensitive information.</p>
+<h3 id="remote-state-and-locking">Remote state and locking</h3>
+<p>Use an S3 backend with encryption, bucket versioning, restrictive IAM and state locking supported by your Terraform version (S3 lockfile where available). Older DynamoDB-based locking examples exist but are deprecated in newer Terraform versions. Configure the backend outside this snippet and validate behavior for the installed Terraform version. Avoid passing secrets via <code>-var</code> or committed tfvars.</p>
+<h3 id="terraform-troubleshooting">Terraform troubleshooting</h3>
+<p><code>InvalidSubnet</code> → wrong VPC/subnet IDs; subnet group lacking distinct AZs → select suitable subnets; <code>InvalidParameterCombination</code> → incompatible instance class/engine/version/storage; unexpected replacement → inspect plan carefully; drift → compare live state with code; locked state → identify the active operator, never force-unlock without coordination. Protect prod with deletion protection, backups and organization policy.</p>
+<h3 id="chapter-checkpoint-1">Chapter checkpoint</h3>
+<p>Explain the architecture, run the lab in an isolated environment, capture real evidence, document one failure mode and answer the related senior interview questions below.</p>
+<h1 id="chapter-33-cloudformation-and-aws-cdk">Chapter 33 — CloudFormation and AWS CDK</h1>
+<h3 id="choosing-tools">Choosing tools</h3>
+<p>CloudFormation uses declarative AWS resources and change sets; CDK synthesizes CloudFormation from code; Terraform uses provider resources and its own state. Use one clear ownership boundary per resource to avoid conflicting controllers.</p>
+<h3 id="cloudformation-starter">CloudFormation starter</h3>
+<pre><code class="language-yaml">AWSTemplateFormatVersion: '2010-09-09'
+Description: Minimal private PostgreSQL RDS starter
+Parameters:
+  DBSubnetGroupName:
+    Type: String
+  DBSecurityGroupId:
+    Type: AWS::EC2::SecurityGroup::Id
+  KmsKeyId:
+    Type: String
+  MasterUsername:
+    Type: String
+    Default: app_admin
+Resources:
+  Database:
+    Type: AWS::RDS::DBInstance
+    DeletionPolicy: Snapshot
+    UpdateReplacePolicy: Snapshot
+    Properties:
+      DBInstanceIdentifier: rds5-cfn-dev
+      Engine: postgres
+      DBInstanceClass: db.t4g.micro
+      AllocatedStorage: '20'
+      StorageType: gp3
+      StorageEncrypted: true
+      KmsKeyId: !Ref KmsKeyId
+      DBSubnetGroupName: !Ref DBSubnetGroupName
+      VPCSecurityGroups: [!Ref DBSecurityGroupId]
+      PubliclyAccessible: false
+      MasterUsername: !Ref MasterUsername
+      ManageMasterUserPassword: true
+      BackupRetentionPeriod: 7
+      DeletionProtection: true
+Outputs:
+  Endpoint:
+    Value: !GetAtt Database.Endpoint.Address
+</code></pre>
+<p><code>DeletionPolicy</code> protects data during stack deletion through a snapshot (check actual resource behavior); <code>UpdateReplacePolicy</code> addresses replacement. <code>ManageMasterUserPassword</code> avoids embedding a static secret. Parameterize names/classes/versions for real use and inspect change sets.</p>
+<h3 id="cdk-typescript-sketch">CDK TypeScript sketch</h3>
+<pre><code class="language-typescript">import * as cdk from 'aws-cdk-lib';
+import * as ec2 from 'aws-cdk-lib/aws-ec2';
+import * as rds from 'aws-cdk-lib/aws-rds';
+import { Construct } from 'constructs';
+export class DatabaseStack extends cdk.Stack {
+  constructor(scope: Construct, id: string, props: cdk.StackProps &amp; {vpc: ec2.IVpc}) {
+    super(scope, id, props);
+    new rds.DatabaseInstance(this, 'Postgres', {
+      engine: rds.DatabaseInstanceEngine.postgres({
+        version: rds.PostgresEngineVersion.VER_16
+      }),
+      vpc: props.vpc,
+      vpcSubnets: {subnetType: ec2.SubnetType.PRIVATE_ISOLATED},
+      credentials: rds.Credentials.fromGeneratedSecret('app_admin'),
+      storageEncrypted: true,
+      deletionProtection: true,
+      removalPolicy: cdk.RemovalPolicy.SNAPSHOT,
+    });
+  }
+}
+</code></pre>
+<p><strong>Version-sensitive:</strong> CDK constants, supported PostgreSQL versions and constructs vary with the installed CDK release. Verify the code against that release. This sketch assumes a VPC with isolated subnets; app connectivity, security groups, KMS, backup and alarms still need configuration.</p>
+<h3 id="lab-and-troubleshooting">Lab and troubleshooting</h3>
+<p>Run <code>cfn-lint</code> on templates, <code>aws cloudformation validate-template</code>, create a change set and inspect replacements before execution. For CDK: <code>npm ci</code>, <code>npx cdk synth</code>, <code>npx cdk diff</code>, then gated deploy. If a stack rolls back, inspect stack events, resource events and CloudTrail; never repeatedly delete and recreate production databases to fix templates.</p>
+<h3 id="chapter-checkpoint-2">Chapter checkpoint</h3>
+<p>Explain the architecture, run the lab in an isolated environment, capture real evidence, document one failure mode and answer the related senior interview questions below.</p>
+<h1 id="chapter-34-ci-cd-schema-migrations-and-zero-downtime-releases">Chapter 34 — CI/CD, schema migrations and zero-downtime releases</h1>
+<h3 id="why-database-releases-are-different">Why database releases are different</h3>
+<p>App rollback can be seconds; schema rollback may destroy data or block writes. Prefer <strong>expand → migrate/backfill → switch → contract</strong>. Deploy backward-compatible schema first, release app code that supports both shapes, backfill in small idempotent batches, monitor, then remove old columns only after all readers and rollback windows have passed.</p>
+<h3 id="example-safe-migration">Example safe migration</h3>
+<pre><code class="language-sql">-- Phase A: expand, low-risk metadata change (verify version/locking)
+ALTER TABLE customers ADD COLUMN display_name text;
+-- Phase B: backfill incrementally in an application worker, not one huge transaction
+-- Phase C: add constraints only after validation and application rollout
+ALTER TABLE customers ADD CONSTRAINT display_name_present
+  CHECK (display_name IS NOT NULL) NOT VALID;
+ALTER TABLE customers VALIDATE CONSTRAINT display_name_present;
+</code></pre>
+<p>A <code>NOT VALID</code> check avoids scanning existing rows during initial creation, but still enforces new/updated rows; validation can consume I/O and locks. An application must populate the field before enabling the check for new writes. <strong>Do not run this unchanged</strong> if legacy writers cannot provide <code>display_name</code>.</p>
+<h3 id="alembic-migration-command">Alembic migration command</h3>
+<pre><code class="language-bash">alembic revision --autogenerate -m "add customer display name"
+alembic upgrade head
+alembic current
+</code></pre>
+<p>Autogeneration is a draft: manually inspect type changes, data loss, indexes, locks and downgrade safety. Run migrations once as a dedicated job with bounded timeout and deployment coordination; do not let every application replica race to migrate.</p>
+<h3 id="github-actions-illustrative-pipeline">GitHub Actions illustrative pipeline</h3>
+<pre><code class="language-yaml">name: database-release
+on:
+  workflow_dispatch:
+  pull_request:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install -r requirements-dev.txt
+      - run: pytest -q
+      - run: alembic check
+</code></pre>
+<p>Pin actions to trusted commit SHAs in regulated/production environments, add SAST and dependency scanning, and keep the example read-only on pull requests. For deployment, use OIDC federation to a narrowly scoped AWS role and a <strong>private-network migration runner</strong> (CodeBuild in VPC, ECS task, or approved runner). Never expose RDS publicly just to let a hosted CI runner connect.</p>
+<h3 id="release-gates">Release gates</h3>
+<p>Schema compatibility tests; EXPLAIN plans; estimated lock duration; backup/restore confidence; pre-deploy baseline; migration timeout; on-call ownership; feature flags; canary; rollback strategy; post-deploy error/latency metrics. For large tables consider concurrent index creation where supported, with its special transaction restrictions.</p>
+<h3 id="troubleshooting">Troubleshooting</h3>
+<p>Migration waiting → <code>pg_stat_activity</code>/lock graph; app errors after deploy → incompatible SQL/ORM model; high WAL/replica lag → large backfill; deploy blocked by long transaction → inspect blockers and terminate only with incident approval. Do not auto-rollback destructive migrations.</p>
+<h3 id="chapter-checkpoint-3">Chapter checkpoint</h3>
+<p>Explain the architecture, run the lab in an isolated environment, capture real evidence, document one failure mode and answer the related senior interview questions below.</p>
+<h1 id="chapter-35-cloudwatch-database-insights-and-observability">Chapter 35 — CloudWatch, Database Insights and observability</h1>
+<h3 id="three-telemetry-layers">Three telemetry layers</h3>
+<p><strong>Infrastructure:</strong> CPUUtilization, FreeableMemory, FreeStorageSpace, ReadIOPS/WriteIOPS, ReadLatency/WriteLatency, DiskQueueDepth, DatabaseConnections. <strong>Engine:</strong> pg_stat_activity, pg_stat_statements, wait events, autovacuum, locks, replication. <strong>Application:</strong> p50/p95/p99 request latency, errors, pool saturation, query counts, traces. Correlate by time, deployment, AZ and workload; a high CPU graph alone does not prove the database is the bottleneck.</p>
+<h3 id="cli-metrics-inspection">CLI metrics inspection</h3>
+<pre><code class="language-bash">aws cloudwatch get-metric-statistics \
+  --namespace AWS/RDS --metric-name CPUUtilization \
+  --dimensions Name=DBInstanceIdentifier,Value="$DB_ID" \
+  --statistics Average Maximum --period 300 \
+  --start-time 2026-10-15T00:00:00Z --end-time 2026-10-15T01:00:00Z
+</code></pre>
+<p>The timestamps are <strong>examples</strong>, replace with a relevant incident window. Metrics can be delayed and datapoints may be missing. For automated dashboards use <code>get-metric-data</code> with aligned windows and pagination.</p>
+<h3 id="postgresql-diagnostic-sql">PostgreSQL diagnostic SQL</h3>
+<pre><code class="language-sql">SELECT now(), state, wait_event_type, wait_event, count(*)
+FROM pg_stat_activity GROUP BY 1,2,3,4 ORDER BY 5 DESC;
+SELECT datname, numbackends, xact_commit, xact_rollback,
+       blks_read, blks_hit, deadlocks
+FROM pg_stat_database ORDER BY datname;
+SELECT pid, usename, state, now()-xact_start AS transaction_age,
+       wait_event_type, wait_event, left(query, 160) AS query_excerpt
+FROM pg_stat_activity WHERE xact_start IS NOT NULL
+ORDER BY transaction_age DESC;
+</code></pre>
+<p><code>pg_stat_activity</code> exposes active backend state; long-lived idle-in-transaction sessions are especially risky. <code>pg_stat_database</code> counters are cumulative since reset, so compute <strong>rates/deltas</strong>, not just raw totals. Query text may contain sensitive values: restrict logging and access.</p>
+<h3 id="database-insights-and-legacy-tooling">Database Insights and legacy tooling</h3>
+<p>AWS has evolved RDS observability features, including Database Insights and Performance Insights transition timelines. Before enabling a paid observability tier or relying on a legacy console page, verify current engine support, retention, IAM, and charges in official documentation. Enhanced Monitoring is distinct from CloudWatch basic metrics and from database query instrumentation.</p>
+<h3 id="alarm-design">Alarm design</h3>
+<p>Use SLO-linked thresholds, multiple evaluation periods and composite signals. Example: sustained low FreeStorageSpace + growth trend + write errors is stronger than a single storage datapoint. Page for user impact; ticket for gradual capacity drift. Configure SNS routing, runbook URL and ownership. Test alarm delivery end-to-end.</p>
+<h3 id="lab-1">Lab</h3>
+<ol>
+<li>Generate a controlled read workload. 2. Capture baseline metrics. 3. Add a deliberately inefficient query in test. 4. Compare EXPLAIN, latency, DB CPU and waits. 5. Create an alarm with an intentionally safe test threshold. 6. Restore threshold and document what actually triggered.</li>
+</ol>
+<h3 id="chapter-checkpoint-4">Chapter checkpoint</h3>
+<p>Explain the architecture, run the lab in an isolated environment, capture real evidence, document one failure mode and answer the related senior interview questions below.</p>
+<h1 id="chapter-36-performance-diagnostics-and-incident-response">Chapter 36 — Performance diagnostics and incident response</h1>
+<h3 id="diagnostic-order">Diagnostic order</h3>
+<ol>
+<li>Confirm user impact and onset. 2. Check deployment/change timeline. 3. Compare request latency with pool wait and SQL duration. 4. Check DB status, failover events, connections, CPU, memory, I/O latency, queue depth. 5. Inspect engine waits, blockers and top SQL. 6. Apply lowest-risk mitigation. 7. Verify recovery and write a blameless postmortem.</li>
+</ol>
+<h3 id="explain-lab">EXPLAIN lab</h3>
+<pre><code class="language-sql">CREATE TABLE orders_perf (
+ id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+ customer_id bigint NOT NULL,
+ created_at timestamptz NOT NULL DEFAULT now(),
+ amount numeric(12,2) NOT NULL
+);
+INSERT INTO orders_perf(customer_id,created_at,amount)
+SELECT (random()*10000)::bigint,
+       now() - (random()*interval '365 days'),
+       (random()*1000)::numeric(12,2)
+FROM generate_series(1,100000);
+ANALYZE orders_perf;
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT * FROM orders_perf WHERE customer_id=123
+ORDER BY created_at DESC LIMIT 20;
+CREATE INDEX CONCURRENTLY idx_orders_customer_created
+ON orders_perf(customer_id,created_at DESC);
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT * FROM orders_perf WHERE customer_id=123
+ORDER BY created_at DESC LIMIT 20;
+</code></pre>
+<p><strong>Lab caution:</strong> <code>CREATE INDEX CONCURRENTLY</code> must run outside an explicit transaction block. It reduces write blocking but takes time/resources and may leave an invalid index if interrupted. <code>EXPLAIN ANALYZE</code> executes the query; use caution for DML. Compare actual time, rows, buffers, sort and index usage rather than assuming every index helps.</p>
+<h3 id="blocking-analysis">Blocking analysis</h3>
+<pre><code class="language-sql">SELECT blocked.pid AS blocked_pid, blocking.pid AS blocking_pid,
+       blocked.wait_event_type, blocked.wait_event,
+       now()-blocking.xact_start AS blocker_age,
+       left(blocking.query,120) AS blocker_query
+FROM pg_stat_activity blocked
+JOIN LATERAL unnest(pg_blocking_pids(blocked.pid)) AS blocker_pid(pid) ON true
+JOIN pg_stat_activity blocking ON blocking.pid=blocker_pid.pid;
+</code></pre>
+<p><code>pg_blocking_pids</code> exposes blockers. Terminating sessions can roll back transactions and cause app errors; first identify owner, impact and safe alternative.</p>
+<h3 id="incident-playbooks">Incident playbooks</h3>
+<p><strong>Connections exhausted:</strong> check pool sizes × replicas, idle sessions, leak patterns, max_connections, RDS Proxy pinning; reduce concurrency and fix leaks before raising connection limits. <strong>CPU high:</strong> inspect top SQL and wait mix; optimize query or scale based on evidence. <strong>I/O high:</strong> check scans, checkpoints, WAL, maintenance, gp3 baseline/allocated IOPS; do not conflate IOPS with latency. <strong>Storage low:</strong> examine table/index growth, WAL retention, replication slots, temporary files and backups; consider storage autoscaling limits. <strong>Replication lag:</strong> assess primary write volume, replica CPU/I/O and long queries; stale reads must be handled at application level.</p>
+<h3 id="example-incident-record">Example incident record</h3>
+<p>Impact: checkout p99 increased from 180 ms to 3.2 s (illustrative). Hypothesis: index regression after migration. Evidence: query plan changed to sequential scan; buffers read and CPU rose; connection pool waiting increased secondarily. Mitigation: safe index addition, throttle writes during build, verify plan, monitor replica lag. Prevention: query-plan review, regression load test, alert on pool wait.</p>
+<h3 id="chapter-checkpoint-5">Chapter checkpoint</h3>
+<p>Explain the architecture, run the lab in an isolated environment, capture real evidence, document one failure mode and answer the related senior interview questions below.</p>
+<h1 id="chapter-37-upgrades-maintenance-and-patching">Chapter 37 — Upgrades, maintenance and patching</h1>
+<h3 id="separate-change-types">Separate change types</h3>
+<p>Minor engine patch, major engine upgrade, instance class resize, storage change, parameter group modification, certificate rotation and OS maintenance have different downtime/rollback implications. <strong>Maintenance window</strong> does not mean zero downtime. <code>apply_immediately</code> can schedule an interruption now. Test exact engine upgrade paths and extension compatibility.</p>
+<h3 id="upgrade-preflight">Upgrade preflight</h3>
+<p>Inventory engine versions, extension versions, parameter groups, option groups, client drivers, replication topology, backup retention, PITR, storage headroom, long-running transactions, compatibility, failover configuration and rollback requirements. Rehearse restore or blue/green where supported. Record RTO/RPO and cutover decision owners.</p>
+<h3 id="cli-review">CLI review</h3>
+<pre><code class="language-bash">aws rds describe-db-instances --db-instance-identifier "$DB_ID" \
+  --query 'DBInstances[0].{Version:EngineVersion,Status:DBInstanceStatus,Pending:PendingModifiedValues,Window:PreferredMaintenanceWindow}'
+aws rds describe-pending-maintenance-actions --filters Name=db-instance-id,Values="$DB_ID"
+aws rds describe-events --source-type db-instance --source-identifier "$DB_ID" --duration 1440
+</code></pre>
+<p><code>PendingModifiedValues</code> reveals queued changes; maintenance actions and events help reconstruct activity. Review supported versions with <code>describe-db-engine-versions</code> and engine release notes.</p>
+<h3 id="parameter-management">Parameter management</h3>
+<p>Use custom DB parameter groups for controlled tuning; distinguish dynamic parameters from static parameters requiring restart. Store changes in code; measure before/after; avoid copying values between instance classes. Example: increasing <code>work_mem</code> can multiply memory use per sort/hash operation and per concurrent query, potentially causing OOM.</p>
+<h3 id="upgrade-runbook">Upgrade runbook</h3>
+<p>T-7d compatibility and restore test → T-1d stakeholder notification and freeze → T-1h backups and baseline → change window with on-call/rollback owner → validate connections, writes, read paths, replicas and latency → monitor 24h → post-change review. A restored pre-upgrade snapshot may imply lost post-snapshot writes; treat rollback as a data-recovery decision, not a button.</p>
+<h3 id="chapter-checkpoint-6">Chapter checkpoint</h3>
+<p>Explain the architecture, run the lab in an isolated environment, capture real evidence, document one failure mode and answer the related senior interview questions below.</p>
+<h1 id="chapter-38-automated-operations-and-event-driven-runbooks">Chapter 38 — Automated operations and event-driven runbooks</h1>
+<h3 id="event-driven-design">Event-driven design</h3>
+<p>RDS events / CloudWatch alarms → EventBridge or SNS → guarded Lambda/Step Functions workflow → approval gate (for destructive actions) → AWS API → verification → ticket and audit log. Use idempotency keys, concurrency controls, retries with backoff, dead-letter handling, and rate limits.</p>
+<h3 id="lambda-read-only-triage-example">Lambda read-only triage example</h3>
+<pre><code class="language-python">import json
+import os
+import boto3
+
+rds = boto3.client('rds')
+
+def lambda_handler(event, context):
+    db_id = os.environ['DB_INSTANCE_ID']
+    response = rds.describe_db_instances(DBInstanceIdentifier=db_id)
+    db = response['DBInstances'][0]
+    report = {
+        'db': db_id,
+        'status': db['DBInstanceStatus'],
+        'multi_az': db.get('MultiAZ', False),
+        'pending': db.get('PendingModifiedValues', {}),
+        'event_type': event.get('detail-type', 'unknown'),
+    }
+    print(json.dumps(report, default=str))
+    return report
+</code></pre>
+<p>Keep environment configuration trusted, IAM restricted to the target ARN where supported, and redact secrets. The Lambda is <strong>read-only</strong>: it does not trigger failover or modify storage. Production workflows should correlate alert IDs, enrich with recent metrics/events and suppress duplicates.</p>
+<h3 id="dangerous-automation-anti-patterns">Dangerous automation anti-patterns</h3>
+<p>Auto-rebooting on every CPU spike; terminating all slow queries; deleting snapshots by age without retention/legal review; modifying security groups to <code>0.0.0.0/0</code>; scaling without cost guardrails; auto-failing over during an ambiguous network event. Prefer safe diagnostics first and explicit approval for impactful changes.</p>
+<h3 id="lab-2">Lab</h3>
+<p>Create a test CloudWatch alarm → SNS subscription or EventBridge rule → Lambda with read-only <code>DescribeDBInstances</code> permission → emit structured log → validate delivery and duplicate handling → disable test rule. Document what happens when Lambda fails or AWS API throttles.</p>
+<h3 id="chapter-checkpoint-7">Chapter checkpoint</h3>
+<p>Explain the architecture, run the lab in an isolated environment, capture real evidence, document one failure mode and answer the related senior interview questions below.</p>
+<h1 id="chapter-39-cost-optimization-and-governance">Chapter 39 — Cost optimization and governance</h1>
+<h3 id="cost-components">Cost components</h3>
+<p>DB instance-hours (class, deployment type), provisioned storage, extra provisioned IOPS/throughput where applicable, backup/snapshot storage beyond free allowances, cross-region data transfer, RDS Proxy, Secrets Manager, monitoring tiers, logs and networking (NAT gateways, endpoints). Aurora and RDS PostgreSQL pricing models differ. <strong>Never assume a single universal free tier or fixed price</strong>: inspect the region-specific AWS pricing calculator and account offers.</p>
+<h3 id="optimization-method">Optimization method</h3>
+<ol>
+<li>Attribute spend by environment/team/product tags. 2. Measure CPU, memory, IOPS, latency, connections, read/write patterns and growth. 3. Right-size test environments and choose suitable instance families. 4. Schedule nonproduction stop/start where allowed (RDS automatically restarts stopped instances after a limited period). 5. Remove orphan snapshots only after retention approval. 6. Compare storage types and backup retention. 7. Evaluate Reserved DB Instances for stable usage; assess term/payment and eligible engines. 8. Revalidate resilience requirements before downsizing.</li>
+</ol>
+<h3 id="cost-worksheet">Cost worksheet</h3>
+<pre><code class="language-text">Monthly estimate = compute + storage + extra IOPS/throughput
+                 + backup/snapshot + monitoring + proxy
+                 + cross-region transfer + networking + tax
+</code></pre>
+<p>Example <em>hypothetical</em>, not an AWS quote: compute $180, storage $45, backups $12, monitoring $18, networking $25 = $280/month. Validate real prices in AWS Pricing Calculator. Include Multi-AZ/replicas, idle environments and restore tests in TCO.</p>
+<h3 id="governance-controls">Governance controls</h3>
+<p>Mandatory tags; AWS Budgets and anomaly detection; SCP restrictions on public RDS where appropriate; approved KMS keys; deletion protection; backup policies; drift scans; periodic IAM review; data classification; documented ownership; break-glass access; cost and security exceptions with expiry dates.</p>
+<h3 id="senior-trade-off">Senior trade-off</h3>
+<p>Cheapest instance may be most expensive in incident costs. Quantify risk-adjusted cost: availability target, recovery objectives, user-facing latency and operational labor. Cost optimization must not silently reduce backups, encryption or DR coverage.</p>
+<h3 id="chapter-checkpoint-8">Chapter checkpoint</h3>
+<p>Explain the architecture, run the lab in an isolated environment, capture real evidence, document one failure mode and answer the related senior interview questions below.</p>
+<h1 id="chapter-40-integrated-production-capstone">Chapter 40 — Integrated production capstone</h1>
+<h3 id="project-order-management-platform">Project: order management platform</h3>
+<p><strong>Functional:</strong> API creates customers/orders, idempotent order submission, transactional inventory decrement, audit events, read-only analytics. <strong>Nonfunctional:</strong> encrypted private RDS, least privilege, p95 API under a chosen SLO, backups/PITR, multi-AZ where justified, reproducible infrastructure, gated migrations, observability, tested recovery.</p>
+<h3 id="architecture">Architecture</h3>
+<pre><code class="language-mermaid">flowchart LR
+ Git[Git PR] --&gt; CI[Tests + IaC scan + plan]
+ CI --&gt; Gate[Review and approval]
+ Gate --&gt; IaC[Terraform / CloudFormation]
+ Gate --&gt; Mig[One-shot migration runner]
+ User --&gt; ALB[ALB]
+ ALB --&gt; API[FastAPI or Spring Boot in private subnet]
+ API --&gt; Pool[Pool / RDS Proxy]
+ Pool --&gt; PG[(Private RDS PostgreSQL)]
+ PG --&gt; Mon[CloudWatch + SQL metrics]
+ PG --&gt; Backup[Automated backup + PITR]
+ Mon --&gt; Pager[Alarms + runbooks]
+</code></pre>
+<h3 id="build-sequence">Build sequence</h3>
+<p><strong>Sprint 1:</strong> repository, threat model, account/region guardrails, VPC private subnets, security groups and KMS. <strong>Sprint 2:</strong> IaC RDS instance and Secrets Manager; private app-to-DB connectivity; no public database endpoint. <strong>Sprint 3:</strong> SQL schema, API, migrations, transaction boundaries, connection pooling and integration tests. <strong>Sprint 4:</strong> CI gates, observability dashboard, alarms, load test, backup/restore test. <strong>Sprint 5:</strong> resilience drill, upgrade rehearsal, cost report and architecture review.</p>
+<h3 id="acceptance-tests">Acceptance tests</h3>
+<ul>
+<li>Unauthorized principal cannot read secret or connect to DB.</li>
+<li>RDS <code>PubliclyAccessible=false</code>, encryption on, restrictive SG rules.</li>
+<li>Integration test proves rollback on failed multi-table order transaction.</li>
+<li>Two concurrent order requests cannot oversell inventory.</li>
+<li>Migration can be applied with old and new app versions during transition.</li>
+<li>Simulated DB connection failure returns bounded errors and recovers.</li>
+<li>Snapshot restored to isolated DB; sentinel data checked; elapsed recovery measured.</li>
+<li>Dashboard correlates API p95, DB CPU, I/O, waits, connections and deployment.</li>
+<li>Budget alarm triggers in test; incident runbook names owner and safe actions.</li>
+<li>Terraform plan shows no unapproved resource replacement.</li>
+</ul>
+<h3 id="suggested-repo">Suggested repo</h3>
+<pre><code class="language-text">rds5-capstone/
+  api/{app,tests,alembic.ini,migrations}
+  infra/{modules,envs}
+  observability/{dashboards,alarms,runbooks}
+  scripts/{db-inventory.py,restore-verify.sh}
+  docs/{architecture.md,threat-model.md,rto-rpo.md,costs.md}
+  .github/workflows/{verify.yml,deploy.yml}
+</code></pre>
+<h3 id="capstone-review-rubric-100-points">Capstone review rubric (100 points)</h3>
+<p>Architecture/security 20; application correctness 20; migration safety 15; observability 15; recovery evidence 15; IaC quality 10; cost/governance 5. A senior engineer must defend <strong>why</strong> each design choice fits workload, availability target and budget—not merely demonstrate that commands execute.</p>
+<h3 id="chapter-checkpoint-9">Chapter checkpoint</h3>
+<p>Explain the architecture, run the lab in an isolated environment, capture real evidence, document one failure mode and answer the related senior interview questions below.</p>
+<h1 id="senior-software-engineer-interview-questions-and-model-answers">Senior Software Engineer interview questions and model answers</h1>
+<p><strong>Q1. How does an RDS control-plane API differ from SQL?</strong> AWS RDS APIs manage cloud resources; SQL operates on engine data and roles. They have different permissions, audit trails and failure domains.</p>
+<p><strong>Q2. Why should Terraform state be protected?</strong> It records infrastructure identifiers and may include sensitive attributes. Encrypt, restrict, version and lock it; never commit state or plan artifacts.</p>
+<p><strong>Q3. How would you prevent accidental production deletion?</strong> RDS deletion protection, backup policies, approval gates, resource-specific IAM/SCP, IaC policy checks and rehearsed restore procedures.</p>
+<p><strong>Q4. Why can a <code>terraform apply</code> be unsafe even when syntax validates?</strong> Provider changes can replace resources, drift can alter effects, and runtime constraints/costs are not guaranteed by syntax validation.</p>
+<p><strong>Q5. When would you choose CloudFormation/CDK instead of Terraform?</strong> Existing AWS-native stack ownership, organization skillset, policy tooling and change-set workflow may favor them; Terraform helps with provider ecosystems and modules. Avoid dual ownership.</p>
+<p><strong>Q6. How do you migrate a populated table without downtime?</strong> Expand schema compatibly, deploy dual-compatible app, backfill in batches, validate, cut over reads/writes and contract after rollback window.</p>
+<p><strong>Q7. Why not run migrations on every app startup?</strong> Replica races, locks, uncontrolled rollout timing and permission sprawl. Use a single gated migration job.</p>
+<p><strong>Q8. What makes an index build risky?</strong> I/O/CPU load, WAL generation, lock behavior, replica lag, disk consumption and failure cleanup; evaluate concurrently where supported.</p>
+<p><strong>Q9. What is the difference between CPU saturation and lock contention?</strong> CPU saturation spends cycles executing work; lock contention waits on holders. Wait events and blocked-session graphs distinguish them.</p>
+<p><strong>Q10. Why is connection count not equal to useful concurrency?</strong> Idle/blocked backends consume slots and memory; application pools can queue; DB throughput may fall under excessive active concurrency.</p>
+<p><strong>Q11. Which RDS metrics would you use for slow queries?</strong> Correlate application latency with query timings, engine waits, CPU, I/O latency, queue depth, memory and connection saturation.</p>
+<p><strong>Q12. Why are CloudWatch metric averages insufficient?</strong> Averages hide bursts and tail latency. Compare maxima, percentiles where applicable, distributions and request-level traces.</p>
+<p><strong>Q13. What is <code>pg_stat_statements</code> useful for?</strong> Aggregated query statistics identify high-total-time or frequent SQL; extension enablement and permissions must be configured appropriately.</p>
+<p><strong>Q14. How would you debug a deadlock?</strong> Inspect engine deadlock logs, conflicting transaction order, lock modes and application retry semantics; establish consistent lock order and short transactions.</p>
+<p><strong>Q15. Why can raising <code>work_mem</code> be dangerous?</strong> Memory use multiplies across operations and concurrent sessions; overcommit can destabilize the database.</p>
+<p><strong>Q16. How do you plan a major PostgreSQL upgrade?</strong> Check supported paths/extensions/drivers, restore/rollback strategy, rehearsal, cutover, replication, downtime, monitoring and data-loss tradeoffs.</p>
+<p><strong>Q17. What is a safe rollback after destructive migration?</strong> Often there is no trivial rollback; use forward repair or carefully planned restore with reconciliation of post-backup writes.</p>
+<p><strong>Q18. Why shouldn't Lambda automatically reboot RDS on CPU alarms?</strong> CPU may be caused by legitimate work or lock/IO symptoms; reboot risks downtime and hides evidence.</p>
+<p><strong>Q19. What does idempotency mean for automation?</strong> Repeated execution should not create unintended duplicate side effects; use stable resource identifiers, guards and state checks.</p>
+<p><strong>Q20. How would you secure CI access to AWS?</strong> Short-lived OIDC role assumption, minimal permissions, protected environments, approval gates, audit logs and no static cloud keys.</p>
+<p><strong>Q21. Why is a publicly accessible RDS endpoint risky?</strong> It expands network exposure; use private subnets, tight SGs and controlled administrative access.</p>
+<p><strong>Q22. What is RDS Proxy good for?</strong> It can help manage bursts and reuse database connections, but transaction/session pinning and query cost can limit benefits.</p>
+<p><strong>Q23. How do you distinguish read replica lag from slow primary queries?</strong> Inspect replica lag metrics, replication state, primary WAL volume, replica resource pressure and workload routing.</p>
+<p><strong>Q24. How do you verify PITR readiness?</strong> Restore to a new isolated instance at a selected timestamp, validate consistency and measure recovery time, rather than relying only on retention settings.</p>
+<p><strong>Q25. What is RTO versus RPO?</strong> RTO is acceptable recovery duration; RPO is acceptable data-loss window. Both require measured exercises.</p>
+<p><strong>Q26. How do you optimize RDS cost without risking availability?</strong> Use utilization trends, workload benchmarks and budget models; preserve HA, backups, security and latency SLOs.</p>
+<p><strong>Q27. What causes sudden cost increases?</strong> Scale-up, replica growth, extra storage/IOPS, snapshot retention, cross-region transfer, paid observability or network costs.</p>
+<p><strong>Q28. What would you include in an RDS operational readiness review?</strong> Ownership, IAM, network, encryption, backups, RTO/RPO, runbooks, SLOs, alarms, maintenance, cost, change management and restore evidence.</p>
+<p><strong>Q29. How do you design a failover test?</strong> Define blast radius and approvals, baseline error/latency, execute supported test mechanism, measure recovery, validate writes and rollback/follow-up.</p>
+<p><strong>Q30. How do you present a production incident in an interview?</strong> State impact, detection, timeline, hypotheses, evidence, mitigation, validation, root causes, prevention and measurable outcomes without inventing results.</p>
+<h1 id="scenario-based-practical-interview-drills">Scenario-based practical interview drills</h1>
+<h2 id="scenario-a-api-p99-rises-after-deployment">Scenario A: API p99 rises after deployment</h2>
+<p>Collect deploy timestamps, request traces, pool wait, DB connections, query plans and wait events. Compare pre/post SQL shapes. Mitigate via feature flag or safe query fix; avoid blind instance resize. Verify p99 and error rate.</p>
+<h2 id="scenario-b-storage-drops-rapidly">Scenario B: Storage drops rapidly</h2>
+<p>Inspect table/index growth, WAL/replication slots, temp files, logs and maintenance; review storage autoscaling/max threshold and growth forecast. Stop runaway workload if necessary; coordinate expansion and recovery.</p>
+<h2 id="scenario-c-terraform-wants-to-replace-production-rds">Scenario C: Terraform wants to replace production RDS</h2>
+<p>Stop pipeline. Inspect attribute diff, provider/module changes, state drift and lifecycle settings. Never apply until data safety, replacement need and recovery plan are approved.</p>
+<h2 id="scenario-d-migration-blocks-checkout">Scenario D: Migration blocks checkout</h2>
+<p>Identify blockers via <code>pg_blocking_pids</code>, check lock timeout and transaction age; cancel migration safely if possible. Redesign with staged schema and smaller backfill batches; rerun in controlled window.</p>
+<h2 id="scenario-e-a-new-instance-is-cheaper-but-slower">Scenario E: A new instance is cheaper but slower</h2>
+<p>Compare representative workload p95/p99, CPU, memory, storage I/O, network, failover behavior and reserved pricing. Quantify total cost of latency and operational risk.</p>
+<h1 id="glossary">Glossary</h1>
+<ul>
+<li><strong>ACID:</strong> Atomicity, consistency, isolation, durability.</li>
+<li><strong>ARN:</strong> Amazon Resource Name.</li>
+<li><strong>Backfill:</strong> Populate new schema fields for existing rows.</li>
+<li><strong>Change set:</strong> Preview of proposed CloudFormation stack changes.</li>
+<li><strong>Control plane:</strong> AWS APIs for resource management.</li>
+<li><strong>Data plane:</strong> SQL protocol and database reads/writes.</li>
+<li><strong>Drift:</strong> Difference between IaC state/configuration and live infrastructure.</li>
+<li><strong>Enhanced Monitoring:</strong> RDS OS-level monitoring feature.</li>
+<li><strong>IaC:</strong> Infrastructure as Code.</li>
+<li><strong>Idempotency:</strong> Safe repeated execution without duplicate unintended effects.</li>
+<li><strong>KMS:</strong> AWS Key Management Service.</li>
+<li><strong>MVCC:</strong> Multi-Version Concurrency Control.</li>
+<li><strong>OIDC:</strong> OpenID Connect federation for short-lived identity.</li>
+<li><strong>PITR:</strong> Point-in-time recovery.</li>
+<li><strong>p99:</strong> 99th percentile of a latency distribution.</li>
+<li><strong>RDS Proxy:</strong> Managed database connection proxy service.</li>
+<li><strong>RPO:</strong> Recovery Point Objective.</li>
+<li><strong>RTO:</strong> Recovery Time Objective.</li>
+<li><strong>SLO:</strong> Service Level Objective.</li>
+<li><strong>WAL:</strong> Write-ahead log in PostgreSQL.</li>
+</ul>
+<h1 id="topic-index">Topic index</h1>
+<ul>
+<li>AWS CLI / boto3: Chapter 31</li>
+<li>Terraform / state / modules: Chapter 32</li>
+<li>CloudFormation / CDK: Chapter 33</li>
+<li>CI/CD / migrations: Chapter 34</li>
+<li>CloudWatch / monitoring / Database Insights: Chapter 35</li>
+<li>SQL performance / waits / locks: Chapter 36</li>
+<li>Upgrades / maintenance: Chapter 37</li>
+<li>EventBridge / Lambda / operations: Chapter 38</li>
+<li>Cost / tagging / governance: Chapter 39</li>
+<li>Integrated project: Chapter 40</li>
+<li>Senior Q&amp;A / incidents: final sections</li>
+</ul>
+<h1 id="authoritative-references-and-validation-checklist">Authoritative references and validation checklist</h1>
+<p>Consult these primary sources before execution:</p>
+<ul>
+<li>Amazon RDS User Guide: <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html">https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html</a></li>
+<li>RDS API Reference: <a href="https://docs.aws.amazon.com/AmazonRDS/latest/APIReference/Welcome.html">https://docs.aws.amazon.com/AmazonRDS/latest/APIReference/Welcome.html</a></li>
+<li>AWS CLI RDS commands: <a href="https://docs.aws.amazon.com/cli/latest/reference/rds/">https://docs.aws.amazon.com/cli/latest/reference/rds/</a></li>
+<li>boto3 RDS reference: <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds.html">https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds.html</a></li>
+<li>Terraform AWS provider DB instance: <a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance</a></li>
+<li>Terraform S3 backend: <a href="https://developer.hashicorp.com/terraform/language/backend/s3">https://developer.hashicorp.com/terraform/language/backend/s3</a></li>
+<li>CloudFormation RDS DBInstance: <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-rds-dbinstance.html">https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-rds-dbinstance.html</a></li>
+<li>AWS CDK API reference: <a href="https://docs.aws.amazon.com/cdk/api/v2/">https://docs.aws.amazon.com/cdk/api/v2/</a></li>
+<li>RDS monitoring: <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/MonitoringOverview.html">https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/MonitoringOverview.html</a></li>
+<li>PostgreSQL monitoring: <a href="https://www.postgresql.org/docs/current/monitoring.html">https://www.postgresql.org/docs/current/monitoring.html</a></li>
+<li>AWS pricing calculator: <a href="https://calculator.aws/">https://calculator.aws/</a></li>
+</ul>
+<p><strong>Before every real deployment:</strong> verify engine/version/region support, account quotas, billing, private networking, TLS, IAM, KMS, maintenance windows, current monitoring-product lifecycle, backup and restore testing, and production change approvals. This volume provides a deep guided foundation, not a guarantee of production readiness without executing and validating the labs.</p>
+</article></main><footer>ARTHA Gurukul · Source material preserved as educational notes</footer></body></html>

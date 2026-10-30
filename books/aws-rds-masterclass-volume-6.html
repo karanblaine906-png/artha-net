@@ -1,0 +1,907 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AWS RDS Masterclass — Volume 6 | ARTHA Gurukul</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><a class="brand" href="../index.html">✦ ARTHA GURUKUL</a><nav><a href="../index.html#courses">All Courses</a><a href="index.html">Source Library</a></nav></header><main class="book-layout"><aside class="book-toc"><div class="eyebrow">Original material · offline copy</div><h2>AWS RDS Masterclass — Volume 6</h2><a href="../index.html">⌂ Course library</a><div class="toc"><a href="#aws-rds-masterclass-volume-6">AWS RDS Masterclass — Volume 6</a><a href="#senior-software-engineering-database-reliability-migration-and-architecture">Senior Software Engineering, Database Reliability, Migration and Architecture</a><a href="#contents">Contents</a><a href="#chapter-41-postgresql-performance-and-internals">Chapter 41 — PostgreSQL performance and internals</a><a href="#chapter-42-mysql-performance-and-internals">Chapter 42 — MySQL performance and internals</a><a href="#chapter-43-locks-deadlocks-isolation-and-concurrency">Chapter 43 — Locks, deadlocks, isolation and concurrency</a><a href="#chapter-44-production-troubleshooting-and-incident-command">Chapter 44 — Production troubleshooting and incident command</a><a href="#chapter-45-aws-dms-and-migration-engineering">Chapter 45 — AWS DMS and migration engineering</a><a href="#chapter-46-microservices-data-architecture">Chapter 46 — Microservices data architecture</a><a href="#chapter-47-multi-tenant-saas-architecture">Chapter 47 — Multi-tenant SaaS architecture</a><a href="#chapter-48-security-and-threat-modeling">Chapter 48 — Security and threat modeling</a><a href="#chapter-49-disaster-recovery-and-reliability">Chapter 49 — Disaster recovery and reliability</a><a href="#chapter-50-production-capstone">Chapter 50 — Production capstone</a><a href="#capstone-multi-tenant-orders-platform-on-rds-postgresql">Capstone: Multi-tenant Orders Platform on RDS PostgreSQL</a><a href="#100-senior-interview-questions-with-answers">100 Senior Interview Questions with Answers</a><a href="#postgresql-internals">PostgreSQL internals</a><a href="#mysql-internals">MySQL internals</a><a href="#concurrency">Concurrency</a><a href="#incidents">Incidents</a><a href="#migration">Migration</a><a href="#microservices">Microservices</a><a href="#saas">SaaS</a><a href="#security">Security</a><a href="#dr">DR</a><a href="#capstone">Capstone</a><a href="#glossary-and-further-reading">Glossary and further reading</a><a href="#authoritative-documentation-to-verify-before-deployment">Authoritative documentation to verify before deployment</a><a href="#study-plan-and-evaluation">Study plan and evaluation</a></div></aside><article class="book-prose"><p class="source-note">Historical course notes converted into searchable offline HTML. Some content may be a draft; exercises requiring cloud accounts need credentials and may incur costs.</p><h1 id="aws-rds-masterclass-volume-6">AWS RDS Masterclass — Volume 6</h1>
+<h2 id="senior-software-engineering-database-reliability-migration-and-architecture">Senior Software Engineering, Database Reliability, Migration and Architecture</h2>
+<p><strong>Edition:</strong> October 2026 · <strong>Primary engines:</strong> Amazon RDS for PostgreSQL and MySQL · <strong>Level:</strong> Advanced to Senior/Staff · <strong>Format:</strong> executable study guide with guarded labs</p>
+<blockquote>
+<p><strong>Safety and scope:</strong> All commands are educational, not executed against AWS. Run destructive exercises only in isolated, disposable databases. Check current AWS engine/version/region capabilities, pricing, permissions and service documentation. AWS RDS is managed infrastructure, not unrestricted superuser access. Some labs deliberately show expected <em>illustrative</em> output, not measured benchmarks.</p>
+</blockquote>
+<h2 id="contents">Contents</h2>
+<ol>
+<li><a href="#chapter-41--postgresql-performance-and-internals">Chapter 41 — PostgreSQL performance and internals</a></li>
+<li><a href="#chapter-42--mysql-performance-and-internals">Chapter 42 — MySQL performance and internals</a></li>
+<li><a href="#chapter-43--locks-deadlocks-isolation-and-concurrency">Chapter 43 — Locks, deadlocks, isolation and concurrency</a></li>
+<li><a href="#chapter-44--production-troubleshooting-and-incident-command">Chapter 44 — Production troubleshooting and incident command</a></li>
+<li><a href="#chapter-45--aws-dms-and-migration-engineering">Chapter 45 — AWS DMS and migration engineering</a></li>
+<li><a href="#chapter-46--microservices-data-architecture">Chapter 46 — Microservices data architecture</a></li>
+<li><a href="#chapter-47--multi-tenant-saas-architecture">Chapter 47 — Multi-tenant SaaS architecture</a></li>
+<li><a href="#chapter-48--security-and-threat-modeling">Chapter 48 — Security and threat modeling</a></li>
+<li><a href="#chapter-49--disaster-recovery-and-reliability">Chapter 49 — Disaster recovery and reliability</a></li>
+<li><a href="#chapter-50--production-capstone">Chapter 50 — Production capstone</a></li>
+<li><a href="#100-senior-interview-questions-with-answers">100 senior interview questions with answers</a></li>
+<li><a href="#glossary-and-further-reading">Glossary and further reading</a></li>
+</ol>
+<p><strong>Learning outcome:</strong> explain engine internals; measure before tuning; defend architectural trade-offs; write reliable code and infrastructure; migrate with reconciliation and rollback; lead incident response; demonstrate a reproducible, secure capstone.</p>
+<h1 id="chapter-41-postgresql-performance-and-internals">Chapter 41 — PostgreSQL performance and internals</h1>
+<h3 id="how-postgresql-executes-a-request">How PostgreSQL executes a request</h3>
+<pre><code class="language-mermaid">flowchart LR
+ A[Client / pool] --&gt; B[PostgreSQL backend]
+ B --&gt; C[Parser / rewrite]
+ C --&gt; D[Planner: cardinality and cost]
+ D --&gt; E[Executor]
+ E --&gt; F[Shared buffers]
+ F --&gt; G[OS page cache / RDS storage]
+ E --&gt; H[WAL records]
+ H --&gt; I[Durable WAL flush]
+</code></pre>
+<p>PostgreSQL uses a process-per-connection architecture. A statement is parsed, rewritten, optimized using statistics, and executed. The planner considers row-count estimates, access paths, join algorithms, and cost parameters. <code>EXPLAIN</code> shows the chosen plan; <code>EXPLAIN (ANALYZE, BUFFERS)</code> <strong>executes</strong> the statement and measures actual work. Never use <code>ANALYZE</code> on a destructive DML statement in production unless you intend its effects; wrap a test in a transaction and roll back when safe.</p>
+<p><strong>MVCC:</strong> updates usually create new tuple versions. Old versions persist until they are no longer needed and vacuum can reclaim their space. Long-lived transactions and replication slots can prevent cleanup, creating bloat and transaction ID risk. Visibility maps help index-only scans; HOT updates can reduce index churn when indexed columns remain unchanged and page space permits. WAL records changes for crash recovery and replication; commit durability depends on flush semantics and configuration. RDS restricts some superuser-level settings.</p>
+<p><strong>Statistics and planner:</strong> <code>ANALYZE</code> updates statistics; extended statistics can capture correlations; bad estimates can choose nested loops over hash joins or vice versa. Tune query shape and indexes before blindly increasing memory.</p>
+<h3 id="lab-41a-diagnose-a-slow-query">Lab 41A — Diagnose a slow query</h3>
+<pre><code class="language-sql">CREATE SCHEMA IF NOT EXISTS training;
+CREATE TABLE IF NOT EXISTS training.orders (
+  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  tenant_id bigint NOT NULL,
+  customer_id bigint NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  status text NOT NULL CHECK (status IN ('pending','paid','cancelled')),
+  total numeric(12,2) NOT NULL CHECK (total &gt;= 0)
+);
+INSERT INTO training.orders (tenant_id, customer_id, created_at, status, total)
+SELECT 1 + (g % 20), 1 + (g % 1000), now() - (g || ' minutes')::interval,
+       CASE WHEN g % 3 = 0 THEN 'paid' ELSE 'pending' END, (g % 900)::numeric
+FROM generate_series(1,100000) AS g;
+ANALYZE training.orders;
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT id, created_at, total FROM training.orders
+WHERE tenant_id = 4 AND status = 'paid'
+ORDER BY created_at DESC LIMIT 30;
+CREATE INDEX CONCURRENTLY orders_tenant_status_created_idx
+ON training.orders (tenant_id, status, created_at DESC) INCLUDE (total);
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT id, created_at, total FROM training.orders
+WHERE tenant_id = 4 AND status = 'paid'
+ORDER BY created_at DESC LIMIT 30;
+</code></pre>
+<p><strong>Where:</strong> <code>psql</code> connected to a disposable RDS PostgreSQL instance. <code>CREATE INDEX CONCURRENTLY</code> cannot run inside an explicit transaction block; it may leave an invalid index on failure. <strong>Expected:</strong> the second plan may use the composite index and avoid sorting, depending on data distribution. <strong>Verify:</strong> inspect actual time, rows, loops, shared hits/reads, planning time, and whether estimates match reality. <strong>Cleanup:</strong> <code>DROP SCHEMA training CASCADE;</code> only in the lab database.</p>
+<p><strong>Line-by-line reasoning:</strong> <code>tenant_id</code> is the leading equality key; <code>status</code> is the next equality key; <code>created_at DESC</code> supports ordered retrieval; <code>INCLUDE (total)</code> can help covering scans, but heap visibility still matters. The <code>LIMIT</code> favors an ordered index scan. An index is not free: writes, WAL, disk and vacuum work increase.</p>
+<h3 id="lab-41b-inspect-production-safe-diagnostics">Lab 41B — Inspect production-safe diagnostics</h3>
+<pre><code class="language-sql">SELECT pid, usename, application_name, state, wait_event_type, wait_event,
+       now() - query_start AS query_age, left(query,160) AS sample
+FROM pg_stat_activity WHERE datname = current_database()
+ORDER BY query_start NULLS LAST LIMIT 30;
+SELECT relname, n_live_tup, n_dead_tup, last_autovacuum
+FROM pg_stat_user_tables ORDER BY n_dead_tup DESC LIMIT 20;
+SELECT indexrelname, idx_scan, idx_tup_read, idx_tup_fetch
+FROM pg_stat_user_indexes ORDER BY idx_scan ASC LIMIT 30;
+</code></pre>
+<p><code>pg_stat_activity</code> identifies current sessions and waits, not historical root cause. Dead tuple counts are estimates. Low index scan counts do not alone justify dropping an index (unique constraints, rare critical queries and time-window bias matter). For <code>pg_stat_statements</code>, check parameter group/preload requirements and supported extension privileges before enabling.</p>
+<h3 id="deep-dive-vacuum-memory-and-connection-saturation">Deep-dive: vacuum, memory and connection saturation</h3>
+<p><code>shared_buffers</code> caches pages; <code>work_mem</code> is per sort/hash operation, potentially many times per query and session; <code>maintenance_work_mem</code> supports maintenance. High <code>max_connections</code> multiplies backend memory and context switching. Avoid treating RDS instance RAM as one freely assignable cache. Investigate checkpoints, WAL volume, temp files, autovacuum progress, <code>idle in transaction</code>, and replication slot retention. <strong>Escalation:</strong> when approaching transaction ID wraparound, prioritize vacuum blockers and AWS-supported recovery guidance rather than indiscriminately disabling autovacuum.</p>
+<h1 id="chapter-42-mysql-performance-and-internals">Chapter 42 — MySQL performance and internals</h1>
+<h3 id="innodb-execution-model">InnoDB execution model</h3>
+<pre><code class="language-mermaid">flowchart LR
+ A[Application] --&gt; B[MySQL parser/optimizer]
+ B --&gt; C[InnoDB buffer pool]
+ C --&gt; D[Clustered primary-key B-tree]
+ C --&gt; E[Secondary indexes]
+ C --&gt; F[Redo log]
+ C --&gt; G[Undo / MVCC]
+ D --&gt; H[RDS storage]
+</code></pre>
+<p>InnoDB stores table rows in the clustered primary-key B-tree; secondary index leaves contain primary-key values. A wide or random primary key affects storage, secondary indexes and page locality. The buffer pool caches data/index pages; redo supports crash recovery; undo supports rollback and consistent reads. Binlogs serve replication/CDC when configured. MySQL's default InnoDB isolation is commonly <code>REPEATABLE READ</code>; PostgreSQL defaults to <code>READ COMMITTED</code>—do not assume identical gap locking or snapshot semantics.</p>
+<h3 id="lab-42a-index-selection-and-plans">Lab 42A — Index selection and plans</h3>
+<pre><code class="language-sql">CREATE DATABASE IF NOT EXISTS training;
+USE training;
+CREATE TABLE invoices (
+ id BIGINT PRIMARY KEY AUTO_INCREMENT,
+ tenant_id BIGINT NOT NULL,
+ issued_at DATETIME NOT NULL,
+ status VARCHAR(20) NOT NULL,
+ amount DECIMAL(12,2) NOT NULL,
+ INDEX idx_tenant_status_date (tenant_id,status,issued_at)
+) ENGINE=InnoDB;
+EXPLAIN FORMAT=JSON SELECT id, issued_at, amount
+FROM invoices WHERE tenant_id=7 AND status='open'
+ORDER BY issued_at DESC LIMIT 50;
+SHOW GLOBAL STATUS LIKE 'Threads_connected';
+SHOW GLOBAL STATUS LIKE 'Innodb_buffer_pool_reads';
+SHOW ENGINE INNODB STATUS\G
+</code></pre>
+<p><strong>Where:</strong> MySQL client connected to a disposable RDS MySQL instance. <strong>Expected:</strong> JSON plan indicates access path and estimated rows; without data, optimizer behavior is not representative. Load anonymized data, collect timings and compare plans before claiming an optimization. <strong>Observe:</strong> <code>performance_schema</code> and Performance Insights/Database Insights availability depends on engine version and AWS offering. Inspect <code>information_schema.innodb_trx</code> and <code>performance_schema.data_lock_waits</code> when supported. <strong>Cleanup:</strong> <code>DROP DATABASE training;</code> only after verifying the target.</p>
+<h3 id="tuning-methodology">Tuning methodology</h3>
+<p>Establish p50/p95/p99 latency and throughput; check slow query logs and digest aggregates; capture <code>EXPLAIN ANALYZE</code> on versions supporting it; inspect row estimates and access paths; fix predicates, indexes, N+1 queries and excessive result sizes; re-measure with concurrency. <code>innodb_buffer_pool_size</code> changes are workload-specific and RDS parameter groups may require reboot. Watch redo/binlog growth, checkpoint pressure, buffer pool hit/miss context, disk queueing, CPU and connections. Avoid tuning solely to an arbitrary hit ratio.</p>
+<h1 id="chapter-43-locks-deadlocks-isolation-and-concurrency">Chapter 43 — Locks, deadlocks, isolation and concurrency</h1>
+<h3 id="transaction-anomaly-map">Transaction anomaly map</h3>
+<ul>
+<li><strong>Dirty read:</strong> observe uncommitted data; PostgreSQL treats READ UNCOMMITTED as READ COMMITTED.</li>
+<li><strong>Nonrepeatable read:</strong> same row read twice differs across statements.</li>
+<li><strong>Phantom:</strong> predicate result changes between reads; exact guarantees differ by engine and isolation.</li>
+<li><strong>Write skew:</strong> transactions each read a shared invariant then update different rows; serializable semantics or explicit coordination may be needed.</li>
+<li><strong>Deadlock:</strong> a wait-for cycle; engine detects and aborts one participant. Retrying the entire idempotent transaction is usually correct.</li>
+</ul>
+<pre><code class="language-mermaid">sequenceDiagram
+ participant T1 as Transaction A
+ participant DB as Database
+ participant T2 as Transaction B
+ T1-&gt;&gt;DB: Lock account 1
+ T2-&gt;&gt;DB: Lock account 2
+ T1-&gt;&gt;DB: Request account 2 (wait)
+ T2-&gt;&gt;DB: Request account 1 (cycle)
+ DB--&gt;&gt;T2: Abort one transaction
+ T1-&gt;&gt;DB: Continue / commit
+</code></pre>
+<h3 id="lab-43a-reproduce-a-postgresql-deadlock-two-psql-terminals">Lab 43A — Reproduce a PostgreSQL deadlock (two psql terminals)</h3>
+<pre><code class="language-sql">-- Setup once
+CREATE TABLE training.accounts(id integer PRIMARY KEY, balance integer NOT NULL);
+INSERT INTO training.accounts VALUES (1,100),(2,100);
+-- Terminal A
+BEGIN; UPDATE training.accounts SET balance=balance-10 WHERE id=1;
+-- Terminal B
+BEGIN; UPDATE training.accounts SET balance=balance+10 WHERE id=2;
+-- Terminal A: run and wait
+UPDATE training.accounts SET balance=balance+10 WHERE id=2;
+-- Terminal B: run and wait
+UPDATE training.accounts SET balance=balance-10 WHERE id=1;
+</code></pre>
+<p><strong>Expected:</strong> PostgreSQL eventually reports <code>ERROR: deadlock detected</code> to one transaction (SQLSTATE <code>40P01</code>); the aborted transaction must <code>ROLLBACK</code>. <strong>Prevent:</strong> always lock accounts in ascending ID order, keep transactions short, use narrow indexes, and retry transient errors with bounded exponential backoff + jitter. A <code>lock_timeout</code> can cap waits but is not a substitute for fixing contention.</p>
+<h3 id="lab-43b-safe-transfer-with-deterministic-locking">Lab 43B — Safe transfer with deterministic locking</h3>
+<pre><code class="language-sql">BEGIN;
+SELECT id, balance FROM training.accounts WHERE id IN (1,2)
+ORDER BY id FOR UPDATE;
+UPDATE training.accounts SET balance=balance-10 WHERE id=1 AND balance&gt;=10;
+-- Check row count in application; abort if zero.
+UPDATE training.accounts SET balance=balance+10 WHERE id=2;
+COMMIT;
+</code></pre>
+<p><strong>Important:</strong> a production money-transfer design needs idempotency keys, ledger entries, constraints, retries and auditing; the example is a concurrency demonstration, not a complete financial ledger. Application code should verify the first update affected one row before the second update.</p>
+<h3 id="application-retry-pseudocode">Application retry pseudocode</h3>
+<pre><code class="language-python">for attempt in range(5):
+    try:
+        with db.transaction():
+            process_idempotent_business_operation()
+        break
+    except (DeadlockDetected, SerializationFailure):
+        if attempt == 4:
+            raise
+        sleep(min(0.1 * 2**attempt, 1.5) + random.uniform(0, 0.1))
+</code></pre>
+<p>Do not retry an operation with external side effects unless the side effects are idempotent or managed with an outbox/saga. Database commit and an HTTP call are not one atomic transaction.</p>
+<h1 id="chapter-44-production-troubleshooting-and-incident-command">Chapter 44 — Production troubleshooting and incident command</h1>
+<h3 id="production-incident-playbook">Production incident playbook</h3>
+<p><strong>1. Detect:</strong> confirm SLO breach, scope, error budget and business impact. <strong>2. Stabilize:</strong> stop a runaway deployment, scale application concurrency down if it is overwhelming the DB, preserve logs and coordinate changes. <strong>3. Diagnose:</strong> distinguish DB CPU, IO, locks, network, authentication, pool starvation and bad plans. <strong>4. Mitigate:</strong> safe rollback, targeted cancellation, add capacity or fail over only if justified. <strong>5. Recover:</strong> verify writes, queues, replication and user-visible correctness. <strong>6. Learn:</strong> blameless postmortem, action owners and regression tests.</p>
+<pre><code class="language-mermaid">flowchart TD
+ A[Elevated p99 latency] --&gt; B{DB connections near max?}
+ B --&gt;|Yes| C[Inspect pool, leaks, idle in transaction]
+ B --&gt;|No| D{Wait events / locks?}
+ D --&gt;|Yes| E[Find blockers and transaction owners]
+ D --&gt;|No| F{CPU or IO saturation?}
+ F --&gt;|CPU| G[Top SQL / plans / concurrency]
+ F --&gt;|IO| H[IOPS, queue, checkpoints, temp spill]
+ C --&gt; I[Apply reversible mitigation]
+ E --&gt; I
+ G --&gt; I
+ H --&gt; I
+ I --&gt; J[Verify SLO and data integrity]
+</code></pre>
+<h3 id="aws-cli-triage-read-only">AWS CLI triage (read-only)</h3>
+<pre><code class="language-bash">export AWS_REGION=ap-south-1
+export DB_ID=your-disposable-db-id
+aws sts get-caller-identity
+aws rds describe-db-instances --db-instance-identifier "$DB_ID" --region "$AWS_REGION"   --query 'DBInstances[0].{State:DBInstanceStatus,Engine:Engine,Class:DBInstanceClass,Storage:AllocatedStorage,MultiAZ:MultiAZ,Pending:PendingModifiedValues}'
+aws cloudwatch get-metric-statistics --namespace AWS/RDS --metric-name DatabaseConnections   --dimensions Name=DBInstanceIdentifier,Value="$DB_ID"   --start-time 2026-10-15T00:00:00Z --end-time 2026-10-15T01:00:00Z   --period 300 --statistics Maximum --region "$AWS_REGION"
+aws rds describe-events --source-type db-instance --source-identifier "$DB_ID"   --duration 60 --region "$AWS_REGION"
+</code></pre>
+<p><strong>Explanation:</strong> <code>sts</code> verifies identity; <code>describe-db-instances</code> shows state and pending modifications; CloudWatch metric query returns sampled connection counts in the specified UTC window (change timestamps to incident window); RDS events reveal recent maintenance/failover signals. Empty datapoints can mean no data, wrong dimensions or window, not zero connections.</p>
+<h3 id="postgresql-blocker-diagnosis">PostgreSQL blocker diagnosis</h3>
+<pre><code class="language-sql">SELECT blocked.pid AS blocked_pid, blocked.wait_event_type,
+       pg_blocking_pids(blocked.pid) AS blocker_pids,
+       now() - blocked.query_start AS blocked_age,
+       left(blocked.query,120) AS blocked_sql
+FROM pg_stat_activity blocked
+WHERE cardinality(pg_blocking_pids(blocked.pid)) &gt; 0;
+</code></pre>
+<p>Avoid blindly terminating sessions: identify business owner, rollback impact and permission; <code>pg_cancel_backend</code> cancels the current query while <code>pg_terminate_backend</code> ends a session and rolls back its open transaction. Neither fixes the underlying lock ordering or transaction length.</p>
+<h3 id="incident-casebook">Incident casebook</h3>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Competing hypotheses</th>
+<th>Evidence</th>
+<th>Reversible mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connection timeout</td>
+<td>SG/NACL/DNS/TLS/pool</td>
+<td>TCP reachability, endpoint, errors</td>
+<td>Correct narrow SG rule; fix DNS/pool</td>
+</tr>
+<tr>
+<td>CPU 95%</td>
+<td>hot SQL, bad plan, excess concurrency</td>
+<td>DB load, top statements, EXPLAIN</td>
+<td>rollback query change, cap concurrency</td>
+</tr>
+<tr>
+<td>Storage pressure</td>
+<td>WAL retention, bloat, temp files, growth</td>
+<td>free storage, slots, vacuum stats</td>
+<td>address retention; increase capacity if safe</td>
+</tr>
+<tr>
+<td>Replica lag</td>
+<td>write spike, long replay, IO bottleneck</td>
+<td>lag metrics, workload, logs</td>
+<td>stop read routing to stale replica</td>
+</tr>
+<tr>
+<td>Deadlock spike</td>
+<td>lock-order regression</td>
+<td>engine deadlock logs, app traces</td>
+<td>rollback release, deterministic order</td>
+</tr>
+<tr>
+<td>Slow after failover</td>
+<td>reconnect storm, DNS cache, cold cache</td>
+<td>events, pool metrics, latency</td>
+<td>backoff/jitter, warm carefully</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Senior judgment:</strong> an RDS failover is not a generic cure for slow SQL; it can create additional disruption. Collect a timeline of changes and preserve forensic data before destructive remediation.</p>
+<h1 id="chapter-45-aws-dms-and-migration-engineering">Chapter 45 — AWS DMS and migration engineering</h1>
+<h3 id="migration-decision-tree">Migration decision tree</h3>
+<p>Use native dump/restore for modest downtime and homogeneous engines; native logical/physical replication when compatible and operationally appropriate; AWS DMS for managed full-load plus CDC workflows; schema conversion tooling for heterogeneous schemas. DMS does <strong>not</strong> automatically solve application SQL incompatibility, stored procedures, sequences, large objects, unsupported data types or cutover consistency.</p>
+<pre><code class="language-mermaid">flowchart LR
+ A[Source database] --&gt; B[Assess schema + compatibility]
+ B --&gt; C[Create target and network access]
+ C --&gt; D[Initial full load]
+ A --&gt; E[CDC from source logs]
+ E --&gt; F[Catch-up and validate]
+ D --&gt; F
+ F --&gt; G[Write freeze / cutover]
+ G --&gt; H[Switch application]
+ H --&gt; I[Reconcile and monitor]
+</code></pre>
+<h3 id="lab-45a-migration-preflight-checklist">Lab 45A — Migration preflight checklist</h3>
+<ol>
+<li>Inventory source engine/version, extensions, triggers, routines, collations, character sets, foreign keys, large objects, sequences, peak write throughput and table sizes.</li>
+<li>Select migration mechanism and document unsupported objects. Provision private network reachability from replication resources to source and target; least-privilege endpoints and encrypted transport.</li>
+<li>For PostgreSQL CDC, plan logical replication prerequisites, slots and WAL retention; for MySQL CDC, binlog format/retention and permissions. AWS DMS source prerequisites are engine-specific and version-sensitive.</li>
+<li>Estimate full-load time from data volume and measured throughput; test on a realistic subset.</li>
+<li>Define a cutover freeze, application rollback criteria, CDC lag threshold, and final sequence/identity adjustments.</li>
+<li>Compare counts, checksums/sample hashes, financial totals, referential integrity and application business invariants; row counts alone are insufficient.</li>
+<li>Decide when rollback ceases to be trivial: once new writes occur on the target, reversing direction requires a tested strategy.</li>
+</ol>
+<h3 id="lab-45b-read-only-dms-inspection">Lab 45B — Read-only DMS inspection</h3>
+<pre><code class="language-bash">aws dms describe-replication-instances --region "$AWS_REGION"   --query 'ReplicationInstances[].{Id:ReplicationInstanceIdentifier,Status:ReplicationInstanceStatus}'
+aws dms describe-replication-tasks --region "$AWS_REGION"   --query 'ReplicationTasks[].{Id:ReplicationTaskIdentifier,Status:Status,Stats:ReplicationTaskStats}'
+</code></pre>
+<p><strong>Expected:</strong> empty arrays if no DMS resources; otherwise status and task statistics. Newer DMS serverless configurations have separate replication-config APIs; choose the API matching the actual mode. Avoid embedding endpoint passwords in shell history or Terraform state. For a full lab, create source and target disposable databases, seed 100k rows, configure full load + CDC in the AWS console with private networking, update source rows during replication, then compare target data and CDC latency. Delete DMS replication resources afterward to stop charges.</p>
+<h3 id="reconciliation-sql">Reconciliation SQL</h3>
+<pre><code class="language-sql">SELECT count(*) AS row_count, sum(total) AS total_amount,
+       min(id) AS min_id, max(id) AS max_id
+FROM training.orders;
+</code></pre>
+<p>Run on both sides at a consistent logical checkpoint or after a write freeze. Aggregate equality is useful but not proof of row-level equality; add deterministic per-key hashes and business validation.</p>
+<h1 id="chapter-46-microservices-data-architecture">Chapter 46 — Microservices data architecture</h1>
+<h3 id="ownership-and-boundaries">Ownership and boundaries</h3>
+<p>Each service owns its schema and business invariants. Avoid services directly joining other services' tables. A single RDS instance may host multiple service-owned databases as an interim trade-off, but failure domains, permissions and noisy neighbors remain shared. Database-per-service improves autonomy while increasing operations and cross-service consistency complexity.</p>
+<pre><code class="language-mermaid">flowchart TD
+ A[API Gateway] --&gt; O[Order Service]
+ A --&gt; P[Payment Service]
+ O --&gt; OD[(Orders RDS)]
+ P --&gt; PD[(Payments RDS)]
+ O --&gt; X[Transactional Outbox]
+ X --&gt; E[Event Bus]
+ E --&gt; P
+ P --&gt; E2[Payment Completed Event]
+ E2 --&gt; O
+</code></pre>
+<h3 id="reliable-outbox-pattern">Reliable outbox pattern</h3>
+<pre><code class="language-sql">BEGIN;
+INSERT INTO orders (id, customer_id, status) VALUES (:id,:customer,'pending');
+INSERT INTO outbox (event_id, aggregate_id, event_type, payload)
+VALUES (:event_id,:id,'OrderCreated',:json_payload);
+COMMIT;
+</code></pre>
+<p>Both records commit atomically in the same database. A background relay publishes outbox rows; delivery may be at least once, so consumers require idempotency (unique <code>event_id</code> receipt table), ordering strategy, retries, poison-message handling and observability. The sample uses named bind parameters: pass them through a driver/ORM, not literal SQL in <code>psql</code>.</p>
+<h3 id="engineering-trade-offs">Engineering trade-offs</h3>
+<p><strong>Saga:</strong> local transactions plus compensating actions, not an ACID transaction spanning services. <strong>CQRS:</strong> separate read projections when justified by different access patterns; account for lag. <strong>Sharding:</strong> hash/range/tenant-based distribution; plan rebalancing and hot-key mitigation. <strong>Read replicas:</strong> can serve stale reads; route read-after-write to writer or use consistency tokens. <strong>Connection budgets:</strong> sum max pools across replicas and deployments; use RDS Proxy only when compatible with session behavior. <strong>Backpressure:</strong> bound concurrency and queue length to avoid database overload.</p>
+<h1 id="chapter-47-multi-tenant-saas-architecture">Chapter 47 — Multi-tenant SaaS architecture</h1>
+<h3 id="three-isolation-patterns">Three isolation patterns</h3>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Benefit</th>
+<th>Risk</th>
+<th>Good fit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Shared tables with <code>tenant_id</code></td>
+<td>Lowest overhead</td>
+<td>Predicate bugs can leak data</td>
+<td>many small tenants</td>
+</tr>
+<tr>
+<td>Separate schemas/databases</td>
+<td>stronger logical boundary</td>
+<td>migrations/connection complexity</td>
+<td>regulated or mid-size tenants</td>
+</tr>
+<tr>
+<td>Dedicated RDS per tenant</td>
+<td>independent capacity and blast radius</td>
+<td>high cost and operational overhead</td>
+<td>premium/large tenants</td>
+</tr>
+</tbody>
+</table>
+<p><strong>PostgreSQL RLS lab</strong> (use a disposable database; application must not connect as a table owner or a role bypassing RLS):</p>
+<pre><code class="language-sql">CREATE TABLE tenant_documents (
+  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  tenant_id uuid NOT NULL,
+  title text NOT NULL
+);
+ALTER TABLE tenant_documents ENABLE ROW LEVEL SECURITY;
+ALTER TABLE tenant_documents FORCE ROW LEVEL SECURITY;
+CREATE POLICY tenant_scope ON tenant_documents
+USING (tenant_id = current_setting('app.tenant_id', true)::uuid)
+WITH CHECK (tenant_id = current_setting('app.tenant_id', true)::uuid);
+CREATE ROLE app_tenant LOGIN;
+GRANT SELECT, INSERT, UPDATE, DELETE ON tenant_documents TO app_tenant;
+GRANT USAGE, SELECT ON SEQUENCE tenant_documents_id_seq TO app_tenant;
+</code></pre>
+<p><strong>Security warning:</strong> a user-controllable session variable alone is not a trustworthy identity boundary. A trusted server must authenticate tenant membership, set tenant context inside each transaction with <code>SET LOCAL</code>, and prevent arbitrary SQL/role escalation. Validate connection-pool resets; test missing, mismatched and malicious tenant IDs. Prefer an authorization architecture that cannot be bypassed by application-level SQL injection.</p>
+<h3 id="lab-47b-tenant-data-leak-tests">Lab 47B — Tenant data leak tests</h3>
+<p>Create two tenant UUIDs and test (1) tenant A sees only A, (2) A cannot insert B rows, (3) unset tenant context denies access, (4) pooled connections do not retain prior tenant identity, (5) backup/restore and exports preserve tenant scoping. Add an integration test for every query path, including background workers, reports and administrative APIs.</p>
+<p><strong>Capacity:</strong> partitioning by tenant can help pruning but is not a substitute for authorization; very large tenant counts make per-tenant schema operations costly. Track tenant-level QPS, p95 latency, storage, connections and cost allocations.</p>
+<h1 id="chapter-48-security-and-threat-modeling">Chapter 48 — Security and threat modeling</h1>
+<h3 id="threat-model-stride">Threat model (STRIDE)</h3>
+<ul>
+<li><strong>Spoofing:</strong> stolen app credentials, compromised IAM role → short-lived credentials, MFA for humans, scoped IAM, rotation.</li>
+<li><strong>Tampering:</strong> SQL injection or privileged writes → parameterized SQL, grants, immutable audit pipelines.</li>
+<li><strong>Repudiation:</strong> insufficient audit evidence → CloudTrail for API control plane; database audit/logging for SQL events where supported.</li>
+<li><strong>Information disclosure:</strong> public endpoints, weak TLS, backups or logs → private subnets, SG least privilege, TLS validation, KMS, redaction.</li>
+<li><strong>Denial of service:</strong> unbounded queries/connections → statement timeouts, pooling, quotas, backpressure.</li>
+<li><strong>Elevation of privilege:</strong> overbroad master credentials, cross-tenant access → separate application roles, RLS/authorization and access review.</li>
+</ul>
+<h3 id="secure-python-db-connection-psycopg-3">Secure Python DB connection (psycopg 3)</h3>
+<pre><code class="language-python">import os
+import psycopg
+
+conn = psycopg.connect(
+    host=os.environ['DB_HOST'],
+    dbname=os.environ['DB_NAME'],
+    user=os.environ['DB_USER'],
+    password=os.environ['DB_PASSWORD'],
+    sslmode='verify-full',
+    sslrootcert=os.environ['RDS_CA_BUNDLE'],
+    connect_timeout=5,
+    application_name='orders-api',
+)
+with conn:
+    with conn.cursor() as cur:
+        cur.execute('SELECT id FROM orders WHERE tenant_id = %s LIMIT 10',
+                    (os.environ['TENANT_ID'],))
+        print(cur.fetchall())
+</code></pre>
+<p><strong>Line-by-line:</strong> environment variables keep credentials out of source control (but env variables can still leak via diagnostics); <code>verify-full</code> checks CA trust and hostname; <code>connect_timeout</code> bounds establishment; <code>application_name</code> improves traceability; <code>%s</code> binds data values rather than interpolating SQL. In production, retrieve Secrets Manager credentials securely and cache with rotation-aware refresh; use IAM DB auth where supported and appropriate. Use the AWS RDS trust bundle from an authoritative AWS URL, not a random certificate mirror.</p>
+<h3 id="infrastructure-security-baseline">Infrastructure security baseline</h3>
+<p>RDS <code>publicly_accessible=false</code>; DB subnet group spanning suitable AZs; no inbound 0.0.0.0/0 database rule; encryption at rest configured at creation; KMS key policy reviewed; backup retention, deletion protection, patch windows, audit logs and event alarms; Secrets Manager rotation; VPC flow logs where needed. IAM database auth does not grant SQL privileges. KMS key deletion can make encrypted data irrecoverable. Encrypted snapshot sharing/copy behavior and cross-account KMS permissions require specific planning.</p>
+<h1 id="chapter-49-disaster-recovery-and-reliability">Chapter 49 — Disaster recovery and reliability</h1>
+<h3 id="rto-and-rpo">RTO and RPO</h3>
+<p><strong>RTO:</strong> maximum acceptable recovery duration. <strong>RPO:</strong> maximum acceptable data loss window. Neither is automatically guaranteed by choosing Multi-AZ or a read replica. Test application reconnection, DNS caching, replica promotion, backup restore, infrastructure recreation and data integrity. Backup retention is not the same as tested recoverability.</p>
+<pre><code class="language-mermaid">flowchart LR
+ A[Primary Region] --&gt; B[Multi-AZ RDS writer]
+ B --&gt; C[Automated backups / PITR]
+ B -.async replication.-&gt; D[Secondary Region replica]
+ D --&gt; E[Promotion + application routing]
+ C --&gt; F[Restore into new DB]
+</code></pre>
+<h3 id="lab-49a-recovery-rehearsal-disposable-instance-only">Lab 49A — Recovery rehearsal (disposable instance only)</h3>
+<pre><code class="language-bash">aws rds describe-db-instances --db-instance-identifier "$DB_ID" --region "$AWS_REGION"
+aws rds create-db-snapshot --db-instance-identifier "$DB_ID"   --db-snapshot-identifier "${DB_ID}-dr-drill-20261016" --region "$AWS_REGION"
+aws rds wait db-snapshot-available   --db-snapshot-identifier "${DB_ID}-dr-drill-20261016" --region "$AWS_REGION"
+aws rds restore-db-instance-from-db-snapshot   --db-instance-identifier "${DB_ID}-dr-restore"   --db-snapshot-identifier "${DB_ID}-dr-drill-20261016"   --db-subnet-group-name your-private-db-subnet-group   --vpc-security-group-ids sg-REPLACE   --no-publicly-accessible --region "$AWS_REGION"
+</code></pre>
+<p><strong>Before execution:</strong> ensure snapshot name uniqueness, valid engine/region settings, sufficient quota and budget. Restores create a <strong>new</strong> instance; verify parameters, networking, TLS, credentials and post-restore settings. A restored snapshot is only as current as snapshot time; PITR restores to a specified point within the supported recovery window. <strong>Validation:</strong> run read-only row-count and invariant checks, synthetic API requests and failover drills; record measured recovery time and data freshness. <strong>Cleanup:</strong> delete the <em>drill</em> instance and drill snapshot after confirmation, not the source.</p>
+<h3 id="dr-runbook-template">DR runbook template</h3>
+<p>Declare incident and freeze deployments; assess region/control-plane health; choose restore versus promotion; verify IAM/KMS and network prerequisites; restore or promote; update application configuration and routing; check migrations and consistency; resume writes; monitor error rates and lag; document divergence and failback plan. Regional outage scenarios may impair API availability, so preprovision and test critical recovery assets where feasible.</p>
+<h1 id="chapter-50-production-capstone">Chapter 50 — Production capstone</h1>
+<h2 id="capstone-multi-tenant-orders-platform-on-rds-postgresql">Capstone: Multi-tenant Orders Platform on RDS PostgreSQL</h2>
+<p><strong>Goal:</strong> build a deployable system with API, PostgreSQL RDS, safe migrations, tenant isolation, asynchronous outbox, IaC, observability, backups and a tested DR runbook. The snippets below are a coherent <strong>starter implementation</strong>, not a full production-certified repository.</p>
+<pre><code class="language-mermaid">flowchart TB
+ U[Client] --&gt; ALB[HTTPS ALB]
+ ALB --&gt; API[FastAPI replicas / private subnets]
+ API --&gt; RP[RDS Proxy - optional]
+ RP --&gt; DB[(RDS PostgreSQL / Multi-AZ)]
+ API --&gt; S[Secrets Manager]
+ API --&gt; O[Outbox relay]
+ O --&gt; Q[EventBridge / SQS]
+ DB --&gt; CW[CloudWatch / DB telemetry]
+ DB --&gt; BK[Backups / PITR]
+ CI[CI/CD] --&gt; API
+ CI --&gt; M[Versioned schema migrations]
+ M --&gt; DB
+</code></pre>
+<h3 id="project-tree">Project tree</h3>
+<pre><code class="language-text">rds-capstone/
+├── app/main.py
+├── app/db.py
+├── app/models.py
+├── migrations/001_init.sql
+├── terraform/main.tf
+├── terraform/variables.tf
+├── tests/test_orders.py
+├── requirements.txt
+└── README.md
+</code></pre>
+<h3 id="migration-sql-migrations-001-init-sql">Migration SQL — <code>migrations/001_init.sql</code></h3>
+<pre><code class="language-sql">CREATE TABLE IF NOT EXISTS orders (
+ id uuid PRIMARY KEY,
+ tenant_id uuid NOT NULL,
+ customer_id uuid NOT NULL,
+ status text NOT NULL CHECK (status IN ('pending','paid','cancelled')),
+ total numeric(12,2) NOT NULL CHECK (total &gt;= 0),
+ created_at timestamptz NOT NULL DEFAULT now(),
+ idempotency_key text NOT NULL,
+ UNIQUE (tenant_id, idempotency_key)
+);
+CREATE INDEX IF NOT EXISTS orders_tenant_created_idx
+ ON orders(tenant_id,created_at DESC);
+CREATE TABLE IF NOT EXISTS outbox (
+ event_id uuid PRIMARY KEY,
+ aggregate_id uuid NOT NULL,
+ event_type text NOT NULL,
+ payload jsonb NOT NULL,
+ published_at timestamptz,
+ created_at timestamptz NOT NULL DEFAULT now()
+);
+</code></pre>
+<p><strong>Design:</strong> unique <code>(tenant_id,idempotency_key)</code> prevents duplicate orders on retries; money uses <code>numeric</code>; outbox events share the same transaction. Add per-tenant authorization/RLS before multi-tenant production use. Use a migration tool (Alembic/Flyway/Liquibase) with version checks rather than running DDL on every application boot.</p>
+<h3 id="fastapi-minimal-api-app-main-py">FastAPI minimal API — <code>app/main.py</code></h3>
+<pre><code class="language-python">import os, uuid
+from decimal import Decimal
+from fastapi import FastAPI, Header, HTTPException
+from pydantic import BaseModel, Field
+from sqlalchemy import create_engine, text
+from sqlalchemy.exc import IntegrityError
+
+app = FastAPI()
+engine = create_engine(os.environ['DATABASE_URL'], pool_size=5,
+                       max_overflow=2, pool_pre_ping=True, pool_timeout=5)
+
+class NewOrder(BaseModel):
+    customer_id: uuid.UUID
+    total: Decimal = Field(ge=0, max_digits=12, decimal_places=2)
+
+@app.post('/orders', status_code=201)
+def create_order(body: NewOrder, idempotency_key: str = Header(min_length=8, max_length=128)):
+    # DEMO ONLY: replace fixed tenant with authenticated principal from verified JWT.
+    tenant_id = uuid.UUID(os.environ['DEMO_TENANT_ID'])
+    order_id, event_id = uuid.uuid4(), uuid.uuid4()
+    with engine.begin() as conn:
+        existing = conn.execute(text("""SELECT id FROM orders
+            WHERE tenant_id=:tenant AND idempotency_key=:key"""),
+            {'tenant':tenant_id,'key':idempotency_key}).scalar_one_or_none()
+        if existing:
+            return {'order_id':str(existing),'deduplicated':True}
+        try:
+            conn.execute(text("""INSERT INTO orders
+                (id,tenant_id,customer_id,status,total,idempotency_key)
+                VALUES (:id,:tenant,:customer,'pending',:total,:key)"""),
+                {'id':order_id,'tenant':tenant_id,'customer':body.customer_id,
+                 'total':body.total,'key':idempotency_key})
+            conn.execute(text("""INSERT INTO outbox
+                (event_id,aggregate_id,event_type,payload)
+                VALUES (:event,:id,'OrderCreated',CAST(:payload AS jsonb))"""),
+                {'event':event_id,'id':order_id,
+                 'payload':'{"order_id":"'+str(order_id)+'"}'})
+        except IntegrityError:
+            # Concurrent same-key inserts need an explicit savepoint or full
+            # transaction retry; do not continue in an aborted PostgreSQL txn.
+            raise HTTPException(409, 'Concurrent duplicate; retry with same key')
+    return {'order_id':str(order_id),'deduplicated':False}
+</code></pre>
+<p><strong>Required production upgrades:</strong> authenticate and authorize tenant membership; handle conflicting idempotency payloads; retry concurrency errors with a new transaction; enforce TLS and secret retrieval; add request tracing, rate limits, connection-budget math, tests, structured logging, metrics, graceful shutdown and event relay. <code>DATABASE_URL</code> should use <code>postgresql+psycopg://</code> and TLS parameters; never print secrets. <strong>Dependencies:</strong> <code>fastapi</code>, <code>uvicorn</code>, <code>sqlalchemy&gt;=2</code>, <code>psycopg[binary]</code>, <code>pydantic</code> (pin tested versions).</p>
+<h3 id="terraform-rds-module-starter-terraform-main-tf">Terraform RDS module starter — <code>terraform/main.tf</code></h3>
+<pre><code class="language-hcl">terraform {
+  required_version = "&gt;= 1.6.0"
+  required_providers {
+    aws = { source = "hashicorp/aws", version = "~&gt; 5.0" }
+  }
+}
+provider "aws" { region = var.aws_region }
+resource "aws_db_subnet_group" "private" {
+  name       = "rds-capstone-private"
+  subnet_ids = var.private_subnet_ids
+}
+resource "aws_db_instance" "orders" {
+  identifier                    = "rds-capstone-orders"
+  engine                        = "postgres"
+  instance_class                = var.db_instance_class
+  allocated_storage             = 30
+  storage_type                  = "gp3"
+  db_name                       = "orders"
+  username                      = "dbadmin"
+  manage_master_user_password   = true
+  db_subnet_group_name          = aws_db_subnet_group.private.name
+  vpc_security_group_ids       = [var.db_security_group_id]
+  publicly_accessible          = false
+  multi_az                     = true
+  storage_encrypted            = true
+  backup_retention_period      = 7
+  deletion_protection          = true
+  skip_final_snapshot          = false
+  final_snapshot_identifier     = "rds-capstone-final-unique-name"
+  apply_immediately             = false
+  tags = { Environment = "lab", Project = "rds-capstone" }
+}
+</code></pre>
+<h3 id="terraform-inputs-terraform-variables-tf">Terraform inputs — <code>terraform/variables.tf</code></h3>
+<pre><code class="language-hcl">variable "aws_region" { type = string; default = "ap-south-1" }
+variable "private_subnet_ids" { type = list(string) }
+variable "db_security_group_id" { type = string }
+variable "db_instance_class" { type = string; default = "db.t4g.medium" }
+</code></pre>
+<p><strong>Prerequisites:</strong> an existing VPC, private subnets in at least two AZs, narrowly scoped SG, IAM credentials and cost approval. The example intentionally does <strong>not</strong> create VPC, app runtime, secret consumers or a complete production stack. Choose an engine version supported by your chosen class/region and pin provider versions after testing. Managed master passwords are stored in Secrets Manager; verify secret lifecycle and IAM access. A fixed final snapshot identifier can collide on repeated destroys; for lab cleanup, change deletion protection only after backup verification and use a unique snapshot ID. Terraform state contains sensitive infrastructure metadata: use an encrypted, access-controlled remote backend with locking.</p>
+<h3 id="step-by-step-deployment">Step-by-step deployment</h3>
+<ol>
+<li>Create private VPC/subnets, SG allowing TCP 5432 only from app SG, and necessary private access paths.</li>
+<li><code>terraform init</code>; <code>terraform fmt -check</code>; <code>terraform validate</code>; <code>terraform plan -out=tfplan</code> and review changes; <code>terraform apply tfplan</code> only after cost/security approval.</li>
+<li>Retrieve managed secret ARN from RDS description, grant the application runtime narrowly scoped Secrets Manager access, configure TLS CA validation.</li>
+<li>Connect from a trusted VPC host; apply <code>001_init.sql</code> using a migration identity, not the application identity.</li>
+<li>Start API with a <strong>restricted</strong> DB role and authenticated tenant context; send POST <code>/orders</code> twice with the same idempotency key and confirm one row/outbox event.</li>
+<li>Add telemetry: API latency/error metrics, RDS connections, CPU, free storage, read/write latency, lock waits, slow queries and log redaction.</li>
+<li>Run load tests against disposable data; compare baseline p95/p99, query plans and saturation; introduce one missing-index regression and fix it.</li>
+<li>Create a snapshot and restore into a separate DB; verify invariants and record measured RTO/RPO.</li>
+<li>Perform a controlled failover exercise on a disposable Multi-AZ DB using AWS-supported APIs and verify reconnect/backoff behavior; schedule and warn users of disruption.</li>
+<li>Remove test infrastructure only after confirming backups, deletion protection settings and final snapshot behavior; check AWS Billing for lingering snapshots, logs, NAT gateways and DMS resources.</li>
+</ol>
+<h3 id="acceptance-checklist">Acceptance checklist</h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Private networking, TLS hostname validation and no public DB ingress</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Separate migration/app roles and least-privilege IAM</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Authenticated tenant isolation tests and idempotency concurrency tests</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Backward-compatible migrations and rollback decision points</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Outbox relay with at-least-once delivery and consumer deduplication</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Query performance baseline and alert thresholds</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Tested restore, documented measured RTO/RPO</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Cost budget and cleanup runbook</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Architecture decision records and incident game day</li>
+</ul>
+<h1 id="100-senior-interview-questions-with-answers">100 Senior Interview Questions with Answers</h1>
+<p><strong>Interview practice:</strong> Each answer is a concise technical model answer. In a real senior interview, expand with assumptions, failure modes, metrics and a concrete example. Questions are grouped by engineering domain.</p>
+<h2 id="postgresql-internals">PostgreSQL internals</h2>
+<p><strong>Q1. Why can an index scan be slower than a sequential scan?</strong></p>
+<p><strong>Answer:</strong> Low selectivity, random heap fetches, stale statistics, cache effects or tiny tables can make sequential IO cheaper. Compare actual rows, buffers and elapsed time under representative load.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q2. What is MVCC?</strong></p>
+<p><strong>Answer:</strong> Multiple row versions allow readers and writers to coexist under snapshot visibility rules. Old versions require vacuum; long transactions can prevent reclamation.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q3. What is WAL?</strong></p>
+<p><strong>Answer:</strong> Write-ahead logging records changes before affected data pages must be persisted, enabling crash recovery and supporting replication. WAL volume and retention affect storage and latency.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q4. What causes table bloat?</strong></p>
+<p><strong>Answer:</strong> Repeated updates/deletes plus delayed vacuum or long snapshots leave dead tuples and unused space. Diagnose with stats and workload, then correct blockers before considering rewrite.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q5. What does autovacuum do?</strong></p>
+<p><strong>Answer:</strong> It reclaims reusable dead-tuple space, maintains visibility/freeze safety and can analyze tables. Tune per-table settings based on churn, not by disabling it.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q6. What is an index-only scan?</strong></p>
+<p><strong>Answer:</strong> A plan that can obtain indexed columns without heap visits when visibility map coverage permits; <code>Heap Fetches</code> shows whether heap checks were required.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q7. When is a partial index useful?</strong></p>
+<p><strong>Answer:</strong> When a stable predicate targets a small, frequently queried subset, e.g. open orders. Query predicates must imply the index predicate for planner use.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q8. Why use composite indexes?</strong></p>
+<p><strong>Answer:</strong> They support combined predicates and ordering, but column order depends on equality, range and sort patterns; every index adds write and storage cost.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q9. How do extended statistics help?</strong></p>
+<p><strong>Answer:</strong> They model dependencies and combinations across columns so cardinality estimates can improve for correlated predicates.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q10. What does <code>work_mem</code> control?</strong></p>
+<p><strong>Answer:</strong> Memory budget per sort/hash operation, not a global server cap; many operations across many sessions can consume much more.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<h2 id="mysql-internals">MySQL internals</h2>
+<p><strong>Q11. Explain InnoDB clustered indexes.</strong></p>
+<p><strong>Answer:</strong> Primary-key B-tree leaf pages contain row data; secondary index entries include primary-key values, making primary-key width a physical design decision.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q12. Redo versus undo log?</strong></p>
+<p><strong>Answer:</strong> Redo supports recovery of committed changes; undo supports rollback and consistent-read versioning. Their retention and IO patterns differ.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q13. What is the buffer pool?</strong></p>
+<p><strong>Answer:</strong> InnoDB memory cache for data/index pages; evaluate misses, dirty pages and workload before resizing.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q14. Why are random UUID primary keys costly?</strong></p>
+<p><strong>Answer:</strong> Random insertion order can fragment clustered B-tree pages and enlarge secondary index entries; ordered keys or UUIDv7 may improve locality with trade-offs.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q15. How do you inspect a slow query?</strong></p>
+<p><strong>Answer:</strong> Capture slow log/digest, representative bind values, EXPLAIN/EXPLAIN ANALYZE where supported, row estimates, locks and timing under concurrency.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q16. What is a covering index?</strong></p>
+<p><strong>Answer:</strong> An index containing all columns needed by a query can avoid extra row lookup, subject to engine and plan; wide indexes cost writes and disk.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q17. What is gap locking?</strong></p>
+<p><strong>Answer:</strong> InnoDB may lock index gaps under some isolation/access patterns to prevent conflicting inserts; inspect isolation and exact predicate/index.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q18. Why can replication lag grow?</strong></p>
+<p><strong>Answer:</strong> Write bursts, large transactions, replica IO/CPU limits, locks and replay serialization can cause backlog; identify bottleneck before scaling.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q19. What are binary logs used for?</strong></p>
+<p><strong>Answer:</strong> They record database changes for replication and CDC depending on configuration; retention must cover consumer outages.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q20. What makes <code>SELECT *</code> harmful?</strong></p>
+<p><strong>Answer:</strong> It transfers unnecessary bytes, defeats narrow covering indexes, increases memory/network and couples callers to schema changes.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<h2 id="concurrency">Concurrency</h2>
+<p><strong>Q21. What is a deadlock?</strong></p>
+<p><strong>Answer:</strong> A cycle in a wait-for graph where transactions hold locks each other needs; engine aborts a victim. Retry complete idempotent transactions.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q22. How do you prevent deadlocks?</strong></p>
+<p><strong>Answer:</strong> Consistent lock ordering, short transactions, appropriate indexes, bounded concurrency and retries; prevention reduces but cannot eliminate all cases.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q23. What is write skew?</strong></p>
+<p><strong>Answer:</strong> Concurrent transactions read an invariant then update disjoint rows so the combined outcome violates it; use serializable isolation or explicit invariant locking.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q24. What is lost update?</strong></p>
+<p><strong>Answer:</strong> Concurrent writes overwrite each other without proper locking/version checks. Use optimistic version columns, atomic updates or row locks.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q25. Optimistic versus pessimistic locking?</strong></p>
+<p><strong>Answer:</strong> Optimistic detects conflict at write/commit and retries; pessimistic locks before modification. Choose based on contention and transaction duration.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q26. What does <code>SELECT FOR UPDATE</code> do?</strong></p>
+<p><strong>Answer:</strong> Acquires row-level locks on selected rows until transaction end; semantics depend on engine, isolation and index path.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q27. When use SERIALIZABLE?</strong></p>
+<p><strong>Answer:</strong> When business invariants require serial execution equivalence and application can retry serialization failures; expect extra conflicts or overhead.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q28. How do you implement safe retries?</strong></p>
+<p><strong>Answer:</strong> Retry whole transaction on classified transient SQLSTATE/error codes with exponential backoff, jitter, attempt cap and idempotency.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q29. Why are long transactions dangerous?</strong></p>
+<p><strong>Answer:</strong> They hold locks/snapshots, delay vacuum or purge, enlarge WAL/undo and prolong failover/recovery impact.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q30. How do you avoid duplicate API writes?</strong></p>
+<p><strong>Answer:</strong> Client idempotency keys enforced by unique constraints, request-body conflict checks and atomic persistence of result and side effects.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<h2 id="incidents">Incidents</h2>
+<p><strong>Q31. RDS CPU reaches 95%; first steps?</strong></p>
+<p><strong>Answer:</strong> Confirm time window and workload change; inspect DB load, top SQL, plans, waits and connection count; mitigate reversibly before resizing.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q32. DatabaseConnections spikes; likely causes?</strong></p>
+<p><strong>Answer:</strong> Pool leaks, scale-out multiplication, reconnect storms, idle transactions or traffic. Inspect app pools, DB sessions and recent deployments.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q33. How do you troubleshoot connection timeouts?</strong></p>
+<p><strong>Answer:</strong> Separate DNS, TCP, TLS, auth and pool acquisition; verify endpoint, VPC routes, SG/NACL, CA, DNS resolution and application logs.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q34. What does high read latency mean?</strong></p>
+<p><strong>Answer:</strong> Potential storage saturation, queueing, random access or instance contention; correlate IOPS, queue depth, SQL plans and cache misses.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q35. When terminate a blocker?</strong></p>
+<p><strong>Answer:</strong> After identifying ownership, business impact and rollback scope; cancel query first when appropriate, terminate only with approval and a recovery plan.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q36. Why can failover increase latency?</strong></p>
+<p><strong>Answer:</strong> Connections reset, DNS/caches change, new writer warms, clients retry simultaneously and pools reconnect; use backoff and bounded retries.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q37. What if free storage is nearly zero?</strong></p>
+<p><strong>Answer:</strong> Inspect growth, temp files, WAL/binlog retention and replication slots; stop uncontrolled growth and plan safe storage increase.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q38. How do you build a useful incident timeline?</strong></p>
+<p><strong>Answer:</strong> Correlate deployment times, AWS events, alarms, DB metrics, SQL changes, application errors and mitigation timestamps in UTC.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q39. What should a postmortem include?</strong></p>
+<p><strong>Answer:</strong> Impact, detection gap, timeline, contributing causes, decisions, recovery, measurable corrective actions, owners and follow-up tests.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q40. When not to fail over RDS?</strong></p>
+<p><strong>Answer:</strong> When issue is application SQL, bad schema or client load likely to follow the writer; failover adds disruption without fixing cause.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<h2 id="migration">Migration</h2>
+<p><strong>Q41. DMS full load versus CDC?</strong></p>
+<p><strong>Answer:</strong> Full load copies existing rows; CDC applies ongoing changes captured from logs, allowing catch-up before cutover with engine-specific prerequisites.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q42. What does DMS not migrate automatically?</strong></p>
+<p><strong>Answer:</strong> Many schema constructs, application SQL semantics, routines, permissions, sequences and unsupported types may require separate conversion.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q43. How do you size migration downtime?</strong></p>
+<p><strong>Answer:</strong> Measure initial load throughput, CDC lag under peak writes, freeze time, validation time, routing switch and rollback decision window.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q44. How do you validate migrated data?</strong></p>
+<p><strong>Answer:</strong> Compare counts, per-key hashes, aggregates, referential integrity, sequences and business invariants at a consistent checkpoint.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q45. What is a replication slot risk?</strong></p>
+<p><strong>Answer:</strong> A stalled logical consumer can retain WAL and exhaust storage; monitor retention and establish cleanup/alert procedures.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q46. How do you cut over safely?</strong></p>
+<p><strong>Answer:</strong> Freeze writes, drain CDC, reconcile, switch endpoint, verify application and keep rollback criteria explicit before resuming writes.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q47. What if CDC lag rises continuously?</strong></p>
+<p><strong>Answer:</strong> Inspect source log capture, network, replication capacity, target locks/indexes and large transactions; reduce source writes if allowed.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q48. Homogeneous versus heterogeneous migration?</strong></p>
+<p><strong>Answer:</strong> Same-engine migrations often preserve semantics better; heterogeneous moves need type, SQL, procedure and transaction behavior conversion.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q49. When prefer native dump/restore?</strong></p>
+<p><strong>Answer:</strong> Smaller data, acceptable downtime, simpler operational surface or objects not handled well by CDC; test restore duration.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q50. How do you handle target writes after cutover rollback?</strong></p>
+<p><strong>Answer:</strong> Use tested reverse replication/dual-write reconciliation or controlled business rollback; switching DNS back alone risks data loss.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<h2 id="microservices">Microservices</h2>
+<p><strong>Q51. What does database per service mean?</strong></p>
+<p><strong>Answer:</strong> Each service owns data and schema; it may share physical infrastructure but not uncontrolled direct writes across ownership boundaries.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q52. Why avoid cross-service joins?</strong></p>
+<p><strong>Answer:</strong> They couple availability, schema and deployment lifecycles; use APIs, events or materialized read models.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q53. What is the outbox pattern?</strong></p>
+<p><strong>Answer:</strong> Persist business state and event intent in one local transaction; relay asynchronously and deduplicate consumers.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q54. Why is exactly-once delivery difficult?</strong></p>
+<p><strong>Answer:</strong> Networks can lose acknowledgments and retries duplicate effects; build idempotent consumers and transactional boundaries.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q55. What is a saga?</strong></p>
+<p><strong>Answer:</strong> A series of local transactions coordinated by events or orchestrator with compensations; not a global ACID transaction.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q56. What is CQRS?</strong></p>
+<p><strong>Answer:</strong> Separate command and query models when read/write needs differ; it introduces projection lag and operational complexity.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q57. How do you handle read-after-write consistency?</strong></p>
+<p><strong>Answer:</strong> Read from writer, use session consistency tokens or delay replica routing until caught up.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q58. How do you budget connections?</strong></p>
+<p><strong>Answer:</strong> Sum pool limits across pods, workers, jobs and environments, leaving DB headroom; cap autoscaling and use backpressure.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q59. What is a hot partition?</strong></p>
+<p><strong>Answer:</strong> Uneven key distribution overloads one shard/partition; redesign key, split hot tenants or use workload-aware routing.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q60. When is shared DB acceptable?</strong></p>
+<p><strong>Answer:</strong> For a modular monolith or constrained system if schema ownership, permissions and future extraction paths are explicit.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<h2 id="saas">SaaS</h2>
+<p><strong>Q61. Shared table versus dedicated DB?</strong></p>
+<p><strong>Answer:</strong> Shared is efficient but needs rigorous tenant authorization; dedicated improves isolation and scaling at higher cost and complexity.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q62. What is row-level security?</strong></p>
+<p><strong>Answer:</strong> DB policy that filters/checks rows based on execution context; roles and trusted tenant context must be configured correctly.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q63. How can pooled sessions leak tenant data?</strong></p>
+<p><strong>Answer:</strong> Session-scoped tenant variables persist between requests unless reset; prefer transaction-local context and integration tests.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q64. How do you prevent noisy neighbors?</strong></p>
+<p><strong>Answer:</strong> Tenant quotas, rate limits, fair scheduling, workload isolation, per-tenant telemetry and dedicated tiers for heavy tenants.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q65. How do you migrate thousands of schemas?</strong></p>
+<p><strong>Answer:</strong> Versioned batches, idempotent scripts, canaries, rate limits, progress tracking and rollback/repair procedures.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q66. How do you measure per-tenant cost?</strong></p>
+<p><strong>Answer:</strong> Attribute requests, storage, IO, CPU proxies and support overhead, then model allocation assumptions and premium tiers.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q67. Can RLS replace app authorization?</strong></p>
+<p><strong>Answer:</strong> No. It is defense in depth; app must authenticate identity and validate tenant membership and operation-level permissions.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q68. How do you test isolation?</strong></p>
+<p><strong>Answer:</strong> Cross-tenant reads/writes, unset context, pooled reuse, background jobs, exports, restores and admin impersonation paths.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q69. How to choose tenant sharding key?</strong></p>
+<p><strong>Answer:</strong> Balance routing simplicity, hot-tenant isolation, rebalancing, residency requirements and query locality.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q70. How to support tenant-specific retention?</strong></p>
+<p><strong>Answer:</strong> Tag data with tenant policy, implement verified deletion/export workflows and reconcile backups/legal holds.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<h2 id="security">Security</h2>
+<p><strong>Q71. Does IAM DB auth grant SQL access?</strong></p>
+<p><strong>Answer:</strong> No. IAM controls token generation/connection authorization; database roles and grants control SQL operations.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q72. Encryption at rest versus TLS?</strong></p>
+<p><strong>Answer:</strong> At rest protects stored media/backups under configured KMS; TLS protects transport and validates endpoints when configured correctly.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q73. Why use <code>sslmode=verify-full</code>?</strong></p>
+<p><strong>Answer:</strong> It validates both trusted CA and hostname, reducing MITM risk compared with encryption without endpoint verification.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q74. How do you rotate secrets safely?</strong></p>
+<p><strong>Answer:</strong> Use supported rotation workflow, dual-credential transition where applicable, connection refresh, monitoring and rollback.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q75. What is least-privilege DB access?</strong></p>
+<p><strong>Answer:</strong> Separate read/write/migration/admin roles, grant only needed schema objects, review default privileges and revoke unused access.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q76. What is SQL injection defense?</strong></p>
+<p><strong>Answer:</strong> Parameterized queries for values, allowlisted identifiers, restricted roles and tests; never concatenate untrusted input into SQL.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q77. What does CloudTrail capture for RDS?</strong></p>
+<p><strong>Answer:</strong> AWS API control-plane activity; it is not a full record of SQL queries. Use engine audit/logging for database actions.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q78. Why are public RDS endpoints risky?</strong></p>
+<p><strong>Answer:</strong> They enlarge exposure and require stricter access controls; private networking with narrow SGs is preferred for app workloads.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q79. What happens if a KMS key is deleted?</strong></p>
+<p><strong>Answer:</strong> Encrypted database/snapshot material depending on that key may become inaccessible; manage key lifecycle and recovery carefully.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q80. How do you secure Terraform state?</strong></p>
+<p><strong>Answer:</strong> Encrypt remote backend, least-privilege access, locking, versioning, audit trails and never publish state or secrets.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<h2 id="dr">DR</h2>
+<p><strong>Q81. Define RTO and RPO.</strong></p>
+<p><strong>Answer:</strong> RTO is target recovery time; RPO is maximum tolerable data-loss window. Validate both with measured drills.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q82. Does Multi-AZ provide zero RPO in all failures?</strong></p>
+<p><strong>Answer:</strong> Do not promise universal zero data loss; durability/failover guarantees depend on topology and failure conditions. Verify documented semantics and test.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q83. Read replica versus standby?</strong></p>
+<p><strong>Answer:</strong> Traditional Multi-AZ standby is for HA and generally not readable; read replicas serve read scaling/DR with replication lag.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q84. Snapshot versus PITR?</strong></p>
+<p><strong>Answer:</strong> Snapshot captures a point-in-time image; PITR reconstructs to a supported timestamp using backup/log history and creates a new DB.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q85. Why test restores?</strong></p>
+<p><strong>Answer:</strong> Backups can exist while credentials, KMS, network, application compatibility or procedures make recovery impossible or too slow.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q86. How to plan cross-region recovery?</strong></p>
+<p><strong>Answer:</strong> Preplan encryption keys, snapshots/replication, networking, DNS, quotas, IAM, capacity and data consistency.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q87. What is split-brain risk?</strong></p>
+<p><strong>Answer:</strong> Two writers accept divergent updates during recovery; enforce a single writer and controlled cutover/fencing.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q88. How do you verify DR success?</strong></p>
+<p><strong>Answer:</strong> Run synthetic transactions, consistency checks, application SLO tests and record actual RTO/RPO and data divergence.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q89. What is failback?</strong></p>
+<p><strong>Answer:</strong> Controlled return to original region after recovery, requiring data reconciliation, traffic switch and rollback criteria.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q90. How often should you run drills?</strong></p>
+<p><strong>Answer:</strong> Based on business criticality, changes and compliance; establish recurring realistic tests and track remediation, not a universal fixed interval.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<h2 id="capstone">Capstone</h2>
+<p><strong>Q91. What makes an RDS design production-ready?</strong></p>
+<p><strong>Answer:</strong> Explicit SLOs, capacity budgets, private networking, TLS, least privilege, HA/DR, observability, migrations, backups and rehearsed operations.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q92. How do you make migrations backward-compatible?</strong></p>
+<p><strong>Answer:</strong> Expand schema first, deploy compatible readers/writers, backfill, switch traffic, then contract after verifying old clients are gone.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q93. How do you size RDS?</strong></p>
+<p><strong>Answer:</strong> Measure CPU, memory pressure, query mix, IO, storage growth, connections, peak concurrency and headroom under representative load.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q94. How do you test failover behavior?</strong></p>
+<p><strong>Answer:</strong> In disposable HA environment, initiate supported failover, capture client errors/reconnect time and verify write correctness.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q95. What should an architecture decision record include?</strong></p>
+<p><strong>Answer:</strong> Context, alternatives, decision, trade-offs, constraints, expected consequences and review trigger.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q96. What is a database SLO?</strong></p>
+<p><strong>Answer:</strong> A measurable reliability target such as successful write availability or p99 query latency over a defined window.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q97. What is a safe rollback for schema changes?</strong></p>
+<p><strong>Answer:</strong> Prefer forward-compatible migrations and application rollback; destructive schema reversal often loses data and needs a recovery plan.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q98. How do you prevent pool storms?</strong></p>
+<p><strong>Answer:</strong> Cap pools, stagger starts, jitter retries, use readiness gates, bound autoscaling and optionally proxy compatible sessions.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q99. How do you measure optimization success?</strong></p>
+<p><strong>Answer:</strong> Compare matched workload p95/p99, throughput, resource use, error rate and regression tests, not one isolated EXPLAIN.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<p><strong>Q100. What distinguishes senior ownership?</strong></p>
+<p><strong>Answer:</strong> Ability to articulate trade-offs, define safe rollout and rollback, debug across layers, quantify risk and mentor with reproducible evidence.</p>
+<p><strong>Follow-up drill:</strong> Describe how you would validate this claim using a controlled lab, metrics, and an operational rollback criterion.</p>
+<h1 id="glossary-and-further-reading">Glossary and further reading</h1>
+<p><strong>ACID:</strong> Atomicity, Consistency, Isolation, Durability. <strong>CDC:</strong> Change Data Capture. <strong>CTE:</strong> Common Table Expression. <strong>DMS:</strong> AWS Database Migration Service. <strong>HOT:</strong> Heap-only tuple. <strong>IOPS:</strong> IO operations per second. <strong>MVCC:</strong> Multi-Version Concurrency Control. <strong>PITR:</strong> Point-in-time recovery. <strong>RDS:</strong> Relational Database Service. <strong>RLS:</strong> Row-Level Security. <strong>RPO:</strong> Recovery Point Objective. <strong>RTO:</strong> Recovery Time Objective. <strong>SLO:</strong> Service-Level Objective. <strong>WAL:</strong> Write-Ahead Log. <strong>Write skew:</strong> concurrency anomaly where separate writes violate a shared invariant.</p>
+<h2 id="authoritative-documentation-to-verify-before-deployment">Authoritative documentation to verify before deployment</h2>
+<ul>
+<li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html">Amazon RDS User Guide</a></li>
+<li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html">Amazon RDS for PostgreSQL</a></li>
+<li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_MySQL.html">Amazon RDS for MySQL</a></li>
+<li><a href="https://docs.aws.amazon.com/dms/latest/userguide/Welcome.html">AWS Database Migration Service</a></li>
+<li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/APIReference/Welcome.html">Amazon RDS API Reference</a></li>
+<li><a href="https://www.postgresql.org/docs/current/">PostgreSQL Documentation</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.4/en/">MySQL Reference Manual</a></li>
+<li><a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance">Terraform AWS Provider documentation</a></li>
+<li><a href="https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html">AWS Well-Architected Framework</a></li>
+</ul>
+<h2 id="study-plan-and-evaluation">Study plan and evaluation</h2>
+<p><strong>Weeks 1–2:</strong> PostgreSQL/MySQL plans, locks and tuning; collect before/after benchmark evidence. <strong>Week 3:</strong> diagnose three controlled incidents. <strong>Week 4:</strong> DMS migration rehearsal and reconciliation. <strong>Week 5:</strong> service boundaries, outbox and tenant-isolation tests. <strong>Week 6:</strong> security review and DR restore. <strong>Weeks 7–8:</strong> capstone integration, load test, architecture review and 100-question oral drill.</p>
+<p><strong>Senior pass criteria:</strong> reproducible deployments; no public database access; evidence of TLS verification; reliable migrations; measured performance gains; bounded connection count; successful recovery drill; documented incident runbooks; architecture decisions with explicit trade-offs. Never claim hands-on proficiency from reading alone—execute and validate in your own account/lab.</p>
+</article></main><footer>ARTHA Gurukul · Source material preserved as educational notes</footer></body></html>

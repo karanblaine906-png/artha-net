@@ -1,0 +1,2490 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AWS VPC Networking in Depth | ARTHA Gurukul</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><a class="brand" href="../index.html">✦ ARTHA GURUKUL</a><nav><a href="../index.html#courses">All Courses</a><a href="index.html">Source Library</a></nav></header><main class="book-layout"><aside class="book-toc"><div class="eyebrow">Original material · offline copy</div><h2>AWS VPC Networking in Depth</h2><a href="../index.html">⌂ Course library</a><div class="toc"><a href="#chapter-8-aws-vpc-networking-in-depth">CHAPTER 8 --- AWS VPC NETWORKING IN DEPTH</a><a href="#8-1-learning-objectives">8.1 Learning Objectives</a><a href="#8-2-why-advanced-vpc-networking-matters">8.2 Why Advanced VPC Networking Matters</a><a href="#8-3-enterprise-network-example">8.3 Enterprise Network Example</a><a href="#8-4-routing-is-the-foundation">8.4 Routing Is the Foundation</a><a href="#8-5-forward-and-return-path">8.5 Forward and Return Path</a><a href="#8-6-longest-prefix-match">8.6 Longest Prefix Match</a><a href="#8-7-route-specificity">8.7 Route Specificity</a><a href="#8-8-vpc-peering">8.8 VPC Peering</a><a href="#8-9-vpc-peering-requirements">8.9 VPC Peering Requirements</a><a href="#8-10-peering-route-example">8.10 Peering Route Example</a><a href="#8-11-vpc-peering-is-non-transitive">8.11 VPC Peering Is Non-Transitive</a><a href="#8-12-non-transitive-example">8.12 Non-Transitive Example</a><a href="#8-13-peering-mesh-problem">8.13 Peering Mesh Problem</a><a href="#8-14-transit-gateway">8.14 Transit Gateway</a><a href="#8-15-hub-and-spoke-model">8.15 Hub-and-Spoke Model</a><a href="#8-16-transit-gateway-attachment">8.16 Transit Gateway Attachment</a><a href="#8-17-vpc-route-to-transit-gateway">8.17 VPC Route to Transit Gateway</a><a href="#8-18-transit-gateway-route-table">8.18 Transit Gateway Route Table</a><a href="#8-19-two-routing-layers">8.19 Two Routing Layers</a><a href="#8-20-transit-gateway-association">8.20 Transit Gateway Association</a><a href="#8-21-transit-gateway-propagation">8.21 Transit Gateway Propagation</a><a href="#8-22-tgw-segmentation">8.22 TGW Segmentation</a><a href="#8-23-segmented-architecture">8.23 Segmented Architecture</a><a href="#8-24-vpc-peering-vs-transit-gateway">8.24 VPC Peering vs Transit Gateway</a><a href="#8-25-site-to-site-vpn">8.25 Site-to-Site VPN</a><a href="#8-26-vpn-components">8.26 VPN Components</a><a href="#8-27-customer-gateway">8.27 Customer Gateway</a><a href="#8-28-virtual-private-gateway">8.28 Virtual Private Gateway</a><a href="#8-29-vpn-redundancy">8.29 VPN Redundancy</a><a href="#8-30-static-vs-dynamic-routing">8.30 Static vs Dynamic Routing</a><a href="#8-31-bgp">8.31 BGP</a><a href="#8-32-why-bgp-matters">8.32 Why BGP Matters</a><a href="#8-33-asn">8.33 ASN</a><a href="#8-34-aws-direct-connect">8.34 AWS Direct Connect</a><a href="#8-35-why-direct-connect">8.35 Why Direct Connect?</a><a href="#8-36-direct-connect-is-not-automatically-highly-available">8.36 Direct Connect Is Not Automatically Highly Available</a><a href="#8-37-direct-connect-gateway-concept">8.37 Direct Connect Gateway Concept</a><a href="#8-38-hybrid-connectivity-design">8.38 Hybrid Connectivity Design</a><a href="#8-39-route-propagation">8.39 Route Propagation</a><a href="#8-40-hybrid-dns-problem">8.40 Hybrid DNS Problem</a><a href="#8-41-route-53-resolver">8.41 Route 53 Resolver</a><a href="#8-42-resolver-outbound-endpoint">8.42 Resolver Outbound Endpoint</a><a href="#8-43-resolver-rule">8.43 Resolver Rule</a><a href="#8-44-resolver-inbound-endpoint">8.44 Resolver Inbound Endpoint</a><a href="#8-45-hybrid-dns-architecture">8.45 Hybrid DNS Architecture</a><a href="#8-46-private-hosted-zone">8.46 Private Hosted Zone</a><a href="#8-47-dns-is-part-of-network-architecture">8.47 DNS Is Part of Network Architecture</a><a href="#8-48-vpc-endpoints-in-depth">8.48 VPC Endpoints in Depth</a><a href="#8-49-gateway-endpoint-recap">8.49 Gateway Endpoint Recap</a><a href="#8-50-interface-endpoint-recap">8.50 Interface Endpoint Recap</a><a href="#8-51-interface-endpoint-security">8.51 Interface Endpoint Security</a><a href="#8-52-endpoint-policy">8.52 Endpoint Policy</a><a href="#8-53-aws-privatelink">8.53 AWS PrivateLink</a><a href="#8-54-privatelink-provider-architecture">8.54 PrivateLink Provider Architecture</a><a href="#8-55-privatelink-consumer-architecture">8.55 PrivateLink Consumer Architecture</a><a href="#8-56-privatelink-vs-vpc-peering">8.56 PrivateLink vs VPC Peering</a><a href="#8-57-privatelink-use-case">8.57 PrivateLink Use Case</a><a href="#8-58-ipv6-in-amazon-vpc">8.58 IPv6 in Amazon VPC</a><a href="#8-59-ipv6-does-not-use-nat-in-the-same-way-as-ipv4">8.59 IPv6 Does Not Use NAT in the Same Way as IPv4</a><a href="#8-60-dual-stack">8.60 Dual Stack</a><a href="#8-61-ipv6-route">8.61 IPv6 Route</a><a href="#8-62-egress-only-internet-gateway">8.62 Egress-Only Internet Gateway</a><a href="#8-63-ipv4-vs-ipv6-egress">8.63 IPv4 vs IPv6 Egress</a><a href="#8-64-load-balancer-networking">8.64 Load Balancer Networking</a><a href="#8-65-application-load-balancer">8.65 Application Load Balancer</a><a href="#8-66-network-load-balancer">8.66 Network Load Balancer</a><a href="#8-67-gateway-load-balancer">8.67 Gateway Load Balancer</a><a href="#8-68-internet-facing-vs-internal-load-balancer">8.68 Internet-Facing vs Internal Load Balancer</a><a href="#8-69-cross-zone-concepts">8.69 Cross-Zone Concepts</a><a href="#8-70-centralized-egress">8.70 Centralized Egress</a><a href="#8-71-egress-vpc">8.71 Egress VPC</a><a href="#8-72-centralized-egress-packet-path">8.72 Centralized Egress Packet Path</a><a href="#8-73-return-path-importance">8.73 Return-Path Importance</a><a href="#8-74-inspection-vpc">8.74 Inspection VPC</a><a href="#8-75-aws-network-firewall">8.75 AWS Network Firewall</a><a href="#8-76-network-firewall-architecture">8.76 Network Firewall Architecture</a><a href="#8-77-firewall-is-not-a-replacement-for-security-groups">8.77 Firewall Is Not a Replacement for Security Groups</a><a href="#8-78-vpc-flow-logs-in-depth">8.78 VPC Flow Logs in Depth</a><a href="#8-79-example-flow-concept">8.79 Example Flow Concept</a><a href="#8-80-accept-does-not-mean-application-success">8.80 ACCEPT Does Not Mean Application Success</a><a href="#8-81-reject-analysis">8.81 REJECT Analysis</a><a href="#8-82-reachability-analyzer">8.82 Reachability Analyzer</a><a href="#8-83-reachability-analyzer-is-not-a-live-packet-generator">8.83 Reachability Analyzer Is Not a Live Packet Generator</a><a href="#8-84-network-troubleshooting-layers">8.84 Network Troubleshooting Layers</a><a href="#8-85-troubleshooting-peering">8.85 Troubleshooting Peering</a><a href="#8-86-peering-dns">8.86 Peering DNS</a><a href="#8-87-troubleshooting-transit-gateway">8.87 Troubleshooting Transit Gateway</a><a href="#8-88-tgw-blackhole-route">8.88 TGW Blackhole Route</a><a href="#8-89-troubleshooting-vpn">8.89 Troubleshooting VPN</a><a href="#8-90-vpn-tunnel-up-but-no-traffic">8.90 VPN Tunnel Up but No Traffic</a><a href="#8-91-troubleshooting-direct-connect">8.91 Troubleshooting Direct Connect</a><a href="#8-92-hybrid-dns-failure">8.92 Hybrid DNS Failure</a><a href="#8-93-privatelink-troubleshooting">8.93 PrivateLink Troubleshooting</a><a href="#8-94-ipv6-troubleshooting">8.94 IPv6 Troubleshooting</a><a href="#8-95-cli-describe-peering-connections">8.95 CLI --- Describe Peering Connections</a><a href="#8-96-cli-describe-transit-gateways">8.96 CLI --- Describe Transit Gateways</a><a href="#8-97-cli-describe-tgw-attachments">8.97 CLI --- Describe TGW Attachments</a><a href="#8-98-cli-transit-gateway-route-tables">8.98 CLI --- Transit Gateway Route Tables</a><a href="#8-99-cli-vpn-connections">8.99 CLI --- VPN Connections</a><a href="#8-100-cli-vpc-endpoints">8.100 CLI --- VPC Endpoints</a><a href="#8-101-cli-network-interfaces">8.101 CLI --- Network Interfaces</a><a href="#8-102-lab-1-vpc-peering-design">8.102 Lab 1 --- VPC Peering Design</a><a href="#8-103-lab-2-create-peering-with-cli">8.103 Lab 2 --- Create Peering with CLI</a><a href="#8-104-lab-3-prove-non-transitive-routing">8.104 Lab 3 --- Prove Non-Transitive Routing</a><a href="#8-105-lab-4-transit-gateway-design">8.105 Lab 4 --- Transit Gateway Design</a><a href="#8-106-lab-5-hybrid-vpn-paper-lab">8.106 Lab 5 --- Hybrid VPN Paper Lab</a><a href="#8-107-lab-6-hybrid-dns-design">8.107 Lab 6 --- Hybrid DNS Design</a><a href="#8-108-lab-7-interface-endpoint">8.108 Lab 7 --- Interface Endpoint</a><a href="#8-109-lab-8-centralized-egress">8.109 Lab 8 --- Centralized Egress</a><a href="#8-110-lab-9-flow-log-analysis">8.110 Lab 9 --- Flow Log Analysis</a><a href="#8-111-lab-10-ipv6-design">8.111 Lab 10 --- IPv6 Design</a><a href="#8-112-production-pattern-shared-services-vpc">8.112 Production Pattern --- Shared Services VPC</a><a href="#8-113-production-pattern-network-account">8.113 Production Pattern --- Network Account</a><a href="#8-114-production-pattern-central-inspection">8.114 Production Pattern --- Central Inspection</a><a href="#8-115-production-pattern-service-exposure">8.115 Production Pattern --- Service Exposure</a><a href="#8-116-production-pattern-endpoint-first-private-vpc">8.116 Production Pattern --- Endpoint-First Private VPC</a><a href="#8-117-common-mistakes">8.117 Common Mistakes</a><a href="#8-118-concept-clearing">8.118 Concept Clearing</a><a href="#8-119-interview-questions-vpc-peering">8.119 Interview Questions --- VPC Peering</a><a href="#q1-is-vpc-peering-transitive">Q1. Is VPC Peering transitive?</a><a href="#q2-what-is-required-after-creating-a-peering-connection">Q2. What is required after creating a peering connection?</a><a href="#8-120-interview-questions-transit-gateway">8.120 Interview Questions --- Transit Gateway</a><a href="#q3-why-use-transit-gateway">Q3. Why use Transit Gateway?</a><a href="#q4-what-are-the-two-routing-layers-with-tgw">Q4. What are the two routing layers with TGW?</a><a href="#q5-can-tgw-isolate-production-from-development">Q5. Can TGW isolate production from development?</a><a href="#8-121-interview-questions-hybrid">8.121 Interview Questions --- Hybrid</a><a href="#q6-vpn-vs-direct-connect">Q6. VPN vs Direct Connect?</a><a href="#q7-what-is-bgp-used-for">Q7. What is BGP used for?</a><a href="#q8-tunnel-is-up-but-application-is-unreachable-what-do-you-check">Q8. Tunnel is UP but application is unreachable. What do you check?</a><a href="#8-122-interview-questions-dns">8.122 Interview Questions --- DNS</a><a href="#q9-aws-instance-can-reach-on-prem-by-ip-but-not-hostname-what-is-likely-wrong">Q9. AWS instance can reach on-prem by IP but not hostname. What is likely wrong?</a><a href="#q10-what-is-a-resolver-inbound-endpoint">Q10. What is a Resolver inbound endpoint?</a><a href="#8-123-interview-questions-privatelink">8.123 Interview Questions --- PrivateLink</a><a href="#q11-privatelink-vs-vpc-peering">Q11. PrivateLink vs VPC Peering?</a><a href="#q12-why-might-privatelink-be-more-secure-for-a-shared-service">Q12. Why might PrivateLink be more secure for a shared service?</a><a href="#8-124-interview-questions-ipv6">8.124 Interview Questions --- IPv6</a><a href="#q13-what-is-the-ipv6-default-route">Q13. What is the IPv6 default route?</a><a href="#q14-what-is-an-egress-only-internet-gateway">Q14. What is an Egress-only Internet Gateway?</a><a href="#q15-does-nat-gateway-solve-ipv6-private-egress-in-the-same-way-as-ipv4">Q15. Does NAT Gateway solve IPv6 private egress in the same way as IPv4?</a><a href="#8-125-senior-scenario-50-vpcs">8.125 Senior Scenario --- 50 VPCs</a><a href="#8-126-senior-scenario-production-cannot-reach-shared-dns">8.126 Senior Scenario --- Production Cannot Reach Shared DNS</a><a href="#8-127-senior-scenario-asymmetric-firewall-path">8.127 Senior Scenario --- Asymmetric Firewall Path</a><a href="#8-128-senior-scenario-private-eks-cluster">8.128 Senior Scenario --- Private EKS Cluster</a><a href="#8-129-senior-scenario-partner-access">8.129 Senior Scenario --- Partner Access</a><a href="#8-130-senior-scenario-hybrid-dr">8.130 Senior Scenario --- Hybrid DR</a><a href="#8-131-senior-scenario-nat-cost-spike">8.131 Senior Scenario --- NAT Cost Spike</a><a href="#8-132-senior-scenario-ipv6-exposure">8.132 Senior Scenario --- IPv6 Exposure</a><a href="#8-133-senior-scenario-flow-log-accept-http-500">8.133 Senior Scenario --- Flow Log ACCEPT + HTTP 500</a><a href="#8-134-production-troubleshooting-worksheet">8.134 Production Troubleshooting Worksheet</a><a href="#8-135-packet-path-method">8.135 Packet-Path Method</a><a href="#8-136-production-network-design-checklist">8.136 Production Network Design Checklist</a><a href="#8-137-complete-enterprise-architecture">8.137 Complete Enterprise Architecture</a><a href="#8-138-quick-revision">8.138 Quick Revision</a><a href="#8-139-chapter-summary">8.139 Chapter Summary</a><a href="#8-140-references">8.140 References</a><a href="#next-chapter">NEXT CHAPTER</a><a href="#chapter-9-production-vpc-design-lab">CHAPTER 9 --- PRODUCTION VPC DESIGN LAB</a></div></aside><article class="book-prose"><p class="source-note">Historical course notes converted into searchable offline HTML. Some content may be a draft; exercises requiring cloud accounts need credentials and may incur costs.</p><h1 id="chapter-8-aws-vpc-networking-in-depth"><strong>CHAPTER 8 --- AWS VPC NETWORKING IN DEPTH</strong></h1>
+<p><strong>Page: 195--236</strong></p>
+<hr/>
+<h2 id="8-1-learning-objectives"><strong>8.1 Learning Objectives</strong></h2>
+<p>By the end of this chapter, you should understand:</p>
+<ul>
+<li>Advanced VPC routing</li>
+<li>Route-table design and route selection</li>
+<li>VPC Peering</li>
+<li>Peering limitations and non-transitive routing</li>
+<li>AWS Transit Gateway</li>
+<li>Hub-and-spoke networking</li>
+<li>Transit Gateway route tables</li>
+<li>Site-to-Site VPN</li>
+<li>Virtual Private Gateway</li>
+<li>Customer Gateway</li>
+<li>BGP fundamentals</li>
+<li>AWS Direct Connect concepts</li>
+<li>Hybrid connectivity</li>
+<li>Route propagation</li>
+<li>Route 53 Resolver</li>
+<li>Hybrid DNS</li>
+<li>Inbound and outbound Resolver endpoints</li>
+<li>VPC endpoints in depth</li>
+<li>AWS PrivateLink</li>
+<li>Endpoint services</li>
+<li>IPv6 in Amazon VPC</li>
+<li>Egress-only Internet Gateway</li>
+<li>Dual-stack networking</li>
+<li>Load-balancer networking</li>
+<li>Centralized egress</li>
+<li>Inspection VPC architecture</li>
+<li>AWS Network Firewall concepts</li>
+<li>VPC Flow Logs analysis</li>
+<li>Reachability Analyzer concepts</li>
+<li>Network troubleshooting methodology</li>
+<li>Production network design patterns</li>
+<li>Senior-level interview scenarios</li>
+</ul>
+<hr/>
+<h1 id="8-2-why-advanced-vpc-networking-matters"><strong>8.2 Why Advanced VPC Networking Matters</strong></h1>
+<p>A single VPC is easy to understand:</p>
+<pre><code class="language-text">Internet
+   |
+   v
+VPC
+   |
+   +--&gt; Public Subnet
+   +--&gt; Private Subnet
+</code></pre>
+<p>Enterprise environments are different.</p>
+<p>You may have:</p>
+<pre><code class="language-text">Production VPC
+Development VPC
+Security VPC
+Shared Services VPC
+EKS VPC
+Database VPC
+On-Premises Data Center
+Branch Offices
+Partner Networks
+Multiple AWS Accounts
+Multiple AWS Regions
+</code></pre>
+<p>Now the question becomes:</p>
+<blockquote>
+<p><strong>How should all these networks communicate securely, reliably and
+predictably?</strong></p>
+</blockquote>
+<hr/>
+<h1 id="8-3-enterprise-network-example"><strong>8.3 Enterprise Network Example</strong></h1>
+<pre><code class="language-text">                     ON-PREMISES
+                          |
+                          |
+                    VPN / Direct Connect
+                          |
+                          v
+                  Transit Gateway
+                 /       |        \
+                /        |         \
+               v         v          v
+           PROD VPC   DEV VPC   SHARED VPC
+              |          |           |
+              v          v           v
+          Workloads   Workloads    DNS/Tools
+</code></pre>
+<p>This is much closer to real enterprise AWS networking.</p>
+<hr/>
+<h1 id="8-4-routing-is-the-foundation"><strong>8.4 Routing Is the Foundation</strong></h1>
+<p>Before studying advanced AWS networking, remember:</p>
+<pre><code class="language-text">SOURCE
+   |
+   v
+ROUTE TABLE
+   |
+   v
+TARGET
+   |
+   v
+DESTINATION
+</code></pre>
+<p>A connection requires a valid path in both directions.</p>
+<p>A common mistake is to check only the forward route.</p>
+<hr/>
+<h1 id="8-5-forward-and-return-path"><strong>8.5 Forward and Return Path</strong></h1>
+<p>Example:</p>
+<pre><code class="language-text">VPC-A
+10.10.0.0/16
+</code></pre>
+<p>to:</p>
+<pre><code class="language-text">VPC-B
+10.20.0.0/16
+</code></pre>
+<p>Forward:</p>
+<pre><code class="language-text">10.10.0.0/16
+      |
+      v
+10.20.0.0/16
+</code></pre>
+<p>Return:</p>
+<pre><code class="language-text">10.20.0.0/16
+      |
+      v
+10.10.0.0/16
+</code></pre>
+<p>If the return route is missing, communication fails even when the
+forward route exists.</p>
+<hr/>
+<h1 id="8-6-longest-prefix-match"><strong>8.6 Longest Prefix Match</strong></h1>
+<p>Suppose a route table contains:</p>
+<pre><code class="language-text">10.0.0.0/8       -&gt; Transit Gateway
+10.20.0.0/16     -&gt; VPC Peering
+0.0.0.0/0        -&gt; NAT Gateway
+</code></pre>
+<p>Destination:</p>
+<pre><code class="language-text">10.20.15.25
+</code></pre>
+<p>The most specific matching route is:</p>
+<pre><code class="language-text">10.20.0.0/16
+</code></pre>
+<p>Therefore the peering route is selected.</p>
+<hr/>
+<h1 id="8-7-route-specificity"><strong>8.7 Route Specificity</strong></h1>
+<p>More specific:</p>
+<pre><code class="language-text">/24
+</code></pre>
+<p>beats:</p>
+<pre><code class="language-text">/16
+</code></pre>
+<p>which beats:</p>
+<pre><code class="language-text">/8
+</code></pre>
+<p>which beats:</p>
+<pre><code class="language-text">/0
+</code></pre>
+<p>This simple concept explains many AWS routing decisions.</p>
+<hr/>
+<h1 id="8-8-vpc-peering"><strong>8.8 VPC Peering</strong></h1>
+<p>VPC Peering provides private connectivity between two VPCs.</p>
+<p>Architecture:</p>
+<pre><code class="language-text">VPC-A
+10.10.0.0/16
+    |
+    v
+VPC Peering
+    |
+    v
+VPC-B
+10.20.0.0/16
+</code></pre>
+<p>Traffic uses private IP connectivity.</p>
+<hr/>
+<h1 id="8-9-vpc-peering-requirements"><strong>8.9 VPC Peering Requirements</strong></h1>
+<p>For communication, typically you need:</p>
+<pre><code class="language-text">Peering connection
+Route in VPC-A
+Route in VPC-B
+Security Group permissions
+NACL permissions
+Application listener
+DNS configuration where required
+</code></pre>
+<p>Creating the peering connection alone is not enough.</p>
+<hr/>
+<h1 id="8-10-peering-route-example"><strong>8.10 Peering Route Example</strong></h1>
+<p>VPC-A route:</p>
+<pre><code class="language-text">Destination:
+10.20.0.0/16
+
+Target:
+pcx-xxxxxxxx
+</code></pre>
+<p>VPC-B route:</p>
+<pre><code class="language-text">Destination:
+10.10.0.0/16
+
+Target:
+pcx-xxxxxxxx
+</code></pre>
+<p>Now both sides know how to reach each other.</p>
+<hr/>
+<h1 id="8-11-vpc-peering-is-non-transitive"><strong>8.11 VPC Peering Is Non-Transitive</strong></h1>
+<p>Suppose:</p>
+<pre><code class="language-text">VPC-A &lt;----&gt; VPC-B &lt;----&gt; VPC-C
+</code></pre>
+<p>This does <strong>not</strong> automatically mean:</p>
+<pre><code class="language-text">VPC-A &lt;----&gt; VPC-C
+</code></pre>
+<p>VPC Peering is not transitive.</p>
+<p>This is one of the most important interview points.</p>
+<hr/>
+<h1 id="8-12-non-transitive-example"><strong>8.12 Non-Transitive Example</strong></h1>
+<p>Connections:</p>
+<pre><code class="language-text">A-B = Peered
+B-C = Peered
+</code></pre>
+<p>Desired:</p>
+<pre><code class="language-text">A -&gt; B -&gt; C
+</code></pre>
+<p>VPC Peering does not turn B into a transit router for A and C.</p>
+<p>For many-VPC connectivity, Transit Gateway is often a better
+architecture.</p>
+<hr/>
+<h1 id="8-13-peering-mesh-problem"><strong>8.13 Peering Mesh Problem</strong></h1>
+<p>With only two VPCs:</p>
+<pre><code class="language-text">A &lt;--&gt; B
+</code></pre>
+<p>simple.</p>
+<p>With five VPCs:</p>
+<pre><code class="language-text">A
+|\ \
+| \ \
+B--C--D--E
+</code></pre>
+<p>Full-mesh peering becomes operationally complex.</p>
+<p>The number of possible pairwise relationships grows rapidly.</p>
+<hr/>
+<h1 id="8-14-transit-gateway"><strong>8.14 Transit Gateway</strong></h1>
+<p>AWS Transit Gateway provides a central routing hub for connecting VPCs
+and supported external networks.</p>
+<p>Concept:</p>
+<pre><code class="language-text">             VPC-A
+               |
+               v
+             +-----+
+VPC-B ------&gt;| TGW |&lt;------ VPC-C
+             +-----+
+               ^
+               |
+          On-Premises
+</code></pre>
+<p>TGW simplifies many-to-many connectivity.</p>
+<hr/>
+<h1 id="8-15-hub-and-spoke-model"><strong>8.15 Hub-and-Spoke Model</strong></h1>
+<p>Transit Gateway commonly enables:</p>
+<pre><code class="language-text">              HUB
+              TGW
+        /      |      \
+       /       |       \
+      v        v        v
+   PROD      DEV     SHARED
+</code></pre>
+<p>Each VPC is a spoke.</p>
+<p>Benefits:</p>
+<pre><code class="language-text">Centralized routing
+Simpler topology
+Scalable connectivity
+Network segmentation
+Hybrid connectivity
+</code></pre>
+<hr/>
+<h1 id="8-16-transit-gateway-attachment"><strong>8.16 Transit Gateway Attachment</strong></h1>
+<p>A VPC connects to a TGW through a Transit Gateway VPC attachment.</p>
+<p>Concept:</p>
+<pre><code class="language-text">VPC
+ |
+ v
+TGW Attachment
+ |
+ v
+Transit Gateway
+</code></pre>
+<p>The attachment uses selected subnets in the VPC for TGW connectivity.</p>
+<hr/>
+<h1 id="8-17-vpc-route-to-transit-gateway"><strong>8.17 VPC Route to Transit Gateway</strong></h1>
+<p>Example VPC route:</p>
+<pre><code class="language-text">Destination:
+10.20.0.0/16
+
+Target:
+tgw-xxxxxxxx
+</code></pre>
+<p>This tells the VPC:</p>
+<pre><code class="language-text">Traffic for 10.20.0.0/16
+go to Transit Gateway
+</code></pre>
+<hr/>
+<h1 id="8-18-transit-gateway-route-table"><strong>8.18 Transit Gateway Route Table</strong></h1>
+<p>TGW has its own routing domain.</p>
+<p>Example:</p>
+<pre><code class="language-text">Destination        Attachment
+
+10.10.0.0/16       prod-vpc
+10.20.0.0/16       dev-vpc
+10.30.0.0/16       shared-vpc
+172.16.0.0/16      vpn
+</code></pre>
+<p>This is separate from each VPC's route table.</p>
+<hr/>
+<h1 id="8-19-two-routing-layers"><strong>8.19 Two Routing Layers</strong></h1>
+<p>When using TGW, reason through:</p>
+<pre><code class="language-text">VPC Route Table
+       |
+       v
+Transit Gateway
+       |
+       v
+TGW Route Table
+       |
+       v
+Destination Attachment
+       |
+       v
+Destination VPC Route Table
+</code></pre>
+<p>Troubleshooting only the VPC route table is insufficient.</p>
+<hr/>
+<h1 id="8-20-transit-gateway-association"><strong>8.20 Transit Gateway Association</strong></h1>
+<p>A TGW attachment can be associated with a TGW route table.</p>
+<p>Concept:</p>
+<pre><code class="language-text">Attachment
+    |
+    v
+TGW Route Table
+</code></pre>
+<p>Association determines which TGW route table is used for traffic
+entering from that attachment.</p>
+<hr/>
+<h1 id="8-21-transit-gateway-propagation"><strong>8.21 Transit Gateway Propagation</strong></h1>
+<p>Routes from an attachment can be propagated into TGW route tables when
+configured.</p>
+<p>Concept:</p>
+<pre><code class="language-text">VPC Attachment
+      |
+      v
+Route Propagation
+      |
+      v
+TGW Route Table
+</code></pre>
+<p>This reduces some manual route management.</p>
+<hr/>
+<h1 id="8-22-tgw-segmentation"><strong>8.22 TGW Segmentation</strong></h1>
+<p>You may not want all VPCs to communicate.</p>
+<p>Example:</p>
+<pre><code class="language-text">Production
+    X
+Development
+</code></pre>
+<p>but both may need:</p>
+<pre><code class="language-text">Shared Services
+</code></pre>
+<p>TGW route tables can help create segmented routing domains.</p>
+<hr/>
+<h1 id="8-23-segmented-architecture"><strong>8.23 Segmented Architecture</strong></h1>
+<pre><code class="language-text">          Shared Services
+                |
+                v
+               TGW
+             /     \
+            /       \
+           v         v
+        PROD         DEV
+</code></pre>
+<p>Routing can be designed so:</p>
+<pre><code class="language-text">PROD -&gt; SHARED = Allowed
+DEV  -&gt; SHARED = Allowed
+PROD -&gt; DEV    = Not routed
+DEV  -&gt; PROD   = Not routed
+</code></pre>
+<p>This is powerful for enterprise network isolation.</p>
+<hr/>
+<h1 id="8-24-vpc-peering-vs-transit-gateway"><strong>8.24 VPC Peering vs Transit Gateway</strong></h1>
+<p>Feature              VPC Peering       Transit Gateway</p>
+<hr/>
+<p>Topology             Point-to-point    Hub-and-spoke
+Transitive routing   No                Supported through TGW routing
+Many VPCs            Becomes complex   Designed for scale
+Central routing      No                Yes
+Segmentation         Per-peer design   TGW route tables
+Cost model           Different         TGW attachment/data processing costs</p>
+<p>Choose based on architecture, scale and cost.</p>
+<hr/>
+<h1 id="8-25-site-to-site-vpn"><strong>8.25 Site-to-Site VPN</strong></h1>
+<p>AWS Site-to-Site VPN connects a network such as an on-premises data
+center to AWS over encrypted IPsec tunnels.</p>
+<p>Concept:</p>
+<pre><code class="language-text">On-Premises
+     |
+     v
+Customer Gateway
+     |
+     v
+IPsec VPN
+     |
+     v
+AWS
+</code></pre>
+<hr/>
+<h1 id="8-26-vpn-components"><strong>8.26 VPN Components</strong></h1>
+<p>Common concepts:</p>
+<pre><code class="language-text">Customer Gateway
+Virtual Private Gateway
+Transit Gateway
+VPN Connection
+VPN Tunnels
+</code></pre>
+<p>A VPN can terminate through supported AWS gateway architectures.</p>
+<hr/>
+<h1 id="8-27-customer-gateway"><strong>8.27 Customer Gateway</strong></h1>
+<p>A Customer Gateway resource represents the customer-side VPN
+device/configuration in AWS.</p>
+<p>Concept:</p>
+<pre><code class="language-text">On-Prem Router/Firewall
+        |
+        v
+Customer Gateway Definition
+</code></pre>
+<p>It contains information AWS needs to establish the VPN relationship.</p>
+<hr/>
+<h1 id="8-28-virtual-private-gateway"><strong>8.28 Virtual Private Gateway</strong></h1>
+<p>A Virtual Private Gateway can provide a VPN termination point associated
+with a VPC.</p>
+<p>Concept:</p>
+<pre><code class="language-text">On-Prem
+   |
+   v
+VPN
+   |
+   v
+VGW
+   |
+   v
+VPC
+</code></pre>
+<p>For larger multi-VPC designs, Transit Gateway may be used instead.</p>
+<hr/>
+<h1 id="8-29-vpn-redundancy"><strong>8.29 VPN Redundancy</strong></h1>
+<p>AWS Site-to-Site VPN provides redundant tunnel architecture.</p>
+<p>Concept:</p>
+<pre><code class="language-text">On-Prem Router
+   |       |
+   |       |
+Tunnel 1  Tunnel 2
+   |       |
+   +---AWS-+
+</code></pre>
+<p>Production configuration should use both tunnels when supported by the
+customer device and design.</p>
+<hr/>
+<h1 id="8-30-static-vs-dynamic-routing"><strong>8.30 Static vs Dynamic Routing</strong></h1>
+<p>VPN routing can involve:</p>
+<pre><code class="language-text">Static routes
+</code></pre>
+<p>or:</p>
+<pre><code class="language-text">Dynamic routing using BGP
+</code></pre>
+<p>depending on the configuration and devices.</p>
+<hr/>
+<h1 id="8-31-bgp"><strong>8.31 BGP</strong></h1>
+<p>BGP means:</p>
+<blockquote>
+<p><strong>Border Gateway Protocol</strong></p>
+</blockquote>
+<p>In hybrid cloud networking, BGP can exchange network reachability
+information between routing systems.</p>
+<p>Simplified:</p>
+<pre><code class="language-text">On-Prem Router
+      |
+      | BGP
+      v
+AWS Gateway
+</code></pre>
+<hr/>
+<h1 id="8-32-why-bgp-matters"><strong>8.32 Why BGP Matters</strong></h1>
+<p>Without dynamic routing, administrators may need to manually maintain
+routes.</p>
+<p>With BGP:</p>
+<pre><code class="language-text">Networks can advertise prefixes dynamically
+</code></pre>
+<p>This is especially useful for larger hybrid environments.</p>
+<hr/>
+<h1 id="8-33-asn"><strong>8.33 ASN</strong></h1>
+<p>BGP uses Autonomous System Numbers.</p>
+<p>Concept:</p>
+<pre><code class="language-text">On-Prem ASN
+     |
+     | BGP Session
+     |
+AWS-side ASN
+</code></pre>
+<p>You do not need to become a carrier-network engineer to manage AWS, but
+DevOps/SRE engineers should understand what an ASN and BGP route
+advertisement mean.</p>
+<hr/>
+<h1 id="8-34-aws-direct-connect"><strong>8.34 AWS Direct Connect</strong></h1>
+<p>AWS Direct Connect provides dedicated network connectivity between
+customer environments and AWS through supported Direct Connect
+locations/partners.</p>
+<p>Concept:</p>
+<pre><code class="language-text">Data Center
+    |
+    v
+Dedicated Connectivity
+    |
+    v
+Direct Connect
+    |
+    v
+AWS
+</code></pre>
+<p>It is different from an internet-based Site-to-Site VPN.</p>
+<hr/>
+<h1 id="8-35-why-direct-connect"><strong>8.35 Why Direct Connect?</strong></h1>
+<p>Organizations may use Direct Connect for requirements involving:</p>
+<pre><code class="language-text">Predictable connectivity
+High-volume data transfer
+Hybrid architectures
+Private connectivity patterns
+Network consistency
+</code></pre>
+<p>Exact performance, redundancy and cost depend on the chosen design.</p>
+<hr/>
+<h1 id="8-36-direct-connect-is-not-automatically-highly-available"><strong>8.36 Direct Connect Is Not Automatically Highly Available</strong></h1>
+<p>A single connection can still be a failure point.</p>
+<p>Production architecture may require:</p>
+<pre><code class="language-text">Multiple connections
+Multiple locations
+Multiple devices
+VPN backup
+Redundant virtual interfaces
+</code></pre>
+<p>according to business requirements.</p>
+<hr/>
+<h1 id="8-37-direct-connect-gateway-concept"><strong>8.37 Direct Connect Gateway Concept</strong></h1>
+<p>A Direct Connect Gateway can help connect Direct Connect virtual
+interfaces to supported AWS gateway architectures across broader network
+designs.</p>
+<p>Conceptually:</p>
+<pre><code class="language-text">On-Prem
+   |
+   v
+Direct Connect
+   |
+   v
+DX Gateway
+   |
+   +--&gt; AWS network destinations
+</code></pre>
+<p>Always validate current supported attachment combinations in AWS
+documentation.</p>
+<hr/>
+<h1 id="8-38-hybrid-connectivity-design"><strong>8.38 Hybrid Connectivity Design</strong></h1>
+<p>Example:</p>
+<pre><code class="language-text">                         AWS
+                          |
+                    Transit Gateway
+                    /      |       \
+                   /       |        \
+                  v        v         v
+               PROD      DEV      SHARED
+                  ^
+                  |
+            Direct Connect
+                  |
+                  v
+              Data Center
+
+Backup:
+Data Center -&gt; Site-to-Site VPN -&gt; AWS
+</code></pre>
+<p>This combines performance and resilience patterns.</p>
+<hr/>
+<h1 id="8-39-route-propagation"><strong>8.39 Route Propagation</strong></h1>
+<p>Route propagation allows routes learned from certain gateway attachments
+to appear automatically in applicable route tables when configured.</p>
+<p>Example concept:</p>
+<pre><code class="language-text">VPN learns:
+172.16.0.0/16
+      |
+      v
+Gateway
+      |
+      v
+Route propagation
+      |
+      v
+Route Table
+</code></pre>
+<p>Understand whether routes are:</p>
+<pre><code class="language-text">Static
+Propagated
+</code></pre>
+<p>when troubleshooting.</p>
+<hr/>
+<h1 id="8-40-hybrid-dns-problem"><strong>8.40 Hybrid DNS Problem</strong></h1>
+<p>Connectivity alone is not enough.</p>
+<p>Suppose:</p>
+<pre><code class="language-text">AWS Application
+</code></pre>
+<p>must resolve:</p>
+<pre><code class="language-text">database.corp.internal
+</code></pre>
+<p>which exists in on-prem DNS.</p>
+<p>Or on-prem users must resolve:</p>
+<pre><code class="language-text">service.aws.internal
+</code></pre>
+<p>A hybrid DNS architecture is required.</p>
+<hr/>
+<h1 id="8-41-route-53-resolver"><strong>8.41 Route 53 Resolver</strong></h1>
+<p>Amazon Route 53 Resolver provides DNS resolution capabilities for VPCs
+and can support hybrid DNS through Resolver endpoints and rules.</p>
+<p>Concept:</p>
+<pre><code class="language-text">AWS Workload
+     |
+     v
+Route 53 Resolver
+     |
+     v
+DNS
+</code></pre>
+<hr/>
+<h1 id="8-42-resolver-outbound-endpoint"><strong>8.42 Resolver Outbound Endpoint</strong></h1>
+<p>Use case:</p>
+<pre><code class="language-text">AWS workload needs to resolve on-prem domain
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-text">EC2
+ |
+ v
+Route 53 Resolver
+ |
+ v
+Outbound Endpoint
+ |
+ v
+VPN / DX
+ |
+ v
+On-Prem DNS
+</code></pre>
+<hr/>
+<h1 id="8-43-resolver-rule"><strong>8.43 Resolver Rule</strong></h1>
+<p>Example requirement:</p>
+<pre><code class="language-text">*.corp.example
+</code></pre>
+<p>should be resolved by:</p>
+<pre><code class="language-text">10.100.0.10
+10.100.0.11
+</code></pre>
+<p>Create a forwarding rule conceptually:</p>
+<pre><code class="language-text">corp.example
+    |
+    v
+On-Prem DNS Servers
+</code></pre>
+<hr/>
+<h1 id="8-44-resolver-inbound-endpoint"><strong>8.44 Resolver Inbound Endpoint</strong></h1>
+<p>Use case:</p>
+<pre><code class="language-text">On-premises systems need to resolve AWS private DNS names
+</code></pre>
+<p>Concept:</p>
+<pre><code class="language-text">On-Prem DNS
+     |
+     v
+VPN / DX
+     |
+     v
+Resolver Inbound Endpoint
+     |
+     v
+AWS Private DNS
+</code></pre>
+<hr/>
+<h1 id="8-45-hybrid-dns-architecture"><strong>8.45 Hybrid DNS Architecture</strong></h1>
+<pre><code class="language-text">                 AWS VPC
+                    |
+             Route 53 Resolver
+              /             \
+             /               \
+            v                 v
+   Outbound Endpoint    Inbound Endpoint
+            |                 ^
+            v                 |
+       On-Prem DNS &lt;----------+
+</code></pre>
+<p>This creates controlled bidirectional DNS resolution.</p>
+<hr/>
+<h1 id="8-46-private-hosted-zone"><strong>8.46 Private Hosted Zone</strong></h1>
+<p>A Route 53 Private Hosted Zone provides DNS records that are resolvable
+within associated VPC environments according to configuration.</p>
+<p>Example:</p>
+<pre><code class="language-text">internal.example.com
+</code></pre>
+<p>Record:</p>
+<pre><code class="language-text">api.internal.example.com
+      |
+      v
+10.20.11.50
+</code></pre>
+<hr/>
+<h1 id="8-47-dns-is-part-of-network-architecture"><strong>8.47 DNS Is Part of Network Architecture</strong></h1>
+<p>A service may be reachable by IP:</p>
+<pre><code class="language-text">10.20.11.50
+</code></pre>
+<p>but not by hostname:</p>
+<pre><code class="language-text">api.internal.example.com
+</code></pre>
+<p>Then:</p>
+<pre><code class="language-text">Routing may be healthy
+Security may be healthy
+DNS may be broken
+</code></pre>
+<p>Always test both.</p>
+<hr/>
+<h1 id="8-48-vpc-endpoints-in-depth"><strong>8.48 VPC Endpoints in Depth</strong></h1>
+<p>Private workloads frequently access AWS services such as:</p>
+<pre><code class="language-text">S3
+ECR
+STS
+CloudWatch
+Secrets Manager
+Systems Manager
+</code></pre>
+<p>Without endpoints, some architectures send this traffic through
+NAT/public service endpoints.</p>
+<p>VPC endpoints can provide private connectivity for supported services.</p>
+<hr/>
+<h1 id="8-49-gateway-endpoint-recap"><strong>8.49 Gateway Endpoint Recap</strong></h1>
+<p>Gateway endpoints are route-table based and support specific AWS
+services such as:</p>
+<pre><code class="language-text">S3
+DynamoDB
+</code></pre>
+<p>Concept:</p>
+<pre><code class="language-text">Private Subnet
+     |
+     v
+Route Table
+     |
+     v
+Gateway Endpoint
+     |
+     v
+AWS Service
+</code></pre>
+<hr/>
+<h1 id="8-50-interface-endpoint-recap"><strong>8.50 Interface Endpoint Recap</strong></h1>
+<p>Interface endpoints create ENIs in selected subnets.</p>
+<p>Concept:</p>
+<pre><code class="language-text">Application
+    |
+    v
+Private DNS
+    |
+    v
+Endpoint ENI
+    |
+    v
+PrivateLink
+    |
+    v
+AWS Service
+</code></pre>
+<hr/>
+<h1 id="8-51-interface-endpoint-security"><strong>8.51 Interface Endpoint Security</strong></h1>
+<p>Interface endpoint ENIs use Security Groups.</p>
+<p>Example:</p>
+<pre><code class="language-text">App SG
+   |
+   | TCP 443
+   v
+Endpoint SG
+</code></pre>
+<p>A common failure is:</p>
+<pre><code class="language-text">DNS resolves to endpoint private IP
+but endpoint SG does not allow traffic
+</code></pre>
+<hr/>
+<h1 id="8-52-endpoint-policy"><strong>8.52 Endpoint Policy</strong></h1>
+<p>Where supported, endpoint policies can restrict what actions/resources
+may be accessed through the endpoint.</p>
+<p>Authorization may involve multiple policy layers:</p>
+<pre><code class="language-text">Identity Policy
+      +
+Endpoint Policy
+      +
+Resource Policy
+      +
+Other applicable controls
+</code></pre>
+<p>An allow in one layer does not necessarily override a deny elsewhere.</p>
+<hr/>
+<h1 id="8-53-aws-privatelink"><strong>8.53 AWS PrivateLink</strong></h1>
+<p>PrivateLink allows services to be consumed privately using
+endpoint-based networking.</p>
+<p>A provider can expose a service through an endpoint service.</p>
+<p>A consumer creates an interface endpoint.</p>
+<hr/>
+<h1 id="8-54-privatelink-provider-architecture"><strong>8.54 PrivateLink Provider Architecture</strong></h1>
+<pre><code class="language-text">Provider VPC
+     |
+     v
+Application
+     |
+     v
+Network Load Balancer
+     |
+     v
+Endpoint Service
+</code></pre>
+<hr/>
+<h1 id="8-55-privatelink-consumer-architecture"><strong>8.55 PrivateLink Consumer Architecture</strong></h1>
+<pre><code class="language-text">Consumer VPC
+     |
+     v
+Application
+     |
+     v
+Interface Endpoint
+     |
+     v
+AWS PrivateLink
+     |
+     v
+Provider Endpoint Service
+</code></pre>
+<p>The consumer does not need broad routed access to the provider VPC.</p>
+<hr/>
+<h1 id="8-56-privatelink-vs-vpc-peering"><strong>8.56 PrivateLink vs VPC Peering</strong></h1>
+<p>VPC Peering:</p>
+<pre><code class="language-text">Network-to-network connectivity
+</code></pre>
+<p>PrivateLink:</p>
+<pre><code class="language-text">Service-oriented private connectivity
+</code></pre>
+<p>If a consumer needs only one service, PrivateLink can reduce network
+exposure compared with full VPC routing.</p>
+<hr/>
+<h1 id="8-57-privatelink-use-case"><strong>8.57 PrivateLink Use Case</strong></h1>
+<p>Company has:</p>
+<pre><code class="language-text">Central Payments Service
+</code></pre>
+<p>used by:</p>
+<pre><code class="language-text">App VPC A
+App VPC B
+Partner VPC C
+</code></pre>
+<p>Instead of routing entire VPCs together:</p>
+<pre><code class="language-text">Consumers
+    |
+    v
+PrivateLink
+    |
+    v
+Payments Service
+</code></pre>
+<p>This creates a narrower connectivity model.</p>
+<hr/>
+<h1 id="8-58-ipv6-in-amazon-vpc"><strong>8.58 IPv6 in Amazon VPC</strong></h1>
+<p>IPv6 uses 128-bit addresses.</p>
+<p>Example:</p>
+<pre><code class="language-text">2001:db8::/32
+</code></pre>
+<p>AWS VPCs can support IPv6 addressing and dual-stack architectures.</p>
+<p>IPv6 changes important networking assumptions.</p>
+<hr/>
+<h1 id="8-59-ipv6-does-not-use-nat-in-the-same-way-as-ipv4"><strong>8.59 IPv6 Does Not Use NAT in the Same Way as IPv4</strong></h1>
+<p>A key IPv6 concept is globally unique addressing.</p>
+<p>Do not design IPv6 merely by copying an IPv4 NAT architecture.</p>
+<p>Security is provided through routing and filtering rather than assuming
+NAT equals security.</p>
+<hr/>
+<h1 id="8-60-dual-stack"><strong>8.60 Dual Stack</strong></h1>
+<p>Dual-stack resources can use:</p>
+<pre><code class="language-text">IPv4
++
+IPv6
+</code></pre>
+<p>Concept:</p>
+<pre><code class="language-text">Application
+   |
+   +--&gt; IPv4
+   |
+   +--&gt; IPv6
+</code></pre>
+<p>Migration can therefore be gradual.</p>
+<hr/>
+<h1 id="8-61-ipv6-route"><strong>8.61 IPv6 Route</strong></h1>
+<p>An IPv6 default route is:</p>
+<pre><code class="language-text">::/0
+</code></pre>
+<p>Compare:</p>
+<pre><code class="language-text">IPv4:
+0.0.0.0/0
+
+IPv6:
+::/0
+</code></pre>
+<hr/>
+<h1 id="8-62-egress-only-internet-gateway"><strong>8.62 Egress-Only Internet Gateway</strong></h1>
+<p>For IPv6 workloads that should initiate outbound internet communication
+without accepting unsolicited inbound internet connections through that
+route, AWS provides an Egress-only Internet Gateway.</p>
+<p>Concept:</p>
+<pre><code class="language-text">Private IPv6 Workload
+       |
+       v
+Egress-Only IGW
+       |
+       v
+Internet
+</code></pre>
+<hr/>
+<h1 id="8-63-ipv4-vs-ipv6-egress"><strong>8.63 IPv4 vs IPv6 Egress</strong></h1>
+<p>Common IPv4 private-subnet pattern:</p>
+<pre><code class="language-text">Private IPv4
+    |
+    v
+NAT Gateway
+    |
+    v
+IGW
+</code></pre>
+<p>IPv6 outbound-only pattern:</p>
+<pre><code class="language-text">IPv6
+ |
+ v
+Egress-Only IGW
+</code></pre>
+<p>Do not assume NAT Gateway is the IPv6 solution.</p>
+<hr/>
+<h1 id="8-64-load-balancer-networking"><strong>8.64 Load Balancer Networking</strong></h1>
+<p>AWS Elastic Load Balancing includes architectures such as:</p>
+<pre><code class="language-text">Application Load Balancer
+Network Load Balancer
+Gateway Load Balancer
+</code></pre>
+<p>Each has different networking use cases.</p>
+<hr/>
+<h1 id="8-65-application-load-balancer"><strong>8.65 Application Load Balancer</strong></h1>
+<p>ALB operates at Layer 7 for HTTP/HTTPS workloads.</p>
+<p>It can route using:</p>
+<pre><code class="language-text">Host
+Path
+HTTP properties
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-text">/api/*  -&gt; API target group
+/web/*  -&gt; Web target group
+</code></pre>
+<hr/>
+<h1 id="8-66-network-load-balancer"><strong>8.66 Network Load Balancer</strong></h1>
+<p>NLB operates at Layer 4.</p>
+<p>Common use cases include:</p>
+<pre><code class="language-text">TCP
+UDP
+TLS
+High-performance network services
+Static-IP-oriented requirements
+PrivateLink provider services
+</code></pre>
+<hr/>
+<h1 id="8-67-gateway-load-balancer"><strong>8.67 Gateway Load Balancer</strong></h1>
+<p>Gateway Load Balancer supports architectures involving virtual network
+appliances.</p>
+<p>Examples:</p>
+<pre><code class="language-text">Firewalls
+Inspection appliances
+Security appliances
+</code></pre>
+<p>It can be used in centralized inspection designs.</p>
+<hr/>
+<h1 id="8-68-internet-facing-vs-internal-load-balancer"><strong>8.68 Internet-Facing vs Internal Load Balancer</strong></h1>
+<p>Internet-facing:</p>
+<pre><code class="language-text">Internet
+   |
+   v
+Public-facing Load Balancer
+</code></pre>
+<p>Internal:</p>
+<pre><code class="language-text">Private Clients
+    |
+    v
+Internal Load Balancer
+</code></pre>
+<p>Choose based on who should reach the service.</p>
+<hr/>
+<h1 id="8-69-cross-zone-concepts"><strong>8.69 Cross-Zone Concepts</strong></h1>
+<p>Load-balancing behavior can involve traffic distribution across
+Availability Zones depending on load-balancer type and configuration.</p>
+<p>When designing:</p>
+<pre><code class="language-text">Check current AWS behavior
+Check cross-zone configuration
+Check target placement
+Check data-transfer implications
+</code></pre>
+<p>Do not assume all load balancers behave identically.</p>
+<hr/>
+<h1 id="8-70-centralized-egress"><strong>8.70 Centralized Egress</strong></h1>
+<p>Large organizations may not want every VPC to maintain independent
+internet-egress infrastructure.</p>
+<p>Possible architecture:</p>
+<pre><code class="language-text">App VPC A
+     |
+     v
+Transit Gateway
+     |
+     v
+Egress VPC
+     |
+     v
+NAT / Firewall
+     |
+     v
+Internet
+</code></pre>
+<p>This centralizes policy and inspection.</p>
+<hr/>
+<h1 id="8-71-egress-vpc"><strong>8.71 Egress VPC</strong></h1>
+<p>An egress VPC can contain:</p>
+<pre><code class="language-text">NAT Gateways
+Network Firewall
+Proxy systems
+Inspection appliances
+Logging
+</code></pre>
+<p>Spoke VPCs route approved internet-bound traffic toward it.</p>
+<hr/>
+<h1 id="8-72-centralized-egress-packet-path"><strong>8.72 Centralized Egress Packet Path</strong></h1>
+<pre><code class="language-text">Private EC2
+App VPC
+   |
+   v
+VPC Route Table
+   |
+   v
+Transit Gateway
+   |
+   v
+Egress VPC
+   |
+   v
+Firewall / Inspection
+   |
+   v
+NAT Gateway
+   |
+   v
+Internet Gateway
+   |
+   v
+Internet
+</code></pre>
+<p>This is much more complex than a single-VPC NAT path.</p>
+<hr/>
+<h1 id="8-73-return-path-importance"><strong>8.73 Return-Path Importance</strong></h1>
+<p>For centralized inspection, return traffic must traverse compatible
+routing.</p>
+<p>Asymmetric routing can cause stateful appliances to drop connections.</p>
+<p>Always draw:</p>
+<pre><code class="language-text">FORWARD PATH
+</code></pre>
+<p>and:</p>
+<pre><code class="language-text">RETURN PATH
+</code></pre>
+<hr/>
+<h1 id="8-74-inspection-vpc"><strong>8.74 Inspection VPC</strong></h1>
+<p>A centralized inspection VPC can host network-security controls.</p>
+<p>Concept:</p>
+<pre><code class="language-text">Spoke VPCs
+    |
+    v
+Transit Gateway
+    |
+    v
+Inspection VPC
+    |
+    v
+Firewall
+</code></pre>
+<p>Traffic is deliberately routed through inspection before reaching
+another destination.</p>
+<hr/>
+<h1 id="8-75-aws-network-firewall"><strong>8.75 AWS Network Firewall</strong></h1>
+<p>AWS Network Firewall is a managed network-security service that can
+inspect VPC traffic according to configured policies.</p>
+<p>It can participate in architectures involving:</p>
+<pre><code class="language-text">Stateful inspection
+Stateless inspection
+Domain-based controls
+Centralized inspection
+Logging
+</code></pre>
+<p>Exact supported features and architecture should be verified in current
+AWS documentation.</p>
+<hr/>
+<h1 id="8-76-network-firewall-architecture"><strong>8.76 Network Firewall Architecture</strong></h1>
+<p>Simplified:</p>
+<pre><code class="language-text">Workload
+   |
+   v
+Route Table
+   |
+   v
+Firewall Endpoint
+   |
+   v
+Inspection
+   |
+   v
+Destination
+</code></pre>
+<p>Routing is fundamental.</p>
+<p>If traffic bypasses the firewall endpoint, the policy cannot inspect
+that path.</p>
+<hr/>
+<h1 id="8-77-firewall-is-not-a-replacement-for-security-groups"><strong>8.77 Firewall Is Not a Replacement for Security Groups</strong></h1>
+<p>Think in layers:</p>
+<pre><code class="language-text">Network Firewall
+       |
+       v
+Network-level inspection
+
+Security Groups
+       |
+       v
+Workload-level access control
+
+NACL
+       |
+       v
+Subnet-level stateless filtering
+</code></pre>
+<p>Use each control for its intended purpose.</p>
+<hr/>
+<h1 id="8-78-vpc-flow-logs-in-depth"><strong>8.78 VPC Flow Logs in Depth</strong></h1>
+<p>Flow Logs can help answer:</p>
+<pre><code class="language-text">Who communicated?
+Source IP?
+Destination IP?
+Source port?
+Destination port?
+Protocol?
+Accepted or rejected?
+When?
+How much traffic?
+</code></pre>
+<p>They are excellent for network evidence.</p>
+<hr/>
+<h1 id="8-79-example-flow-concept"><strong>8.79 Example Flow Concept</strong></h1>
+<p>Example conceptual record:</p>
+<pre><code class="language-text">srcaddr=10.20.11.25
+dstaddr=10.20.21.50
+srcport=52144
+dstport=5432
+protocol=6
+action=ACCEPT
+</code></pre>
+<p>Interpretation:</p>
+<pre><code class="language-text">Application:
+10.20.11.25
+
+Database:
+10.20.21.50
+
+Protocol:
+TCP
+
+Destination Port:
+5432
+
+Network action:
+ACCEPT
+</code></pre>
+<hr/>
+<h1 id="8-80-accept-does-not-mean-application-success"><strong>8.80 ACCEPT Does Not Mean Application Success</strong></h1>
+<p>Flow Log:</p>
+<pre><code class="language-text">ACCEPT
+</code></pre>
+<p>means relevant network controls accepted the recorded flow.</p>
+<p>It does not prove:</p>
+<pre><code class="language-text">Database authentication succeeded
+HTTP returned 200
+TLS certificate was valid
+Application processed request correctly
+</code></pre>
+<p>Continue up the stack.</p>
+<hr/>
+<h1 id="8-81-reject-analysis"><strong>8.81 REJECT Analysis</strong></h1>
+<p>If:</p>
+<pre><code class="language-text">REJECT
+</code></pre>
+<p>investigate:</p>
+<pre><code class="language-text">Security controls
+NACL
+Network-interface rules
+Traffic direction
+Ports
+Return path
+</code></pre>
+<p>Then correlate with the exact architecture.</p>
+<hr/>
+<h1 id="8-82-reachability-analyzer"><strong>8.82 Reachability Analyzer</strong></h1>
+<p>VPC Reachability Analyzer can analyze network reachability between
+supported source and destination resources.</p>
+<p>It can help identify configuration components affecting a path.</p>
+<p>Concept:</p>
+<pre><code class="language-text">Source
+  |
+  v
+Reachability Analysis
+  |
+  v
+Route
+Security
+Gateway
+Target
+</code></pre>
+<hr/>
+<h1 id="8-83-reachability-analyzer-is-not-a-live-packet-generator"><strong>8.83 Reachability Analyzer Is Not a Live Packet Generator</strong></h1>
+<p>Treat it as configuration-path analysis.</p>
+<p>It does not replace:</p>
+<pre><code class="language-text">curl
+tcpdump
+application logs
+real traffic tests
+</code></pre>
+<p>Use multiple evidence sources.</p>
+<hr/>
+<h1 id="8-84-network-troubleshooting-layers"><strong>8.84 Network Troubleshooting Layers</strong></h1>
+<p>Use this order:</p>
+<pre><code class="language-text">1. DNS
+2. Source IP/interface
+3. Source route
+4. Transit component
+5. Destination route
+6. Security Group
+7. NACL
+8. Firewall/inspection
+9. Host firewall
+10. Listener
+11. TLS
+12. Application
+13. Dependency
+14. Return path
+</code></pre>
+<hr/>
+<h1 id="8-85-troubleshooting-peering"><strong>8.85 Troubleshooting Peering</strong></h1>
+<p>Problem:</p>
+<pre><code class="language-text">VPC-A cannot reach VPC-B
+</code></pre>
+<p>Check:</p>
+<pre><code class="language-text">Peering status
+CIDR overlap
+VPC-A route
+VPC-B return route
+Security Groups
+NACLs
+DNS if hostname used
+Application listener
+</code></pre>
+<hr/>
+<h1 id="8-86-peering-dns"><strong>8.86 Peering DNS</strong></h1>
+<p>Private DNS behavior across peering requires appropriate configuration.</p>
+<p>If:</p>
+<pre><code class="language-text">IP connectivity works
+</code></pre>
+<p>but:</p>
+<pre><code class="language-text">hostname fails
+</code></pre>
+<p>investigate:</p>
+<pre><code class="language-text">DNS resolution settings
+Private hosted zones
+Peering DNS options
+Resolver architecture
+</code></pre>
+<hr/>
+<h1 id="8-87-troubleshooting-transit-gateway"><strong>8.87 Troubleshooting Transit Gateway</strong></h1>
+<p>Check both routing domains.</p>
+<pre><code class="language-text">SOURCE VPC ROUTE TABLE
+          |
+          v
+TGW ATTACHMENT
+          |
+          v
+TGW ROUTE TABLE
+          |
+          v
+DESTINATION ATTACHMENT
+          |
+          v
+DESTINATION VPC
+</code></pre>
+<p>Then inspect:</p>
+<pre><code class="language-text">Security Groups
+NACLs
+Firewall
+Return route
+</code></pre>
+<hr/>
+<h1 id="8-88-tgw-blackhole-route"><strong>8.88 TGW Blackhole Route</strong></h1>
+<p>Transit Gateway routing can contain blackhole routes.</p>
+<p>Concept:</p>
+<pre><code class="language-text">Destination
+10.50.0.0/16
+
+Target:
+blackhole
+</code></pre>
+<p>Traffic matching such a route is intentionally discarded.</p>
+<p>This can be used for segmentation but can also cause incidents if
+misconfigured.</p>
+<hr/>
+<h1 id="8-89-troubleshooting-vpn"><strong>8.89 Troubleshooting VPN</strong></h1>
+<p>Check:</p>
+<pre><code class="language-text">Tunnel status
+BGP status
+Advertised routes
+Learned routes
+Customer gateway
+AWS gateway
+Firewall
+IPsec parameters
+Route tables
+Return path
+</code></pre>
+<p>Do not stop at:</p>
+<pre><code class="language-text">Tunnel = UP
+</code></pre>
+<p>A tunnel can be up while application routing is still wrong.</p>
+<hr/>
+<h1 id="8-90-vpn-tunnel-up-but-no-traffic"><strong>8.90 VPN Tunnel Up but No Traffic</strong></h1>
+<p>Possible:</p>
+<pre><code class="language-text">Missing route
+Wrong BGP advertisement
+NACL
+Security Group
+On-prem firewall
+Wrong return path
+Overlapping CIDR
+Application not listening
+</code></pre>
+<p>Connectivity has multiple layers.</p>
+<hr/>
+<h1 id="8-91-troubleshooting-direct-connect"><strong>8.91 Troubleshooting Direct Connect</strong></h1>
+<p>Check:</p>
+<pre><code class="language-text">Physical connection state
+Virtual interface
+BGP session
+Advertised prefixes
+Received prefixes
+Gateway association
+VPC/TGW routes
+Security controls
+Return path
+</code></pre>
+<p>Escalation should include evidence from both AWS and customer network
+sides.</p>
+<hr/>
+<h1 id="8-92-hybrid-dns-failure"><strong>8.92 Hybrid DNS Failure</strong></h1>
+<p>Symptom:</p>
+<pre><code class="language-text">AWS EC2 can ping on-prem server by IP
+but cannot resolve:
+db.corp.example
+</code></pre>
+<p>This strongly suggests:</p>
+<pre><code class="language-text">Routing works
+DNS path/configuration is the next focus
+</code></pre>
+<p>Check:</p>
+<pre><code class="language-text">Resolver rule
+Outbound endpoint
+Security Group
+On-prem DNS
+DNS firewall
+Route
+Domain suffix
+</code></pre>
+<hr/>
+<h1 id="8-93-privatelink-troubleshooting"><strong>8.93 PrivateLink Troubleshooting</strong></h1>
+<p>Consumer:</p>
+<pre><code class="language-text">App
+ |
+ v
+Interface Endpoint
+</code></pre>
+<p>Check:</p>
+<pre><code class="language-text">Endpoint state
+Private DNS
+Endpoint ENI IP
+Endpoint Security Group
+Provider endpoint service
+Acceptance requirement
+NLB target health
+Application port
+</code></pre>
+<hr/>
+<h1 id="8-94-ipv6-troubleshooting"><strong>8.94 IPv6 Troubleshooting</strong></h1>
+<p>Check:</p>
+<pre><code class="language-text">IPv6 assigned?
+IPv6 route?
+::/0 target?
+Security Group IPv6 rules?
+NACL IPv6 rules?
+DNS AAAA record?
+Application listening on IPv6?
+</code></pre>
+<p>An IPv4 rule:</p>
+<pre><code class="language-text">0.0.0.0/0
+</code></pre>
+<p>does not automatically allow IPv6.</p>
+<p>IPv6 uses:</p>
+<pre><code class="language-text">::/0
+</code></pre>
+<hr/>
+<h1 id="8-95-cli-describe-peering-connections"><strong>8.95 CLI --- Describe Peering Connections</strong></h1>
+<pre><code class="language-bash">aws ec2 describe-vpc-peering-connections \
+  --output table
+</code></pre>
+<p>Inspect:</p>
+<pre><code class="language-text">Status
+Requester VPC
+Accepter VPC
+CIDRs
+</code></pre>
+<hr/>
+<h1 id="8-96-cli-describe-transit-gateways"><strong>8.96 CLI --- Describe Transit Gateways</strong></h1>
+<pre><code class="language-bash">aws ec2 describe-transit-gateways \
+  --output table
+</code></pre>
+<hr/>
+<h1 id="8-97-cli-describe-tgw-attachments"><strong>8.97 CLI --- Describe TGW Attachments</strong></h1>
+<pre><code class="language-bash">aws ec2 describe-transit-gateway-attachments \
+  --output table
+</code></pre>
+<p>Inspect:</p>
+<pre><code class="language-text">Attachment ID
+Resource ID
+Resource type
+State
+</code></pre>
+<hr/>
+<h1 id="8-98-cli-transit-gateway-route-tables"><strong>8.98 CLI --- Transit Gateway Route Tables</strong></h1>
+<pre><code class="language-bash">aws ec2 describe-transit-gateway-route-tables \
+  --output table
+</code></pre>
+<p>Routes can then be searched with the appropriate TGW route-table
+commands.</p>
+<hr/>
+<h1 id="8-99-cli-vpn-connections"><strong>8.99 CLI --- VPN Connections</strong></h1>
+<pre><code class="language-bash">aws ec2 describe-vpn-connections \
+  --output json
+</code></pre>
+<p>Inspect tunnel telemetry and routing configuration carefully.</p>
+<hr/>
+<h1 id="8-100-cli-vpc-endpoints"><strong>8.100 CLI --- VPC Endpoints</strong></h1>
+<pre><code class="language-bash">aws ec2 describe-vpc-endpoints \
+  --output table
+</code></pre>
+<p>Check:</p>
+<pre><code class="language-text">Endpoint type
+Service name
+VPC
+State
+Subnets
+Route tables
+Private DNS
+</code></pre>
+<p>as applicable.</p>
+<hr/>
+<h1 id="8-101-cli-network-interfaces"><strong>8.101 CLI --- Network Interfaces</strong></h1>
+<pre><code class="language-bash">aws ec2 describe-network-interfaces \
+  --output table
+</code></pre>
+<p>This is extremely useful because many AWS networking components expose
+ENIs.</p>
+<p>Examples include:</p>
+<pre><code class="language-text">EC2
+Interface endpoints
+Load balancers
+Other managed services
+</code></pre>
+<hr/>
+<h1 id="8-102-lab-1-vpc-peering-design"><strong>8.102 Lab 1 --- VPC Peering Design</strong></h1>
+<p>Create conceptual networks:</p>
+<pre><code class="language-text">VPC-A
+10.10.0.0/16
+
+VPC-B
+10.20.0.0/16
+</code></pre>
+<p>Requirement:</p>
+<pre><code class="language-text">App-A
+must reach
+App-B:8080
+</code></pre>
+<p>Document:</p>
+<pre><code class="language-text">Peering
+Routes
+Security Groups
+NACLs
+DNS
+Application listener
+Return path
+</code></pre>
+<hr/>
+<h1 id="8-103-lab-2-create-peering-with-cli"><strong>8.103 Lab 2 --- Create Peering with CLI</strong></h1>
+<p>Example:</p>
+<pre><code class="language-bash">aws ec2 create-vpc-peering-connection \
+  --vpc-id vpc-aaaaaaaa \
+  --peer-vpc-id vpc-bbbbbbbb
+</code></pre>
+<p>Then the accepter side must accept the request where applicable.</p>
+<p>After acceptance:</p>
+<pre><code class="language-text">Add routes on both sides.
+</code></pre>
+<p>Do not treat creation as complete connectivity.</p>
+<hr/>
+<h1 id="8-104-lab-3-prove-non-transitive-routing"><strong>8.104 Lab 3 --- Prove Non-Transitive Routing</strong></h1>
+<p>Architecture:</p>
+<pre><code class="language-text">A &lt;--&gt; B &lt;--&gt; C
+</code></pre>
+<p>Attempt:</p>
+<pre><code class="language-text">A -&gt; C
+</code></pre>
+<p>Observe that B's peering relationships do not automatically provide
+transit.</p>
+<p>Document why.</p>
+<p>This is a high-value interview lab.</p>
+<hr/>
+<h1 id="8-105-lab-4-transit-gateway-design"><strong>8.105 Lab 4 --- Transit Gateway Design</strong></h1>
+<p>Networks:</p>
+<pre><code class="language-text">PROD   10.10.0.0/16
+DEV    10.20.0.0/16
+SHARED 10.30.0.0/16
+</code></pre>
+<p>Requirement:</p>
+<pre><code class="language-text">PROD -&gt; SHARED
+DEV  -&gt; SHARED
+
+PROD X DEV
+</code></pre>
+<p>Design TGW route tables to enforce the intended routing relationships.</p>
+<hr/>
+<h1 id="8-106-lab-5-hybrid-vpn-paper-lab"><strong>8.106 Lab 5 --- Hybrid VPN Paper Lab</strong></h1>
+<p>Design:</p>
+<pre><code class="language-text">On-Prem:
+172.16.0.0/16
+
+AWS:
+10.10.0.0/16
+</code></pre>
+<p>Write down:</p>
+<pre><code class="language-text">Customer Gateway
+AWS Gateway
+Tunnel 1
+Tunnel 2
+BGP or static routing
+AWS route
+On-prem route
+Security rules
+</code></pre>
+<p>Then trace:</p>
+<pre><code class="language-text">172.16.10.20
+   |
+   v
+10.10.20.30
+</code></pre>
+<hr/>
+<h1 id="8-107-lab-6-hybrid-dns-design"><strong>8.107 Lab 6 --- Hybrid DNS Design</strong></h1>
+<p>Requirement:</p>
+<p>AWS must resolve:</p>
+<pre><code class="language-text">server.corp.example
+</code></pre>
+<p>On-prem DNS:</p>
+<pre><code class="language-text">172.16.1.53
+</code></pre>
+<p>Design:</p>
+<pre><code class="language-text">EC2
+ |
+ v
+Route 53 Resolver
+ |
+ v
+Outbound Endpoint
+ |
+ v
+Resolver Rule:
+corp.example
+ |
+ v
+172.16.1.53
+</code></pre>
+<hr/>
+<h1 id="8-108-lab-7-interface-endpoint"><strong>8.108 Lab 7 --- Interface Endpoint</strong></h1>
+<p>Requirement:</p>
+<p>Private EC2 must access a supported AWS API without using NAT.</p>
+<p>Design:</p>
+<pre><code class="language-text">EC2
+ |
+ v
+Private DNS
+ |
+ v
+Interface Endpoint
+ |
+ v
+AWS Service
+</code></pre>
+<p>Document:</p>
+<pre><code class="language-text">Endpoint subnet
+Endpoint SG
+Application SG
+DNS
+IAM
+Endpoint policy
+</code></pre>
+<hr/>
+<h1 id="8-109-lab-8-centralized-egress"><strong>8.109 Lab 8 --- Centralized Egress</strong></h1>
+<p>Design:</p>
+<pre><code class="language-text">App VPC
+10.10.0.0/16
+
+Egress VPC
+10.100.0.0/16
+</code></pre>
+<p>Path:</p>
+<pre><code class="language-text">App
+ |
+ v
+TGW
+ |
+ v
+Egress VPC
+ |
+ v
+Firewall
+ |
+ v
+NAT
+ |
+ v
+IGW
+</code></pre>
+<p>Now draw the complete return path.</p>
+<p>If you cannot draw the return path, the architecture is not finished.</p>
+<hr/>
+<h1 id="8-110-lab-9-flow-log-analysis"><strong>8.110 Lab 9 --- Flow Log Analysis</strong></h1>
+<p>Given:</p>
+<pre><code class="language-text">srcaddr=10.10.11.25
+dstaddr=10.20.21.50
+srcport=52122
+dstport=5432
+protocol=6
+action=REJECT
+</code></pre>
+<p>Answer:</p>
+<pre><code class="language-text">Source?
+Destination?
+Protocol?
+Application port?
+Was network traffic accepted?
+What controls should be inspected?
+</code></pre>
+<p>Expected reasoning:</p>
+<pre><code class="language-text">TCP connection from app-like source
+to PostgreSQL-like destination
+was rejected at a logged network-control point.
+</code></pre>
+<p>Do not conclude which exact rule failed without additional evidence.</p>
+<hr/>
+<h1 id="8-111-lab-10-ipv6-design"><strong>8.111 Lab 10 --- IPv6 Design</strong></h1>
+<p>Design a dual-stack application:</p>
+<pre><code class="language-text">ALB
+ |
+ +--&gt; IPv4 clients
+ |
+ +--&gt; IPv6 clients
+</code></pre>
+<p>Application tier:</p>
+<pre><code class="language-text">IPv4 + IPv6
+</code></pre>
+<p>For outbound-only IPv6 internet access, evaluate:</p>
+<pre><code class="language-text">Egress-only Internet Gateway
+</code></pre>
+<p>Document IPv6 SG and NACL requirements separately.</p>
+<hr/>
+<h1 id="8-112-production-pattern-shared-services-vpc"><strong>8.112 Production Pattern --- Shared Services VPC</strong></h1>
+<p>Organizations may centralize:</p>
+<pre><code class="language-text">DNS
+Directory services
+Monitoring
+Artifact repositories
+Security tooling
+Management services
+</code></pre>
+<p>inside a Shared Services VPC.</p>
+<p>Connectivity:</p>
+<pre><code class="language-text">Prod
+  \
+   \
+    TGW ---- Shared Services
+   /
+  /
+Dev
+</code></pre>
+<hr/>
+<h1 id="8-113-production-pattern-network-account"><strong>8.113 Production Pattern --- Network Account</strong></h1>
+<p>In multi-account AWS environments, networking may be managed in a
+dedicated account.</p>
+<p>Concept:</p>
+<pre><code class="language-text">AWS Organization
+      |
+      +--&gt; Network Account
+      |      |
+      |      +--&gt; TGW
+      |      +--&gt; DNS
+      |      +--&gt; Inspection
+      |
+      +--&gt; Production Account
+      +--&gt; Development Account
+      +--&gt; Security Account
+</code></pre>
+<p>This separates network administration from application ownership.</p>
+<hr/>
+<h1 id="8-114-production-pattern-central-inspection"><strong>8.114 Production Pattern --- Central Inspection</strong></h1>
+<pre><code class="language-text">Spoke VPC
+    |
+    v
+TGW
+    |
+    v
+Inspection VPC
+    |
+    v
+Firewall
+    |
+    v
+Destination
+</code></pre>
+<p>Benefits can include:</p>
+<pre><code class="language-text">Central policy
+Central logs
+Consistent inspection
+Reduced duplication
+</code></pre>
+<p>But complexity increases significantly.</p>
+<hr/>
+<h1 id="8-115-production-pattern-service-exposure"><strong>8.115 Production Pattern --- Service Exposure</strong></h1>
+<p>If many VPCs need one service:</p>
+<p>Option A:</p>
+<pre><code class="language-text">Full routed connectivity
+</code></pre>
+<p>Option B:</p>
+<pre><code class="language-text">PrivateLink
+</code></pre>
+<p>Ask:</p>
+<pre><code class="language-text">Do consumers need the entire network
+or only this service?
+</code></pre>
+<p>Choose the narrowest architecture that satisfies requirements.</p>
+<hr/>
+<h1 id="8-116-production-pattern-endpoint-first-private-vpc"><strong>8.116 Production Pattern --- Endpoint-First Private VPC</strong></h1>
+<p>Highly restricted workloads may avoid general NAT internet access.</p>
+<p>Example:</p>
+<pre><code class="language-text">Private Workload
+   |
+   +--&gt; S3 Gateway Endpoint
+   +--&gt; ECR Interface Endpoints
+   +--&gt; STS Interface Endpoint
+   +--&gt; CloudWatch Endpoint
+   +--&gt; SSM Endpoints
+</code></pre>
+<p>The exact endpoints depend on workload behavior and AWS service
+dependencies.</p>
+<hr/>
+<h1 id="8-117-common-mistakes"><strong>8.117 Common Mistakes</strong></h1>
+<ol>
+<li>Assuming VPC Peering is transitive.</li>
+<li>Creating TGW attachment but forgetting VPC routes.</li>
+<li>Configuring VPC routes but forgetting TGW routes.</li>
+<li>Missing return routes.</li>
+<li>Overlapping CIDRs.</li>
+<li>Treating VPN tunnel UP as proof of application connectivity.</li>
+<li>Advertising wrong prefixes with BGP.</li>
+<li>Ignoring hybrid DNS.</li>
+<li>Using full VPC connectivity when only one service is required.</li>
+<li>Forgetting interface endpoint Security Groups.</li>
+<li>Assuming endpoint policy replaces IAM.</li>
+<li>Treating Flow Logs as packet capture.</li>
+<li>Assuming ACCEPT means application success.</li>
+<li>Ignoring IPv6 rules.</li>
+<li>Using IPv4-only security rules in dual-stack designs.</li>
+<li>Forgetting egress-only IGW for appropriate IPv6 outbound-only
+patterns.</li>
+<li>Centralizing egress without designing return paths.</li>
+<li>Creating asymmetric routing through stateful firewalls.</li>
+<li>Ignoring AZ dependencies.</li>
+<li>Deploying one Direct Connect path and calling it highly available.</li>
+<li>Making route tables too broad.</li>
+<li>Not documenting CIDR ownership.</li>
+<li>Forgetting DNS when IP connectivity works.</li>
+<li>Changing multiple network controls at once during incidents.</li>
+<li>Opening <code>0.0.0.0/0</code> to "test" without understanding the risk.</li>
+</ol>
+<hr/>
+<h1 id="8-118-concept-clearing"><strong>8.118 Concept Clearing</strong></h1>
+<pre><code class="language-text">VPC PEERING
+=
+Point-to-point private VPC connectivity
+</code></pre>
+<pre><code class="language-text">TRANSIT GATEWAY
+=
+Central network transit hub
+</code></pre>
+<pre><code class="language-text">SITE-TO-SITE VPN
+=
+Encrypted hybrid connection over IPsec
+</code></pre>
+<pre><code class="language-text">BGP
+=
+Dynamic route exchange protocol
+</code></pre>
+<pre><code class="language-text">DIRECT CONNECT
+=
+Dedicated AWS connectivity service
+</code></pre>
+<pre><code class="language-text">ROUTE 53 RESOLVER
+=
+VPC DNS resolution and hybrid DNS capability
+</code></pre>
+<pre><code class="language-text">PRIVATELINK
+=
+Private service-oriented connectivity
+</code></pre>
+<pre><code class="language-text">EGRESS-ONLY IGW
+=
+Outbound-only internet gateway pattern for IPv6
+</code></pre>
+<pre><code class="language-text">NETWORK FIREWALL
+=
+Managed network inspection service
+</code></pre>
+<pre><code class="language-text">FLOW LOG
+=
+IP flow metadata
+</code></pre>
+<pre><code class="language-text">REACHABILITY ANALYZER
+=
+Configuration-based reachability analysis
+</code></pre>
+<hr/>
+<h1 id="8-119-interview-questions-vpc-peering"><strong>8.119 Interview Questions --- VPC Peering</strong></h1>
+<h2 id="q1-is-vpc-peering-transitive"><strong>Q1. Is VPC Peering transitive?</strong></h2>
+<p>No.</p>
+<p>If:</p>
+<pre><code class="language-text">A peers with B
+B peers with C
+</code></pre>
+<p>A does not automatically reach C through B.</p>
+<h2 id="q2-what-is-required-after-creating-a-peering-connection"><strong>Q2. What is required after creating a peering connection?</strong></h2>
+<p>Typically:</p>
+<pre><code class="language-text">Accept peering
+Configure routes
+Configure Security Groups
+Configure NACLs if necessary
+Configure DNS as required
+Verify application listener
+</code></pre>
+<hr/>
+<h1 id="8-120-interview-questions-transit-gateway"><strong>8.120 Interview Questions --- Transit Gateway</strong></h1>
+<h2 id="q3-why-use-transit-gateway"><strong>Q3. Why use Transit Gateway?</strong></h2>
+<p>To provide scalable centralized routing between multiple VPCs and
+supported hybrid network connections.</p>
+<h2 id="q4-what-are-the-two-routing-layers-with-tgw"><strong>Q4. What are the two routing layers with TGW?</strong></h2>
+<pre><code class="language-text">VPC route table
+TGW route table
+</code></pre>
+<p>Both must be correct.</p>
+<h2 id="q5-can-tgw-isolate-production-from-development"><strong>Q5. Can TGW isolate production from development?</strong></h2>
+<p>Yes, routing segmentation can be implemented using Transit Gateway
+route-table architecture.</p>
+<hr/>
+<h1 id="8-121-interview-questions-hybrid"><strong>8.121 Interview Questions --- Hybrid</strong></h1>
+<h2 id="q6-vpn-vs-direct-connect"><strong>Q6. VPN vs Direct Connect?</strong></h2>
+<p>Site-to-Site VPN commonly uses encrypted IPsec connectivity over
+internet/network paths.</p>
+<p>Direct Connect provides dedicated connectivity to AWS.</p>
+<p>Many enterprises use both in resilient hybrid designs.</p>
+<h2 id="q7-what-is-bgp-used-for"><strong>Q7. What is BGP used for?</strong></h2>
+<p>Dynamic exchange of network reachability information.</p>
+<h2 id="q8-tunnel-is-up-but-application-is-unreachable-what-do-you-check"><strong>Q8. Tunnel is UP but application is unreachable. What do you check?</strong></h2>
+<pre><code class="language-text">Routes
+BGP advertisements
+Security Groups
+NACLs
+On-prem firewall
+Return path
+DNS
+Application listener
+</code></pre>
+<hr/>
+<h1 id="8-122-interview-questions-dns"><strong>8.122 Interview Questions --- DNS</strong></h1>
+<h2 id="q9-aws-instance-can-reach-on-prem-by-ip-but-not-hostname-what-is-likely-wrong"><strong>Q9. AWS instance can reach on-prem by IP but not hostname. What is likely wrong?</strong></h2>
+<p>Focus on DNS.</p>
+<p>Check:</p>
+<pre><code class="language-text">Resolver rules
+Outbound Resolver endpoint
+On-prem DNS
+Network path to DNS
+Security controls
+</code></pre>
+<h2 id="q10-what-is-a-resolver-inbound-endpoint"><strong>Q10. What is a Resolver inbound endpoint?</strong></h2>
+<p>It allows DNS queries from external networks such as on-premises
+environments to enter Route 53 Resolver for applicable AWS private DNS
+resolution.</p>
+<hr/>
+<h1 id="8-123-interview-questions-privatelink"><strong>8.123 Interview Questions --- PrivateLink</strong></h1>
+<h2 id="q11-privatelink-vs-vpc-peering"><strong>Q11. PrivateLink vs VPC Peering?</strong></h2>
+<p>Peering connects networks.</p>
+<p>PrivateLink exposes specific services privately through endpoint
+architecture.</p>
+<h2 id="q12-why-might-privatelink-be-more-secure-for-a-shared-service"><strong>Q12. Why might PrivateLink be more secure for a shared service?</strong></h2>
+<p>Because consumers can access the exposed service without requiring broad
+routed connectivity to the provider VPC.</p>
+<hr/>
+<h1 id="8-124-interview-questions-ipv6"><strong>8.124 Interview Questions --- IPv6</strong></h1>
+<h2 id="q13-what-is-the-ipv6-default-route"><strong>Q13. What is the IPv6 default route?</strong></h2>
+<pre><code class="language-text">::/0
+</code></pre>
+<h2 id="q14-what-is-an-egress-only-internet-gateway"><strong>Q14. What is an Egress-only Internet Gateway?</strong></h2>
+<p>A VPC component that supports outbound-initiated IPv6 internet
+connectivity while preventing unsolicited inbound connections through
+that route.</p>
+<h2 id="q15-does-nat-gateway-solve-ipv6-private-egress-in-the-same-way-as-ipv4"><strong>Q15. Does NAT Gateway solve IPv6 private egress in the same way as IPv4?</strong></h2>
+<p>No. IPv6 architecture is different; egress-only IGW is one AWS mechanism
+for outbound-only IPv6 internet connectivity.</p>
+<hr/>
+<h1 id="8-125-senior-scenario-50-vpcs"><strong>8.125 Senior Scenario --- 50 VPCs</strong></h1>
+<p>Company has:</p>
+<pre><code class="language-text">50 VPCs
+</code></pre>
+<p>Requirement:</p>
+<pre><code class="language-text">Controlled inter-VPC connectivity
+Shared DNS
+On-prem connectivity
+Central security
+</code></pre>
+<p>A full-mesh peering architecture would be difficult to manage.</p>
+<p>Consider:</p>
+<pre><code class="language-text">Transit Gateway
+Dedicated network account
+Shared Services VPC
+Inspection VPC
+Route 53 Resolver
+Direct Connect/VPN
+</code></pre>
+<p>with segmented routing.</p>
+<hr/>
+<h1 id="8-126-senior-scenario-production-cannot-reach-shared-dns"><strong>8.126 Senior Scenario --- Production Cannot Reach Shared DNS</strong></h1>
+<p>Architecture:</p>
+<pre><code class="language-text">Prod VPC
+   |
+   v
+TGW
+   |
+   v
+Shared Services VPC
+   |
+   v
+DNS
+</code></pre>
+<p>Check:</p>
+<pre><code class="language-text">Prod subnet route
+TGW route-table association
+TGW route to Shared VPC
+Shared subnet return route
+Security Groups
+NACLs
+DNS listener
+Resolver configuration
+</code></pre>
+<hr/>
+<h1 id="8-127-senior-scenario-asymmetric-firewall-path"><strong>8.127 Senior Scenario --- Asymmetric Firewall Path</strong></h1>
+<p>Forward:</p>
+<pre><code class="language-text">App
+ |
+ v
+Firewall
+ |
+ v
+Destination
+</code></pre>
+<p>Return:</p>
+<pre><code class="language-text">Destination
+ |
+ v
+Direct Route
+ |
+ v
+App
+</code></pre>
+<p>Problem:</p>
+<pre><code class="language-text">Stateful firewall sees only one direction.
+</code></pre>
+<p>Potential result:</p>
+<pre><code class="language-text">Connection failure
+</code></pre>
+<p>Design symmetric routing where required by the inspection architecture.</p>
+<hr/>
+<h1 id="8-128-senior-scenario-private-eks-cluster"><strong>8.128 Senior Scenario --- Private EKS Cluster</strong></h1>
+<p>Private EKS worker nodes require access to AWS services.</p>
+<p>Instead of automatically giving broad NAT internet access, evaluate
+endpoints for required services such as:</p>
+<pre><code class="language-text">ECR
+S3
+STS
+EC2 APIs
+CloudWatch
+SSM
+</code></pre>
+<p>depending on cluster/workload requirements.</p>
+<p>The exact endpoint set depends on the EKS and application architecture.</p>
+<hr/>
+<h1 id="8-129-senior-scenario-partner-access"><strong>8.129 Senior Scenario --- Partner Access</strong></h1>
+<p>Partner needs access only to:</p>
+<pre><code class="language-text">payments-api
+</code></pre>
+<p>They do not need access to:</p>
+<pre><code class="language-text">Database
+Internal monitoring
+Other application networks
+</code></pre>
+<p>Consider:</p>
+<pre><code class="language-text">PrivateLink
+</code></pre>
+<p>rather than broad peering.</p>
+<p>This applies least-privilege thinking to networking.</p>
+<hr/>
+<h1 id="8-130-senior-scenario-hybrid-dr"><strong>8.130 Senior Scenario --- Hybrid DR</strong></h1>
+<p>Primary:</p>
+<pre><code class="language-text">On-Prem Data Center
+</code></pre>
+<p>Disaster recovery:</p>
+<pre><code class="language-text">AWS
+</code></pre>
+<p>Connectivity architecture should consider:</p>
+<pre><code class="language-text">Direct Connect
+VPN backup
+BGP
+DNS failover
+Route advertisements
+Capacity
+RTO
+RPO
+Security
+Testing
+</code></pre>
+<p>A DR design that has never tested network failover is incomplete.</p>
+<hr/>
+<h1 id="8-131-senior-scenario-nat-cost-spike"><strong>8.131 Senior Scenario --- NAT Cost Spike</strong></h1>
+<p>Private workloads send large volumes to:</p>
+<pre><code class="language-text">S3
+</code></pre>
+<p>through:</p>
+<pre><code class="language-text">NAT Gateway
+</code></pre>
+<p>Investigate whether an S3 gateway endpoint is suitable.</p>
+<p>Possible benefits:</p>
+<pre><code class="language-text">Private routing
+Reduced NAT processing dependence
+Potential cost improvement
+</code></pre>
+<p>Always evaluate current AWS pricing and workload behavior.</p>
+<hr/>
+<h1 id="8-132-senior-scenario-ipv6-exposure"><strong>8.132 Senior Scenario --- IPv6 Exposure</strong></h1>
+<p>Engineer adds:</p>
+<pre><code class="language-text">::/0
+</code></pre>
+<p>to a Security Group inbound rule.</p>
+<p>This means:</p>
+<pre><code class="language-text">all IPv6 source addresses
+</code></pre>
+<p>for that rule.</p>
+<p>Do not assume a private IPv4 design automatically makes IPv6 private.</p>
+<p>Review IPv6 routes and security explicitly.</p>
+<hr/>
+<h1 id="8-133-senior-scenario-flow-log-accept-http-500"><strong>8.133 Senior Scenario --- Flow Log ACCEPT + HTTP 500</strong></h1>
+<p>Flow Log:</p>
+<pre><code class="language-text">ACCEPT
+</code></pre>
+<p>HTTP response:</p>
+<pre><code class="language-text">500 Internal Server Error
+</code></pre>
+<p>Conclusion:</p>
+<pre><code class="language-text">Network path reached the application stack sufficiently to receive an HTTP response.
+</code></pre>
+<p>Investigate:</p>
+<pre><code class="language-text">Application logs
+Database
+Dependencies
+Configuration
+Code
+</code></pre>
+<p>Do not keep modifying routes.</p>
+<hr/>
+<h1 id="8-134-production-troubleshooting-worksheet"><strong>8.134 Production Troubleshooting Worksheet</strong></h1>
+<p>For every incident record:</p>
+<pre><code class="language-text">SOURCE:
+SOURCE IP:
+SOURCE SUBNET:
+SOURCE ROUTE TABLE:
+
+DESTINATION:
+DESTINATION IP:
+DESTINATION PORT:
+DESTINATION SUBNET:
+
+TRANSIT:
+PEERING / TGW / VPN / DX / ENDPOINT:
+
+FORWARD ROUTE:
+RETURN ROUTE:
+
+SOURCE SG:
+DESTINATION SG:
+
+SOURCE NACL:
+DESTINATION NACL:
+
+FIREWALL:
+DNS:
+
+FLOW LOG RESULT:
+
+LISTENER:
+APPLICATION RESULT:
+</code></pre>
+<p>This prevents random troubleshooting.</p>
+<hr/>
+<h1 id="8-135-packet-path-method"><strong>8.135 Packet-Path Method</strong></h1>
+<p>Draw:</p>
+<pre><code class="language-text">SOURCE
+   |
+   v
+SOURCE ENI
+   |
+   v
+SOURCE SUBNET ROUTE
+   |
+   v
+TRANSIT TARGET
+   |
+   v
+TRANSIT ROUTE
+   |
+   v
+DESTINATION VPC
+   |
+   v
+DESTINATION ENI
+   |
+   v
+APPLICATION
+</code></pre>
+<p>Then draw the reverse direction.</p>
+<p>This method works for:</p>
+<pre><code class="language-text">Peering
+TGW
+VPN
+Direct Connect
+PrivateLink
+Centralized firewall
+Hybrid networks
+</code></pre>
+<hr/>
+<h1 id="8-136-production-network-design-checklist"><strong>8.136 Production Network Design Checklist</strong></h1>
+<pre><code class="language-text">[ ] CIDRs centrally planned
+
+[ ] No unintended overlaps
+
+[ ] AZ failure domains understood
+
+[ ] VPC connectivity model selected
+
+[ ] Peering vs TGW decision documented
+
+[ ] Hybrid connectivity redundant where required
+
+[ ] Forward routes documented
+
+[ ] Return routes documented
+
+[ ] TGW associations documented
+
+[ ] TGW propagations documented
+
+[ ] Route segmentation tested
+
+[ ] DNS architecture documented
+
+[ ] Resolver endpoints redundant
+
+[ ] Private hosted zones documented
+
+[ ] VPC endpoints evaluated
+
+[ ] Endpoint policies reviewed
+
+[ ] PrivateLink considered for service sharing
+
+[ ] IPv6 explicitly designed
+
+[ ] Security Groups least privilege
+
+[ ] NACL strategy documented
+
+[ ] Firewall inspection paths symmetric where required
+
+[ ] Flow Logs enabled where required
+
+[ ] Reachability analysis available
+
+[ ] Network monitoring configured
+
+[ ] Costs reviewed
+
+[ ] DR network failover tested
+</code></pre>
+<hr/>
+<h1 id="8-137-complete-enterprise-architecture"><strong>8.137 Complete Enterprise Architecture</strong></h1>
+<pre><code class="language-text">                              INTERNET
+                                 |
+                                 v
+                         Central Egress VPC
+                          /             \
+                         /               \
+                    NAT Gateway       Firewall
+                         \               /
+                          \             /
+                           Transit Gateway
+                 _____________|_____________
+                /             |             \
+               /              |              \
+              v               v               v
+         PROD VPC         DEV VPC       SHARED VPC
+         10.10/16         10.20/16       10.30/16
+             |                |               |
+             |                |               +--&gt; DNS
+             |                |               +--&gt; Monitoring
+             |                |               +--&gt; Repositories
+             |                |
+             +----------------+----------------+
+                              |
+                              v
+                       Transit Gateway
+                              |
+                   +----------+----------+
+                   |                     |
+                   v                     v
+             Direct Connect         Site-to-Site VPN
+                   |                     |
+                   +----------+----------+
+                              |
+                              v
+                         ON-PREMISES
+                         172.16/16
+</code></pre>
+<p>Service-specific connectivity can additionally use:</p>
+<pre><code class="language-text">PrivateLink
+VPC Endpoints
+</code></pre>
+<p>Hybrid DNS:</p>
+<pre><code class="language-text">Route 53 Resolver
+Inbound Endpoints
+Outbound Endpoints
+Resolver Rules
+</code></pre>
+<hr/>
+<h1 id="8-138-quick-revision"><strong>8.138 Quick Revision</strong></h1>
+<pre><code class="language-text">VPC PEERING
+=
+Private point-to-point VPC connection
+
+PEERING TRANSITIVITY
+=
+No
+
+TGW
+=
+Central transit router
+
+TGW ATTACHMENT
+=
+Connection between TGW and a network resource
+
+TGW ROUTE TABLE
+=
+Controls transit routing
+
+VPN
+=
+Encrypted hybrid IPsec connection
+
+CUSTOMER GATEWAY
+=
+Customer-side VPN representation
+
+BGP
+=
+Dynamic route exchange
+
+DIRECT CONNECT
+=
+Dedicated AWS connectivity
+
+ROUTE 53 RESOLVER
+=
+DNS resolution and hybrid DNS
+
+OUTBOUND RESOLVER ENDPOINT
+=
+AWS queries external DNS
+
+INBOUND RESOLVER ENDPOINT
+=
+External networks query AWS Resolver
+
+PRIVATELINK
+=
+Private service connectivity
+
+INTERFACE ENDPOINT
+=
+PrivateLink ENI in consumer VPC
+
+IPV6 DEFAULT ROUTE
+=
+::/0
+
+EGRESS-ONLY IGW
+=
+Outbound-only IPv6 internet gateway pattern
+
+CENTRALIZED EGRESS
+=
+Spokes send internet-bound traffic through shared egress network
+
+INSPECTION VPC
+=
+Central network-security inspection layer
+
+FLOW LOG
+=
+Network-flow metadata
+
+REACHABILITY ANALYZER
+=
+Configuration path analysis
+</code></pre>
+<hr/>
+<h1 id="8-139-chapter-summary"><strong>8.139 Chapter Summary</strong></h1>
+<p>This chapter moved from single-VPC networking into enterprise AWS
+network architecture.</p>
+<p>You learned:</p>
+<ul>
+<li>Advanced routing</li>
+<li>VPC Peering</li>
+<li>Non-transitive connectivity</li>
+<li>Transit Gateway</li>
+<li>TGW route tables</li>
+<li>Segmentation</li>
+<li>Site-to-Site VPN</li>
+<li>BGP</li>
+<li>Direct Connect</li>
+<li>Hybrid connectivity</li>
+<li>Route propagation</li>
+<li>Hybrid DNS</li>
+<li>Route 53 Resolver</li>
+<li>Private Hosted Zones</li>
+<li>VPC endpoints</li>
+<li>PrivateLink</li>
+<li>IPv6</li>
+<li>Egress-only Internet Gateway</li>
+<li>ALB/NLB/GWLB networking</li>
+<li>Centralized egress</li>
+<li>Inspection VPCs</li>
+<li>AWS Network Firewall</li>
+<li>Flow Logs</li>
+<li>Reachability analysis</li>
+<li>Production troubleshooting</li>
+</ul>
+<p>The central lesson is:</p>
+<pre><code class="language-text">NETWORK TROUBLESHOOTING
+IS
+PATH TROUBLESHOOTING
+</code></pre>
+<p>Always identify:</p>
+<pre><code class="language-text">SOURCE
+   |
+   v
+ROUTE
+   |
+   v
+TRANSIT
+   |
+   v
+SECURITY
+   |
+   v
+DESTINATION
+   |
+   v
+RETURN PATH
+</code></pre>
+<p>If you can accurately draw the packet path, advanced AWS networking
+becomes much easier to reason about.</p>
+<hr/>
+<h1 id="8-140-references"><strong>8.140 References</strong></h1>
+<p>Use current official AWS documentation for implementation details,
+quotas, supported architectures and pricing:</p>
+<ol>
+<li>Amazon VPC User Guide</li>
+<li>VPC Route Tables Documentation</li>
+<li>VPC Peering Guide</li>
+<li>AWS Transit Gateway Documentation</li>
+<li>AWS Site-to-Site VPN Documentation</li>
+<li>AWS Direct Connect Documentation</li>
+<li>AWS Transit Gateway Route Tables Documentation</li>
+<li>Amazon Route 53 Resolver Documentation</li>
+<li>Route 53 Private Hosted Zones Documentation</li>
+<li>AWS PrivateLink Documentation</li>
+<li>VPC Endpoint Documentation</li>
+<li>IPv6 for Amazon VPC Documentation</li>
+<li>Egress-Only Internet Gateway Documentation</li>
+<li>Elastic Load Balancing Documentation</li>
+<li>Gateway Load Balancer Documentation</li>
+<li>AWS Network Firewall Documentation</li>
+<li>VPC Flow Logs Documentation</li>
+<li>VPC Reachability Analyzer Documentation</li>
+<li>AWS Well-Architected Framework</li>
+<li>AWS Architecture Center --- Networking</li>
+</ol>
+<hr/>
+<p><strong>End of Chapter 8</strong></p>
+<p><strong>Page: 195--236</strong></p>
+<hr/>
+<h1 id="next-chapter"><strong>NEXT CHAPTER</strong></h1>
+<h2 id="chapter-9-production-vpc-design-lab"><strong>CHAPTER 9 --- PRODUCTION VPC DESIGN LAB</strong></h2>
+<p>Chapter 9 will turn Chapters 7 and 8 into a complete production project:</p>
+<pre><code class="language-text">Requirements gathering
+CIDR planning
+Three-tier VPC
+Two Availability Zones
+Public subnets
+Private application subnets
+Private database subnets
+Internet Gateway
+Highly available NAT architecture
+Route tables
+Security Groups
+NACL strategy
+ALB
+Private application tier
+RDS network design
+VPC endpoints
+Flow Logs
+DNS
+Bastion vs Systems Manager
+Failure testing
+Packet-flow validation
+Cost analysis
+Security review
+CLI build
+Troubleshooting labs
+Production incident simulations
+Architecture interview walkthrough
+</code></pre>
+</article></main><footer>ARTHA Gurukul · Source material preserved as educational notes</footer></body></html>

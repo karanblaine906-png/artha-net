@@ -1,0 +1,125 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DevAI V34 — Classical AI to GenAI | ARTHA Gurukul</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><a class="brand" href="../index.html">✦ ARTHA GURUKUL</a><nav><a href="../index.html#courses">All Courses</a><a href="index.html">Source Library</a></nav></header><main class="book-layout"><aside class="book-toc"><div class="eyebrow">Original material · offline copy</div><h2>DevAI V34 — Classical AI to GenAI</h2><a href="../index.html">⌂ Course library</a><div class="toc"><a href="#devai-academy-v34-classical-artificial-intelligence-python-genai-engineering">DevAI Academy V34: Classical Artificial Intelligence → Python → GenAI Engineering</a><a href="#what-was-actually-implemented">What was actually implemented</a><a href="#how-to-run-on-debian-12-8-gb-ram">How to run on Debian 12 / 8 GB RAM</a><a href="#example-bridge-one-connected-question-through-eight-levels">Example bridge: one connected question through eight levels</a><a href="#suggested-six-stage-learning-sequence">Suggested six-stage learning sequence</a><a href="#data-provenance-labels">Data-provenance labels</a></div></aside><article class="book-prose"><p class="source-note">Historical course notes converted into searchable offline HTML. Some content may be a draft; exercises requiring cloud accounts need credentials and may incur costs.</p><h1 id="devai-academy-v34-classical-artificial-intelligence-python-genai-engineering">DevAI Academy V34: Classical Artificial Intelligence → Python → GenAI Engineering</h1>
+<h2 id="what-was-actually-implemented">What was actually implemented</h2>
+<p>This is an additive source-code upgrade to the previously supplied DevAI Academy V33. It does <strong>not</strong> replace old user courses or their progress. It adds:</p>
+<ul>
+<li><strong>One selectable integrated course</strong>: <code>Classical AI to GenAI Engineering</code> with <strong>45 classical lecture-title checkpoints and 160 existing modern AI checkpoints = 205 lessons across 38 chapters</strong> (Complete mode).</li>
+<li>Individual, locally authored explanation pages for all 45 classical topics. Titles are transcribed from <strong>user-supplied screenshots</strong>, not independently checked against the complete 48-video NPTEL playlist or spoken video content. The 160 existing v33 foundation explanations remain available.</li>
+<li><strong>Seven additional offline Python labs</strong>, expanding to 15 executed dependency-free/small standard-library demonstrations overall; an optional toy-training transformer and specialized PyTorch/TensorFlow/LangGraph/MCP scripts remain in <code>ai_labs/optional</code>.</li>
+<li>A course-specific <strong>YouTube video inventory importer</strong>: saves verified-shape public YouTube links and titles; proposes provisional lesson associations by title similarity; exports CSV. Does not watch, download video/audio, extract transcripts, create embeddings, or claim copyright ownership.</li>
+<li>A lesson-specific <strong>matching lab</strong> recommendation in the classroom. Commands display for you to run in a local terminal; the server does not execute learner-selected lab commands.</li>
+<li>Existing private login, progress SQLite, local AI teacher, supervised quizzes, PDF reference search and legacy classroom are preserved.</li>
+</ul>
+<p>These are structured <strong>learning checkpoints</strong> and tested teaching demos, <strong>not 205 long professional lessons or 205 independently deployed real-world projects</strong>. Moving to expert competency requires repeated labs, independent source checking, realistic data, supervised review and production-like capstone validation.</p>
+<h2 id="how-to-run-on-debian-12-8-gb-ram">How to run on Debian 12 / 8 GB RAM</h2>
+<p>In your terminal (project root, after unzipping):</p>
+<pre><code class="language-bash">python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r backend/requirements.txt
+python start_local.py
+</code></pre>
+<p>Open <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a> on the <strong>same computer</strong>. For the Owner login use the access token printed on first startup. Do not share <code>.local-secrets</code> or the SQLite database.</p>
+<p>Create a new course by choosing <strong>Classical AI to GenAI Engineering (205)</strong> from the New Course page. Use <strong>Complete</strong> (or Expert/Job Ready for the full structure), select mentor DevAI or ARTHA Mentor, click <strong>Teach this lesson</strong>. Leave the external AI checkbox off for the authored offline notes; otherwise provider configuration and per-request consent are needed. Select each lesson to see its corresponding executable lab recommendation, where one exists.</p>
+<p><strong>Offline terminal labs</strong> (run from the extracted project root):</p>
+<pre><code class="language-bash">python3 ai_labs/01_search_ai.py
+python3 ai_labs/10_classical_search.py
+python3 ai_labs/12_minimax.py
+python3 ai_labs/13_logic_csp.py
+python3 ai_labs/14_planning.py
+python3 ai_labs/15_logistic_regression.py
+python3 ai_labs/09_neural_net_from_scratch.py
+python3 ai_labs/16_causal_attention.py
+python3 ai_labs/05_rag_offline_fts.py
+python3 ai_labs/06_toolcalling_permissions.py
+python3 tests/offline_ai_labs_smoke.py
+</code></pre>
+<h3 id="youtube-playlist-inventory-two-modes">YouTube playlist inventory: two modes</h3>
+<p><strong>Offline / no permission or network required:</strong> Paste lines such as <code>Video title | https://youtu.be/VIDEO_ID</code> or the exported scraper's CSV into the classroom's <strong>Public YouTube playlist → Course references</strong> section. This checks and deduplicates YouTube video ID shapes and saves metadata; titles supplied by users are not independently confirmed.</p>
+<p><strong>Live playlist / channel extraction:</strong> On your own computer, explicitly approve an Internet request, install optional <code>yt-dlp</code> only if approved, and run the Academy with network opt-in:</p>
+<pre><code class="language-bash">python -m pip install yt-dlp      # optional, needs approved package access
+export DEVAI_NETWORK_ENABLED=1    # admin gate, only when approved
+python start_local.py
+</code></pre>
+<p>Paste a <strong>public HTTPS</strong> URL from <code>youtube.com</code>, e.g. a playlist or <code>@channel/videos</code>. Click Import, review the <em>one-request</em> destination/consent prompt, and approve. The service then invokes <code>yt-dlp</code> in <strong>flat metadata-only mode</strong> to collect available video titles and direct links. Import is bounded to max 500 links (browser currently requests max 250). <strong>No unapproved background fetching</strong>. Stop the service and unset <code>DEVAI_NETWORK_ENABLED</code> to return to default-deny networking. Note that enabling networking may also enable other separately consent-gated integrations in the project; review the existing system's <code>backend/network_policy.py</code> and related endpoints before enabling on sensitive machines.</p>
+<p><strong>Coverage limitation:</strong> Private/deleted/unavailable videos, YouTube blocking and rate limits can produce partial results. The importer has no transcript/content verification, and automatically suggested lesson mappings must be manually reviewed. Exact titles imply a string match, not independently proven conceptual equivalence.</p>
+<h2 id="example-bridge-one-connected-question-through-eight-levels">Example bridge: one connected question through eight levels</h2>
+<p><strong>Capstone brief:</strong> Build a local, evidence-aware mini troubleshooting tutor for synthetic Linux logs. Begin with basic Python and finish with a locally tested API and restricted tools. Do not ingest real sensitive incident logs.</p>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Concept to master</th>
+<th>Build and acceptance test</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Python, math, list/dict, functions</td>
+<td>Parse 20 synthetic log lines into records; unit-test malformed input</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Classical AI graph search and rules</td>
+<td>Represent diagnostic hypotheses as a graph; compare BFS/DFS/A* and forward-chaining rules</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Machine learning classification</td>
+<td>Fit toy logistic regression; show leakage-safe train/test split and precision/recall on a separate fixture</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Deep learning</td>
+<td>Manually train a tiny neural network; explain each gradient and test a mismatched feature shape</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Transformer/LLM concepts</td>
+<td>Implement masked attention, explain Q/K/V and train a <em>toy</em> decoder only with approved installed PyTorch</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Evidence-aware RAG</td>
+<td>Index synthetic troubleshooting notes, retrieve only authorized passages, cite source IDs, and abstain on missing evidence</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Agentic AI / tools</td>
+<td>Propose a read-only diagnostic tool; validate typed arguments; require explicit approval for any external operation; log actual result</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Deploy/operate</td>
+<td>Run localhost API, test invalid inputs and source isolation, record CPU/RAM cost and response latency, draft rollback SOP</td>
+</tr>
+</tbody>
+</table>
+<h3 id="lab-practice-protocol">Lab practice protocol</h3>
+<p>For every lab, write five things: <strong>expected output</strong>, <strong>actual output</strong>, <strong>why they differ</strong>, <strong>edge-case test</strong>, and <strong>production/security limitation</strong>. If a step fails, the right answer is to debug and document it, not mark it mastered. Persist the markdown evidence next to your own project copy; the web app currently stores self-reported progress rather than verified submitted code/test artifacts.</p>
+<h3 id="verification-ladder">Verification ladder</h3>
+<ol>
+<li>15 stdlib AI lab scripts executed on the build machine (01–06, 08–16).</li>
+<li>FastAPI backend, consent controls, course generation, lesson lookup, saved playlist inventory and CSV export tested by automated HTTP tests.</li>
+<li><code>yt-dlp</code> live scraping <strong>not tested against YouTube</strong> in this build; mocked integration path tested, opt-in gate tested.</li>
+<li>Browser UI: JS syntax checked, but Chromium navigation to the local server was blocked by the tool environment. Test locally using your browser after extraction.</li>
+<li>Optional PyTorch / TensorFlow / LangGraph / MCP live SDK compatibility and deployment not asserted by V34 tests. Real foundation-model training and GPU systems are beyond the offline laptop exercises.</li>
+</ol>
+<h2 id="suggested-six-stage-learning-sequence">Suggested six-stage learning sequence</h2>
+<ul>
+<li><strong>Stage A (weeks 1–4):</strong> Python basics + graph search + complexity; implement BFS, DFS, A*, IDDFS; test unreachable targets.</li>
+<li><strong>Stage B (weeks 5–8):</strong> Logic, planning, CSP and algorithms for games; explain minimax, alpha-beta, resolution vs chaining.</li>
+<li><strong>Stage C (weeks 9–12):</strong> ML and math; implement regression, logistic classification, clustering and reproducible evaluation.</li>
+<li><strong>Stage D (weeks 13–16):</strong> Neural-network backprop, embeddings, tokenization, masked attention and toy transformer training.</li>
+<li><strong>Stage E (weeks 17–20):</strong> RAG indexing/citations, agents, typed tools, LangGraph/MCP optional integration and injection/permission tests.</li>
+<li><strong>Stage F (weeks 21–24):</strong> Model serving, metrics, threat modeling, container/API integration, capstone review and mock interviews.</li>
+</ul>
+<p>This schedule is a suggested study plan, not proof of job readiness. On an 8 GB CPU-only device, start with the offline scripts and use free local examples; GPU model training may require resources or approved external infrastructure not included in the project.</p>
+<h2 id="data-provenance-labels">Data-provenance labels</h2>
+<ul>
+<li><strong>Screenshot-observed</strong>: topic titles that are legible in user-provided images; some lecture names were partly cropped.</li>
+<li><strong>Authored locally</strong>: explanatory notes, source code and tests, written for this package.</li>
+<li><strong>Student-supplied / YouTube metadata</strong>: inventory links and titles imported by a user or retrieved after permission; video contents and transcript remain unverified.</li>
+<li><strong>Optional SDK demo</strong>: dependency/API compatibility varies by version and has not been verified in this release unless otherwise indicated.</li>
+</ul>
+<p>No spending, email sending, public outreach, cloud deployment or automated agent tool execution is initiated by installing this release.</p>
+</article></main><footer>ARTHA Gurukul · Source material preserved as educational notes</footer></body></html>

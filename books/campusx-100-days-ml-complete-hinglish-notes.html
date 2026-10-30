@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>CampusX 100 Days ML — Hinglish Notes | ARTHA Gurukul</title><link href="../assets/style.css" rel="stylesheet"/></head><body><header class="top"><a class="brand" href="../index.html">✦ ARTHA GURUKUL</a><nav><a href="../index.html#courses">All Courses</a><a href="index.html">Source Library</a></nav></header><main class="book-layout"><aside class="book-toc"><div class="eyebrow">Original material · offline copy</div><h2>CampusX 100 Days ML — Hinglish Notes</h2><a href="../index.html">⌂ Course library</a><div class="toc"><a href="#campusx-100-days-of-machine-learning-hinglish-study-companion">CampusX 100 Days of Machine Learning — Hinglish Study Companion</a><a href="#kaise-padhein-simple-routine">Kaise padhein (simple routine)</a><a href="#lightweight-debian-setup-8-gb-ram-friendly">Lightweight Debian setup (8 GB RAM friendly)</a><a href="#table-of-contents">Table of contents</a><a href="#important-scope-distinction">Important scope distinction</a><a href="#formula-quick-reference">Formula quick-reference</a><a href="#interview-prep-method">Interview prep method</a><a href="#source-ethics-note">Source &amp; ethics note</a><a href="#module-01-foundations-ml-soch-aur-python-environment">Module 01: Foundations, ML soch aur Python environment</a><a href="#learning-objectives">Learning objectives</a><a href="#lesson-by-lesson-learning-cards">Lesson-by-lesson learning cards</a><a href="#module-completion-checklist">Module completion checklist</a><a href="#module-02-problem-framing-ingestion-aur-exploratory-analysis">Module 02: Problem framing, ingestion aur exploratory analysis</a><a href="#end-to-end-ml-workflow">End-to-end ML workflow</a><a href="#lesson-by-lesson-learning-cards-1">Lesson-by-lesson learning cards</a><a href="#module-completion-checklist-1">Module completion checklist</a><a href="#module-03-feature-engineering-encoding-aur-safe-pipelines">Module 03: Feature engineering, encoding aur safe pipelines</a><a href="#feature-engineering-data-ko-model-friendly-banana">Feature engineering: data ko model-friendly banana</a><a href="#lesson-by-lesson-learning-cards-2">Lesson-by-lesson learning cards</a><a href="#module-completion-checklist-2">Module completion checklist</a><a href="#module-04-missing-data-anomalies-aur-feature-construction">Module 04: Missing data, anomalies aur feature construction</a><a href="#missing-values-ek-hi-imputer-sab-par-mat-lagao">Missing values: ek hi imputer sab par mat lagao</a><a href="#lesson-by-lesson-learning-cards-3">Lesson-by-lesson learning cards</a><a href="#module-completion-checklist-3">Module completion checklist</a><a href="#module-05-high-dimensions-aur-pca">Module 05: High dimensions aur PCA</a><a href="#curse-of-dimensionality">Curse of dimensionality</a><a href="#lesson-by-lesson-learning-cards-4">Lesson-by-lesson learning cards</a><a href="#module-completion-checklist-4">Module completion checklist</a><a href="#module-06-linear-regression-metrics-aur-gradient-descent">Module 06: Linear regression, metrics aur gradient descent</a><a href="#regression-ka-intuition">Regression ka intuition</a><a href="#lesson-by-lesson-learning-cards-5">Lesson-by-lesson learning cards</a><a href="#module-completion-checklist-5">Module completion checklist</a><a href="#module-07-bias-variance-aur-regularization">Module 07: Bias-variance aur regularization</a><a href="#why-perfect-training-fit-dangerous-hai">Why perfect training fit dangerous hai</a><a href="#lesson-by-lesson-learning-cards-6">Lesson-by-lesson learning cards</a><a href="#module-completion-checklist-6">Module completion checklist</a><a href="#module-08-logistic-regression-aur-classification-evaluation">Module 08: Logistic regression aur classification evaluation</a><a href="#logistic-regression-name-regression-kaam-classification">Logistic regression: name regression, kaam classification</a><a href="#lesson-by-lesson-learning-cards-7">Lesson-by-lesson learning cards</a><a href="#module-completion-checklist-7">Module completion checklist</a><a href="#module-09-decision-trees-bagging-aur-random-forest">Module 09: Decision trees, bagging aur random forest</a><a href="#trees-and-ensembles-decision-rules-ko-stack-karna">Trees and ensembles: decision rules ko stack karna</a><a href="#lesson-by-lesson-learning-cards-8">Lesson-by-lesson learning cards</a><a href="#module-completion-checklist-8">Module completion checklist</a><a href="#module-10-boosting-clustering-aur-stacking">Module 10: Boosting, clustering aur stacking</a><a href="#boosting-clustering-aur-meta-learners">Boosting, clustering aur meta-learners</a><a href="#lesson-by-lesson-learning-cards-9">Lesson-by-lesson learning cards</a><a href="#module-completion-checklist-9">Module completion checklist</a><a href="#module-11-knn-svm-aur-naive-bayes">Module 11: KNN, SVM aur Naive Bayes</a><a href="#knn-svm-and-probabilistic-classifiers">KNN, SVM and probabilistic classifiers</a><a href="#lesson-by-lesson-learning-cards-10">Lesson-by-lesson learning cards</a><a href="#module-completion-checklist-10">Module completion checklist</a><a href="#module-12-xgboost-dbscan-imbalance-optuna-aur-roc">Module 12: XGBoost, DBSCAN, imbalance, Optuna aur ROC</a><a href="#advanced-toolbox-and-honest-limits">Advanced toolbox and honest limits</a><a href="#lesson-by-lesson-learning-cards-11">Lesson-by-lesson learning cards</a><a href="#module-completion-checklist-11">Module completion checklist</a><a href="#appendix-a-self-contained-practice-projects">Appendix A: Self-contained practice projects</a><a href="#project-1-soc-unusual-login-detector">Project 1: SOC unusual-login detector</a><a href="#project-2-cloud-capacity-forecasting">Project 2: Cloud capacity forecasting</a><a href="#project-3-customer-service-ticket-triage">Project 3: Customer service ticket triage</a><a href="#appendix-b-troubleshooting-table">Appendix B: Troubleshooting table</a><a href="#appendix-c-fifty-mini-interview-questions">Appendix C: Fifty mini interview questions</a><a href="#appendix-d-career-readiness-evidence-checklist">Appendix D: Career readiness evidence checklist</a></div></aside><article class="book-prose"><p class="source-note">Historical course notes converted into searchable offline HTML. Some content may be a draft; exercises requiring cloud accounts need credentials and may incur costs.</p><h1 id="campusx-100-days-of-machine-learning-hinglish-study-companion">CampusX 100 Days of Machine Learning — Hinglish Study Companion</h1>
+<blockquote>
+<p><strong>Independent, original study companion</strong> | Reviewed 30 October 2026 | Language: simple Hinglish | Level: absolute beginner → interview preparation.</p>
+<p><strong>Accuracy note:</strong> I verified the playlist identity, public ordered syllabus and CampusX's public GitHub project index. I <strong>could not reliably obtain full transcripts for each video</strong>. These notes therefore explain each publicly listed lecture topic using independent explanations, examples and exercises. They are <strong>not</strong> a verbatim transcript, not a minute-by-minute account, and not CampusX's paid notes.</p>
+</blockquote>
+<p><strong>Playlist:</strong> <a href="https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH">https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH</a></p>
+<p><strong>Syllabus reference (CampusX):</strong> <a href="https://learnwith.campusx.in/courses/100-Days-of-Machine-Learning-YouTube-1763210027804-6918732bee601b12112865e6">https://learnwith.campusx.in/courses/100-Days-of-Machine-Learning-YouTube-1763210027804-6918732bee601b12112865e6</a></p>
+<p><strong>Public source notebooks:</strong> <a href="https://github.com/campusx-official/100-days-of-machine-learning">https://github.com/campusx-official/100-days-of-machine-learning</a></p>
+<p><strong>Navigation:</strong> This all-in-one edition combines full chapter notes, all 134 mapped video topics, and coding exercises. Separate module files and CSV are also provided in the ZIP.</p>
+<h2 id="kaise-padhein-simple-routine">Kaise padhein (simple routine)</h2>
+<ol>
+<li>One original lesson ka topic/video study karo; phir corresponding module explanation padho.</li>
+<li>Diagram ko <strong>khud draw</strong> karo. Formulas mein har symbol ka meaning bol pao.</li>
+<li>Topic ke <code>Try it</code> exercise ko data par run karo. Koi ready-made result blindly trust mat karo.</li>
+<li>3 interview questions <strong>without looking</strong> answer karo. Concept weak ho to chapter revisit.</li>
+<li>Every module ka one-page summary apne words mein likho.</li>
+</ol>
+<h2 id="lightweight-debian-setup-8-gb-ram-friendly">Lightweight Debian setup (8 GB RAM friendly)</h2>
+<pre><code class="language-bash">sudo apt update
+sudo apt install -y python3-venv python3-pip
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install numpy pandas scikit-learn matplotlib
+# Optional; not required for base labs:
+# python -m pip install jupyterlab
+</code></pre>
+<p>Use <code>n_jobs=1</code> if memory spikes. No paid cloud, API key or GPU needed. Linux/macOS commands assume <code>bash</code>. All code is original demonstration code, not copied course notebooks.</p>
+<h3 id="overall-roadmap">Overall roadmap</h3>
+<pre><code class="language-mermaid">flowchart TD
+ A[ML basics &amp; Python] --&gt; B[Data sources &amp; EDA]
+ B --&gt; C[Feature engineering &amp; missing values]
+ C --&gt; D[Scaling, encoding, PCA]
+ D --&gt; E[Regression &amp; gradient descent]
+ E --&gt; F[Classification &amp; metrics]
+ F --&gt; G[Trees &amp; ensembles]
+ G --&gt; H[Boosting, clustering, SVM &amp; Bayes]
+ H --&gt; I[Advanced tuning &amp; imbalanced data]
+ I --&gt; J[Model deployment &amp; monitoring practice]
+</code></pre>
+<h2 id="table-of-contents">Table of contents</h2>
+<ul>
+<li><span class="small" title="Referenced resource was not available to bundle">Module 01: Foundations, ML soch aur Python environment — playlist lessons 1–12 [source not bundled]</span></li>
+<li><span class="small" title="Referenced resource was not available to bundle">Module 02: Problem framing, ingestion aur exploratory analysis — playlist lessons 13–22 [source not bundled]</span></li>
+<li><span class="small" title="Referenced resource was not available to bundle">Module 03: Feature engineering, encoding aur safe pipelines — playlist lessons 23–34 [source not bundled]</span></li>
+<li><span class="small" title="Referenced resource was not available to bundle">Module 04: Missing data, anomalies aur feature construction — playlist lessons 35–45 [source not bundled]</span></li>
+<li><span class="small" title="Referenced resource was not available to bundle">Module 05: High dimensions aur PCA — playlist lessons 46–49 [source not bundled]</span></li>
+<li><span class="small" title="Referenced resource was not available to bundle">Module 06: Linear regression, metrics aur gradient descent — playlist lessons 50–60 [source not bundled]</span></li>
+<li><span class="small" title="Referenced resource was not available to bundle">Module 07: Bias-variance aur regularization — playlist lessons 61–68 [source not bundled]</span></li>
+<li><span class="small" title="Referenced resource was not available to bundle">Module 08: Logistic regression aur classification evaluation — playlist lessons 69–79 [source not bundled]</span></li>
+<li><span class="small" title="Referenced resource was not available to bundle">Module 09: Decision trees, bagging aur random forest — playlist lessons 80–97 [source not bundled]</span></li>
+<li><span class="small" title="Referenced resource was not available to bundle">Module 10: Boosting, clustering aur stacking — playlist lessons 98–110 [source not bundled]</span></li>
+<li><span class="small" title="Referenced resource was not available to bundle">Module 11: KNN, SVM aur Naive Bayes — playlist lessons 111–126 [source not bundled]</span></li>
+<li><span class="small" title="Referenced resource was not available to bundle">Module 12: XGBoost, DBSCAN, imbalance, Optuna aur ROC — playlist lessons 127–134 [source not bundled]</span></li>
+</ul>
+<h2 id="important-scope-distinction">Important scope distinction</h2>
+<ul>
+<li><strong>Playlist lesson</strong> = publicly visible playlist position, not necessarily the calendar day or official repository folder number. E.g. a topic may have several parts; public GitHub day folders do not map 1:1 to every lesson position.</li>
+<li>Code is <strong>small, synthetic and auditable</strong>. A successful toy model is not a production model.</li>
+<li>Mermaid diagrams display in GitHub Markdown viewers that support Mermaid; otherwise the source remains readable and GitHub's normal README can still be used.</li>
+<li>Videos can move or be added; mapping below reflects the checked 134-item syllabus, not a permanently frozen playlist.</li>
+</ul>
+<h2 id="formula-quick-reference">Formula quick-reference</h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Formula</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Z-score</td>
+<td><code>z=(x−μ)/σ</code></td>
+<td>Standardized feature</td>
+</tr>
+<tr>
+<td>Min-max</td>
+<td><code>(x−min)/(max−min)</code></td>
+<td>Training-scale transform</td>
+</tr>
+<tr>
+<td>MSE</td>
+<td><code>Σ(y−ŷ)²/n</code></td>
+<td>Mean squared error</td>
+</tr>
+<tr>
+<td>MAE</td>
+<td><code>Σ\|y−ŷ\|/n</code></td>
+<td>Mean absolute error</td>
+</tr>
+<tr>
+<td>R²</td>
+<td><code>1−Σ(y−ŷ)²/Σ(y−ȳ)²</code></td>
+<td>Explained variation vs mean baseline</td>
+</tr>
+<tr>
+<td>Sigmoid</td>
+<td><code>1/(1+e^(−z))</code></td>
+<td>Probability link for binary classification</td>
+</tr>
+<tr>
+<td>Precision</td>
+<td><code>TP/(TP+FP)</code></td>
+<td>Positive predictions that were correct</td>
+</tr>
+<tr>
+<td>Recall</td>
+<td><code>TP/(TP+FN)</code></td>
+<td>Real positives caught</td>
+</tr>
+<tr>
+<td>F1</td>
+<td><code>2PR/(P+R)</code></td>
+<td>Harmonic precision-recall mean</td>
+</tr>
+<tr>
+<td>Entropy</td>
+<td><code>−Σpᵢlog₂(pᵢ)</code></td>
+<td>Label uncertainty</td>
+</tr>
+<tr>
+<td>Gini</td>
+<td><code>1−Σpᵢ²</code></td>
+<td>Tree-node impurity</td>
+</tr>
+<tr>
+<td>Bayes</td>
+<td><code>P(C\|X)=P(X\|C)P(C)/P(X)</code></td>
+<td>Update prior with data</td>
+</tr>
+</tbody>
+</table>
+<h2 id="interview-prep-method">Interview prep method</h2>
+<p>Every algorithm ke liye aapko 8 things bolni chahiye: <strong>what / why / intuition / math / fit vs predict / key hyperparameters / failure modes / validation method</strong>. Ye checklist simple yet interview-useful hai.</p>
+<h2 id="source-ethics-note">Source &amp; ethics note</h2>
+<p>Based on the YouTube playlist identity and public module titles, supplemented by independent teaching material. The creators' official notes are sold separately and are not included here. These independent notes should be used alongside the original videos; they should not be passed off as source transcripts.</p>
+<hr/>
+<h1 id="module-01-foundations-ml-soch-aur-python-environment">Module 01: Foundations, ML soch aur Python environment</h1>
+<p><strong>Playlist entries:</strong> 1–12 (listed order). Original playlist: <a href="https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH">https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH</a></p>
+<h2 id="learning-objectives">Learning objectives</h2>
+<p>Is module ke baad aap training data, labels, types of ML, ML lifecycle aur tensor shapes clear kar paoge. Machine learning ko "computer khud seekh gaya" kehna enough nahi: model <strong>historical data mein patterns fit</strong> karta hai, aur unseen inputs par generalization test hota hai.</p>
+<h3 id="basic-picture-rule-engine-vs-ml">Basic picture: rule engine vs ML</h3>
+<p>Traditional programming: <code>input + programmer ke rules → output</code>. ML training: <code>examples (X) + correct answers (y) + algorithm → learned model</code>; inference: <code>new X + learned model → estimated y</code>. Model guarantee nahi deta; distribution shift se predictions fail ho sakte hain.</p>
+<pre><code class="language-mermaid">flowchart TD
+ A[Business problem] --&gt; B{Labels available?}
+ B -- Yes --&gt; C[Supervised learning]
+ B -- No --&gt; D[Unsupervised learning]
+ C --&gt; E{Target type?}
+ E -- Number --&gt; F[Regression]
+ E -- Category --&gt; G[Classification]
+ D --&gt; H[Clustering / anomaly patterns]
+ F --&gt; I[Evaluate on unseen data]
+ G --&gt; I
+ H --&gt; I
+</code></pre>
+<h3 id="teaching-analogy">Teaching analogy</h3>
+<p>Sochiye ek student ko 1,000 emails diye, har email ke saath "spam" ya "not spam" likha hai. Model word frequencies, senders aur patterns ko weight deta hai. Ye labels ke saath supervised learning hai. Agar label hi na mile aur emails similarities ke basis par groups banaye jaayein, wo unsupervised clustering hai.</p>
+<h3 id="ml-dl-ai-and-genai">ML, DL, AI and GenAI</h3>
+<p>AI broad field hai—search, logical planning, expert systems bhi AI ho sakte hain. ML data se parameters learn karta hai. Deep Learning (DL) multi-layer neural networks use karta hai. Generative AI text, code, images jaise outputs generate karta; modern GenAI often DL-based hota hai, but "sab AI=GenAI" galat hai.</p>
+<h3 id="batch-versus-online-training">Batch versus online training</h3>
+<ul>
+<li><strong>Batch:</strong> Ek fixed dataset snapshot lo → train → validate → version → deploy. Useful jab labels monthly aate hon.</li>
+<li><strong>Online/incremental:</strong> Naye samples batches/streams mein model update karte hain. <code>partial_fit</code> support model-specific hai. Incremental training ko streaming inference se confuse na karein.</li>
+<li><strong>Concept drift:</strong> Jab real-world relationship badal jaye, jaise spam ke naye styles, model retrain karna pad sakta hai.</li>
+</ul>
+<h3 id="tensor-vector-matrix-practical">Tensor, vector, matrix practical</h3>
+<pre><code class="language-python">import numpy as np
+scalar = np.array(7)                       # ndim=0
+vector = np.array([10, 20, 30])           # shape (3,)
+matrix = np.array([[1, 2], [3, 4]])      # shape (2, 2)
+batch = np.zeros((32, 28, 28, 1))        # images NHWC
+for a in (scalar, vector, matrix, batch):
+    print(a.ndim, a.shape, a.dtype)
+</code></pre>
+<p>A matrix ka <code>(rows, columns)</code> shape, aur ML tabular data ka <code>X</code> usually <code>(samples, features)</code> hota hai; <code>y</code> <code>(samples,)</code>.</p>
+<h3 id="production-viewpoint">Production viewpoint</h3>
+<p>Business KPI (e.g. false positive alert ratio) aur ML metric (precision, recall) alag ho sakte hain. Drift, latency, privacy, reproducibility, threshold aur rollback ki planning <strong>training ke pehle</strong> karein.</p>
+<p><strong>Mini lab:</strong> 30 legitimate + 20 spam emails ka toy CSV design karo (<code>sender_domain</code>, <code>links_count</code>, <code>label</code>). Dataset ko training/validation/test mein divide karne ka reason explain karo.</p>
+<p><strong>Interview drill:</strong> (1) Classification vs regression? (2) Online learning vs real-time prediction? (3) Tensor rank/shape? (4) Data leakage ka example? (5) Training metric aur business KPI mein difference?</p>
+<h2 id="lesson-by-lesson-learning-cards">Lesson-by-lesson learning cards</h2>
+<h3 id="playlist-lesson-1-machine-learning-kya-aur-kyun">Playlist lesson 1: Machine Learning kya aur kyun?</h3>
+<p><strong>Samjho:</strong> ML historical examples, features/labels, training vs rules.</p>
+<p><strong>Try it:</strong> Spam email ka data aur label decide karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-2-ai-ml-aur-deep-learning-mein-difference">Playlist lesson 2: AI, ML aur Deep Learning mein difference</h3>
+<p><strong>Samjho:</strong> AI ⊃ ML ⊃ DL; overlap with GenAI.</p>
+<p><strong>Try it:</strong> 3 real examples ko categories mein rakho.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-3-learning-paradigms">Playlist lesson 3: Learning paradigms</h3>
+<p><strong>Samjho:</strong> Supervised, unsupervised, reinforcement, semi-supervised.</p>
+<p><strong>Try it:</strong> Classification vs clustering identify karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-4-batch-learning-ka-lifecycle">Playlist lesson 4: Batch learning ka lifecycle</h3>
+<p><strong>Samjho:</strong> Scheduled retraining, reproducible snapshots.</p>
+<p><strong>Try it:</strong> Monthly model refresh plan banao.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-5-online-learning-ka-lifecycle">Playlist lesson 5: Online learning ka lifecycle</h3>
+<p><strong>Samjho:</strong> Streaming samples, concept drift, incremental updates.</p>
+<p><strong>Try it:</strong> Partial-fit aur drift risk samjho.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-6-memory-based-vs-parametric-models">Playlist lesson 6: Memory-based vs parametric models</h3>
+<p><strong>Samjho:</strong> KNN examples store karta; linear model parameters seekhta.</p>
+<p><strong>Try it:</strong> Prediction speed tradeoff likho.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-7-ml-failure-modes">Playlist lesson 7: ML failure modes</h3>
+<p><strong>Samjho:</strong> Insufficient data, bias, leakage, drift, overfit, latency.</p>
+<p><strong>Try it:</strong> Failure checklist banao.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-8-ml-applications">Playlist lesson 8: ML applications</h3>
+<p><strong>Samjho:</strong> Search, recommendations, anomaly detection, forecasting.</p>
+<p><strong>Try it:</strong> SOC log alert use case choose karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-9-end-to-end-mldlc">Playlist lesson 9: End-to-end MLDLC</h3>
+<p><strong>Samjho:</strong> Define → data → validate → train → serve → monitor.</p>
+<p><strong>Try it:</strong> 8-step pipeline draw karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-10-data-team-job-roles">Playlist lesson 10: Data team job roles</h3>
+<p><strong>Samjho:</strong> Data engineer, analyst, scientist, ML engineer.</p>
+<p><strong>Try it:</strong> Deliverables map banao.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-11-tensors-and-shapes">Playlist lesson 11: Tensors and shapes</h3>
+<p><strong>Samjho:</strong> Scalar, vector, matrix, n-D arrays.</p>
+<p><strong>Try it:</strong> np.ndarray shapes inspect karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-12-python-notebook-environment">Playlist lesson 12: Python notebook environment</h3>
+<p><strong>Samjho:</strong> venv, Jupyter, kernel, notebook.</p>
+<p><strong>Try it:</strong> Debian mein .venv configure karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h2 id="module-completion-checklist">Module completion checklist</h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Concept ko bina notes explain kar sakta/sakti hoon.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Main diagram khud reconstruct kar sakta/sakti hoon.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Ek code example run/modify kiya.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Leakage aur evaluation assumptions identify kiye.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Saare lesson practice prompts kiye.</li>
+</ul>
+<hr/>
+<h1 id="module-02-problem-framing-ingestion-aur-exploratory-analysis">Module 02: Problem framing, ingestion aur exploratory analysis</h1>
+<p><strong>Playlist entries:</strong> 13–22 (listed order). Original playlist: <a href="https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH">https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH</a></p>
+<h2 id="end-to-end-ml-workflow">End-to-end ML workflow</h2>
+<p>Machine learning project ka pehla question "kaunsa algorithm?" nahi; <strong>"kis outcome ko improve karna hai?"</strong> hona chahiye. E.g., SOC alerts ke liye "malicious login detection" ko binary classification frame kar sakte hain, lekin incident labels quality pe depend karega.</p>
+<pre><code class="language-mermaid">flowchart LR
+ A[Problem &amp; success metric] --&gt; B[Ingest CSV / JSON / SQL / API]
+ B --&gt; C[Data quality &amp; EDA]
+ C --&gt; D[Train / validation / test split]
+ D --&gt; E[Preprocessing fitted on training only]
+ E --&gt; F[Baseline + model]
+ F --&gt; G[Threshold &amp; error analysis]
+ G --&gt; H[Version &amp; deploy]
+ H --&gt; I[Monitor drift, alerts, retrain]
+ I -.feedback.-&gt; B
+</code></pre>
+<h3 id="problem-framing-checklist">Problem-framing checklist</h3>
+<p><strong>Entity:</strong> kaunsa row—user, ticket, transaction? <strong>Prediction point:</strong> kis time decision liya jayega? <strong>Target:</strong> label kab available hota hai? <strong>Leakage:</strong> kya model future ka result dekh raha hai? <strong>Cost matrix:</strong> false alarm aur missed incident ka cost? <strong>Latency:</strong> batch hourly or online under 100ms? <strong>Ownership:</strong> who handles failures?</p>
+<h3 id="data-formats-aur-pandas-idioms">Data formats aur pandas idioms</h3>
+<pre><code class="language-python">import pandas as pd
+from io import StringIO
+csv_text = "user,failed_logins,alert\na,5,1\nb,0,0\nc,,0\n"
+df = pd.read_csv(StringIO(csv_text))
+print(df.head(), df.info(), df.isna().sum())
+json_records = [{"user":"a", "ip":{"country":"IN"}}]
+flat = pd.json_normalize(json_records)  # ip.country
+</code></pre>
+<p><code>read_csv</code> par <code>dtype</code>/<code>parse_dates</code> useful; thousands of MB ka file ho to <code>chunksize</code> use karo. JSON nested ho sakta, normalized columns verify karo. SQL queries mein parametrized placeholders use karo (user input string-concat na karo). API ke liye timeouts, HTTP error handling, rate limits aur pagination mandatory hai. Scraping websites ke terms/robots aur consent ka khayal rakho.</p>
+<h3 id="eda-structured-questions">EDA structured questions</h3>
+<ol>
+<li><strong>Shape/schema:</strong> <code>df.shape</code>, <code>df.dtypes</code>, unique keys; duplicates count.</li>
+<li><strong>Missingness:</strong> <code>df.isna().mean()</code>; overall aur by group.</li>
+<li><strong>Distribution:</strong> histogram, boxplot, median, IQR; right skew?</li>
+<li><strong>Target:</strong> rare positives? label errors? group imbalance?</li>
+<li><strong>Relationships:</strong> scatterplots, grouped means, correlations; correlations causal proof nahi.</li>
+<li><strong>Time:</strong> out-of-time validation perhaps random split se better.</li>
+</ol>
+<pre><code class="language-python">import pandas as pd
+x = pd.DataFrame({'hour':[1,4,5,18,22],
+                  'failed':[0,8,5,0,9],
+                  'alert':[0,1,1,0,1]})
+print(x.groupby('alert')['failed'].agg(['count','mean','median']))
+print(x.corr(numeric_only=True))
+</code></pre>
+<h3 id="critical-pitfall-data-leakage">Critical pitfall: data leakage</h3>
+<p>Suppose aap day-1 user log se future 30-day fraud label predict kar rahe ho, lekin <code>resolved_case_count</code> column uske 30 din <em>baad</em> generate hua—model ka validation excellent, real world useless. Define <strong>as-of timestamp</strong> for each feature.</p>
+<p><strong>Hands-on:</strong> Local SQLite database banao, <code>events</code> table create karo, pandas <code>read_sql_query</code> se load karke per-user failed login count compute karo. API data ko source-wise contract checks ke saath save karna seekho.</p>
+<p><strong>Interview drill:</strong> EDA vs data cleaning? Data leakage? Random vs temporal split? What is feature store? How would you monitor API failures?</p>
+<h2 id="lesson-by-lesson-learning-cards-1">Lesson-by-lesson learning cards</h2>
+<h3 id="playlist-lesson-13-first-end-to-end-toy-ml-project">Playlist lesson 13: First end-to-end toy ML project</h3>
+<p><strong>Samjho:</strong> Train/test, baseline, model, predict.</p>
+<p><strong>Try it:</strong> Dataset par first pipeline run karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-14-problem-framing">Playlist lesson 14: Problem framing</h3>
+<p><strong>Samjho:</strong> Target, metric, constraint, leakage, stakeholders.</p>
+<p><strong>Try it:</strong> False alarms cost define karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-15-csv-loading">Playlist lesson 15: CSV loading</h3>
+<p><strong>Samjho:</strong> Pandas read_csv, dtypes, NA values, delimiter.</p>
+<p><strong>Try it:</strong> CSV validation karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-16-json-and-sql-data">Playlist lesson 16: JSON and SQL data</h3>
+<p><strong>Samjho:</strong> normalize JSON and SQL queries.</p>
+<p><strong>Try it:</strong> SQLite demo pandas se read karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-17-fetching-json-via-api">Playlist lesson 17: Fetching JSON via API</h3>
+<p><strong>Samjho:</strong> GET, status, timeout, pagination.</p>
+<p><strong>Try it:</strong> JSON array ko DataFrame banao.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-18-collecting-via-web-pages">Playlist lesson 18: Collecting via web pages</h3>
+<p><strong>Samjho:</strong> HTML tables, consent, robots &amp; terms.</p>
+<p><strong>Try it:</strong> Local HTML parse karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-19-dataset-inspection">Playlist lesson 19: Dataset inspection</h3>
+<p><strong>Samjho:</strong> Shape, types, distributions, missing values.</p>
+<p><strong>Try it:</strong> df.info describe check karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-20-univariate-analysis">Playlist lesson 20: Univariate analysis</h3>
+<p><strong>Samjho:</strong> One column: central tendency, spread, distribution.</p>
+<p><strong>Try it:</strong> Histogram banakar explain karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-21-bivariate-and-multivariate-eda">Playlist lesson 21: Bivariate and multivariate EDA</h3>
+<p><strong>Samjho:</strong> Corr, groupby, crosstabs, confounding.</p>
+<p><strong>Try it:</strong> Target vs feature relation khojo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-22-automated-eda-reports">Playlist lesson 22: Automated EDA reports</h3>
+<p><strong>Samjho:</strong> Reports as audit aid, not truth.</p>
+<p><strong>Try it:</strong> Missingness and outliers manually verify karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h2 id="module-completion-checklist-1">Module completion checklist</h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Concept ko bina notes explain kar sakta/sakti hoon.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Main diagram khud reconstruct kar sakta/sakti hoon.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Ek code example run/modify kiya.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Leakage aur evaluation assumptions identify kiye.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Saare lesson practice prompts kiye.</li>
+</ul>
+<hr/>
+<h1 id="module-03-feature-engineering-encoding-aur-safe-pipelines">Module 03: Feature engineering, encoding aur safe pipelines</h1>
+<p><strong>Playlist entries:</strong> 23–34 (listed order). Original playlist: <a href="https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH">https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH</a></p>
+<h2 id="feature-engineering-data-ko-model-friendly-banana">Feature engineering: data ko model-friendly banana</h2>
+<p>Raw operational logs ko model directly samajhne layak banana padta hai. Aap <code>2026-10-30T03:02:00</code> timestamp ko hour, weekday aur weekend indicator mein split kar sakte ho. Naive numeric encoding bhi trap hai: 23:00 aur 00:00 time adjacent hain, par numeric 23 aur 0 distant.</p>
+<pre><code class="language-mermaid">flowchart TD
+ A[Raw dataframe] --&gt; B[Train/test split]
+ B --&gt; C[ColumnTransformer]
+ C --&gt; D[Numeric: median imputer + scaler]
+ C --&gt; E[Categorical: most frequent + one hot]
+ D --&gt; F[Feature matrix]
+ E --&gt; F
+ F --&gt; G[Estimator]
+ G --&gt; H[Predict/evaluate]
+</code></pre>
+<h3 id="scale-kab-zaroori">Scale kab zaroori?</h3>
+<p><strong>Standardization</strong> <code>(x-mean)/std</code>, suitable distance and gradient models. <strong>MinMaxScaler</strong> <code>(x-min)/(max-min)</code> maps training data to range 0..1 but future values can go outside. <strong>RobustScaler</strong> median/IQR se less sensitive to extreme values. Decision-tree ensembles usually scaling se largely unaffected.</p>
+<h3 id="encoding-caveats">Encoding caveats</h3>
+<p><strong>Ordinal</strong> only meaningful order (low&lt;medium&lt;high). City/department ko 1,2,3 encode karne se false ordering inject hoti hai. <strong>OneHotEncoder</strong> independent binary columns. Fit vocabulary <strong>sirf training set</strong> par; production mein unknown labels ke liye <code>handle_unknown='ignore'</code>. Target <code>y</code> labels encode karna distinct problem hai.</p>
+<h3 id="reusable-pipeline-code">Reusable pipeline code</h3>
+<pre><code class="language-python">import pandas as pd
+from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.linear_model import LogisticRegression
+
+X = pd.DataFrame({'cpu':[20,90,45,78,33,99],
+                  'region':['delhi','delhi','pune','pune','delhi','pune']})
+y = [0,1,0,1,0,1]
+numeric = Pipeline([('fill', SimpleImputer(strategy='median')),
+                    ('scale', StandardScaler())])
+category = Pipeline([('fill', SimpleImputer(strategy='most_frequent')),
+                     ('encode', OneHotEncoder(handle_unknown='ignore'))])
+prep = ColumnTransformer([('num',numeric,['cpu']),('cat',category,['region'])])
+model = Pipeline([('prep',prep),('clf',LogisticRegression())])
+model.fit(X,y)
+print(model.predict_proba(pd.DataFrame({'cpu':[88], 'region':['jaipur']})))
+</code></pre>
+<h3 id="transformations">Transformations</h3>
+<p>Skewed nonnegative count: <code>np.log1p(x)</code> handles zero. Box-Cox input strictly positive; Yeo-Johnson zero/negative handle kar sakta hai. Binning continuous values ko buckets banata hai, but threshold information lose ho sakti. Date-time aur mixed strings ke parsing mein invalid records ko explicitly handle karo.</p>
+<h3 id="leakage-free-cross-validation">Leakage-free cross-validation</h3>
+<p><code>cross_val_score(model, X, y, cv=...)</code> preprocessing har fold ke <strong>training partition</strong> par fit karta. Pehle whole dataset pe scaler fit karke baad mein split = data leakage. Similarly feature selection, imputers, target encoding aur SMOTE must happen inside CV folds.</p>
+<p><strong>Mini lab:</strong> 20 fake records mein 10 missing CPU values, 3 unseen regions aur extreme CPU count include karke same pipeline test karo. <code>fit</code> and <code>transform</code> ka difference write-up karo.</p>
+<p><strong>Interview drill:</strong> Standard vs Robust scaling? One hot vs ordinal? Why ColumnTransformer? Pipeline ke bina leakage kaise? Why cyclical features need sin/cos?</p>
+<h2 id="lesson-by-lesson-learning-cards-2">Lesson-by-lesson learning cards</h2>
+<h3 id="playlist-lesson-23-feature-engineering-overview">Playlist lesson 23: Feature engineering overview</h3>
+<p><strong>Samjho:</strong> Raw columns → meaningful signals.</p>
+<p><strong>Try it:</strong> Login timestamp se hour banao.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-24-z-score-standardization">Playlist lesson 24: Z-score standardization</h3>
+<p><strong>Samjho:</strong> (x−μ)/σ; fit train only.</p>
+<p><strong>Try it:</strong> StandardScaler use karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-25-range-robust-scaling">Playlist lesson 25: Range/robust scaling</h3>
+<p><strong>Samjho:</strong> MinMax, MaxAbs, RobustScaler.</p>
+<p><strong>Try it:</strong> Outlier impact compare karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-26-ordinal-and-target-labels">Playlist lesson 26: Ordinal and target labels</h3>
+<p><strong>Samjho:</strong> Ordered category vs classification target.</p>
+<p><strong>Try it:</strong> Priority low-medium-high map karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-27-one-hot-encoding">Playlist lesson 27: One-hot encoding</h3>
+<p><strong>Samjho:</strong> Unordered categories to binary columns.</p>
+<p><strong>Try it:</strong> handle_unknown test karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-28-columntransformer">Playlist lesson 28: ColumnTransformer</h3>
+<p><strong>Samjho:</strong> Different transforms for numeric and categorical.</p>
+<p><strong>Try it:</strong> Combined preprocessing banao.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-29-pipelines">Playlist lesson 29: Pipelines</h3>
+<p><strong>Samjho:</strong> Leakage-free preprocessing + estimator.</p>
+<p><strong>Try it:</strong> Pipeline fit/predict karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-30-function-transformations">Playlist lesson 30: Function transformations</h3>
+<p><strong>Samjho:</strong> Log1p, sqrt, reciprocal domain.</p>
+<p><strong>Try it:</strong> Skewed values transform karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-31-power-transforms">Playlist lesson 31: Power transforms</h3>
+<p><strong>Samjho:</strong> Box-Cox positive, Yeo-Johnson any real.</p>
+<p><strong>Try it:</strong> Skewness before/after.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-32-binning-and-discretization">Playlist lesson 32: Binning and discretization</h3>
+<p><strong>Samjho:</strong> Equal-width, quantile, k-means bins.</p>
+<p><strong>Try it:</strong> Continuous scores into bins.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-33-mixed-feature-cleanup">Playlist lesson 33: Mixed-feature cleanup</h3>
+<p><strong>Samjho:</strong> Text+numbers split, robust parsing.</p>
+<p><strong>Try it:</strong> Mixed column tokenize karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-34-date-time-feature-engineering">Playlist lesson 34: Date-time feature engineering</h3>
+<p><strong>Samjho:</strong> Hour, day, cyclical time.</p>
+<p><strong>Try it:</strong> Cyclic encoding banao.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h2 id="module-completion-checklist-2">Module completion checklist</h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Concept ko bina notes explain kar sakta/sakti hoon.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Main diagram khud reconstruct kar sakta/sakti hoon.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Ek code example run/modify kiya.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Leakage aur evaluation assumptions identify kiye.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Saare lesson practice prompts kiye.</li>
+</ul>
+<hr/>
+<h1 id="module-04-missing-data-anomalies-aur-feature-construction">Module 04: Missing data, anomalies aur feature construction</h1>
+<p><strong>Playlist entries:</strong> 35–45 (listed order). Original playlist: <a href="https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH">https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH</a></p>
+<h2 id="missing-values-ek-hi-imputer-sab-par-mat-lagao">Missing values: ek hi imputer sab par mat lagao</h2>
+<p>Missing data systematic ho sakta hai. <strong>MCAR</strong> missingness unrelated to observed/unobserved quantities; <strong>MAR</strong> observed variables se explain ho sakti; <strong>MNAR</strong> missingness unobserved value se related hai. In categories ko data se conclusively identify karna generally mushkil hai.</p>
+<h3 id="methods-compare">Methods compare</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Best when</th>
+<th>Main risk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Drop row (complete case)</td>
+<td>Missing fraction tiny and bias acceptable</td>
+<td>Bias/sample shrink</td>
+</tr>
+<tr>
+<td>Mean/median</td>
+<td>Simple baseline</td>
+<td>Distribution shrinks, ignores relations</td>
+</tr>
+<tr>
+<td>Most frequent/constant</td>
+<td>Categories</td>
+<td>Artificially dominant class</td>
+</tr>
+<tr>
+<td>MissingIndicator</td>
+<td>Missingness informative</td>
+<td>Added dimensions / spurious signal</td>
+</tr>
+<tr>
+<td>KNNImputer</td>
+<td>Nearby samples really similar</td>
+<td>Sensitive to scale, computational cost</td>
+</tr>
+<tr>
+<td>IterativeImputer</td>
+<td>Cross-feature predictive relationships</td>
+<td>Complexity and unstable assumptions</td>
+</tr>
+</tbody>
+</table>
+<h3 id="visual-decision-diagram">Visual decision diagram</h3>
+<pre><code class="language-mermaid">flowchart TD
+ A[Missing values found] --&gt; B{Important to keep rows?}
+ B -- No and missingness low --&gt; C[Consider drop]
+ B -- Yes --&gt; D{Numerical or category?}
+ D -- Numerical --&gt; E[Median baseline; optionally KNN/iterative]
+ D -- Category --&gt; F[Most frequent / explicit Unknown]
+ E --&gt; G[Try missingness indicator]
+ F --&gt; G
+ G --&gt; H[Cross-validate without leakage]
+</code></pre>
+<h3 id="outlier-vs-anomaly">Outlier vs anomaly</h3>
+<p>CPU spike of 100% during legitimate load test is a <strong>real event</strong>; typo <code>cpu=10000</code> is likely bad data. Outliers should not be automatically removed. Domain context needed. Z-score <code>z=(x−μ)/σ</code>, flag e.g. <code>|z|&gt;3</code> only works as heuristic on suitable distributions. IQR fences <code>Q1−1.5×IQR</code>, <code>Q3+1.5×IQR</code> more resistant to skew; winsorization caps extreme data at selected train percentiles instead of deleting rows.</p>
+<pre><code class="language-python">import numpy as np
+x = np.array([12, 13, 13, 14, 14, 15, 16, 100], dtype=float)
+q1, q3 = np.percentile(x, [25,75]); iqr=q3-q1
+low, high = q1-1.5*iqr, q3+1.5*iqr
+print('IQR fences:',low,high)
+print('Flagged:',x[(x&lt;low)|(x&gt;high)])
+# In real pipeline, estimate cap threshold from training ONLY.
+</code></pre>
+<h3 id="time-series-caveat">Time-series caveat</h3>
+<p>Logs mein gaps random nahi: outage ke during telemetrics missing ho sakti; zero-impute karne se false 'system healthy' signal milega. Interpolation time-order and causality respect kare; future observations ka leakage avoid kare.</p>
+<p><strong>Mini lab:</strong> Baseline median imputer, KNN imputer, and no imputation with tree native-support (only where model allows) ki validation compare karo. Mark experiment assumptions.</p>
+<p><strong>Interview drill:</strong> MNAR meaning? Why KNN imputer needs scaling? Outlier remove vs cap? Can imputation introduce leakage? What does missingness indicator capture?</p>
+<h2 id="lesson-by-lesson-learning-cards-3">Lesson-by-lesson learning cards</h2>
+<h3 id="playlist-lesson-35-missing-data-overview">Playlist lesson 35: Missing-data overview</h3>
+<p><strong>Samjho:</strong> Missing completely/at random/not at random.</p>
+<p><strong>Try it:</strong> Missingness mechanism guess karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-36-numeric-imputation">Playlist lesson 36: Numeric imputation</h3>
+<p><strong>Samjho:</strong> Median, mean, constant, train-only fit.</p>
+<p><strong>Try it:</strong> SimpleImputer pipeline banao.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-37-categorical-imputation">Playlist lesson 37: Categorical imputation</h3>
+<p><strong>Samjho:</strong> Most frequent or explicit unknown.</p>
+<p><strong>Try it:</strong> Rare category handling socho.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-38-missing-indicators-and-sampling">Playlist lesson 38: Missing indicators and sampling</h3>
+<p><strong>Samjho:</strong> Missingness can signal outcomes.</p>
+<p><strong>Try it:</strong> Indicator experiment karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-39-knn-imputation">Playlist lesson 39: KNN imputation</h3>
+<p><strong>Samjho:</strong> Neighbor-weighted estimation, scaling caveats.</p>
+<p><strong>Try it:</strong> KNNImputer run karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-40-iterative-imputation">Playlist lesson 40: Iterative imputation</h3>
+<p><strong>Samjho:</strong> Predict missing features from others.</p>
+<p><strong>Try it:</strong> IterativeImputer caveats likho.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-41-outliers-conceptual">Playlist lesson 41: Outliers conceptual</h3>
+<p><strong>Samjho:</strong> Real extreme vs faulty measurements.</p>
+<p><strong>Try it:</strong> Anomaly vs bad data differentiate.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-42-z-score-outliers">Playlist lesson 42: Z-score outliers</h3>
+<p><strong>Samjho:</strong> &gt;3σ heuristic, normality limitations.</p>
+<p><strong>Try it:</strong> Z-score flags count karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-43-iqr-outliers">Playlist lesson 43: IQR outliers</h3>
+<p><strong>Samjho:</strong> Q1−1.5IQR to Q3+1.5IQR.</p>
+<p><strong>Try it:</strong> Boxplot and fences nikalo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-44-percentiles-and-winsorization">Playlist lesson 44: Percentiles and winsorization</h3>
+<p><strong>Samjho:</strong> Cap tails without dropping rows.</p>
+<p><strong>Try it:</strong> Train percentiles apply karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-45-construct-and-split-features">Playlist lesson 45: Construct and split features</h3>
+<p><strong>Samjho:</strong> Ratios, totals, parsed fields.</p>
+<p><strong>Try it:</strong> CPU usage/load ratio banao.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h2 id="module-completion-checklist-3">Module completion checklist</h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Concept ko bina notes explain kar sakta/sakti hoon.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Main diagram khud reconstruct kar sakta/sakti hoon.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Ek code example run/modify kiya.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Leakage aur evaluation assumptions identify kiye.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Saare lesson practice prompts kiye.</li>
+</ul>
+<hr/>
+<h1 id="module-05-high-dimensions-aur-pca">Module 05: High dimensions aur PCA</h1>
+<p><strong>Playlist entries:</strong> 46–49 (listed order). Original playlist: <a href="https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH">https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH</a></p>
+<h2 id="curse-of-dimensionality">Curse of dimensionality</h2>
+<p>Jab features d grow karte hain, space ka volume fast grow hota. Fixed training samples high-dimensional space ko sparse cover karte: nearest/farthest distance ka contrast weak ho sakta, aur distance-based methods problematic ho jate hain. More features hamesha more predictive nahi.</p>
+<h3 id="pca-intuition">PCA intuition</h3>
+<p>Ek tilted cloud of 2D data imagine karo. First Principal Component cloud ke <strong>maximum variance direction</strong> ko capture karta hai. Dusra perpendicular direction remaining variance. PCA supervised target y ka knowledge nahi use karta; high variance ≠ high predictive importance.</p>
+<pre><code class="language-mermaid">flowchart LR
+ A[Numeric training X] --&gt; B[Center; usually standardize]
+ B --&gt; C[Covariance / SVD]
+ C --&gt; D[Orthogonal components]
+ D --&gt; E[Choose n from explained variance]
+ E --&gt; F[Project train and unseen samples]
+</code></pre>
+<h3 id="basic-mathematics">Basic mathematics</h3>
+<p>Centered matrix <code>Xc</code>: covariance <code>S = XcᵀXc/(n−1)</code>. Eigenvectors are principal directions; eigenvalues represent variance along components. Explained ratio of component <code>j</code> is <code>λ_j / Σ λ_i</code>. Scikit-learn typically uses SVD-based variants internally for numerical stability; it doesn't require manual eigendecomposition.</p>
+<pre><code class="language-python">from sklearn.datasets import load_wine
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+X, y = load_wine(return_X_y=True)
+p = make_pipeline(StandardScaler(), PCA(n_components=0.95))
+Z = p.fit_transform(X)
+print('Original:',X.shape,'Projected:',Z.shape)
+print('Explained:',p.named_steps['pca'].explained_variance_ratio_.sum())
+</code></pre>
+<h3 id="pca-limitations">PCA limitations</h3>
+<p>PCA components difficult to interpret; categorical one-hot data often deserves other dimension reduction approaches; an unscaled feature with large units dominates. PCA fit <strong>inside</strong> CV pipeline, never on full dataset before splitting. It may hurt tree models that benefit from original aligned features.</p>
+<p><strong>Mini lab:</strong> 13 feature wine dataset mein 95% variance retain karke dimensions compare karo, logistic model with/without PCA 5-fold CV run karo. (No result predetermined.)</p>
+<p><strong>Interview drill:</strong> PCA vs feature selection? Does PCA use labels? Eigenvectors vs eigenvalues? Why scaling? Which model might not benefit?</p>
+<h2 id="lesson-by-lesson-learning-cards-4">Lesson-by-lesson learning cards</h2>
+<h3 id="playlist-lesson-46-curse-of-dimensionality">Playlist lesson 46: Curse of dimensionality</h3>
+<p><strong>Samjho:</strong> Distances lose discrimination as d grows.</p>
+<p><strong>Try it:</strong> Pairwise distances compare karo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-47-pca-geometry">Playlist lesson 47: PCA geometry</h3>
+<p><strong>Samjho:</strong> Rotate to max variance directions.</p>
+<p><strong>Try it:</strong> 2-D cloud principal axes sketch.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-48-pca-from-eigenvectors">Playlist lesson 48: PCA from eigenvectors</h3>
+<p><strong>Samjho:</strong> Center, covariance, eigendecomposition/SVD.</p>
+<p><strong>Try it:</strong> Top eigenvalue fraction nikalo.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-49-pca-implementation-and-visuals">Playlist lesson 49: PCA implementation and visuals</h3>
+<p><strong>Samjho:</strong> Scale inputs; explain variance; no leakage.</p>
+<p><strong>Try it:</strong> PCA scatter plot banao.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h2 id="module-completion-checklist-4">Module completion checklist</h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Concept ko bina notes explain kar sakta/sakti hoon.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Main diagram khud reconstruct kar sakta/sakti hoon.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Ek code example run/modify kiya.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Leakage aur evaluation assumptions identify kiye.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Saare lesson practice prompts kiye.</li>
+</ul>
+<hr/>
+<h1 id="module-06-linear-regression-metrics-aur-gradient-descent">Module 06: Linear regression, metrics aur gradient descent</h1>
+<p><strong>Playlist entries:</strong> 50–60 (listed order). Original playlist: <a href="https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH">https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH</a></p>
+<h2 id="regression-ka-intuition">Regression ka intuition</h2>
+<p>Suppose ghar ka area 600 sqft to price 30 lakh, aur 1000 sqft to 50 lakh. Simple trend <code>y = b0 + b1*x</code> ban sakta hai. <strong>Residual</strong> <code>e_i=y_i−ŷ_i</code>: actual minus predicted. Ordinary least squares (OLS) minimizes squared residuals.</p>
+<pre><code class="language-mermaid">flowchart LR
+ A[Numeric feature x] --&gt; B[Linear prediction: yhat=b0+b1*x]
+ B --&gt; C[Compare y vs yhat]
+ C --&gt; D[Loss: MSE]
+ D --&gt; E[Update coefficients]
+ E --&gt; B
+</code></pre>
+<h3 id="core-derivations">Core derivations</h3>
+<p>For simple regression, <code>b1 = Σ(x−x̄)(y−ȳ)/Σ(x−x̄)²</code>, <code>b0 = ȳ−b1*x̄</code>. General regression <code>y≈Xβ</code>; a full-rank solution satisfies <code>β=(XᵀX)⁻¹Xᵀy</code>, but real code should prefer <code>np.linalg.lstsq</code>/QR/SVD, not explicit inverse. Collinearity can make coefficients unstable.</p>
+<p><strong>Loss and evaluation metrics:</strong> <code>MAE=mean(|y−ŷ|)</code>, <code>MSE=mean((y−ŷ)²)</code>, <code>RMSE=sqrt(MSE)</code>, <code>R²=1−SSE/SST</code>. <code>R²</code> can be <strong>negative</strong> on test data. Adjusted R² penalizes additional features in ordinary regression settings; not a substitute for held-out evaluation.</p>
+<h3 id="gradient-descent-from-first-principles">Gradient descent from first principles</h3>
+<p>For <code>J(w,b) = (1/(2n)) Σ(wx_i+b−y_i)²</code>, derivative <code>∂J/∂w = (1/n)Σ(wx_i+b−y_i)x_i</code>; update <code>w←w−η∂J/∂w</code>. Huge learning rate η causes divergence; too low converges slowly. Scaling features improves conditioning.</p>
+<h3 id="batch-vs-sgd-vs-mini-batch">Batch vs SGD vs mini-batch</h3>
+<p>Batch: all n samples per step; stable but expensive. SGD: one row each step; noisy but fast updates. Mini-batch: B samples; common for neural networks. A training <strong>epoch</strong> means approximately each training sample has been used once.</p>
+<pre><code class="language-python">import numpy as np
+x=np.array([1.,2.,3.,4.]); y=np.array([3.,5.,7.,9.])
+w=0.; b=0.; lr=0.05
+for epoch in range(1000):
+    error=(w*x+b)-y
+    dw=np.mean(error*x); db=np.mean(error)
+    w-=lr*dw; b-=lr*db
+print('slope=',round(w,3),'intercept=',round(b,3))
+</code></pre>
+<p>Expected approximate output: slope 2, intercept 1. Polynomial regression uses polynomial features <code>x²,x³...</code> but remains linear in parameters; high degree may overfit.</p>
+<p><strong>Mini lab:</strong> Synthetic noisy points generate karo; OLS, SGDRegressor, polynomial degree 2/5 compare with cross-validation. Train vs test MSE note karo.</p>
+<p><strong>Interview drill:</strong> Why squared error? Closed-form vs gradient descent? R² negative kaise? Polynomial regression nonlinear or linear? Data scale important kyun?</p>
+<h2 id="lesson-by-lesson-learning-cards-5">Lesson-by-lesson learning cards</h2>
+<h3 id="playlist-lesson-50-simple-linear-regression-intuition">Playlist lesson 50: Simple linear regression intuition</h3>
+<p><strong>Samjho:</strong> Fit y≈mx+b minimizing residual error.</p>
+<p><strong>Try it:</strong> Housing size example.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-51-deriving-simple-linear-regression">Playlist lesson 51: Deriving simple linear regression</h3>
+<p><strong>Samjho:</strong> Slope covariance/variance.</p>
+<p><strong>Try it:</strong> Closed-form slope calculate.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-52-regression-metrics">Playlist lesson 52: Regression metrics</h3>
+<p><strong>Samjho:</strong> MAE, MSE, RMSE, R², adjusted R².</p>
+<p><strong>Try it:</strong> Error metrics manually calculate.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-53-multiple-regression-geometric-intuition">Playlist lesson 53: Multiple regression geometric intuition</h3>
+<p><strong>Samjho:</strong> Hyperplane, correlated features.</p>
+<p><strong>Try it:</strong> Price from area+rooms model.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-54-linear-regression-math">Playlist lesson 54: Linear regression math</h3>
+<p><strong>Samjho:</strong> β=(XᵀX)⁻¹Xᵀy when well-conditioned.</p>
+<p><strong>Try it:</strong> Rank/collinearity discuss.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-55-multiple-regression-from-scratch">Playlist lesson 55: Multiple regression from scratch</h3>
+<p><strong>Samjho:</strong> numpy lstsq least squares.</p>
+<p><strong>Try it:</strong> Compare sklearn coefficients.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-56-gradient-descent-from-scratch">Playlist lesson 56: Gradient descent from scratch</h3>
+<p><strong>Samjho:</strong> θ←θ−η∇J.</p>
+<p><strong>Try it:</strong> Hand steps on quadratic.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-57-batch-gradient-descent">Playlist lesson 57: Batch gradient descent</h3>
+<p><strong>Samjho:</strong> Gradient over whole dataset.</p>
+<p><strong>Try it:</strong> Learning-rate sweep.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-58-stochastic-gradient-descent">Playlist lesson 58: Stochastic gradient descent</h3>
+<p><strong>Samjho:</strong> Noisy one-row steps.</p>
+<p><strong>Try it:</strong> SGDRegressor run.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-59-mini-batch-gradient-descent">Playlist lesson 59: Mini-batch gradient descent</h3>
+<p><strong>Samjho:</strong> Intermediate update/noise cost.</p>
+<p><strong>Try it:</strong> Try batch size 16 vs 64.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-60-polynomial-regression">Playlist lesson 60: Polynomial regression</h3>
+<p><strong>Samjho:</strong> PolynomialFeatures + linear model.</p>
+<p><strong>Try it:</strong> U-shape synthetic data.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h2 id="module-completion-checklist-5">Module completion checklist</h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Concept ko bina notes explain kar sakta/sakti hoon.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Main diagram khud reconstruct kar sakta/sakti hoon.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Ek code example run/modify kiya.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Leakage aur evaluation assumptions identify kiye.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Saare lesson practice prompts kiye.</li>
+</ul>
+<hr/>
+<h1 id="module-07-bias-variance-aur-regularization">Module 07: Bias-variance aur regularization</h1>
+<p><strong>Playlist entries:</strong> 61–68 (listed order). Original playlist: <a href="https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH">https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH</a></p>
+<h2 id="why-perfect-training-fit-dangerous-hai">Why perfect training fit dangerous hai</h2>
+<p>A model training set ko rote memorize kar sakta hai, par unseen data par fail. <strong>Underfitting/high bias:</strong> model too simple. <strong>Overfitting/high variance:</strong> model complexity training noise ko chase karti. Validation curves tune karne mein help karte.</p>
+<h3 id="three-penalties">Three penalties</h3>
+<p>For squared error with coefficient vector <code>w</code> (intercept normally not penalized):</p>
+<ul>
+<li><strong>Ridge/L2:</strong> <code>Loss + α Σ w_j²</code>. Coefficients shrink smoothly; exact zero uncommon.</li>
+<li><strong>Lasso/L1:</strong> <code>Loss + α Σ |w_j|</code>. Corners allow zero coefficients; feature selection effect.</li>
+<li><strong>Elastic Net:</strong> <code>Loss + α[r Σ|w_j| + (1−r)/2 Σw_j²]</code> (library scaling conventions vary). Combines L1 and L2.</li>
+</ul>
+<pre><code class="language-mermaid">flowchart TD
+ A[Validation high error] --&gt; B{Training error low?}
+ B -- Yes --&gt; C[Overfit: regularize, simplify, more data]
+ B -- No --&gt; D[Underfit or poor features]
+ D --&gt; E[Better features, more expressive model]
+ C --&gt; F[Re-evaluate with CV]
+ E --&gt; F
+</code></pre>
+<h3 id="numerical-notes">Numerical notes</h3>
+<p>Ridge's gradient on <code>α||w||²</code> contains <code>2αw</code> (depending on loss normalization). Lasso is non-differentiable at zero; optimizers use coordinate descent or subgradients. Regularize on scaled features so penalty means roughly comparable weight units.</p>
+<pre><code class="language-python">from sklearn.datasets import make_regression
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import make_pipeline
+from sklearn.linear_model import LinearRegression, Ridge, Lasso, ElasticNet
+from sklearn.model_selection import cross_val_score
+X,y=make_regression(n_samples=250,n_features=25,n_informative=5,
+                    noise=20,random_state=42)
+for model in [LinearRegression(), Ridge(alpha=10),
+              Lasso(alpha=1), ElasticNet(alpha=1,l1_ratio=.5)]:
+    p=make_pipeline(StandardScaler(),model)
+    mae=-cross_val_score(p,X,y,cv=5,scoring='neg_mean_absolute_error').mean()
+    print(type(model).__name__,round(mae,2))
+</code></pre>
+<h3 id="hyperparameter-vs-parameter">Hyperparameter vs parameter</h3>
+<p>Model <strong>parameters</strong> fitted (<code>coef_</code>, tree splits), <strong>hyperparameters</strong> supplied before fit (<code>alpha</code>, <code>max_depth</code>, <code>C</code>). Increasing Ridge/Lasso <code>alpha</code> means stronger regularization; LogisticRegression <code>C</code> means inverse of regularization strength. Don't confuse!</p>
+<p><strong>Mini lab:</strong> Correlated synthetic features add karo. <code>alpha</code> values 0.01,0.1,1,10,100 mein coefficient norms aur CV MAE plot karo.</p>
+<p><strong>Interview drill:</strong> L1 vs L2 geometric intuition? What is multicollinearity? Does regularization improve training error? Why scale before Lasso? Bias-variance tradeoff practically?</p>
+<h2 id="lesson-by-lesson-learning-cards-6">Lesson-by-lesson learning cards</h2>
+<h3 id="playlist-lesson-61-bias-variance-and-fit">Playlist lesson 61: Bias-variance and fit</h3>
+<p><strong>Samjho:</strong> Underfit vs overfit learning curves.</p>
+<p><strong>Try it:</strong> Train/test curve inspect.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-62-ridge-intuition">Playlist lesson 62: Ridge intuition</h3>
+<p><strong>Samjho:</strong> L2 penalty shrinks coefficients.</p>
+<p><strong>Try it:</strong> Ridge vs OLS compare.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-63-ridge-closed-form">Playlist lesson 63: Ridge closed form</h3>
+<p><strong>Samjho:</strong> (XᵀX+λI) inverse with unpenalized intercept.</p>
+<p><strong>Try it:</strong> λ effect simulate.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-64-ridge-via-gradient-descent">Playlist lesson 64: Ridge via gradient descent</h3>
+<p><strong>Samjho:</strong> L2 penalty derivative.</p>
+<p><strong>Try it:</strong> Regularized gradient derive.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-65-ridge-deeper-tradeoffs">Playlist lesson 65: Ridge deeper tradeoffs</h3>
+<p><strong>Samjho:</strong> Collinearity, scaling, shrinkage.</p>
+<p><strong>Try it:</strong> Coefficient norms compare.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-66-lasso-intuition">Playlist lesson 66: Lasso intuition</h3>
+<p><strong>Samjho:</strong> L1 sparsity encourages zeros.</p>
+<p><strong>Try it:</strong> Lasso vs Ridge run.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-67-why-lasso-zeroes-weights">Playlist lesson 67: Why Lasso zeroes weights</h3>
+<p><strong>Samjho:</strong> L1 sharp corner geometric intuition.</p>
+<p><strong>Try it:</strong> Small coefficient selection.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-68-elasticnet-combination">Playlist lesson 68: ElasticNet combination</h3>
+<p><strong>Samjho:</strong> α[L1-ratio L1 + rest L2].</p>
+<p><strong>Try it:</strong> Tune l1_ratio.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h2 id="module-completion-checklist-6">Module completion checklist</h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Concept ko bina notes explain kar sakta/sakti hoon.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Main diagram khud reconstruct kar sakta/sakti hoon.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Ek code example run/modify kiya.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Leakage aur evaluation assumptions identify kiye.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Saare lesson practice prompts kiye.</li>
+</ul>
+<hr/>
+<h1 id="module-08-logistic-regression-aur-classification-evaluation">Module 08: Logistic regression aur classification evaluation</h1>
+<p><strong>Playlist entries:</strong> 69–79 (listed order). Original playlist: <a href="https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH">https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH</a></p>
+<h2 id="logistic-regression-name-regression-kaam-classification">Logistic regression: name regression, kaam classification</h2>
+<p>Linear score <code>z=wᵀx+b</code> ko sigmoid <code>σ(z)=1/(1+e^(−z))</code> se 0..1 probability estimate banate. Binary target y∈{0,1}. Agar <code>p≥0.5</code>, predict positive, <strong>but 0.5 is only a default threshold</strong>. Security alerts mein threshold cost-sensitive hona chahiye.</p>
+<h3 id="from-sigmoid-to-binary-cross-entropy">From sigmoid to binary cross-entropy</h3>
+<p>Individual loss <code>L = −[y log(p)+(1−y) log(1−p)]</code>. Correct confident predictions small loss; confident wrong guesses huge loss. Gradient <code>∇_w J = Xᵀ(p−y)/n</code> for mean BCE (without penalty). For numerical stability, use trained library loss routines/logsumexp instead of naive <code>np.log</code> at exact 0 or 1.</p>
+<pre><code class="language-mermaid">flowchart LR
+ A[Feature vector] --&gt; B[Linear logit z]
+ B --&gt; C[Sigmoid p]
+ C --&gt; D{Threshold chosen?}
+ D -- p &gt;= t --&gt; E[Positive alert]
+ D -- p &lt; t --&gt; F[Normal]
+ C --&gt; G[BCE training loss]
+</code></pre>
+<h3 id="confusion-matrix">Confusion matrix</h3>
+<table>
+<thead>
+<tr>
+<th>Actual / predicted</th>
+<th style="text-align:right">Pred 0</th>
+<th style="text-align:right">Pred 1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Actual 0</td>
+<td style="text-align:right">TN</td>
+<td style="text-align:right">FP</td>
+</tr>
+<tr>
+<td>Actual 1</td>
+<td style="text-align:right">FN</td>
+<td style="text-align:right">TP</td>
+</tr>
+</tbody>
+</table>
+<p><code>Precision=TP/(TP+FP)</code> measures alert purity; <code>Recall=TP/(TP+FN)</code> catches positives; <code>F1=2PR/(P+R)</code> when denominators defined. In a rare-attack SOC case, even 99% accuracy can hide failure if 99% of rows normal. <code>FPR=FP/(FP+TN)</code>. <strong>Type I error</strong> is false positive; <strong>Type II</strong> is false negative in a hypothesis-testing framing.</p>
+<h3 id="multiclass-extension">Multiclass extension</h3>
+<p>Softmax probability for class k: <code>exp(z_k)/Σ_j exp(z_j)</code>. For numeric stability subtract largest logit before exponentiation. Polynomial features allow nonlinear boundaries though estimator remains linear in transformed features.</p>
+<pre><code class="language-python">from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import make_pipeline
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report, confusion_matrix, average_precision_score
+X,y=make_classification(n_samples=1000,n_features=8,weights=[.94,.06],random_state=42)
+Xtr,Xte,ytr,yte=train_test_split(X,y,test_size=.25,stratify=y,random_state=42)
+p=make_pipeline(StandardScaler(),LogisticRegression(class_weight='balanced'))
+p.fit(Xtr,ytr); prob=p.predict_proba(Xte)[:,1]
+for t in [0.3,0.5,0.7]:
+    print('threshold:',t,'confusion:',confusion_matrix(yte,(prob&gt;=t).astype(int)).tolist())
+print('Average precision:',average_precision_score(yte,prob))
+</code></pre>
+<p><code>class_weight='balanced'</code> not universally optimal; calibrate, validate and inspect false positives.</p>
+<p><strong>Mini lab:</strong> False negative ka cost 10× false positive hai: cost function <code>10*FN+1*FP</code> across validation thresholds compute karke best choose karo, <em>not test set</em>.</p>
+<p><strong>Interview drill:</strong> sigmoid derivative? BCE vs MSE? Why accuracy misleading? Precision/recall tradeoff? What does regularization C do?</p>
+<h2 id="lesson-by-lesson-learning-cards-7">Lesson-by-lesson learning cards</h2>
+<h3 id="playlist-lesson-69-perceptron-update-intuition">Playlist lesson 69: Perceptron update intuition</h3>
+<p><strong>Samjho:</strong> Binary linear separating boundary.</p>
+<p><strong>Try it:</strong> Points classify by sign.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-70-perceptron-code">Playlist lesson 70: Perceptron code</h3>
+<p><strong>Samjho:</strong> Mistake-driven weight updates.</p>
+<p><strong>Try it:</strong> XOR limitation explain.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-71-sigmoid-and-probabilities">Playlist lesson 71: Sigmoid and probabilities</h3>
+<p><strong>Samjho:</strong> p=1/(1+exp(−z)).</p>
+<p><strong>Try it:</strong> 0,2,−2 sigmoid compute.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-72-logistic-loss-and-likelihood">Playlist lesson 72: Logistic loss and likelihood</h3>
+<p><strong>Samjho:</strong> Negative log likelihood / BCE.</p>
+<p><strong>Try it:</strong> Wrong confident case cost.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-73-sigmoid-derivative">Playlist lesson 73: Sigmoid derivative</h3>
+<p><strong>Samjho:</strong> σ′(z)=σ(z)(1−σ(z)).</p>
+<p><strong>Try it:</strong> Differentiate by chain rule.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-74-logistic-gradient-descent">Playlist lesson 74: Logistic gradient descent</h3>
+<p><strong>Samjho:</strong> ∇w=Xᵀ(p−y)/n.</p>
+<p><strong>Try it:</strong> NumPy logistic train.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-75-confusion-matrix-and-errors">Playlist lesson 75: Confusion matrix and errors</h3>
+<p><strong>Samjho:</strong> TP FP TN FN and Type I/II.</p>
+<p><strong>Try it:</strong> Fraud matrix draw.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-76-precision-recall-f1">Playlist lesson 76: Precision recall F1</h3>
+<p><strong>Samjho:</strong> Costs and threshold selection.</p>
+<p><strong>Try it:</strong> SOC alert tradeoff solve.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-77-softmax-multiclass">Playlist lesson 77: Softmax multiclass</h3>
+<p><strong>Samjho:</strong> Normalize exp(logits) for classes.</p>
+<p><strong>Try it:</strong> Log-sum-exp stability.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-78-nonlinear-logistic-boundary">Playlist lesson 78: Nonlinear logistic boundary</h3>
+<p><strong>Samjho:</strong> Polynomial features before logistic.</p>
+<p><strong>Try it:</strong> Curved boundary plot.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-79-logistic-hyperparameters">Playlist lesson 79: Logistic hyperparameters</h3>
+<p><strong>Samjho:</strong> C inverse regularization; solver class weight.</p>
+<p><strong>Try it:</strong> Tuning grid compare.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h2 id="module-completion-checklist-7">Module completion checklist</h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Concept ko bina notes explain kar sakta/sakti hoon.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Main diagram khud reconstruct kar sakta/sakti hoon.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Ek code example run/modify kiya.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Leakage aur evaluation assumptions identify kiye.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Saare lesson practice prompts kiye.</li>
+</ul>
+<hr/>
+<h1 id="module-09-decision-trees-bagging-aur-random-forest">Module 09: Decision trees, bagging aur random forest</h1>
+<p><strong>Playlist entries:</strong> 80–97 (listed order). Original playlist: <a href="https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH">https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH</a></p>
+<h2 id="trees-and-ensembles-decision-rules-ko-stack-karna">Trees and ensembles: decision rules ko stack karna</h2>
+<p>Decision tree learns a series of <code>if feature &lt;= threshold</code> splits. E.g. <code>failed_logins&gt;5?</code> then <code>odd_hour?</code>. Tree classifier impurity minimize karta hai. <strong>Gini</strong> <code>1−Σp_k²</code>; <strong>entropy</strong> <code>−Σp_k log₂p_k</code>; information gain = parent entropy − weighted child entropy. Regression tree leaf usually mean of training target in leaf; criterion often squared error.</p>
+<pre><code class="language-mermaid">flowchart TD
+ A[Failed logins &gt; 5?] --&gt;|No| B[Mostly normal]
+ A --&gt;|Yes| C{Unusual hour?}
+ C --&gt;|No| D[Review]
+ C --&gt;|Yes| E[High-risk flag]
+</code></pre>
+<h3 id="why-tree-overfits">Why tree overfits?</h3>
+<p>Without minimum leaf size/max depth, leaf can memorize single rows. Tune <code>max_depth</code>, <code>min_samples_leaf</code>, <code>ccp_alpha</code>. Trees split axis-aligned: small changes near boundaries can flip outcome.</p>
+<h3 id="bagging-and-random-forests">Bagging and random forests</h3>
+<p><strong>Bootstrap</strong> sample n rows <em>with replacement</em>. Train B base models and average/vote. For reasonably decorrelated estimators, averaging reduces prediction variance. RandomForest adds random candidate feature subsets at each split, reducing tree correlation. <code>n_estimators</code> increases compute, often stabilizes average; <code>max_features</code>, depth and leaf size change bias/variance.</p>
+<pre><code class="language-mermaid">flowchart LR
+ A[Train data] --&gt; B[Bootstrap 1]
+ A --&gt; C[Bootstrap 2]
+ A --&gt; D[Bootstrap N]
+ B --&gt; E[Tree 1]
+ C --&gt; F[Tree 2]
+ D --&gt; G[Tree N]
+ E --&gt; H[Average / vote]
+ F --&gt; H
+ G --&gt; H
+</code></pre>
+<h3 id="oob-out-of-bag">OOB (out-of-bag)</h3>
+<p>Per tree roughly 36.8% of original rows omitted in one size-n bootstrap (<code>(1−1/n)^n≈e^(-1)</code>). OOB samples help estimate generalization for bootstrap ensembles without separate validation set, <strong>but do not replace final test set</strong>.</p>
+<h3 id="feature-importance-caution">Feature importance caution</h3>
+<p><code>feature_importances_</code> impurity-based importance can prefer high-cardinality features; correlated features share importance unpredictably. On validation data, permutation importance measures performance degradation when a column is shuffled. Neither method demonstrates causality.</p>
+<pre><code class="language-python">from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.inspection import permutation_importance
+from sklearn.metrics import roc_auc_score
+X,y=load_breast_cancer(return_X_y=True)
+Xtr,Xte,ytr,yte=train_test_split(X,y,stratify=y,random_state=42)
+rf=RandomForestClassifier(n_estimators=150,min_samples_leaf=2,
+                          oob_score=True,random_state=42,n_jobs=-1)
+rf.fit(Xtr,ytr)
+print('OOB:',rf.oob_score_,'Test AUC:',roc_auc_score(yte,rf.predict_proba(Xte)[:,1]))
+perm=permutation_importance(rf,Xte,yte,n_repeats=5,random_state=42)
+print('Most important index:',perm.importances_mean.argmax())
+</code></pre>
+<h3 id="valid-tuning-workflow">Valid tuning workflow</h3>
+<p>Train data → inner CV <code>GridSearchCV</code>/<code>RandomizedSearchCV</code> → select model → once on untouched test. If time-series data, use <code>TimeSeriesSplit</code> instead of random fold. Avoid optimizing dozens of configs repeatedly on test.</p>
+<p><strong>Mini lab:</strong> Single Tree, BaggingClassifier and RandomForestClassifier 5-fold stratified CV compare; inspect train-test gap, not just peak score.</p>
+<p><strong>Interview drill:</strong> Entropy/Gini? Bagging vs RF? Why OOB 36.8%? Permutation vs impurity importance? Bootstrap vs cross validation?</p>
+<h2 id="lesson-by-lesson-learning-cards-8">Lesson-by-lesson learning cards</h2>
+<h3 id="playlist-lesson-80-decision-tree-splitting">Playlist lesson 80: Decision tree splitting</h3>
+<p><strong>Samjho:</strong> Gini, entropy, info gain.</p>
+<p><strong>Try it:</strong> Manual best split.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-81-tree-complexity-tuning">Playlist lesson 81: Tree complexity tuning</h3>
+<p><strong>Samjho:</strong> max_depth min_samples_leaf pruning.</p>
+<p><strong>Try it:</strong> Depth vs overfit.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-82-regression-decision-trees">Playlist lesson 82: Regression decision trees</h3>
+<p><strong>Samjho:</strong> Leaf means and squared-error impurity.</p>
+<p><strong>Try it:</strong> Piecewise prediction inspect.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-83-tree-visualization">Playlist lesson 83: Tree visualization</h3>
+<p><strong>Samjho:</strong> plot_tree decision boundaries.</p>
+<p><strong>Try it:</strong> Explain root split.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-84-ensemble-learning-intro">Playlist lesson 84: Ensemble learning intro</h3>
+<p><strong>Samjho:</strong> Combine weak/varied estimators.</p>
+<p><strong>Try it:</strong> Variance reduction intuition.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-85-voting-ensembles-principle">Playlist lesson 85: Voting ensembles principle</h3>
+<p><strong>Samjho:</strong> Multiple estimators aggregate.</p>
+<p><strong>Try it:</strong> Correlation matters discuss.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-86-hard-soft-voting-classification">Playlist lesson 86: Hard/soft voting classification</h3>
+<p><strong>Samjho:</strong> Majority class vs mean probabilities.</p>
+<p><strong>Try it:</strong> Calibrated-prob caution.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-87-voting-regression">Playlist lesson 87: Voting regression</h3>
+<p><strong>Samjho:</strong> Mean/weighted averaging.</p>
+<p><strong>Try it:</strong> Model error ensemble.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-88-bagging-fundamentals">Playlist lesson 88: Bagging fundamentals</h3>
+<p><strong>Samjho:</strong> Bootstrap samples + parallel fits.</p>
+<p><strong>Try it:</strong> Bootstrap indices generate.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-89-bagging-classifier">Playlist lesson 89: Bagging classifier</h3>
+<p><strong>Samjho:</strong> Majority voting over base trees.</p>
+<p><strong>Try it:</strong> OOB understanding.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-90-bagging-regressor">Playlist lesson 90: Bagging regressor</h3>
+<p><strong>Samjho:</strong> Average independent estimators.</p>
+<p><strong>Try it:</strong> Bias/variance compare.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-91-random-forest-intuition">Playlist lesson 91: Random forest intuition</h3>
+<p><strong>Samjho:</strong> Bagging plus random feature subsets.</p>
+<p><strong>Try it:</strong> Decorrelated trees explain.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-92-why-random-forest-works">Playlist lesson 92: Why random forest works</h3>
+<p><strong>Samjho:</strong> Average variance shrinks for decorrelated trees.</p>
+<p><strong>Try it:</strong> Correlated error discuss.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-93-bagging-vs-random-forest">Playlist lesson 93: Bagging vs random forest</h3>
+<p><strong>Samjho:</strong> All/sampled features per split.</p>
+<p><strong>Try it:</strong> Parameter max_features.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-94-random-forest-tuning">Playlist lesson 94: Random forest tuning</h3>
+<p><strong>Samjho:</strong> n_estimators depth min_leaf max_features.</p>
+<p><strong>Try it:</strong> Tune on train folds.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-95-searchcv-tuning">Playlist lesson 95: SearchCV tuning</h3>
+<p><strong>Samjho:</strong> Cross-validated grid/random search.</p>
+<p><strong>Try it:</strong> Hold-out test untouched.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-96-out-of-bag-score">Playlist lesson 96: Out-of-bag score</h3>
+<p><strong>Samjho:</strong> Samples omitted from bootstrap evaluate.</p>
+<p><strong>Try it:</strong> Bootstrap OOB fraction.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-97-tree-feature-importance">Playlist lesson 97: Tree feature importance</h3>
+<p><strong>Samjho:</strong> Impurity importances bias; permutation alternative.</p>
+<p><strong>Try it:</strong> Rank one feature.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h2 id="module-completion-checklist-8">Module completion checklist</h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Concept ko bina notes explain kar sakta/sakti hoon.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Main diagram khud reconstruct kar sakta/sakti hoon.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Ek code example run/modify kiya.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Leakage aur evaluation assumptions identify kiye.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Saare lesson practice prompts kiye.</li>
+</ul>
+<hr/>
+<h1 id="module-10-boosting-clustering-aur-stacking">Module 10: Boosting, clustering aur stacking</h1>
+<p><strong>Playlist entries:</strong> 98–110 (listed order). Original playlist: <a href="https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH">https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH</a></p>
+<h2 id="boosting-clustering-aur-meta-learners">Boosting, clustering aur meta-learners</h2>
+<h3 id="boosting-vs-bagging">Boosting vs bagging</h3>
+<p>Bagging builds models largely independently on bootstrapped rows; boosting <strong>sequentially</strong> adds learners to fix weak spots or loss gradients. AdaBoost classical algorithm reweights difficult examples; gradient boosting adds learners to predict loss's negative gradients. Modern implementations include XGBoost, LightGBM, CatBoost (outside lecture scope unless separately studied).</p>
+<pre><code class="language-mermaid">flowchart TD
+ A[Initial model F0] --&gt; B[Compute residual / negative gradient]
+ B --&gt; C[Fit weak learner h1]
+ C --&gt; D[New F = old F + learning_rate*h]
+ D --&gt; E{More rounds?}
+ E -- Yes --&gt; B
+ E -- No --&gt; F[Final boosted model]
+</code></pre>
+<h3 id="simple-gradient-boost-numeric-example">Simple gradient boost numeric example</h3>
+<p>True targets <code>[10,20,30]</code>, baseline mean 20, residuals <code>[-10,0,10]</code>. Next weak model learns pattern of residuals. If learning rate <code>0.1</code>, add only 10% of correction; repeat. Classification uses derivatives of classification loss (e.g. log loss), not just raw <code>y-p</code> without nuance.</p>
+<h3 id="k-means-center-based-clustering">K-means: center-based clustering</h3>
+<p>For K clusters, assign each point to nearest centroid (typically Euclidean distance), recompute centroid as mean, repeat. Objective is within-cluster squared distances (<code>inertia_</code>): smaller with K usually, so compare K via elbow, silhouette plus domain relevance. K-means assumes compact roughly spherical clusters, scale-sensitive, needs K.</p>
+<pre><code class="language-mermaid">flowchart LR
+ A[Choose K centroids] --&gt; B[Assign nearest center]
+ B --&gt; C[Recompute group means]
+ C --&gt; D{Centroids stable?}
+ D -- No --&gt; B
+ D -- Yes --&gt; E[Cluster assignments]
+</code></pre>
+<pre><code class="language-python">from sklearn.datasets import make_blobs
+from sklearn.cluster import KMeans, AgglomerativeClustering
+from sklearn.metrics import silhouette_score
+X,_=make_blobs(n_samples=200,centers=3,random_state=42)
+for k in [2,3,4,5]:
+    lbl=KMeans(n_clusters=k,n_init=10,random_state=42).fit_predict(X)
+    print(k,round(silhouette_score(X,lbl),3))
+labels=AgglomerativeClustering(n_clusters=3,linkage='ward').fit_predict(X)
+print('Hierarchy labels count',len(set(labels)))
+</code></pre>
+<h3 id="hierarchical-clustering">Hierarchical clustering</h3>
+<p>Agglomerative starts with every sample as own cluster, merges closest groups until target count. Linkage matters: single/min, complete/max, average, Ward/minimize cluster variance. Dendrogram cut level sets cluster granularity.</p>
+<h3 id="stacking-blending">Stacking / blending</h3>
+<p>Base models outputs become features for meta-model. Training meta-model on <strong>same rows' in-sample</strong> predictions leaks target and overfits; use out-of-fold predictions (<code>StackingClassifier</code> handles CV) or true hold-out blend set.</p>
+<p><strong>Mini lab:</strong> KMeans fails on <code>make_moons</code>; compare DBSCAN later. Fit shallow boosted trees vs random forest and explain their bias-variance/compute.</p>
+<p><strong>Interview drill:</strong> Bagging vs boosting? Why shrinkage? What KMeans minimizes? Hierarchical linkage? What causes stacking leakage?</p>
+<h2 id="lesson-by-lesson-learning-cards-9">Lesson-by-lesson learning cards</h2>
+<h3 id="playlist-lesson-98-adaboost-geometric-intuition">Playlist lesson 98: AdaBoost geometric intuition</h3>
+<p><strong>Samjho:</strong> Sequential focus on hard cases.</p>
+<p><strong>Try it:</strong> Weight update intuition.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-99-adaboost-worked-steps">Playlist lesson 99: AdaBoost worked steps</h3>
+<p><strong>Samjho:</strong> Weak learner weighted errors.</p>
+<p><strong>Try it:</strong> Misclassified sample upweight.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-100-adaboost-from-scratch">Playlist lesson 100: AdaBoost from scratch</h3>
+<p><strong>Samjho:</strong> Classifier weights and weighted voting.</p>
+<p><strong>Try it:</strong> Small stump ensemble.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-101-adaboost-tuning">Playlist lesson 101: AdaBoost tuning</h3>
+<p><strong>Samjho:</strong> Estimators and learning rate.</p>
+<p><strong>Try it:</strong> Underfit vs overfit test.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-102-bagging-vs-boosting">Playlist lesson 102: Bagging vs boosting</h3>
+<p><strong>Samjho:</strong> Parallel variance vs sequential bias+variance.</p>
+<p><strong>Try it:</strong> Contrast table.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-103-k-means-geometric-idea">Playlist lesson 103: K-means geometric idea</h3>
+<p><strong>Samjho:</strong> Assign nearest centroid; update means.</p>
+<p><strong>Try it:</strong> Two clusters sketch.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-104-k-means-with-scikit-learn">Playlist lesson 104: K-means with scikit-learn</h3>
+<p><strong>Samjho:</strong> fit_predict inertia centers.</p>
+<p><strong>Try it:</strong> Cluster iris projections.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-105-k-means-from-scratch">Playlist lesson 105: K-means from scratch</h3>
+<p><strong>Samjho:</strong> Alternate assignment / update to convergence.</p>
+<p><strong>Try it:</strong> NumPy iterations.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-106-gradient-boosting-intuition">Playlist lesson 106: Gradient boosting intuition</h3>
+<p><strong>Samjho:</strong> Each new learner fits residual signal.</p>
+<p><strong>Try it:</strong> Residual example.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-107-gradient-boosting-regression-mathematics">Playlist lesson 107: Gradient boosting regression mathematics</h3>
+<p><strong>Samjho:</strong> Additive models minimize objective gradients.</p>
+<p><strong>Try it:</strong> Learning rate effect.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-108-gradient-boosting-classification">Playlist lesson 108: Gradient boosting classification</h3>
+<p><strong>Samjho:</strong> Fit negative log-loss gradients.</p>
+<p><strong>Try it:</strong> Boost classifiers compare.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-109-stacking-and-blending">Playlist lesson 109: Stacking and blending</h3>
+<p><strong>Samjho:</strong> Meta-learner out-of-fold features.</p>
+<p><strong>Try it:</strong> Leakage-safe stack.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-110-hierarchical-agglomerative-clustering">Playlist lesson 110: Hierarchical agglomerative clustering</h3>
+<p><strong>Samjho:</strong> Bottom-up merges, linkage.</p>
+<p><strong>Try it:</strong> Dendrogram cut heights.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h2 id="module-completion-checklist-9">Module completion checklist</h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Concept ko bina notes explain kar sakta/sakti hoon.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Main diagram khud reconstruct kar sakta/sakti hoon.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Ek code example run/modify kiya.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Leakage aur evaluation assumptions identify kiye.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Saare lesson practice prompts kiye.</li>
+</ul>
+<hr/>
+<h1 id="module-11-knn-svm-aur-naive-bayes">Module 11: KNN, SVM aur Naive Bayes</h1>
+<p><strong>Playlist entries:</strong> 111–126 (listed order). Original playlist: <a href="https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH">https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH</a></p>
+<h2 id="knn-svm-and-probabilistic-classifiers">KNN, SVM and probabilistic classifiers</h2>
+<h3 id="k-nearest-neighbors-knn">K-nearest neighbors (KNN)</h3>
+<p>No explicit coefficients: during prediction, identify k nearest training samples. For classification majority/weighted vote; regression neighbor mean. Small k unstable, large k too smooth. Crucial: distances depend on scale; StandardScaler usually beneficial. Memory and prediction time grow with training data.</p>
+<h3 id="support-vector-machine-svm">Support Vector Machine (SVM)</h3>
+<p>For separable classes, maximize margin—distance from separating hyperplane to closest training examples (support vectors). Hard margin assumes perfectly separable data; soft margin allows violations via slack variables <code>ξ_i</code> and penalty parameter <strong>C</strong>. Larger C penalizes violations more (can overfit). With RBF kernel, <code>gamma</code> controls locality; high gamma potentially narrow/complex boundary. Scale before SVM.</p>
+<pre><code class="language-mermaid">flowchart TD
+ A[Classification dataset] --&gt; B{Boundary type?}
+ B -- Local neighborhood --&gt; C[KNN + scaler]
+ B -- Wide-margin boundary --&gt; D[SVM + scaler]
+ B -- Probabilistic simple baseline --&gt; E[Naive Bayes]
+ D --&gt; F[Kernel? linear / RBF]
+ C --&gt; G[Cross-validation]
+ F --&gt; G
+ E --&gt; G
+</code></pre>
+<h3 id="conditional-probability-and-bayes">Conditional probability and Bayes</h3>
+<p><code>P(A|B)=P(A∩B)/P(B)</code>. Bayes' rule <code>P(C|x)=P(x|C)P(C)/P(x)</code>. <strong>Prior</strong> P(C) is base rate, <strong>likelihood</strong> P(x|C) says data compatibility, <strong>posterior</strong> updated class probability. Mutually exclusive is not independent: for disjoint positive-probability events, intersection zero but product nonzero.</p>
+<h3 id="naive-bayes-independence-assumption">Naive Bayes independence assumption</h3>
+<p>Assumes features conditionally independent <em>given class</em>: <code>P(x1,..,xd|C)≈Π_j P(xj|C)</code>. May be violated but classifier can still perform well. GaussianNB for continuous approximate gaussian features; MultinomialNB for nonnegative counts (text token counts); BernoulliNB binary occurrences. Use log-probabilities to avoid underflow.</p>
+<pre><code class="language-python">from sklearn.datasets import load_iris
+from sklearn.model_selection import StratifiedKFold, cross_val_score
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import make_pipeline
+from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
+X,y=load_iris(return_X_y=True)
+cv=StratifiedKFold(n_splits=5,shuffle=True,random_state=42)
+models=[make_pipeline(StandardScaler(),KNeighborsClassifier(n_neighbors=5)),
+        make_pipeline(StandardScaler(),SVC(C=1,gamma='scale')),
+        GaussianNB()]
+for m in models:
+    print(type(m.steps[-1][1]).__name__ if hasattr(m,'steps') else type(m).__name__,
+          cross_val_score(m,X,y,cv=cv,scoring='accuracy').mean())
+</code></pre>
+<h3 id="base-rate-thought-experiment">Base-rate thought experiment</h3>
+<p>Disease prevalence 1%, test sensitivity 90%, specificity 95%. Out of 10,000 persons, ~100 sick → 90 TP; 9,900 healthy → 495 FP. Positive predictive value <code>90/(90+495)≈15.4%</code>. <strong>Rare-event classification needs base-rate awareness</strong>, exactly like rare intrusions in SOC logs.</p>
+<p><strong>Mini lab:</strong> Iris par models compare; then 1:50 imbalance generate karke precision, recall and calibration compare karo.</p>
+<p><strong>Interview drill:</strong> KNN training/prediction cost? Support vectors kya? C and gamma? Naive assumption? Conditional independence vs mutual exclusion? Bayes posterior numerically calculate.</p>
+<h2 id="lesson-by-lesson-learning-cards-10">Lesson-by-lesson learning cards</h2>
+<h3 id="playlist-lesson-111-k-nearest-neighbors">Playlist lesson 111: K nearest neighbors</h3>
+<p><strong>Samjho:</strong> Neighbor distance and k choice.</p>
+<p><strong>Try it:</strong> Scaling imperative.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-112-linear-regression-assumptions">Playlist lesson 112: Linear regression assumptions</h3>
+<p><strong>Samjho:</strong> Linearity independent errors constant variance normal residual for inference.</p>
+<p><strong>Try it:</strong> Residual plot.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-113-svm-margin-intuition">Playlist lesson 113: SVM margin intuition</h3>
+<p><strong>Samjho:</strong> Widest separating margin.</p>
+<p><strong>Try it:</strong> Support vectors identify.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-114-hard-margin-svm-optimization">Playlist lesson 114: Hard-margin SVM optimization</h3>
+<p><strong>Samjho:</strong> min ||w||²/2 with y(w·x+b)≥1.</p>
+<p><strong>Try it:</strong> Separable vs noisy.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-115-soft-margin-svm">Playlist lesson 115: Soft-margin SVM</h3>
+<p><strong>Samjho:</strong> Slack ξ and C controls violations.</p>
+<p><strong>Try it:</strong> C sweep on noisy data.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-116-svm-kernel-practical">Playlist lesson 116: SVM kernel practical</h3>
+<p><strong>Samjho:</strong> RBF γ and C selection.</p>
+<p><strong>Try it:</strong> Pipeline StandardScaler SVC.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-117-kernel-trick-geometry">Playlist lesson 117: Kernel trick geometry</h3>
+<p><strong>Samjho:</strong> Inner products in implicit feature space.</p>
+<p><strong>Try it:</strong> Polynomial kernel explain.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-118-conditional-probability">Playlist lesson 118: Conditional probability</h3>
+<p><strong>Samjho:</strong> P(A|B)=P(A∩B)/P(B).</p>
+<p><strong>Try it:</strong> Medical test problem.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-119-independent-events">Playlist lesson 119: Independent events</h3>
+<p><strong>Samjho:</strong> P(A∩B)=P(A)P(B) if independent.</p>
+<p><strong>Try it:</strong> Independence vs conditional.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-120-mutually-exclusive-events">Playlist lesson 120: Mutually exclusive events</h3>
+<p><strong>Samjho:</strong> P(A∩B)=0; not normally independent.</p>
+<p><strong>Try it:</strong> Dice outcomes.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-121-bayes-theorem">Playlist lesson 121: Bayes theorem</h3>
+<p><strong>Samjho:</strong> Posterior ∝ likelihood × prior.</p>
+<p><strong>Try it:</strong> Spam posterior estimate.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-122-bayes-worked-example">Playlist lesson 122: Bayes worked example</h3>
+<p><strong>Samjho:</strong> Base rate matters.</p>
+<p><strong>Try it:</strong> 1% prevalence test calculate.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-123-naive-bayes-intuition">Playlist lesson 123: Naive Bayes intuition</h3>
+<p><strong>Samjho:</strong> Conditional independence assumption.</p>
+<p><strong>Try it:</strong> Token likelihoods.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-124-naive-bayes-mathematics">Playlist lesson 124: Naive Bayes mathematics</h3>
+<p><strong>Samjho:</strong> Multiply class priors likelihoods in log-space.</p>
+<p><strong>Try it:</strong> Log posterior derive.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-125-naive-bayes-in-code">Playlist lesson 125: Naive Bayes in code</h3>
+<p><strong>Samjho:</strong> GaussianNB MultinomialNB BernoulliNB.</p>
+<p><strong>Try it:</strong> Choose data type.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-126-numerical-naive-bayes">Playlist lesson 126: Numerical Naive Bayes</h3>
+<p><strong>Samjho:</strong> Class conditional gaussian densities.</p>
+<p><strong>Try it:</strong> GaussianNB assumptions.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h2 id="module-completion-checklist-10">Module completion checklist</h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Concept ko bina notes explain kar sakta/sakti hoon.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Main diagram khud reconstruct kar sakta/sakti hoon.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Ek code example run/modify kiya.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Leakage aur evaluation assumptions identify kiye.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Saare lesson practice prompts kiye.</li>
+</ul>
+<hr/>
+<h1 id="module-12-xgboost-dbscan-imbalance-optuna-aur-roc">Module 12: XGBoost, DBSCAN, imbalance, Optuna aur ROC</h1>
+<p><strong>Playlist entries:</strong> 127–134 (listed order). Original playlist: <a href="https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH">https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH</a></p>
+<h2 id="advanced-toolbox-and-honest-limits">Advanced toolbox and honest limits</h2>
+<h3 id="xgboost-overview">XGBoost overview</h3>
+<p>Gradient boosted decision tree framework with objectives combining data-fit loss and model complexity regularization. Typical derivation approximates loss with <strong>first and second order</strong> gradients (g,h). Candidate split gain compares leaf-score improvement with regularization; XGBoost handles missing branches natively. Learn early stopping, learning rate, tree depth, row/feature sampling, <code>reg_alpha</code>, <code>reg_lambda</code>, and proper validation.</p>
+<h3 id="gradient-boosting-vs-xgboost">Gradient boosting vs XGBoost</h3>
+<p>Both sequential decision-tree models, but XGBoost provides optimized training algorithms, regularization knobs and split handling. Different implementations can lead to different results even on same data. No external or paid GPU required for small tabular demos.</p>
+<h3 id="dbscan-density-clustering">DBSCAN density clustering</h3>
+<p>DBSCAN groups points connected through dense neighborhoods defined by <code>eps</code> radius and <code>min_samples</code>. Core points have sufficient neighbors, border points connect to core, noise points label <code>-1</code>. Can find nonconvex shapes unlike KMeans, <strong>but varying densities and high dimensions</strong> complicate eps tuning.</p>
+<pre><code class="language-mermaid">flowchart TD
+ A[Tabular classification with rare positives] --&gt; B[Stratified train/validation/test]
+ B --&gt; C[Preprocessing fit on train]
+ C --&gt; D[Class-weight / resampling inside training folds]
+ D --&gt; E[Optuna tuning against validation objective]
+ E --&gt; F[Choose threshold on validation]
+ F --&gt; G[One-time test evaluation]
+ G --&gt; H[Deploy + monitor precision-recall/drift]
+</code></pre>
+<h3 id="imbalanced-data-avoid-dangerous-shortcuts">Imbalanced data: avoid dangerous shortcuts</h3>
+<p>At 1% positive rate, accuracy 99% if predict all negatives! Focus <strong>PR-AUC/average precision, recall at acceptable precision, cost matrix</strong>, and calibration. SMOTE synthesizes minority samples; do not SMOTE <strong>before</strong> train/test split or before CV split (leakage). Prefer <code>imblearn.pipeline.Pipeline</code> for fold-scoped oversampling. Group/time data may make SMOTE unsuitable.</p>
+<h3 id="roc-and-pr-curves">ROC and PR curves</h3>
+<p>ROC plots <code>TPR</code> (recall) against <code>FPR</code> across thresholds. ROC-AUC summarizes ranking quality; with tiny positive prevalence, ROC-AUC can look reassuring despite poor precision. Precision-recall curve more informative for low base rates. <strong>AUC is not one threshold's accuracy</strong>.</p>
+<h3 id="hyperparameter-tuning-with-optuna">Hyperparameter tuning with Optuna</h3>
+<p>Study proposes parameter trials; each trial fits model and returns <strong>validation</strong> score. Use reproducible seed, limited budget, parallelism carefully, and final held-out test. Optuna library optional; baseline <code>RandomizedSearchCV</code> works with scikit-learn only.</p>
+<pre><code class="language-python">from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split, RandomizedSearchCV
+from sklearn.ensemble import HistGradientBoostingClassifier
+from sklearn.metrics import roc_auc_score, average_precision_score
+X,y=make_classification(n_samples=1500,n_features=15,weights=[.97,.03],
+                        random_state=42)
+Xtr,Xte,ytr,yte=train_test_split(X,y,test_size=.25,stratify=y,random_state=42)
+m=RandomizedSearchCV(HistGradientBoostingClassifier(random_state=42),
+    {'max_leaf_nodes':[7,15,31], 'learning_rate':[.03,.1,.2],
+     'max_iter':[60,120]}, n_iter=8, scoring='average_precision', cv=3,
+     random_state=42,n_jobs=-1)
+m.fit(Xtr,ytr)
+proba=m.predict_proba(Xte)[:,1]
+print('CV best:',m.best_params_)
+print('ROC AUC',roc_auc_score(yte,proba),
+      'Average precision',average_precision_score(yte,proba))
+</code></pre>
+<h3 id="production-checklist">Production checklist</h3>
+<p>Save model version, code commit, input schema, training data window/hash, preprocessing pipeline, metric table by slice, threshold, monitoring strategy, bias/privacy constraints, rollback plan. A notebook <code>accuracy=0.95</code> is <strong>not</strong> production readiness.</p>
+<p><strong>Mini lab:</strong> Two-moons data on KMeans/DBSCAN; separately fraud-style imbalanced data evaluate AP vs ROC-AUC, and threshold tuned only on validation.</p>
+<p><strong>Interview drill:</strong> XGBoost objective and split gain? Why Hessian? DBSCAN core/border/noise? SMOTE leakage? Difference between AP and ROC-AUC? Hyperparameter selection vs test leakage?</p>
+<h2 id="lesson-by-lesson-learning-cards-11">Lesson-by-lesson learning cards</h2>
+<h3 id="playlist-lesson-127-xgboost-introduction">Playlist lesson 127: XGBoost introduction</h3>
+<p><strong>Samjho:</strong> Regularized gradient boosted trees.</p>
+<p><strong>Try it:</strong> Objective and boosting overview.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-128-xgboost-regression">Playlist lesson 128: XGBoost regression</h3>
+<p><strong>Samjho:</strong> Gradient/Hessian-based leaf scores.</p>
+<p><strong>Try it:</strong> Compare HistGradientBoosting.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-129-xgboost-classification">Playlist lesson 129: XGBoost classification</h3>
+<p><strong>Samjho:</strong> Logistic objective probabilities.</p>
+<p><strong>Try it:</strong> Log-loss early-stop validate.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-130-xgboost-math-and-gain">Playlist lesson 130: XGBoost math and gain</h3>
+<p><strong>Samjho:</strong> Second order Taylor expansion + regularization.</p>
+<p><strong>Try it:</strong> Interpret split gain.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-131-dbscan-clustering">Playlist lesson 131: DBSCAN clustering</h3>
+<p><strong>Samjho:</strong> ε neighborhoods min_samples and noise labels.</p>
+<p><strong>Try it:</strong> Two-moons compare.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-132-class-imbalance-strategies">Playlist lesson 132: Class imbalance strategies</h3>
+<p><strong>Samjho:</strong> Stratified splits, class weights, SMOTE train-only.</p>
+<p><strong>Try it:</strong> PR-AUC compare.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-133-optuna-hyperparameter-tuning">Playlist lesson 133: Optuna hyperparameter tuning</h3>
+<p><strong>Samjho:</strong> Trial sampler validation and overfit guard.</p>
+<p><strong>Try it:</strong> 15-trial tune.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h3 id="playlist-lesson-134-roc-curve-and-roc-auc">Playlist lesson 134: ROC curve and ROC-AUC</h3>
+<p><strong>Samjho:</strong> TPR vs FPR; ranking metric; PR for rare positives.</p>
+<p><strong>Try it:</strong> Threshold vs AUC compare.</p>
+<p><strong>Self-check:</strong> Is topic ko kisi non-technical dost ko do sentences mein kaise samjhaoge? Kaunsa input, output aur validation proof chahiye?</p>
+<h2 id="module-completion-checklist-11">Module completion checklist</h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Concept ko bina notes explain kar sakta/sakti hoon.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Main diagram khud reconstruct kar sakta/sakti hoon.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Ek code example run/modify kiya.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Leakage aur evaluation assumptions identify kiye.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Saare lesson practice prompts kiye.</li>
+</ul>
+<hr/>
+<h1 id="appendix-a-self-contained-practice-projects">Appendix A: Self-contained practice projects</h1>
+<h2 id="project-1-soc-unusual-login-detector">Project 1: SOC unusual-login detector</h2>
+<p><strong>Goal:</strong> Historical per-user login behavior se high-risk login event score. <strong>Features:</strong> failed attempts last 60 minutes, new device indicator, unusual hour (respect local time and cyclical encoding), unique IP count. <strong>Label:</strong> confirmed malicious/legitimate with source/time provenance. <strong>Flow:</strong> Define prediction timestamp → join past-only data → group/time-aware split → baseline → validation PR curve → threshold chosen from operational alert budget → shadow mode → production monitoring. <strong>Important:</strong> class imbalance, alert fatigue, concept drift, privacy, group leakage; dangerous automated blocking bina human review avoid karo.</p>
+<h2 id="project-2-cloud-capacity-forecasting">Project 2: Cloud capacity forecasting</h2>
+<p><strong>Goal:</strong> Future CPU/load forecast. <strong>Features:</strong> lagged CPU, hour-of-day sin/cos, seasonality, event labels. <strong>Validation:</strong> temporal folds, not random. <strong>Baseline:</strong> previous hour value. <strong>Metric:</strong> MAE/RMSE plus cost-weighted underprediction. <strong>Do not:</strong> include future rolling averages in features.</p>
+<h2 id="project-3-customer-service-ticket-triage">Project 3: Customer service ticket triage</h2>
+<p><strong>Goal:</strong> Predict priority; mixed text/categories/numeric features. <strong>Guardrail:</strong> sensitive info handling; categorical pipeline; macro F1 not just accuracy; final manual review. <strong>Deploy:</strong> versioned preprocessing and prediction schema, drift monitoring.</p>
+<h1 id="appendix-b-troubleshooting-table">Appendix B: Troubleshooting table</h1>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Root cause to test</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ModuleNotFoundError</code></td>
+<td>Wrong venv/kernel</td>
+<td><code>which python</code>; activate <code>.venv</code>; install package there</td>
+</tr>
+<tr>
+<td><code>ValueError: could not convert string to float</code></td>
+<td>Unencoded categories</td>
+<td><code>OneHotEncoder</code> and <code>ColumnTransformer</code></td>
+</tr>
+<tr>
+<td>Test performance collapses</td>
+<td>Leakage, drift, overfit, split mismatch</td>
+<td>Audit feature timestamps and fitting scopes</td>
+</tr>
+<tr>
+<td>SVM/KNN poor results</td>
+<td>Unscaled input</td>
+<td>Put scaler in training pipeline</td>
+</tr>
+<tr>
+<td>Linear regression unstable weights</td>
+<td>High collinearity or ill-conditioned matrix</td>
+<td>Ridge, <code>lstsq</code>, feature diagnostics</td>
+</tr>
+<tr>
+<td><code>Found unknown categories</code></td>
+<td>Inference data unseen strings</td>
+<td><code>OneHotEncoder(handle_unknown='ignore')</code></td>
+</tr>
+<tr>
+<td>NaN error in estimator</td>
+<td>Missing values not supported by chosen estimator</td>
+<td>Imputer in pipeline, or supported native model</td>
+</tr>
+<tr>
+<td><code>Only one class in y_true</code></td>
+<td>Tiny/incorrect split</td>
+<td>Stratify; more positives; use appropriate metrics</td>
+</tr>
+<tr>
+<td>Dataset large/8GB OOM</td>
+<td>Excess parallelism, dense one-hot, copies</td>
+<td>Sample/chunks, sparse matrix, <code>n_jobs=1</code></td>
+</tr>
+<tr>
+<td>Very high CV score, bad live performance</td>
+<td>Data or target leakage</td>
+<td>Time-aware features and truly unseen holdout</td>
+</tr>
+<tr>
+<td>Inconsistent inference feature order</td>
+<td>Training/serving schema mismatch</td>
+<td>Save pipeline and strict feature contracts</td>
+</tr>
+<tr>
+<td>ROC-AUC good, alerts mostly wrong</td>
+<td>Severe class imbalance</td>
+<td>Inspect precision-recall, calibration, threshold</td>
+</tr>
+</tbody>
+</table>
+<h1 id="appendix-c-fifty-mini-interview-questions">Appendix C: Fifty mini interview questions</h1>
+<ol>
+<li>ML vs rules? 2. AI vs DL? 3. Supervised vs unsupervised? 4. Regression vs classification? 5. Batch vs online?</li>
+<li>What is concept drift? 7. Training vs inference? 8. Parameter vs hyperparameter? 9. What is data leakage? 10. Random vs temporal split?</li>
+<li>What is EDA? 12. Why histogram? 13. What is skewness? 14. Pearson correlation meaning? 15. Why correlation not causation?</li>
+<li>StandardScaler vs MinMax? 17. Robust scaling? 18. Ordinal vs one hot? 19. ColumnTransformer? 20. Why a pipeline?</li>
+<li>MCAR/MAR/MNAR? 22. Median vs KNN imputer? 23. Missing indicators? 24. Outlier vs anomaly? 25. Winsorization?</li>
+<li>Curse of dimensionality? 27. PCA and SVD? 28. Explained variance ratio? 29. PCA leakage? 30. Why PCA hurts interpretability?</li>
+<li>OLS assumptions? 32. Derive gradient of squared loss? 33. MAE vs RMSE? 34. R² negative? 35. SGD vs minibatch?</li>
+<li>Ridge vs Lasso? 37. C vs alpha? 38. Cross entropy? 39. Precision vs recall? 40. PR-AUC vs ROC-AUC?</li>
+<li>Gini vs entropy? 42. Random forest vs bagging? 43. OOB evaluation? 44. Impurity vs permutation importance? 45. Boosting vs stacking?</li>
+<li>K-means limitation? 47. SVM margin C gamma? 48. Bayes theorem? 49. SMOTE leakage? 50. How to productionize and monitor model?</li>
+</ol>
+<h1 id="appendix-d-career-readiness-evidence-checklist">Appendix D: Career readiness evidence checklist</h1>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Notebook with reproducible requirements and seed</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>EDA report including leakage and missingness decisions</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Version-controlled preprocessing model pipeline</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>At least 3 baseline/advanced algorithms compared honestly</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Cross-validation plus untouched final test</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Model card: labels, features, failure modes, latency and privacy</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Small API (FastAPI optional) with schema validation and health endpoint</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Docker container with dependency lock, no credentials in image</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Tests for missing, unexpected categories, edge input and model reload</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Monitoring plan for data distribution, outcomes, response times and rollback</li>
+</ul>
+<p>These production topics add job-readiness beyond the public lecture map; do not assume every one is explicitly taught in the playlist.</p>
+</article></main><footer>ARTHA Gurukul · Source material preserved as educational notes</footer></body></html>

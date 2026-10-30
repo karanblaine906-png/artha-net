@@ -1,0 +1,1017 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CI/CD 30 Hands-on Labs | ARTHA Gurukul</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><a class="brand" href="../index.html">✦ ARTHA GURUKUL</a><nav><a href="../index.html#courses">All Courses</a><a href="index.html">Source Library</a></nav></header><main class="book-layout"><aside class="book-toc"><div class="eyebrow">Original material · offline copy</div><h2>CI/CD 30 Hands-on Labs</h2><a href="../index.html">⌂ Course library</a><div class="toc"><a href="#ci-cd-masterclass-30-hands-on-labs-hinglish-english">CI/CD Masterclass: 30 Hands-on Labs (Hinglish + English)</a><a href="#table-of-contents">Table of contents</a><a href="#1-prerequisites-and-setup">1. Prerequisites and setup</a><a href="#2-runnable-starter-project">2. Runnable starter project</a><a href="#lab-01-git-workflow-and-release-branches">Lab 01 — Git workflow and release branches</a><a href="#lab-02-python-flask-sample-application">Lab 02 — Python Flask sample application</a><a href="#lab-03-pytest-unit-tests-and-coverage">Lab 03 — Pytest unit tests and coverage</a><a href="#lab-04-jenkins-controller-installation-on-debian">Lab 04 — Jenkins controller installation on Debian</a><a href="#lab-05-jenkins-declarative-pipeline">Lab 05 — Jenkins declarative pipeline</a><a href="#lab-06-git-webhook-and-multibranch-ci">Lab 06 — Git webhook and multibranch CI</a><a href="#lab-07-jenkins-credentials-and-secret-hygiene">Lab 07 — Jenkins credentials and secret hygiene</a><a href="#lab-08-parallel-stages-timeouts-and-retries">Lab 08 — Parallel stages, timeouts and retries</a><a href="#lab-09-docker-image-and-multi-stage-builds">Lab 09 — Docker image and multi-stage builds</a><a href="#lab-10-container-registry-publishing">Lab 10 — Container registry publishing</a><a href="#lab-11-sonarqube-quality-gate">Lab 11 — SonarQube quality gate</a><a href="#lab-12-gitleaks-secret-scanning">Lab 12 — Gitleaks secret scanning</a><a href="#lab-13-trivy-image-and-filesystem-scan">Lab 13 — Trivy image and filesystem scan</a><a href="#lab-14-sbom-and-supply-chain-attestation">Lab 14 — SBOM and supply-chain attestation</a><a href="#lab-15-terraform-fmt-validate-and-plan-in-ci">Lab 15 — Terraform fmt validate and plan in CI</a><a href="#lab-16-aws-oidc-federation-for-ci">Lab 16 — AWS OIDC federation for CI</a><a href="#lab-17-aws-ecr-build-and-push">Lab 17 — AWS ECR build and push</a><a href="#lab-18-kubernetes-deployment-and-rollout">Lab 18 — Kubernetes deployment and rollout</a><a href="#lab-19-helm-chart-package-and-deployment">Lab 19 — Helm chart package and deployment</a><a href="#lab-20-argo-cd-gitops-synchronization">Lab 20 — Argo CD GitOps synchronization</a><a href="#lab-21-openshift-image-and-rollout-pipeline">Lab 21 — OpenShift image and rollout pipeline</a><a href="#lab-22-nginx-reverse-proxy-and-deployment-smoke-test">Lab 22 — Nginx reverse proxy and deployment smoke test</a><a href="#lab-23-azure-pipelines-yaml-for-python">Lab 23 — Azure Pipelines YAML for Python</a><a href="#lab-24-windows-powershell-build-agent">Lab 24 — Windows PowerShell build agent</a><a href="#lab-25-msbuild-nuget-and-nunit-vstest">Lab 25 — MSBuild, NuGet and NUnit / VSTest</a><a href="#lab-26-code-signing-and-release-artifact-integrity">Lab 26 — Code signing and release artifact integrity</a><a href="#lab-27-blue-green-and-canary-deployment">Lab 27 — Blue-green and canary deployment</a><a href="#lab-28-observability-logs-and-deployment-rca">Lab 28 — Observability, logs and deployment RCA</a><a href="#lab-29-disaster-recovery-drift-and-state-safety">Lab 29 — Disaster recovery, drift and state safety</a><a href="#lab-30-capstone-jenkins-security-ecr-eks-openshift">Lab 30 — Capstone: Jenkins → security → ECR → EKS/OpenShift</a><a href="#4-reference-implementations">4. Reference implementations</a><a href="#5-troubleshooting-matrix">5. Troubleshooting matrix</a><a href="#6-senior-lead-devops-capstone-acceptance-checklist">6. Senior/Lead DevOps capstone acceptance checklist</a></div></aside><article class="book-prose"><p class="source-note">Historical course notes converted into searchable offline HTML. Some content may be a draft; exercises requiring cloud accounts need credentials and may incur costs.</p><h1 id="ci-cd-masterclass-30-hands-on-labs-hinglish-english">CI/CD Masterclass: 30 Hands-on Labs (Hinglish + English)</h1>
+<p><strong>Audience:</strong> Linux Administrator / DevOps / OpenShift / Kubernetes engineer preparing for senior or Lead DevOps roles.<br/>
+<strong>Companion:</strong> Terraform 30 Labs Hinglish Cloud Deployment Manual.<br/>
+<strong>Learning path:</strong> Debian 12 → Python + Jenkins → Docker → security → Terraform + AWS → Kubernetes/OpenShift → Windows/.NET → lead-level capstone.</p>
+<blockquote>
+<p><strong>Execution note:</strong> This is a guided lab workbook, not a claim that every cloud service has been deployed or tested in your account. Commands require the prerequisites and files described below. Azure DevOps, AWS, Kubernetes and Windows labs need their own environments. Never use production credentials for exercises.</p>
+</blockquote>
+<h2 id="table-of-contents">Table of contents</h2>
+<ol>
+<li>Prerequisites, security and cost controls</li>
+<li>Lab repository and runnable starter application</li>
+<li>Thirty progressive labs</li>
+<li>Complete reference pipelines and Kubernetes manifests</li>
+<li>Command workflow, troubleshooting matrix and interview drill</li>
+</ol>
+<h2 id="1-prerequisites-and-setup">1. Prerequisites and setup</h2>
+<p><strong>Debian 12 terminal:</strong> <code>git</code>, <code>python3</code>, <code>python3-venv</code>, <code>curl</code>, <code>jq</code>; for later labs: Jenkins, Java supported by your Jenkins release, Docker Engine, Terraform, AWS CLI v2, kubectl, Helm, oc, and optionally Argo CD CLI. Install each from its official maintained instructions, pin tested versions, and confirm with <code>--version</code> before running labs. Windows/.NET labs require a Windows build agent with supported .NET SDK, NuGet feeds and test runner. Scanner labs require installed scanner binaries. Don't execute a Windows PowerShell command in Debian Bash.</p>
+<pre><code class="language-bash">sudo apt update
+sudo apt install -y git curl jq python3 python3-venv python3-pip
+mkdir -p ~/cicd-masterclass &amp;&amp; cd ~/cicd-masterclass
+git init
+python3 -m venv .venv
+. .venv/bin/activate
+pip install flask pytest pytest-cov gunicorn
+</code></pre>
+<p><strong>Cost and security:</strong> EKS, EC2, NAT gateways, ALBs, RDS, hosted runners, scanners and registries can cost money. Set an AWS Budget alert; use isolated test accounts and short-lived credentials. Restrict IAM privileges, avoid publicly exposing Jenkins/SonarQube, and remove resources after each cloud lab. <code>terraform destroy</code> only affects resources tracked in the selected state and does not guarantee all billable items are removed. Never paste real credentials into source code, build logs or chat.</p>
+<h2 id="2-runnable-starter-project">2. Runnable starter project</h2>
+<p>Create these files in <code>~/cicd-masterclass</code>. The app intentionally stays simple so pipeline behavior is the focus.</p>
+<p><strong>app.py</strong></p>
+<pre><code class="language-python">from flask import Flask, jsonify
+app = Flask(__name__)
+
+@app.get('/health')
+def health():
+    return jsonify(status='ok'), 200
+
+@app.get('/')
+def index():
+    return jsonify(message='CI/CD masterclass'), 200
+
+if __name__ == '__main__':
+    app.run(host='127.0.0.1', port=5000)
+</code></pre>
+<p><strong>test_app.py</strong></p>
+<pre><code class="language-python">from app import app
+
+def test_health():
+    response = app.test_client().get('/health')
+    assert response.status_code == 200
+    assert response.json['status'] == 'ok'
+</code></pre>
+<p><strong>requirements.txt</strong></p>
+<pre><code class="language-text">flask&gt;=3,&lt;4
+gunicorn&gt;=22,&lt;24
+</code></pre>
+<p><strong>Dockerfile</strong></p>
+<pre><code class="language-dockerfile">FROM python:3.12-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt &amp;&amp; useradd --create-home appuser
+COPY app.py .
+USER appuser
+EXPOSE 5000
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
+</code></pre>
+<p><strong>.dockerignore</strong></p>
+<pre><code class="language-text">.git
+.venv
+__pycache__
+.pytest_cache
+*.tfstate*
+.env
+</code></pre>
+<p><strong>.gitignore</strong></p>
+<pre><code class="language-text">.venv/
+__pycache__/
+.pytest_cache/
+.coverage
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+.env
+</code></pre>
+<p>Run locally:</p>
+<pre><code class="language-bash">pip install -r requirements.txt pytest pytest-cov
+pytest -q
+python app.py &amp; APP_PID=$!
+curl -fsS http://127.0.0.1:5000/health
+kill "$APP_PID"
+</code></pre>
+<p><strong>Command workflow:</strong> <code>pytest</code> imports the Flask app → creates an in-process HTTP test client → invokes <code>/health</code> → asserts status and JSON. <code>curl</code> checks the real local HTTP listener. Tests failing means stop before building/deploying.</p>
+<h2 id="lab-01-git-workflow-and-release-branches">Lab 01 — Git workflow and release branches</h2>
+<p><strong>Level / stack:</strong> Git. <strong>Goal:</strong> Understand and practice git workflow and release branches in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Git</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow">Step-by-step command workflow</h3>
+<pre><code class="language-bash">git init; git switch -c feature/login; git add .; git commit -m "feat: add login"; git switch -c release/1.0
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result">Verification / expected result</h3>
+<pre><code class="language-bash">git log --oneline --graph --all
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting">Failure injection and troubleshooting</h3>
+<p>Conflict: use git status, resolve markers, git add and git commit. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control">Cleanup / cost control</h3>
+<pre><code class="language-bash">git status
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question">Interview question</h3>
+<p><strong>Q:</strong> Explain merge vs rebase and protected main branches.<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-02-python-flask-sample-application">Lab 02 — Python Flask sample application</h2>
+<p><strong>Level / stack:</strong> Python. <strong>Goal:</strong> Understand and practice python flask sample application in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-1">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-1">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Python</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-1">Step-by-step command workflow</h3>
+<pre><code class="language-bash">python3 -m venv .venv; . .venv/bin/activate; pip install flask pytest gunicorn; python app.py
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-1">Verification / expected result</h3>
+<pre><code class="language-bash">curl -f http://127.0.0.1:5000/health
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-1">Failure injection and troubleshooting</h3>
+<p>Port busy: ss -ltnp | grep 5000. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-1">Cleanup / cost control</h3>
+<pre><code class="language-bash">deactivate
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-1">Interview question</h3>
+<p><strong>Q:</strong> Why should /health return an HTTP status code?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-03-pytest-unit-tests-and-coverage">Lab 03 — Pytest unit tests and coverage</h2>
+<p><strong>Level / stack:</strong> Python. <strong>Goal:</strong> Understand and practice pytest unit tests and coverage in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-2">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-2">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Python</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-2">Step-by-step command workflow</h3>
+<pre><code class="language-bash">pip install pytest pytest-cov; pytest -q --cov=app --cov-report=term-missing
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-2">Verification / expected result</h3>
+<pre><code class="language-bash">pytest -q
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-2">Failure injection and troubleshooting</h3>
+<p>Import error: run python -m pytest from repository root. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-2">Cleanup / cost control</h3>
+<pre><code class="language-bash">rm -rf .pytest_cache .coverage
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-2">Interview question</h3>
+<p><strong>Q:</strong> Unit tests vs integration tests?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-04-jenkins-controller-installation-on-debian">Lab 04 — Jenkins controller installation on Debian</h2>
+<p><strong>Level / stack:</strong> Jenkins. <strong>Goal:</strong> Understand and practice jenkins controller installation on debian in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-3">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-3">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Jenkins</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-3">Step-by-step command workflow</h3>
+<pre><code class="language-bash">java -version; sudo systemctl status jenkins; sudo journalctl -u jenkins -n 50
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-3">Verification / expected result</h3>
+<pre><code class="language-bash">curl -I http://localhost:8080/login
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-3">Failure injection and troubleshooting</h3>
+<p>Java mismatch: inspect journalctl and supported Jenkins Java versions. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-3">Cleanup / cost control</h3>
+<pre><code class="language-bash">sudo systemctl stop jenkins
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-3">Interview question</h3>
+<p><strong>Q:</strong> Why should builds run on agents rather than controller?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-05-jenkins-declarative-pipeline">Lab 05 — Jenkins declarative pipeline</h2>
+<p><strong>Level / stack:</strong> Jenkins. <strong>Goal:</strong> Understand and practice jenkins declarative pipeline in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-4">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-4">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Jenkins</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-4">Step-by-step command workflow</h3>
+<pre><code class="language-bash">git add Jenkinsfile; git commit -m "ci: first pipeline"; git push
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-4">Verification / expected result</h3>
+<pre><code class="language-bash">Check Jenkins Stage View and console output
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-4">Failure injection and troubleshooting</h3>
+<p>Missing agent: check labels, executors and node online state. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-4">Cleanup / cost control</h3>
+<pre><code class="language-bash">Delete test job in Jenkins UI
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-4">Interview question</h3>
+<p><strong>Q:</strong> Explain agent, stages, steps, post and environment.<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-06-git-webhook-and-multibranch-ci">Lab 06 — Git webhook and multibranch CI</h2>
+<p><strong>Level / stack:</strong> Jenkins. <strong>Goal:</strong> Understand and practice git webhook and multibranch ci in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-5">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-5">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Jenkins</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-5">Step-by-step command workflow</h3>
+<pre><code class="language-bash">git switch -c feature/webhook-test; git commit --allow-empty -m "test webhook"; git push -u origin feature/webhook-test
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-5">Verification / expected result</h3>
+<pre><code class="language-bash">Inspect webhook delivery and multibranch scan logs
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-5">Failure injection and troubleshooting</h3>
+<p>Webhook 403: inspect token, credentials, endpoint and reverse proxy. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-5">Cleanup / cost control</h3>
+<pre><code class="language-bash">Delete remote test branch after merging
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-5">Interview question</h3>
+<p><strong>Q:</strong> How do you secure webhook triggers?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-07-jenkins-credentials-and-secret-hygiene">Lab 07 — Jenkins credentials and secret hygiene</h2>
+<p><strong>Level / stack:</strong> Security. <strong>Goal:</strong> Understand and practice jenkins credentials and secret hygiene in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-6">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-6">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Security</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-6">Step-by-step command workflow</h3>
+<pre><code class="language-bash">grep -R "password\|token" -n Jenkinsfile || true; git grep -n "AKIA" || true
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-6">Verification / expected result</h3>
+<pre><code class="language-bash">Verify masked secret does not appear in build logs
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-6">Failure injection and troubleshooting</h3>
+<p>Leaked secret: rotate immediately and remove from git history appropriately. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-6">Cleanup / cost control</h3>
+<pre><code class="language-bash">Revoke lab-only credentials
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-6">Interview question</h3>
+<p><strong>Q:</strong> Why is masking not sufficient protection?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-08-parallel-stages-timeouts-and-retries">Lab 08 — Parallel stages, timeouts and retries</h2>
+<p><strong>Level / stack:</strong> Jenkins. <strong>Goal:</strong> Understand and practice parallel stages, timeouts and retries in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-7">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-7">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Jenkins</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-7">Step-by-step command workflow</h3>
+<pre><code class="language-bash">git diff -- Jenkinsfile; git add Jenkinsfile; git commit -m "ci: parallel tests"
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-7">Verification / expected result</h3>
+<pre><code class="language-bash">Inspect two parallel branches in stage view
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-7">Failure injection and troubleshooting</h3>
+<p>Flaky job: distinguish transient network from deterministic failure. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-7">Cleanup / cost control</h3>
+<pre><code class="language-bash">Revert test commit if needed
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-7">Interview question</h3>
+<p><strong>Q:</strong> When should retries be avoided?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-09-docker-image-and-multi-stage-builds">Lab 09 — Docker image and multi-stage builds</h2>
+<p><strong>Level / stack:</strong> Docker. <strong>Goal:</strong> Understand and practice docker image and multi-stage builds in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-8">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-8">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Docker</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-8">Step-by-step command workflow</h3>
+<pre><code class="language-bash">docker build -t cicd-flask:lab .; docker run --rm -p 8081:5000 cicd-flask:lab
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-8">Verification / expected result</h3>
+<pre><code class="language-bash">curl -f http://localhost:8081/health
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-8">Failure injection and troubleshooting</h3>
+<p>Port conflict: docker ps and ss -ltnp. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-8">Cleanup / cost control</h3>
+<pre><code class="language-bash">docker image rm cicd-flask:lab
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-8">Interview question</h3>
+<p><strong>Q:</strong> How do multi-stage builds reduce attack surface?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-10-container-registry-publishing">Lab 10 — Container registry publishing</h2>
+<p><strong>Level / stack:</strong> Docker. <strong>Goal:</strong> Understand and practice container registry publishing in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-9">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-9">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Docker</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-9">Step-by-step command workflow</h3>
+<pre><code class="language-bash">docker tag cicd-flask:lab "$REGISTRY_USER/cicd-flask:lab"; docker push "$REGISTRY_USER/cicd-flask:lab"
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-9">Verification / expected result</h3>
+<pre><code class="language-bash">docker manifest inspect "$REGISTRY_USER/cicd-flask:lab"
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-9">Failure injection and troubleshooting</h3>
+<p>Denied push: docker login and verify repository permissions. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-9">Cleanup / cost control</h3>
+<pre><code class="language-bash">Delete lab image in registry console
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-9">Interview question</h3>
+<p><strong>Q:</strong> Why use immutable digests over latest?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-11-sonarqube-quality-gate">Lab 11 — SonarQube quality gate</h2>
+<p><strong>Level / stack:</strong> Security. <strong>Goal:</strong> Understand and practice sonarqube quality gate in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-10">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-10">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Security</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-10">Step-by-step command workflow</h3>
+<pre><code class="language-bash">mvn -version || true; docker compose ps; curl -I http://localhost:9000
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-10">Verification / expected result</h3>
+<pre><code class="language-bash">Inspect SonarQube dashboard and gate result
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-10">Failure injection and troubleshooting</h3>
+<p>Scanner cannot connect: verify service URL and network. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-10">Cleanup / cost control</h3>
+<pre><code class="language-bash">docker compose down
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-10">Interview question</h3>
+<p><strong>Q:</strong> Difference between quality gate and vulnerability scanner?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-12-gitleaks-secret-scanning">Lab 12 — Gitleaks secret scanning</h2>
+<p><strong>Level / stack:</strong> Security. <strong>Goal:</strong> Understand and practice gitleaks secret scanning in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-11">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-11">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Security</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-11">Step-by-step command workflow</h3>
+<pre><code class="language-bash">gitleaks detect --source . --redact --exit-code 1
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-11">Verification / expected result</h3>
+<pre><code class="language-bash">Review redacted findings and CI exit code
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-11">Failure injection and troubleshooting</h3>
+<p>False positive: use narrowly scoped documented allowlist. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-11">Cleanup / cost control</h3>
+<pre><code class="language-bash">Remove only intentionally planted dummy fixtures
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-11">Interview question</h3>
+<p><strong>Q:</strong> What is secret rotation after a leak?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-13-trivy-image-and-filesystem-scan">Lab 13 — Trivy image and filesystem scan</h2>
+<p><strong>Level / stack:</strong> Security. <strong>Goal:</strong> Understand and practice trivy image and filesystem scan in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-12">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-12">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Security</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-12">Step-by-step command workflow</h3>
+<pre><code class="language-bash">trivy fs --severity HIGH,CRITICAL .; trivy image --severity HIGH,CRITICAL cicd-flask:lab
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-12">Verification / expected result</h3>
+<pre><code class="language-bash">Record vulnerabilities and fixed versions
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-12">Failure injection and troubleshooting</h3>
+<p>DB download blocked: configure proxy or approved mirror. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-12">Cleanup / cost control</h3>
+<pre><code class="language-bash">docker image rm cicd-flask:lab 2&gt;/dev/null || true
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-12">Interview question</h3>
+<p><strong>Q:</strong> What is the difference between SAST and SCA?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-14-sbom-and-supply-chain-attestation">Lab 14 — SBOM and supply-chain attestation</h2>
+<p><strong>Level / stack:</strong> Security. <strong>Goal:</strong> Understand and practice sbom and supply-chain attestation in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-13">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-13">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Security</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-13">Step-by-step command workflow</h3>
+<pre><code class="language-bash">syft cicd-flask:lab -o spdx-json &gt; sbom.spdx.json; grype sbom:sbom.spdx.json
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-13">Verification / expected result</h3>
+<pre><code class="language-bash">python3 -m json.tool sbom.spdx.json &gt;/dev/null
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-13">Failure injection and troubleshooting</h3>
+<p>Missing image: build or pull it first. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-13">Cleanup / cost control</h3>
+<pre><code class="language-bash">rm -f sbom.spdx.json
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-13">Interview question</h3>
+<p><strong>Q:</strong> Why is an SBOM useful during a CVE incident?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-15-terraform-fmt-validate-and-plan-in-ci">Lab 15 — Terraform fmt validate and plan in CI</h2>
+<p><strong>Level / stack:</strong> Terraform. <strong>Goal:</strong> Understand and practice terraform fmt validate and plan in ci in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-14">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-14">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Terraform</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-14">Step-by-step command workflow</h3>
+<pre><code class="language-bash">terraform fmt -check -recursive; terraform init -input=false; terraform validate; terraform plan -input=false -out=tfplan
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-14">Verification / expected result</h3>
+<pre><code class="language-bash">terraform show tfplan
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-14">Failure injection and troubleshooting</h3>
+<p>Provider init fails: inspect lockfile and credentials. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-14">Cleanup / cost control</h3>
+<pre><code class="language-bash">rm -f tfplan
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-14">Interview question</h3>
+<p><strong>Q:</strong> Why must apply use the reviewed plan?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-16-aws-oidc-federation-for-ci">Lab 16 — AWS OIDC federation for CI</h2>
+<p><strong>Level / stack:</strong> AWS. <strong>Goal:</strong> Understand and practice aws oidc federation for ci in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-15">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-15">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>AWS</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-15">Step-by-step command workflow</h3>
+<pre><code class="language-bash">aws sts get-caller-identity; aws configure list
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-15">Verification / expected result</h3>
+<pre><code class="language-bash">Confirm assumed role ARN and minimal permissions
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-15">Failure injection and troubleshooting</h3>
+<p>AccessDenied: inspect trust conditions and IAM policies. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-15">Cleanup / cost control</h3>
+<pre><code class="language-bash">Remove temporary trust policy and role after lab
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-15">Interview question</h3>
+<p><strong>Q:</strong> Why avoid long-lived AWS access keys in Jenkins?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-17-aws-ecr-build-and-push">Lab 17 — AWS ECR build and push</h2>
+<p><strong>Level / stack:</strong> AWS. <strong>Goal:</strong> Understand and practice aws ecr build and push in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-16">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-16">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>AWS</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-16">Step-by-step command workflow</h3>
+<pre><code class="language-bash">aws ecr get-login-password --region "$AWS_REGION" | docker login --username AWS --password-stdin "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-16">Verification / expected result</h3>
+<pre><code class="language-bash">aws ecr describe-images --repository-name cicd-flask --region "$AWS_REGION"
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-16">Failure injection and troubleshooting</h3>
+<p>Repository missing: create via Terraform first. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-16">Cleanup / cost control</h3>
+<pre><code class="language-bash">aws ecr batch-delete-image --repository-name cicd-flask --image-ids imageTag=lab --region "$AWS_REGION"
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-16">Interview question</h3>
+<p><strong>Q:</strong> How do ECR permissions differ for push vs pull?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-18-kubernetes-deployment-and-rollout">Lab 18 — Kubernetes deployment and rollout</h2>
+<p><strong>Level / stack:</strong> Kubernetes. <strong>Goal:</strong> Understand and practice kubernetes deployment and rollout in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-17">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-17">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Kubernetes</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-17">Step-by-step command workflow</h3>
+<pre><code class="language-bash">kubectl apply -f k8s/; kubectl rollout status deployment/cicd-flask; kubectl get pods -o wide
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-17">Verification / expected result</h3>
+<pre><code class="language-bash">kubectl get deploy,svc,pods
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-17">Failure injection and troubleshooting</h3>
+<p>ImagePullBackOff: inspect image reference and registry auth. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-17">Cleanup / cost control</h3>
+<pre><code class="language-bash">kubectl delete -f k8s/
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-17">Interview question</h3>
+<p><strong>Q:</strong> How does Deployment create ReplicaSets?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-19-helm-chart-package-and-deployment">Lab 19 — Helm chart package and deployment</h2>
+<p><strong>Level / stack:</strong> Kubernetes. <strong>Goal:</strong> Understand and practice helm chart package and deployment in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-18">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-18">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Kubernetes</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-18">Step-by-step command workflow</h3>
+<pre><code class="language-bash">helm lint ./chart; helm template cicd-flask ./chart; helm upgrade --install cicd-flask ./chart --namespace cicd --create-namespace
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-18">Verification / expected result</h3>
+<pre><code class="language-bash">helm status cicd-flask -n cicd
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-18">Failure injection and troubleshooting</h3>
+<p>Template error: helm template --debug. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-18">Cleanup / cost control</h3>
+<pre><code class="language-bash">helm uninstall cicd-flask -n cicd
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-18">Interview question</h3>
+<p><strong>Q:</strong> helm rollback vs kubectl rollout undo?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-20-argo-cd-gitops-synchronization">Lab 20 — Argo CD GitOps synchronization</h2>
+<p><strong>Level / stack:</strong> Kubernetes. <strong>Goal:</strong> Understand and practice argo cd gitops synchronization in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-19">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-19">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Kubernetes</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-19">Step-by-step command workflow</h3>
+<pre><code class="language-bash">kubectl get applications -n argocd; argocd app get cicd-flask; argocd app sync cicd-flask
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-19">Verification / expected result</h3>
+<pre><code class="language-bash">argocd app wait cicd-flask --health --sync
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-19">Failure injection and troubleshooting</h3>
+<p>OutOfSync: inspect desired manifests vs live diff. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-19">Cleanup / cost control</h3>
+<pre><code class="language-bash">argocd app delete cicd-flask --cascade=false
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-19">Interview question</h3>
+<p><strong>Q:</strong> Why should CI not directly mutate GitOps-managed objects?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-21-openshift-image-and-rollout-pipeline">Lab 21 — OpenShift image and rollout pipeline</h2>
+<p><strong>Level / stack:</strong> OpenShift. <strong>Goal:</strong> Understand and practice openshift image and rollout pipeline in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-20">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-20">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>OpenShift</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-20">Step-by-step command workflow</h3>
+<pre><code class="language-bash">oc project cicd-lab; oc get routes; oc rollout status deployment/cicd-flask
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-20">Verification / expected result</h3>
+<pre><code class="language-bash">oc get pods,svc,route -n cicd-lab
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-20">Failure injection and troubleshooting</h3>
+<p>SCC rejection: oc describe pod and check securityContext. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-20">Cleanup / cost control</h3>
+<pre><code class="language-bash">oc delete project cicd-lab
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-20">Interview question</h3>
+<p><strong>Q:</strong> What differs between OpenShift Route and Kubernetes Ingress?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-22-nginx-reverse-proxy-and-deployment-smoke-test">Lab 22 — Nginx reverse proxy and deployment smoke test</h2>
+<p><strong>Level / stack:</strong> Linux. <strong>Goal:</strong> Understand and practice nginx reverse proxy and deployment smoke test in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-21">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-21">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Linux</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-21">Step-by-step command workflow</h3>
+<pre><code class="language-bash">sudo nginx -t; curl -fsS http://127.0.0.1/health
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-21">Verification / expected result</h3>
+<pre><code class="language-bash">curl -I http://127.0.0.1/health
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-21">Failure injection and troubleshooting</h3>
+<p>502: inspect upstream address, journalctl and proxy logs. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-21">Cleanup / cost control</h3>
+<pre><code class="language-bash">Remove only lab-specific Nginx site
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-21">Interview question</h3>
+<p><strong>Q:</strong> What should smoke tests validate after deployment?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-23-azure-pipelines-yaml-for-python">Lab 23 — Azure Pipelines YAML for Python</h2>
+<p><strong>Level / stack:</strong> Azure. <strong>Goal:</strong> Understand and practice azure pipelines yaml for python in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-22">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-22">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Azure</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-22">Step-by-step command workflow</h3>
+<pre><code class="language-bash">python3 -m pytest -q; git add azure-pipelines.yml; git commit -m "ci: azure pipeline"
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-22">Verification / expected result</h3>
+<pre><code class="language-bash">Inspect pipeline run, test reports and artifact
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-22">Failure injection and troubleshooting</h3>
+<p>Agent capability mismatch: inspect pool and installed tools. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-22">Cleanup / cost control</h3>
+<pre><code class="language-bash">Disable lab pipeline in Azure DevOps
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-22">Interview question</h3>
+<p><strong>Q:</strong> Compare Azure stages/jobs/steps with Jenkins.<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-24-windows-powershell-build-agent">Lab 24 — Windows PowerShell build agent</h2>
+<p><strong>Level / stack:</strong> Windows. <strong>Goal:</strong> Understand and practice windows powershell build agent in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-23">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-23">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Windows</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-23">Step-by-step command workflow</h3>
+<pre><code class="language-powershell">Get-Service; Get-ExecutionPolicy -List; Get-Command pwsh -ErrorAction SilentlyContinue
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-23">Verification / expected result</h3>
+<pre><code class="language-powershell">Get-ComputerInfo | Select-Object WindowsProductName,OsVersion
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-23">Failure injection and troubleshooting</h3>
+<p>Agent offline: inspect Windows service and agent logs. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-23">Cleanup / cost control</h3>
+<pre><code class="language-powershell">Stop-Service -Name LabService -ErrorAction SilentlyContinue
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-23">Interview question</h3>
+<p><strong>Q:</strong> Why run Windows builds on isolated agents?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-25-msbuild-nuget-and-nunit-vstest">Lab 25 — MSBuild, NuGet and NUnit / VSTest</h2>
+<p><strong>Level / stack:</strong> Windows. <strong>Goal:</strong> Understand and practice msbuild, nuget and nunit / vstest in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-24">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-24">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Windows</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-24">Step-by-step command workflow</h3>
+<pre><code class="language-powershell">dotnet restore; dotnet build --configuration Release --no-restore; dotnet test --configuration Release --no-build --logger "trx;LogFileName=results.trx"
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-24">Verification / expected result</h3>
+<pre><code class="language-powershell">Get-ChildItem -Recurse -Filter results.trx
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-24">Failure injection and troubleshooting</h3>
+<p>Restore failure: verify NuGet feeds, TLS and credentials. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-24">Cleanup / cost control</h3>
+<pre><code class="language-powershell">dotnet clean
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-24">Interview question</h3>
+<p><strong>Q:</strong> When are MSBuild and dotnet build interchangeable?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-26-code-signing-and-release-artifact-integrity">Lab 26 — Code signing and release artifact integrity</h2>
+<p><strong>Level / stack:</strong> Security. <strong>Goal:</strong> Understand and practice code signing and release artifact integrity in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-25">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-25">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Security</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-25">Step-by-step command workflow</h3>
+<pre><code class="language-bash">sha256sum dist/*; cosign version
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-25">Verification / expected result</h3>
+<pre><code class="language-bash">Verify checksum and signature using approved public key
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-25">Failure injection and troubleshooting</h3>
+<p>Verification failure: block release and investigate provenance. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-25">Cleanup / cost control</h3>
+<pre><code class="language-bash">Remove lab-only artifacts; revoke lab signing key
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-25">Interview question</h3>
+<p><strong>Q:</strong> Why store signing keys outside build workspaces?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-27-blue-green-and-canary-deployment">Lab 27 — Blue-green and canary deployment</h2>
+<p><strong>Level / stack:</strong> Kubernetes. <strong>Goal:</strong> Understand and practice blue-green and canary deployment in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-26">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-26">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Kubernetes</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-26">Step-by-step command workflow</h3>
+<pre><code class="language-bash">kubectl get deployments,services; kubectl rollout history deployment/cicd-flask
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-26">Verification / expected result</h3>
+<pre><code class="language-bash">Run synthetic traffic and verify service endpoints
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-26">Failure injection and troubleshooting</h3>
+<p>Bad canary: stop traffic and roll back immediately. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-26">Cleanup / cost control</h3>
+<pre><code class="language-bash">kubectl rollout undo deployment/cicd-flask
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-26">Interview question</h3>
+<p><strong>Q:</strong> Blue-green vs canary and rollback criteria?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-28-observability-logs-and-deployment-rca">Lab 28 — Observability, logs and deployment RCA</h2>
+<p><strong>Level / stack:</strong> ELK. <strong>Goal:</strong> Understand and practice observability, logs and deployment rca in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-27">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-27">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>ELK</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-27">Step-by-step command workflow</h3>
+<pre><code class="language-bash">kubectl logs deployment/cicd-flask --tail=100; kubectl describe deployment cicd-flask; kubectl get events --sort-by=.metadata.creationTimestamp
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-27">Verification / expected result</h3>
+<pre><code class="language-bash">Compare error rate and latency before/after release
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-27">Failure injection and troubleshooting</h3>
+<p>Missing logs: inspect agent collection, permissions and retention. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-27">Cleanup / cost control</h3>
+<pre><code class="language-bash">Remove temporary lab dashboards/alerts
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-27">Interview question</h3>
+<p><strong>Q:</strong> What is an actionable deployment SLO?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-29-disaster-recovery-drift-and-state-safety">Lab 29 — Disaster recovery, drift and state safety</h2>
+<p><strong>Level / stack:</strong> Terraform. <strong>Goal:</strong> Understand and practice disaster recovery, drift and state safety in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-28">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-28">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Terraform</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-28">Step-by-step command workflow</h3>
+<pre><code class="language-bash">terraform plan -detailed-exitcode; terraform state list; terraform show
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-28">Verification / expected result</h3>
+<pre><code class="language-bash">Record exit code 0/no diff or 2/diff
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-28">Failure injection and troubleshooting</h3>
+<p>State lock: identify owner; never force-unlock active run. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-28">Cleanup / cost control</h3>
+<pre><code class="language-bash">terraform destroy only for dedicated lab workspace
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-28">Interview question</h3>
+<p><strong>Q:</strong> How do you restore lost Terraform state safely?<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="lab-30-capstone-jenkins-security-ecr-eks-openshift">Lab 30 — Capstone: Jenkins → security → ECR → EKS/OpenShift</h2>
+<p><strong>Level / stack:</strong> Capstone. <strong>Goal:</strong> Understand and practice capstone: jenkins → security → ecr → eks/openshift in a controlled environment.</p>
+<h3 id="hinglish-theory-and-architecture-29">Hinglish theory and architecture</h3>
+<p>Is lab mein pehle dependency identify karo: source code, runner/agent, permissions, target system, aur expected artifact. CI ka matlab har change par automated checks; CD ka matlab approved artifact ko repeatable tareeke se release karna. <strong>Build → Test → Verify → Publish → Deploy → Observe</strong> mein is lab ka stage identify karo. Production mein idempotency, traceability aur rollback zaroori hain.</p>
+<h3 id="prerequisites-where-to-run-29">Prerequisites / where to run</h3>
+<p>Run commands in the appropriate lab environment: <strong>Capstone</strong>. Debian terminal by default; Windows-specific commands must run in PowerShell. Cloud commands need configured access and an existing test environment. Refer to starter project and the companion Terraform manual for prerequisite infrastructure. <code>REGISTRY_USER</code>, <code>AWS_REGION</code>, <code>AWS_ACCOUNT_ID</code>, and cluster contexts are placeholders you must configure; do not copy literal placeholders into a production shell.</p>
+<h3 id="step-by-step-command-workflow-29">Step-by-step command workflow</h3>
+<pre><code class="language-bash">terraform fmt -check; terraform validate; pytest -q; docker build -t cicd-flask:capstone .
+</code></pre>
+<p><strong>What happens internally:</strong> Shell/runner starts the command → tool loads configuration and credentials → validates inputs → contacts local daemon or remote API if required → reports exit status. <strong>Exit code 0</strong> usually signals success; nonzero should fail CI. For a chained command, execute each line separately first, inspect output, and only then automate it. Commands that inspect or delete a resource assume you created it in this lab.</p>
+<h3 id="verification-expected-result-29">Verification / expected result</h3>
+<pre><code class="language-bash">Check signed digest, deployment health and monitoring
+</code></pre>
+<p>Expected: a passing test, healthy service, visible resource, or verifiable artifact as applicable. Capture logs/screenshots and record the exact commit SHA or image digest. <strong>Never treat a green pipeline alone as proof that users can access the service.</strong></p>
+<h3 id="failure-injection-and-troubleshooting-29">Failure injection and troubleshooting</h3>
+<p>Inject failed test, bad image and denied IAM permission; document RCA. Diagnose in order: command exit code → configuration → permissions → network → runtime logs → upstream dependency. Record symptom, evidence, root cause, corrective action and prevention.</p>
+<h3 id="cleanup-cost-control-29">Cleanup / cost control</h3>
+<pre><code class="language-bash">helm uninstall cicd-flask -n cicd; terraform destroy after dependency review
+</code></pre>
+<p>Run cleanup only against resources created for this lab. Confirm cloud resources and associated storage/load balancers are gone in the provider console.</p>
+<h3 id="interview-question-29">Interview question</h3>
+<p><strong>Q:</strong> Design an approval-based production release pipeline.<br/>
+<strong>Practice answer:</strong> Describe the purpose, components, execution flow, failure signals, security controls and a production trade-off. Demonstrate with a command or pipeline excerpt from this lab.</p>
+<h2 id="4-reference-implementations">4. Reference implementations</h2>
+<h3 id="4-1-jenkinsfile-runnable-python-quality-and-docker-build-pipeline">4.1 Jenkinsfile — runnable Python quality and Docker build pipeline</h3>
+<p>Requires Jenkins agents labeled <code>docker</code> with Python 3, Docker access and appropriate agent permissions. Do not mount the Docker socket into untrusted workloads. Configure registry credentials in Jenkins Credentials store; do not store them in the repository. The example builds and tests locally and does <strong>not</strong> push to a registry automatically.</p>
+<pre><code class="language-groovy">pipeline {
+  agent { label 'docker' }
+  options { timestamps(); timeout(time: 20, unit: 'MINUTES'); disableConcurrentBuilds() }
+  stages {
+    stage('Checkout') { steps { checkout scm } }
+    stage('Unit tests') {
+      steps {
+        sh '''
+          set -eu
+          python3 -m venv .venv
+          . .venv/bin/activate
+          pip install -r requirements.txt pytest pytest-cov
+          python -m pytest -q --junitxml=test-results.xml
+        '''
+      }
+      post { always { junit allowEmptyResults: true, testResults: 'test-results.xml' } }
+    }
+    stage('Build image') {
+      steps { sh 'docker build -t cicd-flask:${BUILD_NUMBER} .' }
+    }
+    stage('Smoke test') {
+      steps {
+        sh '''
+          set -eu
+          docker run -d --name "cicd-smoke-${BUILD_NUMBER}" -p 127.0.0.1:0:5000 "cicd-flask:${BUILD_NUMBER}"
+          PORT=$(docker port "cicd-smoke-${BUILD_NUMBER}" 5000/tcp | awk -F: '{print $NF}')
+          i=0
+          until curl -fsS "http://127.0.0.1:${PORT}/health"; do
+            i=$((i+1)); [ "$i" -lt 20 ] || exit 1; sleep 1
+          done
+        '''
+      }
+      post { always { sh 'docker rm -f "cicd-smoke-${BUILD_NUMBER}" || true' } }
+    }
+  }
+  post { always { cleanWs() } }
+}
+</code></pre>
+<p><strong>Line-by-line workflow:</strong> <code>agent</code> selects a Docker-capable worker; <code>options</code> enforce timeouts and serial execution; <code>checkout</code> pins source to build revision; Python venv isolates dependencies; JUnit archives test results; Docker creates the immutable image for that build number; smoke test runs a temporary container and checks HTTP readiness; <code>post</code> removes the temporary container and workspace. <strong>Production improvement:</strong> use an isolated agent, digest-pinned base image, vulnerability gates, registry push with OIDC/short-lived credentials, signature verification, environment approval and progressive rollout.</p>
+<h3 id="4-2-kubernetes-manifests-save-under-k8s">4.2 Kubernetes manifests (save under <code>k8s/</code>)</h3>
+<p><strong>k8s/deployment.yaml</strong> — replace <code>YOUR_REGISTRY/IMAGE@sha256:YOUR_DIGEST</code> with a real pushed image digest.</p>
+<pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cicd-flask
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cicd-flask
+  template:
+    metadata:
+      labels:
+        app: cicd-flask
+    spec:
+      containers:
+        - name: web
+          image: YOUR_REGISTRY/IMAGE@sha256:YOUR_DIGEST
+          ports:
+            - containerPort: 5000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 2
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 10
+          resources:
+            requests: {cpu: 50m, memory: 64Mi}
+            limits: {cpu: 250m, memory: 256Mi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            capabilities:
+              drop: [ALL]
+            seccompProfile:
+              type: RuntimeDefault
+</code></pre>
+<p><strong>k8s/service.yaml</strong></p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  name: cicd-flask
+spec:
+  selector:
+    app: cicd-flask
+  ports:
+    - port: 80
+      targetPort: 5000
+  type: ClusterIP
+</code></pre>
+<p><strong>Verify:</strong> <code>kubectl apply --dry-run=client -f k8s/</code>, then <code>kubectl apply -f k8s/</code> after replacing the image. <code>kubectl rollout status deployment/cicd-flask</code> waits for rollout; <code>kubectl port-forward svc/cicd-flask 8080:80</code> permits local smoke test. Cluster must have a working CNI and registry pull access. OpenShift default SCC may impose additional requirements; inspect and adjust manifests rather than granting privileged SCC.</p>
+<h3 id="4-3-azure-pipelines-linux-python-ci-azure-pipelines-yml">4.3 Azure Pipelines — Linux Python CI (<code>azure-pipelines.yml</code>)</h3>
+<pre><code class="language-yaml">trigger:
+  - main
+pool:
+  vmImage: ubuntu-latest
+steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.12'
+  - script: |
+      python -m pip install -r requirements.txt pytest
+      python -m pytest -q --junitxml=results.xml
+    displayName: Test Python application
+  - task: PublishTestResults@2
+    condition: always()
+    inputs:
+      testResultsFormat: JUnit
+      testResultsFiles: results.xml
+</code></pre>
+<p><strong>Workflow:</strong> commit to main → agent allocation → Python setup → dependency install → tests → JUnit publication. Hosted agent availability and permissions depend on Azure DevOps organization settings.</p>
+<h3 id="4-4-windows-net-build-and-test-pipeline-azure-pipelines-windows-yml">4.4 Windows .NET build and test pipeline (<code>azure-pipelines-windows.yml</code>)</h3>
+<pre><code class="language-yaml">trigger:
+  - main
+pool:
+  vmImage: windows-latest
+steps:
+  - task: UseDotNet@2
+    inputs:
+      packageType: sdk
+      version: '8.0.x'
+  - powershell: |
+      dotnet restore .\Demo.sln
+      if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      dotnet build .\Demo.sln --configuration Release --no-restore
+      if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      dotnet test .\Demo.sln --configuration Release --no-build --logger 'trx;LogFileName=results.trx'
+      exit $LASTEXITCODE
+    displayName: Restore build test
+  - task: PublishTestResults@2
+    condition: always()
+    inputs:
+      testResultsFormat: VSTest
+      testResultsFiles: '**/results.trx'
+</code></pre>
+<p><strong>Prerequisite:</strong> create a compatible <code>Demo.sln</code> with a .NET test project. NUnit requires the appropriate NUnit, NUnit3TestAdapter and Microsoft.NET.Test.Sdk packages. Windows-specific .NET Framework projects may require Visual Studio Build Tools/MSBuild rather than just <code>dotnet build</code>.</p>
+<h3 id="4-5-terraform-pipeline-policy">4.5 Terraform pipeline policy</h3>
+<p><strong>PR:</strong> <code>terraform fmt -check</code> → <code>terraform init -backend=false</code> (syntax/provider setup only) → <code>terraform validate</code> → static analysis → reviewed plan using configured backend and read credentials. <strong>Main branch:</strong> require approval and fresh reviewed plan, enforce remote state locking, use short-lived IAM identity, apply once, capture outputs, verify service health. Do not publish a plan file openly: it may contain sensitive values. Never auto-apply untrusted pull requests.</p>
+<h2 id="5-troubleshooting-matrix">5. Troubleshooting matrix</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>First checks</th>
+<th>Corrective direction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Jenkins queue stuck</td>
+<td>Node label, executors, agent status</td>
+<td>Correct agent capacity/label</td>
+</tr>
+<tr>
+<td>Pipeline secret exposure</td>
+<td>Console log, SCM history</td>
+<td>Revoke/rotate; restrict credentials</td>
+</tr>
+<tr>
+<td>Docker build fails</td>
+<td>Build context, Dockerfile, registry, disk</td>
+<td>Correct paths/dependencies</td>
+</tr>
+<tr>
+<td>ImagePullBackOff</td>
+<td><code>kubectl describe pod</code>, registry credentials</td>
+<td>Correct digest and imagePullSecret</td>
+</tr>
+<tr>
+<td>CrashLoopBackOff</td>
+<td><code>kubectl logs --previous</code>, probes, env</td>
+<td>Fix startup/configuration</td>
+</tr>
+<tr>
+<td>Terraform locked state</td>
+<td>Backend and lock owner</td>
+<td>Wait; unlock only abandoned locks</td>
+</tr>
+<tr>
+<td>AWS AccessDenied</td>
+<td>STS identity, IAM policies, trust</td>
+<td>Apply least-privilege fix</td>
+</tr>
+<tr>
+<td>OpenShift forbidden SCC</td>
+<td>Pod events and security context</td>
+<td>Use compatible nonroot policy</td>
+</tr>
+<tr>
+<td>.NET restore 401</td>
+<td>Feed URL, credentials, TLS</td>
+<td>Fix NuGet source and auth</td>
+</tr>
+<tr>
+<td>Quality gate red</td>
+<td>Scanner findings, threshold</td>
+<td>Remediate or approve documented exception</td>
+</tr>
+</tbody>
+</table>
+<h2 id="6-senior-lead-devops-capstone-acceptance-checklist">6. Senior/Lead DevOps capstone acceptance checklist</h2>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Source commit traceable to immutable image digest</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Automated unit tests and JUnit results published</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>SAST, SCA, secret scanning and image scanning gated</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Terraform plan reviewed and remote state protected</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Build identity has minimal permissions and short-lived credentials</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Kubernetes/OpenShift deployment uses probes and nonroot security</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Smoke tests verify deployed endpoint and failure triggers rollback</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Logs, deployment events, latency and error rate reviewed</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Production approval, rollback runbook and incident RCA documented</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Lab cloud resources deleted and billing checked</li>
+</ul>
+<h3 id="mock-interview-scenarios">Mock interview scenarios</h3>
+<ol>
+<li>Jenkins says SUCCESS but application returns 502. Which logs and network path do you inspect first?</li>
+<li>Terraform wants to replace an RDS instance. How do you prevent destructive apply?</li>
+<li>A CVE appears in an image deployed last month. How do you find affected releases via SBOM?</li>
+<li>ECR push succeeds but Kubernetes pulls fail. What IAM and networking checks are required?</li>
+<li>One Windows agent builds successfully, another fails on NuGet restore. How do you isolate environmental drift?</li>
+<li>Argo CD reverts a manual <code>kubectl</code> change. Explain desired-state reconciliation.</li>
+<li>Release introduces 15% error rate. How do you halt canary, roll back and prove recovery?</li>
+<li>A leaked signing certificate is discovered. What is the release containment and rotation procedure?</li>
+<li>Jenkins shared agents have Docker daemon access. Explain the isolation and privilege risks.</li>
+<li>Leadership asks for faster deployment without weakening controls. Which pipeline bottlenecks would you measure?</li>
+</ol>
+<p><strong>Final guidance:</strong> For the role you shared, give extra time to Labs 23–26 (Azure DevOps, Windows, MSBuild, NUnit/VSTest and signing). Your existing Linux/Jenkins/Kubernetes skills transfer well, but enterprise Windows release engineering must be practiced separately.</p>
+</article></main><footer>ARTHA Gurukul · Source material preserved as educational notes</footer></body></html>

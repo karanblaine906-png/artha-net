@@ -1,0 +1,540 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>C++ Masterbook Volume 1 | ARTHA Gurukul</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><a class="brand" href="../index.html">✦ ARTHA GURUKUL</a><nav><a href="../index.html#courses">All Courses</a><a href="index.html">Source Library</a></nav></header><main class="book-layout"><aside class="book-toc"><div class="eyebrow">Original material · offline copy</div><h2>C++ Masterbook Volume 1</h2><a href="../index.html">⌂ Course library</a><div class="toc"><a href="#expanded-edition-c-software-engineering-masterbook-volume-1">Expanded Edition — C++ Software Engineering Masterbook Volume 1</a><a href="#modern-c-software-engineering-masterbook">Modern C++ Software Engineering — Masterbook</a><a href="#table-of-contents-curriculum">Table of contents / curriculum</a><a href="#chapter-completion-standard">Chapter completion standard</a><a href="#chapter-1-from-source-code-to-running-program">Chapter 1 — From Source Code to Running Program</a><a href="#outcomes">Outcomes</a><a href="#1-1-what-is-c">1.1 What is C++?</a><a href="#1-2-prepare-debian-12">1.2 Prepare Debian 12</a><a href="#1-3-first-program">1.3 First program</a><a href="#1-4-the-compilation-pipeline">1.4 The compilation pipeline</a><a href="#1-5-compile-vs-link-vs-runtime-error">1.5 Compile vs link vs runtime error</a><a href="#1-6-debug-with-gdb">1.6 Debug with GDB</a><a href="#1-7-build-and-inspect-a-two-file-program">1.7 Build and inspect a two-file program</a><a href="#1-8-troubleshooting-playbook">1.8 Troubleshooting playbook</a><a href="#1-9-practical-labs">1.9 Practical labs</a><a href="#1-10-interview-questions-and-model-answers">1.10 Interview questions and model answers</a><a href="#1-11-assessment">1.11 Assessment</a><a href="#1-12-further-reading">1.12 Further reading</a><a href="#glossary">Glossary</a><a href="#chapter-1-index">Chapter 1 index</a><a href="#foundation-chapters-2-5-full-learning-units">Foundation Chapters 2–5 — Full Learning Units</a><a href="#chapter-02-variables-types-expressions-and-conversions">Chapter 02 — Variables, Types, Expressions and Conversions</a><a href="#learning-objectives-and-prerequisite-check">Learning objectives and prerequisite check</a><a href="#conceptual-model">Conceptual model</a><a href="#worked-example">Worked example</a><a href="#guided-lab-requirements-implementation-and-verification">Guided lab: requirements, implementation and verification</a><a href="#troubleshooting-playbook">Troubleshooting playbook</a><a href="#interview-questions-with-answers">Interview questions with answers</a><a href="#assessment-and-exit-criteria">Assessment and exit criteria</a><a href="#chapter-03-control-flow-functions-and-scope">Chapter 03 — Control Flow, Functions and Scope</a><a href="#learning-objectives-and-prerequisite-check-1">Learning objectives and prerequisite check</a><a href="#conceptual-model-1">Conceptual model</a><a href="#worked-example-1">Worked example</a><a href="#guided-lab-requirements-implementation-and-verification-1">Guided lab: requirements, implementation and verification</a><a href="#troubleshooting-playbook-1">Troubleshooting playbook</a><a href="#interview-questions-with-answers-1">Interview questions with answers</a><a href="#assessment-and-exit-criteria-1">Assessment and exit criteria</a><a href="#chapter-04-arrays-strings-references-and-pointers">Chapter 04 — Arrays, Strings, References and Pointers</a><a href="#learning-objectives-and-prerequisite-check-2">Learning objectives and prerequisite check</a><a href="#conceptual-model-2">Conceptual model</a><a href="#worked-example-2">Worked example</a><a href="#guided-lab-requirements-implementation-and-verification-2">Guided lab: requirements, implementation and verification</a><a href="#troubleshooting-playbook-2">Troubleshooting playbook</a><a href="#interview-questions-with-answers-2">Interview questions with answers</a><a href="#assessment-and-exit-criteria-2">Assessment and exit criteria</a><a href="#chapter-05-program-organization-and-build-fundamentals">Chapter 05 — Program Organization and Build Fundamentals</a><a href="#learning-objectives-and-prerequisite-check-3">Learning objectives and prerequisite check</a><a href="#conceptual-model-3">Conceptual model</a><a href="#worked-example-3">Worked example</a><a href="#guided-lab-requirements-implementation-and-verification-3">Guided lab: requirements, implementation and verification</a><a href="#troubleshooting-playbook-3">Troubleshooting playbook</a><a href="#interview-questions-with-answers-3">Interview questions with answers</a><a href="#assessment-and-exit-criteria-3">Assessment and exit criteria</a></div></aside><article class="book-prose"><p class="source-note">Historical course notes converted into searchable offline HTML. Some content may be a draft; exercises requiring cloud accounts need credentials and may incur costs.</p><h1 id="expanded-edition-c-software-engineering-masterbook-volume-1">Expanded Edition — C++ Software Engineering Masterbook Volume 1</h1>
+<blockquote>
+<p>This expanded edition preserves the original instructional volume and adds targeted workshops. It is a substantial study resource, not a claim that every subject is exhaustively covered or every sample runtime-tested.</p>
+</blockquote>
+<h1 id="modern-c-software-engineering-masterbook">Modern C++ Software Engineering — Masterbook</h1>
+<p><strong>Track:</strong> Beginner → Expert → Production Engineer → Interviews<br/>
+<strong>Language:</strong> C++17 baseline; C++20/23 advanced material<br/>
+<strong>Platform:</strong> Debian 12/Linux; Windows differences noted when relevant<br/>
+<strong>Approach:</strong> Concept → internal mechanism → code → build/run → troubleshooting → exercises → interview questions.</p>
+<blockquote>
+<p>This is Volume 1 of an evolving chapter-by-chapter masterbook. The complete curriculum is indexed below. Only Chapter 1 is fully authored in this initial release; later chapters are planned, not falsely represented as finished.</p>
+</blockquote>
+<h2 id="table-of-contents-curriculum">Table of contents / curriculum</h2>
+<h3 id="phase-i-foundations">Phase I — Foundations</h3>
+<ol>
+<li>From Source Code to Running Program <strong>[included]</strong></li>
+<li>Variables, Fundamental Types, Expressions, Conversions</li>
+<li>Branching, Loops, Functions, Scope</li>
+<li>Arrays, Strings, References, Pointers</li>
+<li>Headers, Translation Units, Namespaces, Linkage</li>
+</ol>
+<h3 id="phase-ii-memory-and-oop">Phase II — Memory and OOP</h3>
+<ol start="6">
+<li>Memory Layout, Lifetime, Ownership, Undefined Behavior</li>
+<li>Classes, Constructors, Destructors, RAII</li>
+<li>Inheritance, Virtual Dispatch, Polymorphism</li>
+<li>Operator Overloading, Copy/Move Semantics, Rule of Five/Zero</li>
+<li>Exceptions and Exception Safety</li>
+</ol>
+<h3 id="phase-iii-generic-and-modern-c">Phase III — Generic and Modern C++</h3>
+<ol start="11">
+<li>Templates, Specialization, Variadics</li>
+<li>STL Containers, Iterators, Algorithms</li>
+<li>Lambdas, Functional Programming, Ranges</li>
+<li>Smart Pointers, optional, variant, expected</li>
+<li>Concepts, constexpr, Modules, Coroutines</li>
+</ol>
+<h3 id="phase-iv-algorithms-and-systems">Phase IV — Algorithms and Systems</h3>
+<ol start="16">
+<li>Complexity and Problem Solving</li>
+<li>Linear Data Structures and Hashing</li>
+<li>Trees, Graphs, Heaps</li>
+<li>Recursion, Backtracking, Greedy, Dynamic Programming</li>
+<li>Linux Processes, Threads, Files, ELF, ABI</li>
+<li>CPU Cache, Alignment, Profiling and Performance</li>
+</ol>
+<h3 id="phase-v-concurrency-and-engineering">Phase V — Concurrency and Engineering</h3>
+<ol start="22">
+<li>Threads, Mutexes, Condition Variables</li>
+<li>Atomics, Memory Model, Lock-Free Caveats</li>
+<li>Thread Pools, Futures, Async I/O</li>
+<li>CMake, Dependencies, Package Management</li>
+<li>Testing, Sanitizers, Debuggers, Static Analysis</li>
+<li>CI/CD, Git, Documentation, Secure Coding</li>
+</ol>
+<h3 id="phase-vi-production-and-interview">Phase VI — Production and Interview</h3>
+<ol start="28">
+<li>TCP/UDP Networking and HTTP Services</li>
+<li>PostgreSQL/SQLite and Persistence</li>
+<li>Software Design Patterns and Architecture</li>
+<li>High-Performance and Reliable Systems</li>
+<li>Production Capstone: Concurrent Service</li>
+<li>DSA Interview Drills and C++ Internals</li>
+<li>Low-Level Design, Systems Design, Behavioral Interviews</li>
+</ol>
+<h2 id="chapter-completion-standard">Chapter completion standard</h2>
+<p>Each chapter should contain: learning objectives; theory and mechanisms; annotated runnable examples; compilation commands; expected output; at least two labs; failure analysis; review questions; interview questions and solutions; a mini-project or checkpoint. Future chapter releases should be appended to this masterbook.</p>
+<hr/>
+<h1 id="chapter-1-from-source-code-to-running-program">Chapter 1 — From Source Code to Running Program</h1>
+<h2 id="outcomes">Outcomes</h2>
+<p>After this chapter you can describe the C++ toolchain, build a C++ program on Debian 12, distinguish compile errors from link errors and runtime failures, inspect the compilation pipeline, use basic GDB, and answer entry-level interview questions.</p>
+<h2 id="1-1-what-is-c">1.1 What is C++?</h2>
+<p>C++ is a compiled, statically typed, general-purpose programming language supporting procedural, object-oriented and generic styles. It is used in systems software, games, browsers, low-latency services, databases and embedded software. C++ gives explicit control over object lifetime and resource management, but that flexibility makes undefined behavior and lifetime mistakes important concerns.</p>
+<p>A <strong>source file</strong> (<code>.cpp</code>) contains text that a compiler translates. A <strong>header</strong> (<code>.h</code>, <code>.hpp</code>) typically exposes declarations. An <strong>object file</strong> (<code>.o</code>) contains machine code and metadata that is not yet necessarily a complete executable. A <strong>linker</strong> combines object files and libraries, resolving external symbols. The <strong>operating-system loader</strong> maps executable segments and needed shared libraries into a process and transfers control to startup code, which calls <code>main</code>.</p>
+<h2 id="1-2-prepare-debian-12">1.2 Prepare Debian 12</h2>
+<p>Run these commands in your <strong>terminal</strong>, not inside C++ source code:</p>
+<pre><code class="language-bash">sudo apt update
+sudo apt install -y build-essential gdb cmake ninja-build binutils file
+c++ --version
+gdb --version
+</code></pre>
+<p><code>build-essential</code> supplies the compiler toolchain and build essentials. <code>gdb</code> is the debugger; <code>binutils</code> supplies tools such as <code>nm</code>, <code>objdump</code> and <code>readelf</code>. Package versions differ by system; the baseline examples require only C++17.</p>
+<h2 id="1-3-first-program">1.3 First program</h2>
+<p>Create <code>main.cpp</code>:</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+
+int main() {
+    std::cout &lt;&lt; "Hello, C++ Engineer!\n";
+    return 0;
+}
+</code></pre>
+<p><strong>Line by line</strong></p>
+<ol>
+<li><code>#include &lt;iostream&gt;</code> requests declarations for standard stream I/O; preprocessing handles the include directive.</li>
+<li><code>int main()</code> defines the hosted program's entry-point function, returning an integer status.</li>
+<li><code>{</code> begins the function body.</li>
+<li><code>std::cout</code> is the standard output stream; <code>&lt;&lt;</code> inserts text into it. <code>\n</code> is a newline character.</li>
+<li><code>return 0;</code> indicates successful termination. Reaching the end of <code>main</code> also returns zero.</li>
+<li><code>}</code> ends the function.</li>
+</ol>
+<p>Compile and run:</p>
+<pre><code class="language-bash">g++ -std=c++17 -Wall -Wextra -Wpedantic -g -O0 main.cpp -o hello
+./hello
+printf 'Exit status: %s\n' "$?"
+</code></pre>
+<p>Expected:</p>
+<pre><code class="language-text">Hello, C++ Engineer!
+Exit status: 0
+</code></pre>
+<p>Flags: <code>-std=c++17</code> selects a standard; <code>-Wall -Wextra -Wpedantic</code> enable useful diagnostics; <code>-g</code> includes debug information; <code>-O0</code> disables optimization for easier introductory debugging; <code>-o hello</code> sets the output filename.</p>
+<h2 id="1-4-the-compilation-pipeline">1.4 The compilation pipeline</h2>
+<pre><code class="language-text">main.cpp
+   |
+   v
+Preprocessor (includes, macros, conditional compilation)
+   |
+   v
+Compiler (C++ semantics, optimization, assembly generation)
+   |
+   v
+Assembler (machine code and relocations in main.o)
+   |
+   v
+Linker (symbols, libraries, executable)
+   |
+   v
+Linux ELF loader + runtime initialization
+   |
+   v
+main() -&gt; output -&gt; process exit
+</code></pre>
+<p>Observe intermediate outputs:</p>
+<pre><code class="language-bash">g++ -std=c++17 -E main.cpp -o main.ii
+g++ -std=c++17 -S main.cpp -o main.s
+g++ -std=c++17 -c main.cpp -o main.o
+g++ main.o -o hello
+file hello
+readelf -h hello | head -n 20
+nm -C main.o | grep main
+</code></pre>
+<p>The preprocessed file is large because the standard header expands into many declarations. Assembly is architecture/compiler dependent. <code>readelf</code> describes the ELF header; <code>nm -C</code> displays demangled symbols. The linker may produce a position-independent executable by default depending on distribution configuration.</p>
+<h2 id="1-5-compile-vs-link-vs-runtime-error">1.5 Compile vs link vs runtime error</h2>
+<p><strong>Compile error:</strong> malformed C++:</p>
+<pre><code class="language-cpp">int main() {
+    int x = ;
+}
+</code></pre>
+<p>The compiler rejects invalid syntax before producing a usable object file.</p>
+<p><strong>Link error:</strong> a function is declared but never defined:</p>
+<pre><code class="language-cpp">int calculate();
+int main() { return calculate(); }
+</code></pre>
+<p>The compiler can compile this translation unit, but the linker typically reports an undefined reference to <code>calculate()</code>.</p>
+<p><strong>Runtime error:</strong> code builds but fails during execution. Examples include an uncaught exception or an invalid memory access. Importantly, undefined behavior does <strong>not</strong> guarantee a crash; it can produce unpredictable behavior.</p>
+<h2 id="1-6-debug-with-gdb">1.6 Debug with GDB</h2>
+<p>Create <code>debug.cpp</code>:</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+int square(int x) {
+    int result = x * x;
+    return result;
+}
+int main() {
+    int number = 7;
+    std::cout &lt;&lt; square(number) &lt;&lt; '\n';
+}
+</code></pre>
+<p>Build and start GDB:</p>
+<pre><code class="language-bash">g++ -std=c++17 -g -O0 -Wall -Wextra debug.cpp -o debug
+gdb ./debug
+</code></pre>
+<p>At the <code>(gdb)</code> prompt:</p>
+<pre><code class="language-text">break square
+run
+info args
+next
+print result
+backtrace
+continue
+quit
+</code></pre>
+<p>A breakpoint pauses execution in <code>square</code>. <code>info args</code> shows parameters; <code>next</code> executes the next source line without entering called functions; <code>print result</code> evaluates a variable after assignment; <code>backtrace</code> displays stack frames.</p>
+<h2 id="1-7-build-and-inspect-a-two-file-program">1.7 Build and inspect a two-file program</h2>
+<p><code>math_ops.hpp</code>:</p>
+<pre><code class="language-cpp">#pragma once
+int add(int a, int b);
+</code></pre>
+<p><code>math_ops.cpp</code>:</p>
+<pre><code class="language-cpp">#include "math_ops.hpp"
+int add(int a, int b) { return a + b; }
+</code></pre>
+<p><code>app.cpp</code>:</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include "math_ops.hpp"
+int main() {
+    std::cout &lt;&lt; add(2, 3) &lt;&lt; '\n';
+}
+</code></pre>
+<p>Build:</p>
+<pre><code class="language-bash">g++ -std=c++17 -Wall -Wextra -Wpedantic -c math_ops.cpp -o math_ops.o
+g++ -std=c++17 -Wall -Wextra -Wpedantic -c app.cpp -o app.o
+g++ math_ops.o app.o -o app
+./app
+</code></pre>
+<p>Expected output: <code>5</code>. Remove <code>math_ops.o</code> from the final link command and observe the undefined-reference error. This is a controlled demonstration of symbol resolution.</p>
+<h2 id="1-8-troubleshooting-playbook">1.8 Troubleshooting playbook</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely cause</th>
+<th>Check</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>g++: command not found</code></td>
+<td>compiler missing</td>
+<td><code>command -v g++</code></td>
+<td>install <code>build-essential</code></td>
+</tr>
+<tr>
+<td><code>undefined reference</code></td>
+<td>definition/object/library missing</td>
+<td>examine link command; <code>nm -C</code></td>
+<td>link the defining object/library</td>
+</tr>
+<tr>
+<td><code>Permission denied</code> on execution</td>
+<td>file permissions or <code>noexec</code> mount</td>
+<td><code>ls -l hello</code>; <code>findmnt</code></td>
+<td>check executable bit/mount</td>
+</tr>
+<tr>
+<td>Segmentation fault</td>
+<td>invalid memory access is possible</td>
+<td>GDB backtrace; sanitizer</td>
+<td>fix lifetime/index/pointer error</td>
+</tr>
+<tr>
+<td>Header not found</td>
+<td>incorrect include path</td>
+<td><code>ls</code> and include directories</td>
+<td>use <code>-Ipath</code> or fix include</td>
+</tr>
+<tr>
+<td>Old output after edits</td>
+<td>stale executable/build</td>
+<td>timestamps and build output</td>
+<td>rebuild and rerun</td>
+</tr>
+</tbody>
+</table>
+<h2 id="1-9-practical-labs">1.9 Practical labs</h2>
+<h3 id="lab-a-understand-build-stages">Lab A — Understand build stages</h3>
+<ol>
+<li>Compile <code>main.cpp</code> to <code>.ii</code>, <code>.s</code>, <code>.o</code>, and executable using commands in §1.4.</li>
+<li>Inspect sizes using <code>wc -c main.cpp main.ii main.s main.o hello</code>.</li>
+<li>Record which stage resolves external symbols.</li>
+<li>Change the greeting and repeat; note which artifacts changed.</li>
+</ol>
+<p><strong>Acceptance criteria:</strong> you can identify each artifact, explain why <code>.ii</code> is large, and successfully run the executable.</p>
+<h3 id="lab-b-diagnose-a-link-failure">Lab B — Diagnose a link failure</h3>
+<ol>
+<li>Build the three files from §1.7.</li>
+<li>Link only <code>app.o</code>; capture the linker diagnostic.</li>
+<li>Inspect both objects with <code>nm -C</code>.</li>
+<li>Relink both objects and verify the output is <code>5</code>.</li>
+</ol>
+<p><strong>Acceptance criteria:</strong> you can explain declaration vs definition and why compilation succeeded but linking failed.</p>
+<h3 id="lab-c-debug-a-calculation">Lab C — Debug a calculation</h3>
+<ol>
+<li>Compile <code>debug.cpp</code> with <code>-g -O0</code>.</li>
+<li>Break in <code>square</code>, inspect <code>x</code>, step to the assignment, inspect <code>result</code>.</li>
+<li>Change input from 7 to 9 and predict the output before running.</li>
+</ol>
+<p><strong>Acceptance criteria:</strong> you can use <code>break</code>, <code>run</code>, <code>next</code>, <code>print</code>, and <code>backtrace</code> without copying commands blindly.</p>
+<h2 id="1-10-interview-questions-and-model-answers">1.10 Interview questions and model answers</h2>
+<p><strong>Q1. Is C++ compiled or interpreted?</strong><br/>
+Typically compiled to native machine code. Other execution models exist, but GCC/Clang/MSVC native compilation is the standard production workflow.</p>
+<p><strong>Q2. What is the difference between a compiler and a linker?</strong><br/>
+A compiler processes a translation unit and produces object code; a linker combines objects/libraries and resolves symbols to create a loadable output.</p>
+<p><strong>Q3. What is a translation unit?</strong><br/>
+The source file after preprocessing, including text introduced by headers.</p>
+<p><strong>Q4. Why use header files?</strong><br/>
+To expose reusable declarations and interfaces across translation units. Definitions placed in headers need appropriate rules such as <code>inline</code> or templates to avoid violating the One Definition Rule.</p>
+<p><strong>Q5. What does <code>return 0</code> in <code>main</code> mean?</strong><br/>
+Successful program termination in a hosted C++ environment.</p>
+<p><strong>Q6. What is undefined behavior?</strong><br/>
+Program behavior for which the C++ standard imposes no requirements; the result is not necessarily a crash or diagnostic.</p>
+<p><strong>Q7. Why compile with <code>-g</code>?</strong><br/>
+To include debugging metadata so tools can associate machine instructions with source lines and symbols.</p>
+<p><strong>Q8. What does <code>-O0</code> do?</strong><br/>
+Requests no optimization; this generally makes source-level debugging easier but is not a production performance choice.</p>
+<p><strong>Q9. What is ELF?</strong><br/>
+The Executable and Linkable Format used for object files, executables and shared objects on many Unix-like systems, including Linux.</p>
+<p><strong>Q10. What is the role of the operating system loader?</strong><br/>
+It maps the executable and required runtime components into a process, arranges execution prerequisites, and transfers control to program startup code.</p>
+<h2 id="1-11-assessment">1.11 Assessment</h2>
+<p>Answer without looking up notes:</p>
+<ol>
+<li>Draw the six major stages from <code>.cpp</code> to running program.</li>
+<li>Explain why a missing definition is a link error, not necessarily a compile error.</li>
+<li>Explain the difference between <code>-c</code>, <code>-S</code>, and <code>-E</code>.</li>
+<li>Write a program with a function in a separate <code>.cpp</code> and its declaration in <code>.hpp</code>.</li>
+<li>Debug that function using a breakpoint and print its local variable.</li>
+</ol>
+<p><strong>Pass standard:</strong> complete all three labs and correctly explain at least four of five assessment items.</p>
+<h2 id="1-12-further-reading">1.12 Further reading</h2>
+<ul>
+<li>C++ reference: <a href="https://en.cppreference.com/w/cpp">https://en.cppreference.com/w/cpp</a></li>
+<li>GCC documentation: <a href="https://gcc.gnu.org/onlinedocs/">https://gcc.gnu.org/onlinedocs/</a></li>
+<li>GDB manual: <a href="https://sourceware.org/gdb/current/onlinedocs/gdb.html">https://sourceware.org/gdb/current/onlinedocs/gdb.html</a></li>
+<li>CMake tutorial: <a href="https://cmake.org/cmake/help/latest/guide/tutorial/index.html">https://cmake.org/cmake/help/latest/guide/tutorial/index.html</a></li>
+</ul>
+<h2 id="glossary">Glossary</h2>
+<p><strong>ABI:</strong> conventions governing binary compatibility, calling, and layout.<br/>
+<strong>Compiler:</strong> translates C++ translation units into lower-level output.<br/>
+<strong>ELF:</strong> Linux executable/object file format.<br/>
+<strong>Linker:</strong> combines compiled objects and resolves symbols.<br/>
+<strong>Loader:</strong> prepares executable images for process execution.<br/>
+<strong>Object file:</strong> compiled code and metadata awaiting linking or further processing.<br/>
+<strong>Translation unit:</strong> preprocessed source compiled as a unit.<br/>
+<strong>Undefined behavior:</strong> behavior with no requirements imposed by the C++ standard.</p>
+<h2 id="chapter-1-index">Chapter 1 index</h2>
+<p>ABI: §1.1, Glossary; compiler: §1.1–1.5; debugger: §1.6; ELF: §1.4; headers: §1.7; linker: §1.4–1.5, §1.7; Linux: §1.2; object files: §1.4; troubleshooting: §1.8.</p>
+<hr/>
+<h1 id="foundation-chapters-2-5-full-learning-units">Foundation Chapters 2–5 — Full Learning Units</h1>
+<h1 id="chapter-02-variables-types-expressions-and-conversions">Chapter 02 — Variables, Types, Expressions and Conversions</h1>
+<h2 id="learning-objectives-and-prerequisite-check">Learning objectives and prerequisite check</h2>
+<p>By the end, explain the language rules, write a small application without copying a tutorial, use compiler diagnostics, and diagnose at least one failure. Prerequisites: Chapter 1.</p>
+<h2 id="conceptual-model">Conceptual model</h2>
+<p>C++ source describes operations on objects with types and lifetimes. The compiler checks syntax and many type constraints, but cannot prove that all runtime inputs are valid. The engineer is responsible for validating external inputs and preserving invariants.</p>
+<h3 id="detailed-explanations">Detailed explanations</h3>
+<p><strong>Initialization vs assignment.</strong> <code>int x{{}};</code> value-initializes to zero; <code>int x;</code> as an uninitialized automatic local has an indeterminate value and must not be read. <code>const</code> prevents modifying through that name, while <code>constexpr</code> requires a compile-time constant expression in its defining context. <code>auto</code> deduces types but does not imply dynamic typing.</p>
+<p><strong>Integer arithmetic.</strong> Signed overflow is undefined behavior; unsigned arithmetic wraps modulo 2^N. Mixing signed and unsigned values can change comparison meaning through usual arithmetic conversions. Prefer range checks before multiplication and use explicit types such as <code>std::int64_t</code> when exact widths are needed.</p>
+<p><strong>Floating point.</strong> Binary floating-point cannot represent many decimal fractions exactly. Compare with an application-specific tolerance, not a universal magic epsilon. NaN is unequal to itself; infinity can result from some floating operations.</p>
+<p><strong>Conversions.</strong> Braced initialization rejects many narrowing conversions. <code>static_cast</code> makes intended conversions explicit but does not make an out-of-range value safe. Avoid C-style casts in new code.</p>
+<h2 id="worked-example">Worked example</h2>
+<p>The following is an instructional example. Read each statement and identify its input, output, state changes, and failure path.</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;limits&gt;
+#include &lt;string&gt;
+int main() {
+    long long value{};
+    std::cout &lt;&lt; "Enter a nonnegative integer: ";
+    if (!(std::cin &gt;&gt; value) || value &lt; 0 || value &gt; 1000000) {
+        std::cerr &lt;&lt; "Invalid input\n";
+        return 1;
+    }
+    std::cout &lt;&lt; "Square: " &lt;&lt; value * value &lt;&lt; "\n";
+}
+</code></pre>
+<p><strong>Expected behavior:</strong> Input 12 → Square: 144; input -1 → Invalid input.</p>
+<h3 id="compile-and-run-on-debian-12">Compile and run on Debian 12</h3>
+<pre><code class="language-bash">sudo apt update &amp;&amp; sudo apt install -y g++ gdb cmake ninja-build
+# For a single-file example saved as main.cpp:
+g++ -std=c++17 -Wall -Wextra -Wpedantic -g -O0 main.cpp -o app
+./app
+# Diagnose memory errors in suitable examples:
+g++ -std=c++17 -g -O1 -fsanitize=address,undefined -fno-omit-frame-pointer main.cpp -o app_san
+</code></pre>
+<p>For Chapter 5, first split the labeled source sections into three files and compile with <code>g++ -std=c++17 -Wall -Wextra -Wpedantic main.cpp math.cpp -o app</code>.</p>
+<h2 id="guided-lab-requirements-implementation-and-verification">Guided lab: requirements, implementation and verification</h2>
+<p><strong>Assignment:</strong> Write a numeric input validator that rejects out-of-range values and prints diagnostic messages.</p>
+<ol>
+<li>Write the requirements as observable input/output examples.</li>
+<li>Identify types, ownership, error cases, and any invariants.</li>
+<li>Implement the smallest working solution; compile with all warnings.</li>
+<li>Run one normal case, one boundary case, and one invalid-input case.</li>
+<li>Use <code>gdb ./app</code>, <code>break main</code>, <code>run</code>, <code>next</code>, and <code>print</code> to inspect values.</li>
+<li>Refactor duplicated logic into a function; repeat all tests.</li>
+</ol>
+<h2 id="troubleshooting-playbook">Troubleshooting playbook</h2>
+<p><strong>Symptoms:</strong> signed overflow, narrowing, floating-point comparisons, integral promotions. Start by reproducing the failure with minimal input. Record compiler version and exact command. Distinguish compilation errors from runtime failures. Enable warnings and sanitizers where relevant; do not "fix" symptoms by suppressing diagnostics. Verify the repaired behavior with a regression test.</p>
+<h2 id="interview-questions-with-answers">Interview questions with answers</h2>
+<p><strong>Q: Why prefer brace initialization?</strong> A: It offers consistent initialization syntax and prevents many narrowing conversions.</p>
+<p><strong>Q: What is undefined behavior?</strong> A: A program execution for which the language standard imposes no requirements; tests passing does not make it valid.</p>
+<p><strong>Q: What is the difference between compile and link?</strong> A: Compilation translates a translation unit to object code; linking resolves symbols and produces the executable or library.</p>
+<p><strong>Q: How do you investigate a crash?</strong> A: Reproduce it, preserve exact inputs, build with symbols, inspect the stack in GDB, use appropriate sanitizers, isolate the root cause, and add a regression test.</p>
+<h2 id="assessment-and-exit-criteria">Assessment and exit criteria</h2>
+<p>Explain the concepts without notes, complete the lab, demonstrate a debugger session, and defend one design decision. If you cannot explain the failure path or the object lifetimes, revisit the chapter.</p>
+<h1 id="chapter-03-control-flow-functions-and-scope">Chapter 03 — Control Flow, Functions and Scope</h1>
+<h2 id="learning-objectives-and-prerequisite-check-1">Learning objectives and prerequisite check</h2>
+<p>By the end, explain the language rules, write a small application without copying a tutorial, use compiler diagnostics, and diagnose at least one failure. Prerequisites: Chapter 2.</p>
+<h2 id="conceptual-model-1">Conceptual model</h2>
+<p>C++ source describes operations on objects with types and lifetimes. The compiler checks syntax and many type constraints, but cannot prove that all runtime inputs are valid. The engineer is responsible for validating external inputs and preserving invariants.</p>
+<h3 id="detailed-explanations-1">Detailed explanations</h3>
+<p><strong>Branching.</strong> <code>if</code> handles arbitrary Boolean expressions; <code>switch</code> handles integral/enum selections. A <code>switch</code> branch can fall through if no <code>break</code>, <code>return</code>, or other control transfer occurs; use <code>[[fallthrough]]</code> when intentional.</p>
+<p><strong>Loops.</strong> <code>for</code> expresses a bounded iteration, <code>while</code> repeats while a condition holds, and <code>do</code> always executes at least once. Every loop needs a termination argument. Prefer range-for for element traversal.</p>
+<p><strong>Functions.</strong> Declarations communicate an interface; definitions provide an implementation. Overload resolution considers argument types and conversions. Passing a large immutable object by <code>const T&amp;</code> avoids a copy; small scalar values are usually simplest by value. Recursion consumes call-stack space and must have a base case.</p>
+<p><strong>Scope and linkage.</strong> Local variables are visible within their block; namespace-scope names may have external or internal linkage. Use namespaces to avoid collisions and do not put <code>using namespace std;</code> in public headers.</p>
+<h2 id="worked-example-1">Worked example</h2>
+<p>The following is an instructional example. Read each statement and identify its input, output, state changes, and failure path.</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+int add(int a, int b) { return a + b; }
+int main() {
+    int a{}, b{};
+    if (!(std::cin &gt;&gt; a &gt;&gt; b)) { std::cerr &lt;&lt; "Invalid integers\n"; return 1; }
+    std::cout &lt;&lt; add(a, b) &lt;&lt; '\n';
+}
+</code></pre>
+<p><strong>Expected behavior:</strong> Input 3 7 → 10.</p>
+<h3 id="compile-and-run-on-debian-12-1">Compile and run on Debian 12</h3>
+<pre><code class="language-bash">sudo apt update &amp;&amp; sudo apt install -y g++ gdb cmake ninja-build
+# For a single-file example saved as main.cpp:
+g++ -std=c++17 -Wall -Wextra -Wpedantic -g -O0 main.cpp -o app
+./app
+# Diagnose memory errors in suitable examples:
+g++ -std=c++17 -g -O1 -fsanitize=address,undefined -fno-omit-frame-pointer main.cpp -o app_san
+</code></pre>
+<p>For Chapter 5, first split the labeled source sections into three files and compile with <code>g++ -std=c++17 -Wall -Wextra -Wpedantic main.cpp math.cpp -o app</code>.</p>
+<h2 id="guided-lab-requirements-implementation-and-verification-1">Guided lab: requirements, implementation and verification</h2>
+<p><strong>Assignment:</strong> Implement a menu-driven calculator with validated input and separate functions.</p>
+<ol>
+<li>Write the requirements as observable input/output examples.</li>
+<li>Identify types, ownership, error cases, and any invariants.</li>
+<li>Implement the smallest working solution; compile with all warnings.</li>
+<li>Run one normal case, one boundary case, and one invalid-input case.</li>
+<li>Use <code>gdb ./app</code>, <code>break main</code>, <code>run</code>, <code>next</code>, and <code>print</code> to inspect values.</li>
+<li>Refactor duplicated logic into a function; repeat all tests.</li>
+</ol>
+<h2 id="troubleshooting-playbook-1">Troubleshooting playbook</h2>
+<p><strong>Symptoms:</strong> fallthrough, recursion depth, overload resolution, scope shadowing. Start by reproducing the failure with minimal input. Record compiler version and exact command. Distinguish compilation errors from runtime failures. Enable warnings and sanitizers where relevant; do not "fix" symptoms by suppressing diagnostics. Verify the repaired behavior with a regression test.</p>
+<h2 id="interview-questions-with-answers-1">Interview questions with answers</h2>
+<p><strong>Q: Why prefer brace initialization?</strong> A: It offers consistent initialization syntax and prevents many narrowing conversions.</p>
+<p><strong>Q: What is undefined behavior?</strong> A: A program execution for which the language standard imposes no requirements; tests passing does not make it valid.</p>
+<p><strong>Q: What is the difference between compile and link?</strong> A: Compilation translates a translation unit to object code; linking resolves symbols and produces the executable or library.</p>
+<p><strong>Q: How do you investigate a crash?</strong> A: Reproduce it, preserve exact inputs, build with symbols, inspect the stack in GDB, use appropriate sanitizers, isolate the root cause, and add a regression test.</p>
+<h2 id="assessment-and-exit-criteria-1">Assessment and exit criteria</h2>
+<p>Explain the concepts without notes, complete the lab, demonstrate a debugger session, and defend one design decision. If you cannot explain the failure path or the object lifetimes, revisit the chapter.</p>
+<h1 id="chapter-04-arrays-strings-references-and-pointers">Chapter 04 — Arrays, Strings, References and Pointers</h1>
+<h2 id="learning-objectives-and-prerequisite-check-2">Learning objectives and prerequisite check</h2>
+<p>By the end, explain the language rules, write a small application without copying a tutorial, use compiler diagnostics, and diagnose at least one failure. Prerequisites: Chapter 3.</p>
+<h2 id="conceptual-model-2">Conceptual model</h2>
+<p>C++ source describes operations on objects with types and lifetimes. The compiler checks syntax and many type constraints, but cannot prove that all runtime inputs are valid. The engineer is responsible for validating external inputs and preserving invariants.</p>
+<h3 id="detailed-explanations-2">Detailed explanations</h3>
+<p><strong>Arrays and vectors.</strong> Built-in arrays have fixed extents and can decay to pointers in many expressions. <code>std::array&lt;T,N&gt;</code> retains its size in the type. <code>std::vector&lt;T&gt;</code> owns a dynamically sized contiguous sequence; growth may invalidate pointers, references and iterators.</p>
+<p><strong>Strings.</strong> <code>std::string</code> owns characters and manages memory. <code>std::string_view</code> borrows characters and must not outlive the backing storage. <code>std::getline</code> reads a whole line; <code>operator&gt;&gt;</code> reads whitespace-delimited tokens.</p>
+<p><strong>References and pointers.</strong> A reference aliases an object; a pointer can be null and can be reseated. Dereferencing null, an invalid address, or an object past its lifetime is undefined behavior. Prefer references for required parameters, pointers for optional access, and owning containers/smart pointers for ownership.</p>
+<p><strong>Bounds.</strong> <code>v.at(i)</code> checks bounds and throws; <code>v[i]</code> requires the caller to ensure the index is valid. A half-open range <code>[begin,end)</code> simplifies traversal and avoids many off-by-one bugs.</p>
+<h2 id="worked-example-2">Worked example</h2>
+<p>The following is an instructional example. Read each statement and identify its input, output, state changes, and failure path.</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;sstream&gt;
+#include &lt;string&gt;
+#include &lt;unordered_map&gt;
+int main() {
+    std::string line, word;
+    std::getline(std::cin, line);
+    std::istringstream in(line);
+    std::unordered_map&lt;std::string, int&gt; counts;
+    while (in &gt;&gt; word) ++counts[word];
+    for (const auto&amp; entry : counts)
+        std::cout &lt;&lt; entry.first &lt;&lt; ": " &lt;&lt; entry.second &lt;&lt; '\n';
+}
+</code></pre>
+<p><strong>Expected behavior:</strong> Input cat dog cat → counts cat: 2 and dog: 1 (iteration order unspecified).</p>
+<h3 id="compile-and-run-on-debian-12-2">Compile and run on Debian 12</h3>
+<pre><code class="language-bash">sudo apt update &amp;&amp; sudo apt install -y g++ gdb cmake ninja-build
+# For a single-file example saved as main.cpp:
+g++ -std=c++17 -Wall -Wextra -Wpedantic -g -O0 main.cpp -o app
+./app
+# Diagnose memory errors in suitable examples:
+g++ -std=c++17 -g -O1 -fsanitize=address,undefined -fno-omit-frame-pointer main.cpp -o app_san
+</code></pre>
+<p>For Chapter 5, first split the labeled source sections into three files and compile with <code>g++ -std=c++17 -Wall -Wextra -Wpedantic main.cpp math.cpp -o app</code>.</p>
+<h2 id="guided-lab-requirements-implementation-and-verification-2">Guided lab: requirements, implementation and verification</h2>
+<p><strong>Assignment:</strong> Write a word-frequency analyzer using std::string and std::vector.</p>
+<ol>
+<li>Write the requirements as observable input/output examples.</li>
+<li>Identify types, ownership, error cases, and any invariants.</li>
+<li>Implement the smallest working solution; compile with all warnings.</li>
+<li>Run one normal case, one boundary case, and one invalid-input case.</li>
+<li>Use <code>gdb ./app</code>, <code>break main</code>, <code>run</code>, <code>next</code>, and <code>print</code> to inspect values.</li>
+<li>Refactor duplicated logic into a function; repeat all tests.</li>
+</ol>
+<h2 id="troubleshooting-playbook-2">Troubleshooting playbook</h2>
+<p><strong>Symptoms:</strong> iterator invalidation, dangling views, buffer overruns, off-by-one errors. Start by reproducing the failure with minimal input. Record compiler version and exact command. Distinguish compilation errors from runtime failures. Enable warnings and sanitizers where relevant; do not "fix" symptoms by suppressing diagnostics. Verify the repaired behavior with a regression test.</p>
+<h2 id="interview-questions-with-answers-2">Interview questions with answers</h2>
+<p><strong>Q: Why prefer brace initialization?</strong> A: It offers consistent initialization syntax and prevents many narrowing conversions.</p>
+<p><strong>Q: What is undefined behavior?</strong> A: A program execution for which the language standard imposes no requirements; tests passing does not make it valid.</p>
+<p><strong>Q: What is the difference between compile and link?</strong> A: Compilation translates a translation unit to object code; linking resolves symbols and produces the executable or library.</p>
+<p><strong>Q: How do you investigate a crash?</strong> A: Reproduce it, preserve exact inputs, build with symbols, inspect the stack in GDB, use appropriate sanitizers, isolate the root cause, and add a regression test.</p>
+<h2 id="assessment-and-exit-criteria-2">Assessment and exit criteria</h2>
+<p>Explain the concepts without notes, complete the lab, demonstrate a debugger session, and defend one design decision. If you cannot explain the failure path or the object lifetimes, revisit the chapter.</p>
+<h1 id="chapter-05-program-organization-and-build-fundamentals">Chapter 05 — Program Organization and Build Fundamentals</h1>
+<h2 id="learning-objectives-and-prerequisite-check-3">Learning objectives and prerequisite check</h2>
+<p>By the end, explain the language rules, write a small application without copying a tutorial, use compiler diagnostics, and diagnose at least one failure. Prerequisites: Chapter 4.</p>
+<h2 id="conceptual-model-3">Conceptual model</h2>
+<p>C++ source describes operations on objects with types and lifetimes. The compiler checks syntax and many type constraints, but cannot prove that all runtime inputs are valid. The engineer is responsible for validating external inputs and preserving invariants.</p>
+<h3 id="detailed-explanations-3">Detailed explanations</h3>
+<p><strong>Translation units.</strong> Each <code>.cpp</code> file is preprocessed and compiled independently. Headers provide declarations and templates; source files provide ordinary function definitions. The linker resolves references to external symbols.</p>
+<p><strong>One-definition rule.</strong> Non-inline functions with external linkage generally need one definition in the program. A non-inline function defined in a header and included in multiple <code>.cpp</code> files can cause duplicate symbol errors. Include guards or <code>#pragma once</code> prevent duplicate inclusion within a translation unit, not ODR violations across translation units.</p>
+<p><strong>CMake.</strong> Prefer target-oriented commands (<code>add_library</code>, <code>target_include_directories</code>, <code>target_compile_features</code>) rather than global flags. Keep build output outside source directories. Tests should exercise public interfaces, not private implementation details.</p>
+<h2 id="worked-example-3">Worked example</h2>
+<p>The following is an instructional example. Read each statement and identify its input, output, state changes, and failure path.</p>
+<pre><code class="language-cpp">// math.hpp
+#pragma once
+int square(int n);
+
+// math.cpp
+#include "math.hpp"
+int square(int n) { return n * n; }
+
+// main.cpp
+#include &lt;iostream&gt;
+#include "math.hpp"
+int main() { std::cout &lt;&lt; square(5) &lt;&lt; '\n'; }
+</code></pre>
+<p><strong>Expected behavior:</strong> Output 25. Separate the three labeled sections into their respective files.</p>
+<h3 id="compile-and-run-on-debian-12-3">Compile and run on Debian 12</h3>
+<pre><code class="language-bash">sudo apt update &amp;&amp; sudo apt install -y g++ gdb cmake ninja-build
+# For a single-file example saved as main.cpp:
+g++ -std=c++17 -Wall -Wextra -Wpedantic -g -O0 main.cpp -o app
+./app
+# Diagnose memory errors in suitable examples:
+g++ -std=c++17 -g -O1 -fsanitize=address,undefined -fno-omit-frame-pointer main.cpp -o app_san
+</code></pre>
+<p>For Chapter 5, first split the labeled source sections into three files and compile with <code>g++ -std=c++17 -Wall -Wextra -Wpedantic main.cpp math.cpp -o app</code>.</p>
+<h2 id="guided-lab-requirements-implementation-and-verification-3">Guided lab: requirements, implementation and verification</h2>
+<p><strong>Assignment:</strong> Create a multi-file math library with public headers and a CMake executable.</p>
+<ol>
+<li>Write the requirements as observable input/output examples.</li>
+<li>Identify types, ownership, error cases, and any invariants.</li>
+<li>Implement the smallest working solution; compile with all warnings.</li>
+<li>Run one normal case, one boundary case, and one invalid-input case.</li>
+<li>Use <code>gdb ./app</code>, <code>break main</code>, <code>run</code>, <code>next</code>, and <code>print</code> to inspect values.</li>
+<li>Refactor duplicated logic into a function; repeat all tests.</li>
+</ol>
+<h2 id="troubleshooting-playbook-3">Troubleshooting playbook</h2>
+<p><strong>Symptoms:</strong> ODR violations, missing symbols, header cycles, incremental builds. Start by reproducing the failure with minimal input. Record compiler version and exact command. Distinguish compilation errors from runtime failures. Enable warnings and sanitizers where relevant; do not "fix" symptoms by suppressing diagnostics. Verify the repaired behavior with a regression test.</p>
+<h2 id="interview-questions-with-answers-3">Interview questions with answers</h2>
+<p><strong>Q: Why prefer brace initialization?</strong> A: It offers consistent initialization syntax and prevents many narrowing conversions.</p>
+<p><strong>Q: What is undefined behavior?</strong> A: A program execution for which the language standard imposes no requirements; tests passing does not make it valid.</p>
+<p><strong>Q: What is the difference between compile and link?</strong> A: Compilation translates a translation unit to object code; linking resolves symbols and produces the executable or library.</p>
+<p><strong>Q: How do you investigate a crash?</strong> A: Reproduce it, preserve exact inputs, build with symbols, inspect the stack in GDB, use appropriate sanitizers, isolate the root cause, and add a regression test.</p>
+<h2 id="assessment-and-exit-criteria-3">Assessment and exit criteria</h2>
+<p>Explain the concepts without notes, complete the lab, demonstrate a debugger session, and defend one design decision. If you cannot explain the failure path or the object lifetimes, revisit the chapter.</p>
+</article></main><footer>ARTHA Gurukul · Source material preserved as educational notes</footer></body></html>

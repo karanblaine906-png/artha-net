@@ -1,0 +1,1033 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CampusX DSMP — Hinglish Notes | ARTHA Gurukul</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><a class="brand" href="../index.html">✦ ARTHA GURUKUL</a><nav><a href="../index.html#courses">All Courses</a><a href="index.html">Source Library</a></nav></header><main class="book-layout"><aside class="book-toc"><div class="eyebrow">Original material · offline copy</div><h2>CampusX DSMP — Hinglish Notes</h2><a href="../index.html">⌂ Course library</a><div class="toc"><a href="#campusx-dsmp-2022-23-hinglish-topic-wise-master-notes">CampusX DSMP 2022–23: Hinglish Topic-wise Master Notes</a><a href="#start-here-kaise-use-karna-hai">Start here — kaise use karna hai</a><a href="#visual-diagrams-png-editable-dot">Visual diagrams (PNG + editable DOT)</a><a href="#table-of-contents-playlist-topics-grouped-logically">Table of Contents — playlist topics grouped logically</a><a href="#01-python-foundations-language-ko-zero-se-samjho">01. Python Foundations — language ko zero se samjho</a><a href="#02-data-structures-functions-oop-and-robust-code">02. Data Structures, Functions, OOP and Robust Code</a><a href="#03-numpy-vectorized-numerical-computing">03. NumPy — vectorized numerical computing</a><a href="#04-pandas-tables-joins-groupby-and-time-series">04. Pandas — tables, joins, groupby and time series</a><a href="#05-data-visualization-chart-ka-correct-choice">05. Data Visualization — chart ka correct choice</a><a href="#06-data-gathering-etl-cleaning-and-exploratory-data-analysis">06. Data Gathering, ETL, Cleaning and Exploratory Data Analysis</a><a href="#07-relational-databases-sql-from-beginner-to-window-functions">07. Relational Databases &amp; SQL from Beginner to Window Functions</a><a href="#08-descriptive-statistics-probability-and-distributions">08. Descriptive Statistics, Probability and Distributions</a><a href="#09-inferential-statistics-clt-confidence-intervals-hypothesis-tests">09. Inferential Statistics: CLT, Confidence Intervals, Hypothesis Tests</a><a href="#10-linear-algebra-calculus-for-ml">10. Linear Algebra &amp; Calculus for ML</a><a href="#11-machine-learning-fundamentals-linear-regression">11. Machine Learning Fundamentals &amp; Linear Regression</a><a href="#12-gradient-descent-learning-ka-engine">12. Gradient Descent: learning ka engine</a><a href="#13-regression-diagnostics-regularization-bias-variance">13. Regression Diagnostics, Regularization &amp; Bias-Variance</a><a href="#14-feature-engineering-missing-values-encoding-selection">14. Feature Engineering, Missing Values, Encoding, Selection</a><a href="#15-classification-knn-logistic-regression-naive-bayes-svm">15. Classification: KNN, Logistic Regression, Naive Bayes, SVM</a><a href="#16-decision-trees-random-forest-gradient-boosting-xgboost">16. Decision Trees, Random Forest, Gradient Boosting, XGBoost</a><a href="#17-pca-clustering-dimensionality-reduction">17. PCA, Clustering, Dimensionality Reduction</a><a href="#18-evaluation-cross-validation-metrics-tuning-leakage">18. Evaluation: Cross-Validation, Metrics, Tuning, Leakage</a><a href="#19-real-world-capstone-data-dashboard-model-deployment">19. Real-World Capstone: Data → Dashboard / Model → Deployment</a><a href="#20-debugging-interview-master-checklist">20. Debugging / Interview Master Checklist</a></div></aside><article class="book-prose"><p class="source-note">Historical course notes converted into searchable offline HTML. Some content may be a draft; exercises requiring cloud accounts need credentials and may incur costs.</p><h1 id="campusx-dsmp-2022-23-hinglish-topic-wise-master-notes">CampusX DSMP 2022–23: Hinglish Topic-wise Master Notes</h1>
+<p><strong>Edition:</strong> 30 October 2026<br/>
+<strong>Source playlist:</strong> <a href="https://www.youtube.com/playlist?list=PLKnIA16_RmvbAlyx4_rdtR66B7EHX5k3z">https://www.youtube.com/playlist?list=PLKnIA16_RmvbAlyx4_rdtR66B7EHX5k3z</a><br/>
+<strong>Official course outline:</strong> <a href="https://learnwith.campusx.in/s/preview/courses/CampusX-Data-Science-Mentorship-Program">https://learnwith.campusx.in/s/preview/courses/CampusX-Data-Science-Mentorship-Program</a><br/>
+<strong>Official course overview:</strong> <a href="https://learnwith.campusx.in/courses/CampusX-Data-Science-Mentorship-Program-637339afe4b0615a1bbed390">https://learnwith.campusx.in/courses/CampusX-Data-Science-Mentorship-Program-637339afe4b0615a1bbed390</a></p>
+<blockquote>
+<p><strong>Scope and provenance:</strong> Yeh <strong>original companion study guide</strong> hai, video ki verbatim transcript ya har individual video ka verified summary nahi. Publicly visible CampusX course curriculum ke topic names ko guide kiya gaya hai. YouTube ki poori playlist ki individual transcripts directly accessible nahi thi, aur official paid curriculum mein aise extras ho sakte hain jo public playlist mein na hon. Is guide ke examples, diagrams, Q&amp;A aur labs naye likhe gaye hain. Source ki exact lesson-by-lesson claims ke liye video/transcript check karein.</p>
+</blockquote>
+<h2 id="start-here-kaise-use-karna-hai">Start here — kaise use karna hai</h2>
+<ol>
+<li><code>notes/MASTER_NOTES.md</code> ko VS Code / GitHub par kholiye. Mermaid-enabled Markdown viewer diagrams draw karega; <code>diagrams/</code> folder mein PNG bhi hain.</li>
+<li>Debian/Linux par <code>python3 -m venv .venv &amp;&amp; source .venv/bin/activate</code>.</li>
+<li><code>python -m pip install -r requirements.txt</code> (badi dependencies ke liye kuch minutes aur internet lagega).</li>
+<li><code>python labs/01_python_foundations.py</code> se shuru kariye; phir numbering follow kariye. <code>labs/04_sqlite_analysis.py</code> standard-library SQLite use karta hai, MySQL ki zaroorat nahi.</li>
+<li>Har chapter mein <em>Concept → Kyun → Kaise → Workflow → Example → Pitfall → Practice → Interview</em> order follow kariye.</li>
+<li><strong>8 GB laptop tip:</strong> Jupyter/VS Code mein small datasets, 1–2 kernels, <code>n_jobs=1</code>; deep learning/GPU ki need nahi.</li>
+</ol>
+<h2 id="visual-diagrams-png-editable-dot">Visual diagrams (PNG + editable DOT)</h2>
+<p><img alt="Full Data Science workflow" src="../diagrams/01_full_pipeline.png"/></p>
+<p><img alt="Leakage-safe ML workflow" src="../diagrams/02_ml_leakage_safe.png"/></p>
+<p><img alt="Gradient descent workflow" src="../diagrams/03_gradient_descent.png"/></p>
+<p><img alt="SQL analytics workflow" src="../diagrams/04_sql_analysis.png"/></p>
+<p>The diagrams above are also included as Graphviz <code>.dot</code> sources for local editing. In addition, every main topic uses editable Mermaid workflows in this document.</p>
+<h2 id="table-of-contents-playlist-topics-grouped-logically">Table of Contents — playlist topics grouped logically</h2>
+<table>
+<thead>
+<tr>
+<th>Chapter</th>
+<th>Topic</th>
+<th>Approx. syllabus mapping</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>01</td>
+<td>Python language, variables, types</td>
+<td>Sessions 1–3</td>
+</tr>
+<tr>
+<td>02</td>
+<td>Collections, functions, OOP, file handling</td>
+<td>Sessions 4–12</td>
+</tr>
+<tr>
+<td>03</td>
+<td>NumPy arrays and vectorization</td>
+<td>Sessions 13–15</td>
+</tr>
+<tr>
+<td>04</td>
+<td>Pandas Series/DataFrame and data wrangling</td>
+<td>Sessions 16–22</td>
+</tr>
+<tr>
+<td>05</td>
+<td>Matplotlib, Seaborn, Plotly</td>
+<td>Sessions 23–26 + extras</td>
+</tr>
+<tr>
+<td>06</td>
+<td>Data collection, cleaning and EDA</td>
+<td>Sessions 27–29</td>
+</tr>
+<tr>
+<td>07</td>
+<td>Relational DBs and SQL</td>
+<td>Sessions 30–37</td>
+</tr>
+<tr>
+<td>08</td>
+<td>Descriptive statistics and distributions</td>
+<td>Sessions 38–42</td>
+</tr>
+<tr>
+<td>09</td>
+<td>Inferential statistics and hypothesis testing</td>
+<td>Sessions 43–46</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Vectors, matrices and calculus</td>
+<td>Week 22 + math extras</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Machine learning concepts and linear regression</td>
+<td>Sessions 48–50</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Gradient descent from scratch</td>
+<td>Sessions 51–52</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Regression diagnosis, bias-variance, regularization</td>
+<td>Weeks 25 and 27</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Feature engineering and selection</td>
+<td>Week 26 + extras</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Classification: KNN, logistic regression, Naive Bayes, SVM</td>
+<td>Weeks 28 and 31–33</td>
+</tr>
+<tr>
+<td>16</td>
+<td>Trees, bagging, random forest, boosting</td>
+<td>Weeks 34–36</td>
+</tr>
+<tr>
+<td>17</td>
+<td>PCA, K-Means and clustering</td>
+<td>Week 29 + clustering extras</td>
+</tr>
+<tr>
+<td>18</td>
+<td>Model evaluation, validation, tuning and leakage</td>
+<td>Week 30</td>
+</tr>
+<tr>
+<td>19</td>
+<td>End-to-end capstone + deployment</td>
+<td>Capstone sessions 1–13</td>
+</tr>
+<tr>
+<td>20</td>
+<td>Troubleshooting, interviews, project checklist</td>
+<td>Study-guide addition</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> These are topic clusters for studying, not a claim that each lesson appears at exactly this index in the public YouTube playlist. Course mapping source: CampusX official curriculum above.</p>
+<pre><code class="language-mermaid">flowchart LR
+    A[Python] --&gt; B[NumPy + Pandas]
+    B --&gt; C[Data Cleaning + EDA]
+    C --&gt; D[Statistics + SQL]
+    D --&gt; E[ML Algorithms]
+    E --&gt; F[Evaluation]
+    F --&gt; G[API / App / Deployment]
+    G --&gt; H[Monitoring + Feedback]
+</code></pre>
+<hr/>
+<h1 id="01-python-foundations-language-ko-zero-se-samjho">01. Python Foundations — language ko zero se samjho</h1>
+<h3 id="concept">Concept</h3>
+<p>Computer ko instructions dene ke liye Python ek high-level programming language hai. <strong>Program</strong> instructions ka sequence hota hai; <strong>interpreter</strong> code run karta hai; <strong>variables</strong> values ko names dete hain; <strong>objects</strong> runtime mein values represent karte hain. Python mein <code>x = 10</code> ek name ko integer object se bind karta hai — fixed-size memory box samajhna sirf beginner analogy hai.</p>
+<ul>
+<li><code>int</code> whole number, <code>float</code> decimal, <code>bool</code> True/False, <code>str</code> text, <code>None</code> absence-of-value marker.</li>
+<li><code>print()</code> output deta hai; <code>input()</code> string return karta hai (number chahiye toh <code>int()</code>/<code>float()</code> lagao, validate karo).</li>
+<li><code>==</code> value compare; <code>is</code> identity compare. <code>=</code> assign karta hai.</li>
+<li><code>if/elif/else</code> branching; <code>for</code> iterable par loop; <code>while</code> condition tak; <code>break</code> stop, <code>continue</code> skip.</li>
+<li><strong>Mutable</strong> (<code>list</code>, <code>dict</code>, <code>set</code>) contents badal sakte; <strong>immutable</strong> (<code>int</code>, <code>str</code>, <code>tuple</code>) nahi.</li>
+</ul>
+<pre><code class="language-python">name = 'Asha'
+age = 20
+salary = 35000.0
+eligible = age &gt;= 18 and salary &gt; 0
+print(f'{name}: eligible={eligible}')
+
+marks = [45, 89, 67, 72]
+for mark in marks:
+    if mark &gt;= 60:
+        print('Pass with &gt;=60:', mark)
+
+answer = sum(marks) / len(marks)
+print('Average:', answer)
+</code></pre>
+<h3 id="logic-workflow">Logic workflow</h3>
+<pre><code class="language-mermaid">flowchart TD
+    A[Input: student marks] --&gt; B{Any marks?}
+    B -- No --&gt; C[Error: empty list]
+    B -- Yes --&gt; D[Calculate average]
+    D --&gt; E{Average &gt;= 60?}
+    E -- Yes --&gt; F[Distinction band]
+    E -- No --&gt; G[Keep practicing]
+</code></pre>
+<h3 id="strings-and-loops">Strings and loops</h3>
+<p>Strings Unicode text hoti hain. Indexing zero se (<code>s[0]</code>) aur slicing <code>[start:stop:step]</code> mein <strong>stop exclude</strong> hota hai. <code>strip()</code> spaces remove, <code>.lower()</code> case normalization, <code>.split()</code> tokenization, <code>' '.join(...)</code> string build karte hain. <code>range(5)</code> = 0..4. <code>enumerate(items)</code> index+value; <code>zip(a,b)</code> matching pairs.</p>
+<pre><code class="language-python">text = '  Data Science  '
+print(text.strip().lower())
+for i, ch in enumerate('ML'):
+    print(i, ch)
+for n in range(1, 6):
+    print(n, n * n)
+</code></pre>
+<h3 id="time-complexity-ka-intuition">Time complexity ka intuition</h3>
+<p>Agar 10 items mein search ko 10 comparisons chahiye aur 1000 items mein 1000, linear <code>O(n)</code>. Binary search sorted input par <code>O(log n)</code> (magar sorting cost count karo). Nested full loops roughly <code>O(n²)</code>. Time complexity hardware timer nahi, input size ke saath growth explain karti hai.</p>
+<p><strong>Common mistakes:</strong> <code>if x = 5</code> syntax error (use <code>==</code>), <code>input()</code> string ko integer samajhna, <code>range</code> ke end ko inclusive samajhna, empty list se mean nikalna, <code>is</code> use for numeric/string equality.</p>
+<p><strong>Practice:</strong> (1) list ke even numbers count karo; (2) palindrome check; (3) vowel frequencies; (4) positive numbers ka average; (5) 2 nested loops ki complexity explain.</p>
+<p><strong>Interview Q:</strong> Q: <code>is</code> vs <code>==</code>? A: <code>==</code> checks equality of values; <code>is</code> object identity. Q: Mutable defaults issue? A: Default <code>[]</code> shared between function calls; use <code>None</code> then create list.</p>
+<hr/>
+<h1 id="02-data-structures-functions-oop-and-robust-code">02. Data Structures, Functions, OOP and Robust Code</h1>
+<h3 id="collections">Collections</h3>
+<ul>
+<li><strong>List</strong> <code>[1,2,3]</code>: ordered, mutable, duplicate allowed; append, pop, slice.</li>
+<li><strong>Tuple</strong> <code>(1,2)</code>: ordered, immutable sequence; fixed record-like values.</li>
+<li><strong>Set</strong> <code>{1,2}</code>: unique members, no positional indexing; membership and set algebra.</li>
+<li><strong>Dict</strong> <code>{'name':'Ravi'}</code>: key→value mapping; average membership lookups efficient.</li>
+</ul>
+<pre><code class="language-python">sales = [{'city':'Delhi','value':120}, {'city':'Pune','value':80}, {'city':'Delhi','value':50}]
+by_city = {}
+for record in sales:
+    city = record['city']
+    by_city[city] = by_city.get(city, 0) + record['value']
+print(by_city)  # {'Delhi': 170, 'Pune': 80}
+</code></pre>
+<h3 id="functions-scope">Functions / scope</h3>
+<p>Functions reusable blocks hain. Argument input, <code>return</code> output. Local variable usually function ke scope mein. <code>*args</code> positional bundle; <code>**kwargs</code> keyword bundle. Pure function ko same inputs par same outputs milte hain aur external state modify nahi hota — easier testing.</p>
+<pre><code class="language-python">def safe_mean(values):
+    if not values:
+        raise ValueError('At least one value required')
+    return sum(values) / len(values)
+
+try:
+    print(safe_mean([1,2,3]))
+except ValueError as exc:
+    print('Invalid input:', exc)
+</code></pre>
+<h3 id="oop">OOP</h3>
+<p><strong>Class</strong> blueprint, <strong>instance</strong> actual object; <code>__init__</code> initial attributes. <strong>Encapsulation</strong> related state/behaviour group, <strong>inheritance</strong> share/extend behavior, <strong>polymorphism</strong> same interface on different types. <code>@property</code> controlled access, <code>@staticmethod</code> no instance needed. Composition is often simpler than deep inheritance.</p>
+<pre><code class="language-python">class BankAccount:
+    def __init__(self, starting_balance=0):
+        if starting_balance &lt; 0:
+            raise ValueError('Negative starting balance')
+        self._balance = float(starting_balance)
+
+    @property
+    def balance(self):
+        return self._balance
+
+    def deposit(self, amount):
+        if amount &lt;= 0:
+            raise ValueError('Deposit must be positive')
+        self._balance += amount
+
+account = BankAccount(100)
+account.deposit(50)
+print(account.balance)
+</code></pre>
+<h3 id="advanced-python">Advanced Python</h3>
+<p><strong>Iterator</strong> provides next item one at a time; <strong>generator</strong> uses <code>yield</code>, useful when full dataset doesn't fit RAM. <strong>Decorator</strong> wraps another function (e.g. timing/logging) without rewriting it. <strong>Context manager</strong> <code>with open(...)</code> closes files even after exceptions. <strong>Serialization</strong> saves data (CSV, JSON, pickle); <strong>untrusted pickle unsafe</strong>, prefer JSON for simple interoperable data.</p>
+<pre><code class="language-python">import json
+from pathlib import Path
+path = Path('config.json')
+path.write_text(json.dumps({'threshold': 0.7}), encoding='utf-8')
+config = json.loads(path.read_text(encoding='utf-8'))
+print(config['threshold'])
+
+def squares():
+    for n in range(5):
+        yield n * n
+print(list(squares()))
+</code></pre>
+<pre><code class="language-mermaid">flowchart LR
+    A[Raw input] --&gt; B[Validation function]
+    B --&gt; C[Business logic / class]
+    C --&gt; D[Exception handling]
+    D --&gt; E[JSON or CSV output]
+</code></pre>
+<p><strong>Common issues:</strong> <code>KeyError</code> unknown key → <code>dict.get</code>; <code>IndexError</code> wrong position → check length; <code>TypeError</code> wrong argument type; <code>FileNotFoundError</code> → pathlib absolute/relative check; <code>UnicodeDecodeError</code> → explicit encoding; <code>RecursionError</code> → incorrect base case.</p>
+<p><strong>Practice:</strong> Build expense tracker with add, summarize, export JSON. Add unit tests for invalid negative amounts. <strong>Interview:</strong> Generator vs list? Generator lazy, usually memory efficient; list materializes all items.</p>
+<hr/>
+<h1 id="03-numpy-vectorized-numerical-computing">03. NumPy — vectorized numerical computing</h1>
+<h3 id="why-numpy">Why NumPy?</h3>
+<p>Python list diverse objects store kar sakti, isliye numeric loops costly ho sakte. NumPy <code>ndarray</code> mostly homogeneous elements ko compact shape/dtype ke saath stores. Vectorized operations compiled code use karte, often much faster. <code>shape=(rows, cols)</code>, <code>ndim</code> axis count, <code>dtype</code> element type, <code>axis=0</code> down rows across each column, <code>axis=1</code> across columns for each row.</p>
+<pre><code class="language-python">import numpy as np
+scores = np.array([[70, 80, 90], [50, 60, 70]], dtype=float)
+print('shape', scores.shape)            # (2, 3)
+print('student means', scores.mean(axis=1))
+print('subject means', scores.mean(axis=0))
+print(scores[:, 1])                    # column 2
+print(scores[scores &gt;= 70])            # boolean indexing
+</code></pre>
+<h3 id="broadcasting-rules">Broadcasting rules</h3>
+<p>Dimensions compare right-to-left. Do dimensions compatible hain jab equal ho <strong>ya ek 1 ho</strong>; warna ValueError. <code>(2,3) + (3,)</code> works; <code>(2,3) + (2,)</code> nahi. Shapes strategically <code>reshape(-1,1)</code> se align karo.</p>
+<pre><code class="language-python">prices = np.array([[100, 200, 300], [400, 500, 600]])
+tax_rate = np.array([0.05, 0.12, 0.18])
+final_prices = prices * (1 + tax_rate)
+print(final_prices)
+</code></pre>
+<h3 id="math-to-ml-bridge">Math to ML bridge</h3>
+<p>Sigmoid <code>1/(1+exp(-x))</code> scores ko (0,1) mein squash karta hai; probability interpretation only when model appropriate/calibrated. MSE = average squared errors; standardized features <code>z=(x-mean)/std</code>. Overflow se bachne ke liye large <code>x</code> par stable sigmoid implementations use hoti hain.</p>
+<pre><code class="language-python">x = np.array([-2., 0., 2.])
+sigmoid = 1 / (1 + np.exp(-x))
+y_actual = np.array([10., 20., 30.])
+y_pred = np.array([12., 19., 28.])
+mse = np.mean((y_actual - y_pred) ** 2)
+print(sigmoid, mse)
+</code></pre>
+<pre><code class="language-mermaid">flowchart LR
+    A[2D array: shape 2 x 3] --&gt; B[Broadcast vector: shape 3]
+    B --&gt; C[Elementwise operation]
+    C --&gt; D[Output: shape 2 x 3]
+</code></pre>
+<p><strong>Pitfalls:</strong> <code>a * b</code> = elementwise multiplication; <code>a @ b</code> = matrix multiplication; integer arrays cannot hold <code>np.nan</code>; avoid Python truth tests <code>if array:</code>; use <code>.any()</code>/<code>.all()</code>.</p>
+<p><strong>Lab:</strong> <code>labs/02_numpy_operations.py</code>; change axis and shape, predict output before running. <strong>Interview:</strong> <code>view</code> vs <code>copy</code>? View may share underlying memory; copy allocates independent data. Check <code>.base</code>/<code>np.shares_memory()</code>.</p>
+<hr/>
+<h1 id="04-pandas-tables-joins-groupby-and-time-series">04. Pandas — tables, joins, groupby and time series</h1>
+<h3 id="series-vs-dataframe">Series vs DataFrame</h3>
+<p><strong>Series</strong> labeled 1-dimensional data; <strong>DataFrame</strong> columns with shared index, table jaisa. <code>.loc[row_label, col_label]</code> label-based, <code>.iloc[row_position, col_position]</code> positional. Missing values <code>NaN</code>/<code>pd.NA</code> handle with <code>isna</code>, imputation, drop only after considering bias. Avoid row-wise Python loops; vectorized operations faster.</p>
+<pre><code class="language-python">import pandas as pd
+orders = pd.DataFrame({
+    'city':['Delhi','Pune','Delhi','Mumbai','Pune'],
+    'revenue':[100,200,150,None,300],
+    'units':[1,2,1,3,2]
+})
+print(orders.info())
+orders['revenue'] = orders['revenue'].fillna(orders['revenue'].median())
+orders['unit_price'] = orders['revenue'] / orders['units']
+print(orders.groupby('city', as_index=False)['revenue'].sum())
+</code></pre>
+<h3 id="joins">Joins</h3>
+<p><code>merge</code> SQL join equivalent, but duplicates on keys can create <code>many-to-many</code> row explosions. Use <code>validate='many_to_one'</code> where appropriate. <code>concat</code> rows/columns stack karta; <code>pivot_table</code> summarize &amp; reshape; <code>melt</code> wide → long. <code>to_datetime</code> date parse, <code>.dt</code> extracts year/month, <code>.resample('MS')</code> time buckets (DatetimeIndex needed).</p>
+<pre><code class="language-python">customers = pd.DataFrame({'city':['Delhi','Pune','Mumbai'], 'region':['N','W','W']})
+with_region = orders.merge(customers, on='city', how='left', validate='many_to_one')
+print(pd.pivot_table(with_region, index='region', values='revenue', aggfunc='sum'))
+</code></pre>
+<pre><code class="language-mermaid">flowchart TD
+    A[CSV / API / DB] --&gt; B[read_csv / read_json / read_sql]
+    B --&gt; C[info + describe + isna]
+    C --&gt; D[Clean columns / deduplicate]
+    D --&gt; E[merge + groupby + pivot]
+    E --&gt; F[Charts / ML features / export]
+</code></pre>
+<p><strong>Pitfalls:</strong> chained assignment like <code>df[df.x&gt;0]['x']=...</code> use <code>.loc</code>; dropping missing values blindly loses signal; <code>.apply(axis=1)</code> very large tables par slow; merge duplicates wrongly inflate totals. Validate unique key, compare before/after row counts.</p>
+<p><strong>Practice:</strong> CSV se monthly revenue, top 3 cities, missing rate, repeat customer rate. <strong>Interview:</strong> <code>groupby</code> vs <code>pivot_table</code>? Both aggregation; pivot creates wide cross-tab layout conveniently. <strong>Lab:</strong> <code>labs/03_pandas_eda.py</code>.</p>
+<hr/>
+<h1 id="05-data-visualization-chart-ka-correct-choice">05. Data Visualization — chart ka correct choice</h1>
+<p><strong>Why:</strong> Charts trend, distribution, relationship aur outliers reveal karte hain. Beautiful but misleading charts dangerous hain — axes, labels, units, sample sizes show karo.</p>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Best common chart</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Value time ke saath kaise change hui?</td>
+<td>Line plot</td>
+<td>Continuous time trend</td>
+</tr>
+<tr>
+<td>5 categories compare?</td>
+<td>Bar plot</td>
+<td>Length comparison</td>
+</tr>
+<tr>
+<td>Data ka spread?</td>
+<td>Histogram / KDE</td>
+<td>Distribution</td>
+</tr>
+<tr>
+<td>Groups ke outliers?</td>
+<td>Box / violin</td>
+<td>Quartiles / density</td>
+</tr>
+<tr>
+<td>x,y relation?</td>
+<td>Scatter</td>
+<td>Association pattern</td>
+</tr>
+<tr>
+<td>Numeric variables correlations?</td>
+<td>Heatmap</td>
+<td>Many pairwise coefficients</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+frame = pd.DataFrame({'hours':[1,2,3,4,5], 'score':[45,55,61,72,88]})
+sns.scatterplot(data=frame, x='hours', y='score')
+plt.title('Study hours vs score (illustrative data)')
+plt.tight_layout()
+plt.savefig('hours_score.png', dpi=140)
+</code></pre>
+<p><strong>Matplotlib</strong> low-level figure/axes control; <strong>Seaborn</strong> statistical defaults on top of Matplotlib; <strong>Plotly</strong> interactivity (hover/zoom) for dashboards. <code>Figure</code> entire canvas; <code>Axes</code> individual plot; <code>fig, ax=plt.subplots()</code> cleaner than implicit global state.</p>
+<p><strong>Workflow:</strong> Question → measure selection → chart type → encoding/axis labels → checks (outliers/missing/sample sizes) → annotate → audience interpretation. <strong>Pitfalls:</strong> truncated y-axis in bars; pie with too many slices; correlation ≠ causation; 3D charts distort comparisons.</p>
+<p><strong>Practice:</strong> histogram of order value and bar of revenue per city. <strong>Interview:</strong> Box plot median/Q1/Q3/IQR; beyond 1.5 IQR are <em>commonly flagged</em> outliers, not automatically invalid.</p>
+<hr/>
+<h1 id="06-data-gathering-etl-cleaning-and-exploratory-data-analysis">06. Data Gathering, ETL, Cleaning and Exploratory Data Analysis</h1>
+<h3 id="etl-data-quality">ETL / data quality</h3>
+<p><strong>Extract</strong> source se read (CSV/DB/API), <strong>Transform</strong> types, dedup, null repair, normalizations, <strong>Load</strong> destination table. Data science mein raw data preserved rakho to be reproducible. EDA = Exploratory Data Analysis — pehle dataset ka story samjho; model banana second step.</p>
+<pre><code class="language-mermaid">flowchart TD
+    A[Original source] --&gt; B[Raw snapshot: immutable]
+    B --&gt; C[Schema + quality checks]
+    C --&gt; D[Cleaning: types / duplicates / invalid]
+    D --&gt; E[EDA: summary + plots]
+    E --&gt; F[Feature plan]
+    F --&gt; G[Train/test split]
+    G --&gt; H[Model]
+</code></pre>
+<h3 id="checklist">Checklist</h3>
+<ol>
+<li>Grain: <strong>one row actually represents what?</strong> one customer? one order? one transaction?</li>
+<li>Types: currency numeric? date parsed? categorical consistently spelled?</li>
+<li>Missingness: MCAR/MAR/MNAR mechanisms; missing itself can be signal.</li>
+<li>Duplicates: true duplicates vs legitimate repeated purchases; choose key carefully.</li>
+<li>Outliers: wrong measurement or legitimate extreme? Domain check before removal.</li>
+<li>Leakage: future information accidentally features mein toh nahi?</li>
+<li>Privacy: emails/phone numbers/identifiers minimize, protect, never put in public repo.</li>
+</ol>
+<h3 id="simple-reproducible-cleaning">Simple reproducible cleaning</h3>
+<pre><code class="language-python">import pandas as pd
+raw = pd.DataFrame({
+  'order_id':[1,1,2,3], 'amount':['120','120','bad','300'],
+  'date':['2026-01-01','2026-01-01','2026-01-02','2026-01-03']
+})
+clean = raw.drop_duplicates(subset='order_id').copy()
+clean['amount'] = pd.to_numeric(clean['amount'], errors='coerce')
+clean['date'] = pd.to_datetime(clean['date'], errors='coerce')
+print(clean.isna().sum())
+</code></pre>
+<p><strong>Important:</strong> Bad numeric data coerced to NA; replace with median only when justified (for analyses/ML), otherwise flag for review. <strong>Practice:</strong> Calculate missing percentage, duplicate count, before/after row count; write a log. <strong>Lab:</strong> <code>labs/03_pandas_eda.py</code>.</p>
+<hr/>
+<h1 id="07-relational-databases-sql-from-beginner-to-window-functions">07. Relational Databases &amp; SQL from Beginner to Window Functions</h1>
+<h3 id="core-model">Core model</h3>
+<p><strong>Database</strong> data organized store; <strong>table</strong> rows/columns; <strong>primary key</strong> unique identifier; <strong>foreign key</strong> another table reference. <code>DDL</code> (<code>CREATE</code>, <code>ALTER</code>), <code>DML</code> (<code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>), <code>DQL</code> (<code>SELECT</code>). Transactions <code>BEGIN/COMMIT/ROLLBACK</code> and ACID principles. Normalization reduces duplication; denormalization sometimes read performance ke liye deliberate.</p>
+<pre><code class="language-sql">CREATE TABLE customers(id INTEGER PRIMARY KEY, city TEXT NOT NULL);
+CREATE TABLE orders(id INTEGER PRIMARY KEY, customer_id INTEGER, amount REAL,
+  FOREIGN KEY(customer_id) REFERENCES customers(id));
+
+SELECT c.city, COUNT(*) AS orders, SUM(o.amount) AS total
+FROM orders AS o
+JOIN customers AS c ON o.customer_id = c.id
+GROUP BY c.city
+HAVING SUM(o.amount) &gt; 100
+ORDER BY total DESC;
+</code></pre>
+<h3 id="joins-1">JOINs</h3>
+<p><code>INNER</code> matched; <code>LEFT</code> all left + matched right; <code>RIGHT</code> supported in many databases; <code>FULL OUTER</code> both sides (check DB support). Joining on nonunique keys can multiply records; test keys, schema, null behavior.</p>
+<h3 id="subqueries-and-windows">Subqueries and windows</h3>
+<p>Subquery result nested SQL mein use; <strong>window function</strong> rows ko collapse nahi karti (unlike <code>GROUP BY</code>) and can rank/running total within partitions.</p>
+<pre><code class="language-sql">SELECT customer_id, amount,
+       ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY amount DESC) AS rank_in_customer,
+       SUM(amount) OVER (PARTITION BY customer_id) AS customer_total
+FROM orders;
+</code></pre>
+<pre><code class="language-mermaid">flowchart LR
+    A[FROM + JOIN] --&gt; B[WHERE row filter]
+    B --&gt; C[GROUP BY]
+    C --&gt; D[HAVING group filter]
+    D --&gt; E[SELECT + windows]
+    E --&gt; F[ORDER BY / LIMIT]
+</code></pre>
+<p><em>Conceptual SQL evaluation order, not a promise about database execution-plan order.</em></p>
+<p><strong>Pitfalls:</strong> <code>WHERE amount = NULL</code> wrong; use <code>IS NULL</code>; query grouping nonaggregated columns nonportable; injection risk → parameterized queries (never f-string SQL with raw user values). SQL is set-based, not procedural loop. <strong>Lab:</strong> <code>labs/04_sqlite_analysis.py</code> creates DB in memory and runs queries, no server needed.</p>
+<hr/>
+<h1 id="08-descriptive-statistics-probability-and-distributions">08. Descriptive Statistics, Probability and Distributions</h1>
+<h3 id="statistics-ka-role">Statistics ka role</h3>
+<p><strong>Population</strong> complete set; <strong>sample</strong> subset. Descriptive statistics available observations summarize karta; inferential sample se broader uncertainty quantify. Center: mean, median, mode. Spread: variance, standard deviation, IQR. Mean outliers se sensitive; median relatively robust.</p>
+<p>Example: salaries <code>[20,22,24,25,200]</code> (thousand) mein mean <code>58.2</code>, median <code>24</code>. Ek CEO salary ne mean bahut pull kiya — salary discussion ke liye median often better.</p>
+<p><strong>Formulas:</strong> mean = <code>Σx/n</code>. Population variance = <code>Σ(x-μ)²/N</code>; sample variance = <code>Σ(x-x̄)²/(n-1)</code> (unbiased population variance estimator under standard assumptions). Standard deviation = square root of variance. Z-score = <code>(x-μ)/σ</code> if σ nonzero. Percentile = relative position in a distribution; quantile implementation differs slightly across libraries.</p>
+<h3 id="probability">Probability</h3>
+<p>Events <code>A</code>, <code>B</code>. <code>P(A|B)=P(A∩B)/P(B)</code> for nonzero <code>P(B)</code>. Bayes theorem <code>P(A|B)=P(B|A)P(A)/P(B)</code>. Independent events: <code>P(A∩B)=P(A)P(B)</code>; mutually exclusive events with nonzero probabilities are not independent.</p>
+<ul>
+<li><strong>Bernoulli:</strong> one yes/no trial (<code>p</code>). <strong>Binomial:</strong> successes in fixed independent Bernoulli trials.</li>
+<li><strong>Normal/Gaussian:</strong> bell-shaped continuous distribution defined by mean and standard deviation.</li>
+<li><strong>Poisson:</strong> events in interval under assumptions of constant rate and independence.</li>
+<li><strong>Exponential:</strong> waiting time of Poisson process.</li>
+<li><strong>PMF:</strong> probability mass at discrete values, <strong>PDF:</strong> density (not probability at a point), <strong>CDF:</strong> probability <code>P(X≤x)</code>.</li>
+</ul>
+<pre><code class="language-python">import numpy as np
+values = np.array([20, 22, 24, 25, 200])
+print('mean:', values.mean(), 'median:', np.median(values))
+print('sample standard deviation:', values.std(ddof=1))
+</code></pre>
+<pre><code class="language-mermaid">flowchart TD
+    A[Raw numeric data] --&gt; B{Question?}
+    B -- Typical value --&gt; C[Mean / median]
+    B -- Spread --&gt; D[Std / IQR]
+    B -- Uncertainty --&gt; E[Distribution / sampling]
+    E --&gt; F[Inference]
+</code></pre>
+<p><strong>Interviews:</strong> (1) Why <code>ddof=1</code>? sample variance Bessel correction. (2) Correlation vs causation? correlation measures association; confounding/reverse causation possible. (3) PDF vs CDF? density vs cumulative probability. <strong>Practice:</strong> write a function computing mean/median/std and compare with NumPy. <strong>Lab:</strong> <code>labs/05_stats_tests.py</code>.</p>
+<hr/>
+<h1 id="09-inferential-statistics-clt-confidence-intervals-hypothesis-tests">09. Inferential Statistics: CLT, Confidence Intervals, Hypothesis Tests</h1>
+<h3 id="central-limit-theorem-clt">Central Limit Theorem (CLT)</h3>
+<p>Independent identically distributed samples with finite variance and sufficiently large <code>n</code> mein sample mean ka standardized distribution approximately normal hota hai (many generalizations exist). CLT <strong>original data ko normal nahi banata</strong>; repeated <em>sample means</em> ki distribution approach hoti hai. Skewness/heavy tails large sample requirement badha sakte hain.</p>
+<h3 id="confidence-interval">Confidence interval</h3>
+<p>Agar population SD known or approximation justified, mean ke liye approximate 95% CI <code>x̄ ± 1.96 × SE</code>; <code>SE = σ/√n</code> (unknown σ cases mein t critical / estimated SE). Correct frequency interpretation: repeated experiment procedure ke 95% intervals true parameter cover karenge; ek fixed interval mein 95% probability of parameter statement frequentist framing mein nahi.</p>
+<h3 id="hypothesis-testing-workflow">Hypothesis testing workflow</h3>
+<pre><code class="language-mermaid">flowchart TD
+    A[Define research question] --&gt; B[H0 and H1]
+    B --&gt; C[Select test + check assumptions]
+    C --&gt; D[Choose alpha before viewing result]
+    D --&gt; E[Compute statistic + p-value]
+    E --&gt; F{p &lt;= alpha?}
+    F -- Yes --&gt; G[Reject H0]
+    F -- No --&gt; H[Fail to reject H0]
+    G --&gt; I[Report effect size + CI + limitations]
+    H --&gt; I
+</code></pre>
+<p><strong>H0</strong> null statement; <strong>H1</strong> alternative. p-value = probability under H0 of data at least as extreme as observed, according to the chosen test, <strong>not</strong> probability H0 is true. <code>α=0.05</code> false positive long-run threshold when H0 true; Type I = reject true H0; Type II = fail to reject false H0. Power = <code>1-β</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Common test (assumptions apply)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>One sample mean</td>
+<td>One-sample t-test</td>
+</tr>
+<tr>
+<td>Two independent means</td>
+<td>Welch t-test</td>
+</tr>
+<tr>
+<td>Paired before/after</td>
+<td>Paired t-test</td>
+</tr>
+<tr>
+<td>Categorical association</td>
+<td>Chi-square test</td>
+</tr>
+<tr>
+<td>More than two group means</td>
+<td>ANOVA</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-python">from scipy import stats
+before = [10, 12, 11, 14, 13, 10]
+after  = [11, 14, 13, 15, 14, 12]
+result = stats.ttest_rel(after, before)
+print('statistic=', result.statistic, 'p=', result.pvalue)
+</code></pre>
+<p><strong>Pitfalls:</strong> significance ≠ practical importance; non-significance ≠ equality; many repeated tests inflate false positives; peeking at A/B tests can break naive p-value interpretation; data dependence may invalidate test. <strong>Practice:</strong> write hypotheses and test choice for (a) paired weight measurements, (b) city vs product type, (c) three teaching methods.</p>
+<hr/>
+<h1 id="10-linear-algebra-calculus-for-ml">10. Linear Algebra &amp; Calculus for ML</h1>
+<h3 id="shapes-matter-more-than-memorizing-formulas">Shapes matter more than memorizing formulas</h3>
+<p>Scalar: <code>3</code>; vector: <code>[1,2]</code>; matrix: rows and columns; tensor: generalized multidimensional array. ML mein dataset <code>X</code> shape <code>(n_samples, n_features)</code> aur target <code>y</code> usually <code>(n_samples,)</code>.</p>
+<p><strong>Dot product</strong> <code>a·b=Σaᵢbᵢ</code> projection / similarity / linear model score mein use. <strong>Matrix multiplication</strong> <code>X @ w</code>: <code>(n,p)@(p,)→(n,)</code>. Transpose <code>X.T</code> flips axes. <strong>Eigenvector</strong> direction jo square linear transform ke baad same line par rehta hai; eigenvalue us direction ka scaling. PCA covariance matrix ki eigenvectors ko principal directions ke roop mein use karta (implementation often SVD).</p>
+<pre><code class="language-python">import numpy as np
+X = np.array([[1., 2.], [3., 4.], [5., 6.]])
+w = np.array([0.5, -0.25])
+b = 2.
+prediction = X @ w + b
+print(prediction)
+</code></pre>
+<h3 id="derivative-intuition">Derivative intuition</h3>
+<p>Derivative slope/instantaneous rate of change hai. <code>f(w)=(w-3)²</code> has derivative <code>f'(w)=2(w-3)</code>; when <code>w&lt;3</code>, derivative negative so subtracting derivative moves <code>w</code> upward, toward minimum. <strong>Chain rule</strong> composite functions ka derivative: <code>d f(g(x))/dx = f'(g(x))g'(x)</code>.</p>
+<pre><code class="language-mermaid">flowchart LR
+    A[Features X] --&gt; B[Linear combination Xw+b]
+    B --&gt; C[Prediction]
+    C --&gt; D[Loss against y]
+    D --&gt; E[Derivative / gradient]
+    E --&gt; F[Update parameters]
+    F --&gt; B
+</code></pre>
+<p><strong>Math basics revision:</strong> vectors, dot product, matrix multiplication, rank, eigen decomposition, partial derivative, gradients. <strong>Pitfalls:</strong> <code>(n,)</code> and <code>(n,1)</code> broadcast differently; <code>A*B</code> is not <code>A@B</code>; <code>inv(X.T@X)</code> may fail for singular matrices. Prefer numerically stable solvers/pseudoinverse. <strong>Interview:</strong> What is gradient? Vector of partial derivatives, direction of steepest local increase in Euclidean coordinates.</p>
+<hr/>
+<h1 id="11-machine-learning-fundamentals-linear-regression">11. Machine Learning Fundamentals &amp; Linear Regression</h1>
+<h3 id="what-is-ml">What is ML?</h3>
+<p>Traditional software mein human rules likhta, ML mein algorithm labeled/unlabeled examples se patterns estimate karta. <strong>Supervised</strong> learning has labels (regression numeric, classification class). <strong>Unsupervised</strong> learning explores structure without external labels (clusters, dimension reduction). Training is optimization; testing unseen data par generalization measure karta.</p>
+<p><strong>Model</strong> <code>ŷ = w₀ + w₁x₁ + ⋯ + wₚxₚ</code>. Simple linear regression one feature; multiple linear regression several. <code>w₀</code> intercept; coefficients conditional linear effects for fixed other features (not causal automatically). MSE <code>1/n Σ(yᵢ-ŷᵢ)²</code>; MAE robust-ish against large outliers compared to MSE; R² relative fit versus predicting sample mean (can be negative on test data).</p>
+<pre><code class="language-python">import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error, r2_score
+X = np.array([[1],[2],[3],[4],[5]], dtype=float)
+y = np.array([3.,5.,7.,9.,11.])
+model = LinearRegression().fit(X[:4], y[:4])
+pred = model.predict(X[4:])
+print('coefficient=', model.coef_, 'intercept=', model.intercept_)
+print('MAE=', mean_absolute_error(y[4:], pred), 'R2 requires 2+ test points')
+</code></pre>
+<h3 id="train-test-split">Train/test split</h3>
+<p>Test set model development ke baad final honest evaluation ke liye; train pe best score misleading. Random splits for i.i.d. problems; time series mein chronological split (future past train ko predict kare); group data mein GroupKFold/GroupShuffleSplit avoid same customer in train and test.</p>
+<pre><code class="language-mermaid">flowchart LR
+    A[Available labeled examples] --&gt; B[Split train / test]
+    B --&gt; C[Fit preprocessing on train]
+    C --&gt; D[Train model]
+    D --&gt; E[Validation: choose model]
+    E --&gt; F[Final untouched test]
+    F --&gt; G[Deployment &amp; monitoring]
+</code></pre>
+<p><strong>Practice:</strong> Build house-price regression, choose MAE because rupee errors interpretable; then compare MSE. <strong>Pitfalls:</strong> <code>fit_transform()</code> whole dataset before split causes leakage; extrapolating linear relationship outside observed range risky. <strong>Lab:</strong> <code>labs/06_gradient_descent.py</code> compares manual regression to sklearn.</p>
+<hr/>
+<h1 id="12-gradient-descent-learning-ka-engine">12. Gradient Descent: learning ka engine</h1>
+<h3 id="why-optimization">Why optimization?</h3>
+<p>Linear regression loss minimize karna hai. Gradient (derivative) slope batata, step size <code>learning_rate</code> decide karta kitni jaldi move karna: <code>w_new = w_old - η∇L(w_old)</code>.</p>
+<p>For prediction <code>ŷ = wx+b</code> and MSE <code>(1/n)Σ(ŷ-y)²</code>:</p>
+<ul>
+<li><code>dL/dw = (2/n) Σ(ŷ-y)x</code></li>
+<li><code>dL/db = (2/n) Σ(ŷ-y)</code>.</li>
+</ul>
+<p><strong>Batch GD:</strong> all examples per update (stable, full-batch costly). <strong>SGD:</strong> one random example/update (noisy, fast updates). <strong>Mini-batch:</strong> 32/64/128 examples (common compromise). Features at very different scales make optimization slower/less stable; standardization helps. For very high learning rate loss oscillates/diverges; tiny rate learns slowly.</p>
+<pre><code class="language-python">import numpy as np
+X = np.array([1.,2.,3.,4.,5.]); y = 2*X + 1
+w, b, lr = 0., 0., 0.02
+for epoch in range(1000):
+    error = (w*X+b)-y
+    dw = 2*np.mean(error * X)
+    db = 2*np.mean(error)
+    w -= lr*dw
+    b -= lr*db
+print('trained w,b', round(w,3), round(b,3))
+</code></pre>
+<pre><code class="language-mermaid">flowchart TD
+    A[Initialize parameters] --&gt; B[Forward: predict]
+    B --&gt; C[Compute loss]
+    C --&gt; D[Compute gradient]
+    D --&gt; E[Update weights]
+    E --&gt; F{Converged / max epochs?}
+    F -- No --&gt; B
+    F -- Yes --&gt; G[Evaluate on held-out data]
+</code></pre>
+<p><strong>Debug:</strong> Plot loss per epoch; <code>NaN</code> indicates overflow/invalid data/high rate; gradient zeros can signal convergence or bad feature/implementation. <strong>Lab:</strong> <code>labs/06_gradient_descent.py</code> records loss and saves a plot. <strong>Interview:</strong> Why mini-batch? More efficient updates vs full batch, less noisy than one-sample SGD.</p>
+<hr/>
+<h1 id="13-regression-diagnostics-regularization-bias-variance">13. Regression Diagnostics, Regularization &amp; Bias-Variance</h1>
+<h3 id="underfitting-vs-overfitting">Underfitting vs overfitting</h3>
+<p><strong>High bias / underfit:</strong> model too simple; both train/validation error high. <strong>High variance / overfit:</strong> training error low, validation high; likely learned noise/memorization. Complexity, dataset size, feature selection, cross-validation, regularization change balance.</p>
+<p><strong>Linear regression assumptions for common inference:</strong> approximately linear conditional mean, independence, sufficiently constant error variance for conventional standard errors, low problematic multicollinearity, exogeneity to interpret coefficients; normally distributed residuals primarily matters for certain small-sample inference, not basic point predictions. Diagnostic plots help, don't blindly trust textbook assumptions.</p>
+<ul>
+<li><strong>Ridge (L2)</strong> adds <code>α Σw²</code> penalty → shrinks coefficients, usually retains them.</li>
+<li><strong>Lasso (L1)</strong> adds <code>α Σ|w|</code> → can make coefficients exactly zero (selection).</li>
+<li><strong>Elastic Net</strong> mixes L1+L2 useful for correlated/high-dimensional features.</li>
+<li><code>α</code> tune using cross-validation, train-only pipeline.</li>
+<li><strong>Multicollinearity</strong> highly correlated predictors make individual coefficients unstable; VIF as diagnostic, regularization helps prediction.</li>
+</ul>
+<pre><code class="language-python">from sklearn.linear_model import Ridge, Lasso, ElasticNet
+ridge = Ridge(alpha=1.0)
+lasso = Lasso(alpha=0.1, max_iter=10000)
+model = ElasticNet(alpha=0.05, l1_ratio=0.5, max_iter=10000)
+</code></pre>
+<pre><code class="language-mermaid">flowchart TD
+    A[Compare train and validation error] --&gt; B{Both high?}
+    B -- Yes --&gt; C[Underfit: enrich features / capacity]
+    B -- No --&gt; D{Train low, validation high?}
+    D -- Yes --&gt; E[Overfit: regularize / more data]
+    D -- No --&gt; F[Proceed to error analysis]
+</code></pre>
+<p><strong>Interview:</strong> Why L1 sparse? L1 has corners in constraint geometry and nondifferentiability at zero, often optimum at a zero coefficient. <strong>Practice:</strong> Compare Ridge/Lasso on correlated inputs and record zero coefficients, train CV error.</p>
+<hr/>
+<h1 id="14-feature-engineering-missing-values-encoding-selection">14. Feature Engineering, Missing Values, Encoding, Selection</h1>
+<h3 id="feature-engineering-vs-selection">Feature engineering vs selection</h3>
+<p>Engineering converts raw data into meaningful predictors (<code>timestamp -&gt; day_of_week</code>, amount/unit, customer transactions last month). <strong>Selection</strong> picks subset of columns to control noise, compute cost, multicollinearity. Filter (variance, mutual information), wrapper (recursive feature elimination), embedded (Lasso, tree-based) are main families.</p>
+<h3 id="preprocessing-workflow-leakage-safe">Preprocessing workflow (leakage-safe)</h3>
+<pre><code class="language-mermaid">flowchart TD
+    A[Raw dataset] --&gt; B[Train/test split]
+    B --&gt; C[Fit imputer / scaler / encoder on TRAIN]
+    C --&gt; D[Train estimator on transformed TRAIN]
+    D --&gt; E[Apply saved transformers to TEST]
+    E --&gt; F[Evaluate on TEST]
+    F --&gt; G[Save full pipeline, not model alone]
+</code></pre>
+<p><strong>Missing numeric:</strong> median imputation simple; categorical: most frequent / constant <code>'unknown'</code>. Missing indicator may help. <strong>Scaling:</strong> StandardScaler mean=0/std=1 by training statistics; tree models usually don't need feature scaling, distance/regularized linear models usually do. <strong>Encoding:</strong> one-hot for unordered nominal categories; ordinal encoding only if natural order or model handles it properly. <strong>Class imbalance:</strong> metrics matter; never SMOTE/oversample before splitting (leakage).</p>
+<pre><code class="language-python">from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.pipeline import Pipeline
+num = Pipeline([('fill', SimpleImputer(strategy='median')),
+                ('scale', StandardScaler())])
+cat = Pipeline([('fill', SimpleImputer(strategy='most_frequent')),
+                ('onehot', OneHotEncoder(handle_unknown='ignore'))])
+pre = ColumnTransformer([('num', num, ['age','income']),
+                         ('cat', cat, ['city'])])
+</code></pre>
+<p><strong>Pitfall:</strong> Future feature like “days until loan default” cannot be used to predict default at issue time; target encoding folds incorrectly leaks target. <strong>Lab:</strong> <code>labs/07_pipeline_regression.py</code> includes ColumnTransformer + Pipeline + cross-validation.</p>
+<hr/>
+<h1 id="15-classification-knn-logistic-regression-naive-bayes-svm">15. Classification: KNN, Logistic Regression, Naive Bayes, SVM</h1>
+<h3 id="binary-classification">Binary classification</h3>
+<p>Output classes <code>0/1</code>; often model yields score/probability, threshold makes decision. Spam vs ham, fraud vs genuine. Class priors, probability calibration, false-positive/false-negative costs guide threshold.</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Main idea</th>
+<th>Strength</th>
+<th>Watch out</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>KNN</td>
+<td>nearby examples vote</td>
+<td>intuitive nonlinear</td>
+<td>distance scaling, slow prediction, dimensionality</td>
+</tr>
+<tr>
+<td>Logistic regression</td>
+<td>sigmoid of linear score</td>
+<td>interpretable baseline</td>
+<td>linear boundary, scaling, regularization</td>
+</tr>
+<tr>
+<td>Naive Bayes</td>
+<td>Bayes + conditional feature independence</td>
+<td>fast, text/counts good</td>
+<td>independence assumption, calibration</td>
+</tr>
+<tr>
+<td>SVM</td>
+<td>maximize separation margin; kernels add nonlinear boundaries</td>
+<td>strong medium-size datasets</td>
+<td>scaling, hyperparameters, costly large data</td>
+</tr>
+</tbody>
+</table>
+<p><strong>KNN distance:</strong> Euclidean <code>√Σ(xᵢ−zᵢ)²</code>; if income in lakhs and age in years, income can dominate distance unless scaled. <code>k</code> small high variance; <code>k</code> large smoothing/high bias.</p>
+<p><strong>Logistic regression:</strong> <code>p(y=1|x)=σ(w·x+b)</code>. Fit commonly minimizes log loss, not MSE. <code>threshold=0.5</code> is default, not necessarily business-optimal.</p>
+<p><strong>Naive Bayes:</strong> <code>P(class|features) ∝ P(class)∏P(feature_i|class)</code> under conditional independence model. MultinomialNB useful bag-of-words counts.</p>
+<p><strong>SVM:</strong> seeks separating hyperplane with margin; <code>C</code> trades violations vs regularization; <code>gamma</code> RBF kernel reach; both tune CV. Very large C can overfit.</p>
+<pre><code class="language-python">from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
+classifier = make_pipeline(StandardScaler(), SVC(kernel='rbf', C=1, gamma='scale'))
+</code></pre>
+<pre><code class="language-mermaid">flowchart LR
+    A[Input example] --&gt; B[Preprocessing]
+    B --&gt; C[Classification score]
+    C --&gt; D{Score &gt;= chosen threshold?}
+    D -- Yes --&gt; E[Positive]
+    D -- No --&gt; F[Negative]
+    E --&gt; G[Compare outcome with ground truth]
+    F --&gt; G
+</code></pre>
+<p><strong>Lab:</strong> <code>labs/08_classification_metrics.py</code> compares logistic, KNN, NB and SVM on synthetic small data; compute confusion matrix and score. <strong>Interview:</strong> Why PR-AUC often better in rare positives? It focuses on precision vs recall for positive class; ROC-AUC may appear high even with many false positives at large negative-class scale.</p>
+<hr/>
+<h1 id="16-decision-trees-random-forest-gradient-boosting-xgboost">16. Decision Trees, Random Forest, Gradient Boosting, XGBoost</h1>
+<h3 id="tree">Tree</h3>
+<p>Tree repeatedly splits a feature based on impurity reduction (<code>Gini</code>, entropy for classification; squared error for regression). <strong>Leaf</strong> outputs class/probability/mean. Depth unlimited → often overfit. Use <code>max_depth</code>, <code>min_samples_leaf</code>, pruning (<code>ccp_alpha</code>).</p>
+<p><strong>Bagging:</strong> bootstrap samples → multiple models trained in parallel → average/vote reduces variance. <strong>Random Forest:</strong> bagging trees plus random feature subsets at splits → decorrelate trees; strong tabular baseline. <strong>Boosting:</strong> new weak model sequentially corrects ensemble error/gradient direction (Gradient Boosting). <strong>XGBoost:</strong> optimized gradient boosted trees with regularization and engineering features; not the same thing as random forest.</p>
+<pre><code class="language-mermaid">flowchart TD
+    A[Training data] --&gt; B1[Bootstrap sample 1]
+    A --&gt; B2[Bootstrap sample 2]
+    A --&gt; B3[Bootstrap sample 3]
+    B1 --&gt; T1[Tree 1]
+    B2 --&gt; T2[Tree 2]
+    B3 --&gt; T3[Tree 3]
+    T1 --&gt; C[Average / majority vote]
+    T2 --&gt; C
+    T3 --&gt; C
+</code></pre>
+<pre><code class="language-python">from sklearn.ensemble import RandomForestClassifier, HistGradientBoostingClassifier
+rf = RandomForestClassifier(n_estimators=120, max_depth=6, random_state=42, n_jobs=1)
+gb = HistGradientBoostingClassifier(max_iter=100, learning_rate=0.08,
+                                    max_leaf_nodes=15, random_state=42)
+</code></pre>
+<p><strong>Diagnostics:</strong> Feature importance from impurities can be biased toward high-cardinality features; permutation importance on held-out data helps but correlated features complicate attribution. Gradient Boosting too many iterations + high learning rate may overfit; early stopping helps. <strong>Practice:</strong> Train tree vs RF, compare cross-validation scores and feature importance stability. <strong>Interview:</strong> Bagging vs boosting? Parallel bootstrap aggregation vs sequential error reduction.</p>
+<hr/>
+<h1 id="17-pca-clustering-dimensionality-reduction">17. PCA, Clustering, Dimensionality Reduction</h1>
+<h3 id="unsupervised-learning">Unsupervised learning</h3>
+<p>Labels ke bina underlying patterns dekhna. <strong>K-Means</strong> groups points into <code>k</code> clusters minimizing within-cluster squared distance; iterate centroid assignment → centroid update. Initialization matters; standardized features often required; spherical/compact clusters assumption common. Choose <code>k</code> via domain knowledge, silhouette, elbow (heuristic; no universal optimum).</p>
+<p><strong>PCA</strong> orthogonal directions with maximum sample variance; typical sequence: training split → scale if units differ → <code>PCA.fit(train)</code> → transform train/test. PCA components linear combinations, often less interpretable. PCA is not “feature selection” in the original-feature sense; it is feature extraction.</p>
+<p><strong>DBSCAN:</strong> density-based clusters + noise; no explicit cluster count, but <code>eps</code>, <code>min_samples</code> sensitive to scale/density. <strong>Hierarchical clustering:</strong> merges/splits clusters, dendrogram visualization; choice of linkage/distance matters.</p>
+<pre><code class="language-mermaid">flowchart TD
+    A[Unlabeled numerical data] --&gt; B[Impute + scale]
+    B --&gt; C{Goal?}
+    C -- Reduce dimensions --&gt; D[PCA]
+    C -- Find groups --&gt; E[KMeans / DBSCAN / Hierarchical]
+    D --&gt; F[Visualize / feature compression]
+    E --&gt; G[Check quality / business meaning]
+</code></pre>
+<pre><code class="language-python">from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+from sklearn.cluster import KMeans
+pca = make_pipeline(StandardScaler(), PCA(n_components=2, random_state=42))
+clusters = make_pipeline(StandardScaler(), KMeans(n_clusters=3, n_init=10, random_state=42))
+</code></pre>
+<p><strong>Pitfalls:</strong> Applying PCA before train split leaks distribution; K-Means with categorical data without encoding misrepresents distances; clusters are not ground-truth identities. <strong>Lab:</strong> <code>labs/09_clustering_pca.py</code> saves a PCA visualization.</p>
+<hr/>
+<h1 id="18-evaluation-cross-validation-metrics-tuning-leakage">18. Evaluation: Cross-Validation, Metrics, Tuning, Leakage</h1>
+<h3 id="confusion-matrix">Confusion matrix</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Predicted positive</th>
+<th>Predicted negative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Actual positive</td>
+<td>TP</td>
+<td>FN</td>
+</tr>
+<tr>
+<td>Actual negative</td>
+<td>FP</td>
+<td>TN</td>
+</tr>
+</tbody>
+</table>
+<p><code>Precision=TP/(TP+FP)</code> among predicted positives how many correct; <code>Recall=TP/(TP+FN)</code> among actual positives how many caught; <code>F1=2PR/(P+R)</code> when denominator nonzero. <strong>Accuracy</strong> <code>(TP+TN)/all</code>, misleading when 99.5% majority class. ROC-AUC measures ranking over thresholds; PR-AUC/AP suits rare positive focus. Calibration: prediction <code>0.8</code> should correspond to ~80% positives among similar predictions, approximately.</p>
+<p><strong>Cross-validation:</strong> k-fold rotates validation folds; stratified k-fold preserves proportions for classification; group k-fold prevents group leakage; TimeSeriesSplit respects sequence (with suitable gap where needed). Tuning with CV picks hyperparameters; separate holdout remains final.</p>
+<pre><code class="language-mermaid">flowchart TD
+    A[Split: training / final test] --&gt; B[CV folds on training only]
+    B --&gt; C[Fit preprocessing and model inside each fold]
+    C --&gt; D[Select hyperparameters]
+    D --&gt; E[Refit best pipeline on entire training]
+    E --&gt; F[Evaluate exactly once on final test]
+    F --&gt; G[Document errors, uncertainty and limitations]
+</code></pre>
+<pre><code class="language-python">from sklearn.model_selection import StratifiedKFold, cross_val_score
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+clf = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+# scores = cross_val_score(clf, X_train, y_train, cv=cv, scoring='f1')
+</code></pre>
+<p><strong>Data leakage examples:</strong> scaling on all data, target-derived fields, same patient/user in both sets, future date data in past prediction, selecting top features using all labels. <strong>Interviews:</strong> CV score not same as final holdout; nested CV useful for less biased estimate of full model-selection process. <strong>Lab:</strong> <code>labs/07_pipeline_regression.py</code> and <code>labs/08_classification_metrics.py</code>.</p>
+<hr/>
+<h1 id="19-real-world-capstone-data-dashboard-model-deployment">19. Real-World Capstone: Data → Dashboard / Model → Deployment</h1>
+<p>CampusX curriculum mein data gathering, cleaning, EDA, feature selection, model selection, analytics/recommender/insight modules and AWS deployment sessions listed hain. Yahan <strong>independent sample capstone</strong> diya hai jo small laptop par local run ho sake.</p>
+<h3 id="example-customer-order-intelligence">Example: Customer order intelligence</h3>
+<p><strong>Business question:</strong> Kaunse cities highest revenue laati hain? Expected customer spend estimate karna hai? Input fields: date, city, units, unit price, revenue. Target = next-period future revenue only if proper time-aware target constructed; same-row <code>units*price</code> ko predict karke business forecasting ka claim nahi karna.</p>
+<pre><code class="language-mermaid">flowchart LR
+    A[CSV / source] --&gt; B[Schema checks]
+    B --&gt; C[Cleaning]
+    C --&gt; D[Feature engineering]
+    D --&gt; E[EDA and dashboard]
+    D --&gt; F[Train / validation pipeline]
+    F --&gt; G[Artifact + metrics]
+    G --&gt; H[Inference API]
+    E --&gt; I[Business user]
+    H --&gt; I
+    I --&gt; J[Feedback / monitoring]
+</code></pre>
+<h3 id="file-directory-production-layout">File/directory production layout</h3>
+<pre><code class="language-text">project/
+  data/raw/                   # Keep original; never commit sensitive files
+  data/processed/             # Reproducible transformations
+  src/clean.py
+  src/features.py
+  src/train.py
+  src/predict.py
+  tests/test_clean.py
+  model/model.joblib          # Only load artifacts from trusted source
+  requirements.txt
+  README.md
+</code></pre>
+<h3 id="production-handoff-checklist">Production handoff checklist</h3>
+<ol>
+<li>Define target and success metric, baseline and acceptable error.</li>
+<li>Raw dataset provenance, licenses, permission, consent and sensitive-data exclusions.</li>
+<li>Validation of input schema/ranges; logs and missingness report.</li>
+<li>Split logic documented (time, group, random) and leakage tests.</li>
+<li>Preprocessing+model packaged as one pipeline; versions pinned and recorded.</li>
+<li>Tests for empty/null/out-of-range/unseen category inputs.</li>
+<li>FastAPI/Flask or Streamlit UI, protected endpoints where necessary, containerize only if useful.</li>
+<li>Deploy with least-privilege secrets management, HTTPS, health checks; never put AWS credentials in GitHub.</li>
+<li>Monitoring: latency, 4xx/5xx, null rates, distribution drift, prediction quality <strong>when labels arrive</strong>, periodic retraining only when justified.</li>
+<li>Rollback plan, model card, business owner approval.</li>
+</ol>
+<p><strong>Important AWS note:</strong> Course demo infrastructure and historic commands/pricing may no longer be appropriate; verify current AWS docs and costs before deploying. Running local labs avoids unexpected charges. <strong>Practice project:</strong> Build a city-level revenue dashboard with pandas + Streamlit and SQL; validate totals; explain uncertainty of projections.</p>
+<hr/>
+<h1 id="20-debugging-interview-master-checklist">20. Debugging / Interview Master Checklist</h1>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely cause</th>
+<th>First check</th>
+<th>Fix direction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ModuleNotFoundError</code></td>
+<td>pip installed to other interpreter</td>
+<td><code>python -m pip -V</code>, <code>which python</code></td>
+<td>activate correct venv, reinstall</td>
+</tr>
+<tr>
+<td><code>ValueError: shapes not aligned</code></td>
+<td>matrix dimensions wrong</td>
+<td>print <code>X.shape</code>, <code>w.shape</code></td>
+<td>reshape, verify axis semantics</td>
+</tr>
+<tr>
+<td>Pandas merge duplicates rows</td>
+<td>many-to-many key</td>
+<td><code>duplicated</code>, <code>merge(validate=...)</code></td>
+<td>business key correction</td>
+</tr>
+<tr>
+<td>Unexpected NaNs after joins</td>
+<td>keys mismatch/nulls</td>
+<td><code>.isna()</code>, dtype, whitespace</td>
+<td>normalize keys and validate</td>
+</tr>
+<tr>
+<td><code>SettingWithCopyWarning</code></td>
+<td>chained assignment</td>
+<td>review <code>.loc</code> and <code>.copy()</code></td>
+<td>explicit copy/loc assignment</td>
+</tr>
+<tr>
+<td>Poor train and val scores</td>
+<td>underfit, wrong labels, weak features</td>
+<td>baseline and labels</td>
+<td>data/feature/model checks</td>
+</tr>
+<tr>
+<td>Train good, val bad</td>
+<td>overfit / leakage split issue</td>
+<td>train-val gap, split scheme</td>
+<td>regularize/group/time split</td>
+</tr>
+<tr>
+<td>Test score too amazing</td>
+<td>leakage</td>
+<td>audit all transformations + time</td>
+<td>isolate test, remove proxy columns</td>
+</tr>
+<tr>
+<td>CV fails tiny dataset</td>
+<td>insufficient rows/class count</td>
+<td><code>value_counts</code>, folds</td>
+<td>fewer folds/more data</td>
+</tr>
+<tr>
+<td>Class imbalance misread</td>
+<td>accuracy inappropriate</td>
+<td>confusion matrix, AP/PR</td>
+<td>precision/recall, threshold choice</td>
+</tr>
+<tr>
+<td>Model output changed in app</td>
+<td>preprocessing not saved</td>
+<td>compare feature order/schema</td>
+<td>persist entire pipeline</td>
+</tr>
+<tr>
+<td>High RAM use on 8 GB laptop</td>
+<td>huge data, object dtype</td>
+<td><code>df.info(memory_usage='deep')</code></td>
+<td>chunks, dtypes, sample data</td>
+</tr>
+</tbody>
+</table>
+<h3 id="must-answer-interview-questions">Must-answer interview questions</h3>
+<ol>
+<li><strong>Data Analyst vs Data Scientist?</strong> Analyst typically asks/describes business signals; scientist additionally may develop predictive/statistical models and experiments. Roles overlap.</li>
+<li><strong>DataFrame vs NumPy array?</strong> Labeled heterogeneous columns vs primarily homogeneous numerical n-dimensional arrays.</li>
+<li><strong>Bias vs variance?</strong> Consistent systematic error vs sensitivity to different training samples.</li>
+<li><strong>What is leakage?</strong> Info unavailable at prediction time or evaluation contamination unintentionally enters training pipeline.</li>
+<li><strong>ROC-AUC vs accuracy?</strong> ROC-AUC ranking across thresholds; accuracy one chosen threshold and class mix.</li>
+<li><strong>p-value interpretation?</strong> Null-assumption extremeness, not probability null true.</li>
+<li><strong>L1 vs L2?</strong> L1 sparsity/selection often, L2 smooth shrinkage.</li>
+<li><strong>Bagging vs boosting?</strong> Bootstrap parallel variance reduction vs sequential fitted corrections.</li>
+<li><strong>Why standardize?</strong> Similar scales stabilize distance/optimization-based models; trees generally less sensitive.</li>
+<li><strong>Why train/test separation?</strong> Unbiased-ish estimate of generalization to unseen data under representative split.</li>
+<li><strong>PCA vs feature selection?</strong> PCA creates combinations; selection retains original variables.</li>
+<li><strong>Why monitor after deploy?</strong> Data/behavior change, dependencies fail, real outcomes may worsen.</li>
+</ol>
+<h3 id="8-week-practical-roadmap-2-3-hours-day">8-week practical roadmap (2–3 hours/day)</h3>
+<table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Focus</th>
+<th>Deliverable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Python, strings, collections, OOP</td>
+<td>Expense tracker + unit tests</td>
+</tr>
+<tr>
+<td>2</td>
+<td>NumPy and Pandas</td>
+<td>Data cleaning + GroupBy notebook</td>
+</tr>
+<tr>
+<td>3</td>
+<td>SQL, plots, EDA</td>
+<td>1 SQL case study + 5 charts</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Statistics, distributions, tests, linear algebra</td>
+<td>Hypothesis report with effect size/CI</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Regression, loss, gradient descent</td>
+<td>From-scratch GD + sklearn comparison</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Logistic, KNN, NB, SVM</td>
+<td>Reproducible classifier benchmark</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Trees, forests, boosting, PCA, clustering</td>
+<td>Model comparison with CV and error analysis</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Capstone, README, reproducibility, deploy demo</td>
+<td>Portfolio-quality repo + presentation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hands-on-assessment">Hands-on assessment</h3>
+<ul>
+<li><strong>Foundation gate:</strong> independently write a Python function and fix 3 exceptions.</li>
+<li><strong>Data gate:</strong> merge two tables correctly and produce a missingness report.</li>
+<li><strong>Math gate:</strong> explain the difference between SD and SE; compute mean and variance by hand.</li>
+<li><strong>ML gate:</strong> design a leakage-safe split and pipeline, select metric with business reason.</li>
+<li><strong>Job gate:</strong> show runnable GitHub project, reproducible test, metric, model card and limitations.</li>
+</ul>
+<h3 id="further-reading-and-sources">Further reading and sources</h3>
+<ul>
+<li><strong>Playlist:</strong> <a href="https://www.youtube.com/playlist?list=PLKnIA16_RmvbAlyx4_rdtR66B7EHX5k3z">https://www.youtube.com/playlist?list=PLKnIA16_RmvbAlyx4_rdtR66B7EHX5k3z</a></li>
+<li><strong>CampusX official detailed curriculum:</strong> <a href="https://learnwith.campusx.in/s/preview/courses/CampusX-Data-Science-Mentorship-Program">https://learnwith.campusx.in/s/preview/courses/CampusX-Data-Science-Mentorship-Program</a></li>
+<li><strong>CampusX course outline:</strong> <a href="https://learnwith.campusx.in/courses/CampusX-Data-Science-Mentorship-Program-637339afe4b0615a1bbed390">https://learnwith.campusx.in/courses/CampusX-Data-Science-Mentorship-Program-637339afe4b0615a1bbed390</a></li>
+<li><strong>Official Python tutorial:</strong> <a href="https://docs.python.org/3/tutorial/">https://docs.python.org/3/tutorial/</a></li>
+<li><strong>NumPy user guide:</strong> <a href="https://numpy.org/doc/stable/user/">https://numpy.org/doc/stable/user/</a></li>
+<li><strong>Pandas user guide:</strong> <a href="https://pandas.pydata.org/docs/user_guide/index.html">https://pandas.pydata.org/docs/user_guide/index.html</a></li>
+<li><strong>Scikit-learn user guide:</strong> <a href="https://scikit-learn.org/stable/user_guide.html">https://scikit-learn.org/stable/user_guide.html</a></li>
+<li><strong>Matplotlib guide:</strong> <a href="https://matplotlib.org/stable/users/index.html">https://matplotlib.org/stable/users/index.html</a></li>
+<li><strong>SQL SQLite docs:</strong> <a href="https://www.sqlite.org/lang.html">https://www.sqlite.org/lang.html</a></li>
+</ul>
+<p><strong>Copyright note:</strong> Yeh original teaching material hai; CampusX ki video descriptions/transcripts ya notebooks ka large copied text nahi. For every public lesson's exact timing/order, refer to the original playlist. Additional practical examples deliberately independent hain.</p>
+</article></main><footer>ARTHA Gurukul · Source material preserved as educational notes</footer></body></html>

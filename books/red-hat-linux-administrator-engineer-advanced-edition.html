@@ -1,0 +1,1192 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RHEL RHCSA/RHCE Engineering | ARTHA Gurukul</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><a class="brand" href="../index.html">✦ ARTHA GURUKUL</a><nav><a href="../index.html#courses">All Courses</a><a href="index.html">Source Library</a></nav></header><main class="book-layout"><aside class="book-toc"><div class="eyebrow">Original material · offline copy</div><h2>RHEL RHCSA/RHCE Engineering</h2><a href="../index.html">⌂ Course library</a><div class="toc"><a href="#red-hat-linux-administrator-engineer-practical-masterbook">Red Hat Linux Administrator &amp; Engineer — Practical Masterbook</a><a href="#table-of-contents">Table of contents</a><a href="#chapter-1-rhel-architecture-and-installation">Chapter 1: RHEL Architecture and Installation</a><a href="#chapter-2-shell-and-core-utilities">Chapter 2: Shell and Core Utilities</a><a href="#chapter-3-users-groups-and-permissions">Chapter 3: Users, Groups and Permissions</a><a href="#chapter-4-processes-cpu-and-memory">Chapter 4: Processes, CPU and Memory</a><a href="#chapter-5-systemd-and-boot-troubleshooting">Chapter 5: Systemd and Boot Troubleshooting</a><a href="#chapter-6-storage-lvm-raid-and-filesystems">Chapter 6: Storage, LVM, RAID and Filesystems</a><a href="#chapter-7-networking-and-troubleshooting">Chapter 7: Networking and Troubleshooting</a><a href="#chapter-8-software-management">Chapter 8: Software Management</a><a href="#chapter-9-selinux-and-host-security">Chapter 9: SELinux and Host Security</a><a href="#chapter-10-ssh-pki-and-tls">Chapter 10: SSH, PKI and TLS</a><a href="#chapter-11-services-web-proxy-and-dns">Chapter 11: Services: Web, Proxy and DNS</a><a href="#chapter-12-file-sharing-and-automation">Chapter 12: File Sharing and Automation</a><a href="#chapter-13-containers-and-virtualization">Chapter 13: Containers and Virtualization</a><a href="#chapter-14-observability-and-performance">Chapter 14: Observability and Performance</a><a href="#chapter-15-backup-recovery-and-high-availability">Chapter 15: Backup, Recovery and High Availability</a><a href="#chapter-16-rhcsa-practical-examination-labs">Chapter 16: RHCSA Practical Examination Labs</a><a href="#chapter-17-rhce-engineering-with-ansible">Chapter 17: RHCE Engineering with Ansible</a><a href="#chapter-18-production-engineering-and-incident-response">Chapter 18: Production Engineering and Incident Response</a><a href="#chapter-19-senior-linux-interview-preparation">Chapter 19: Senior Linux Interview Preparation</a><a href="#deep-dive-appendix-load-average-vs-cpu-utilization">Deep-dive appendix: Load average vs CPU utilization</a><a href="#deep-dive-appendix-lvm-extension-exercise">Deep-dive appendix: LVM extension exercise</a><a href="#deep-dive-appendix-selinux-troubleshooting">Deep-dive appendix: SELinux troubleshooting</a><a href="#glossary">Glossary</a><a href="#references-and-verification-resources">References and verification resources</a><a href="#advanced-edition-deep-dive-companion-chapters">Advanced Edition — Deep-Dive Companion Chapters</a><a href="#navigation">Navigation</a><a href="#chapter-20-linux-internals-and-process-lifecycle">Chapter 20 — Linux internals and process lifecycle</a><a href="#chapter-21-load-average-internals-diagnosis-and-remediation">Chapter 21 — Load average: internals, diagnosis and remediation</a><a href="#chapter-22-production-process-troubleshooting">Chapter 22 — Production process troubleshooting</a><a href="#chapter-23-lvm-from-creation-to-safe-recovery">Chapter 23 — LVM from creation to safe recovery</a><a href="#chapter-24-memory-swap-oom-and-reclaim">Chapter 24 — Memory, swap, OOM and reclaim</a><a href="#chapter-25-storage-latency-and-filesystem-diagnostics">Chapter 25 — Storage latency and filesystem diagnostics</a><a href="#chapter-26-boot-and-systemd-recovery">Chapter 26 — Boot and systemd recovery</a><a href="#chapter-27-networking-incident-runbook">Chapter 27 — Networking incident runbook</a><a href="#chapter-28-production-incident-simulations">Chapter 28 — Production incident simulations</a><a href="#expanded-glossary">Expanded glossary</a><a href="#alphabetical-subject-index">Alphabetical subject index</a><a href="#further-reading-and-technical-verification-references">Further reading and technical verification references</a></div></aside><article class="book-prose"><p class="source-note">Historical course notes converted into searchable offline HTML. Some content may be a draft; exercises requiring cloud accounts need credentials and may incur costs.</p><h1 id="red-hat-linux-administrator-engineer-practical-masterbook">Red Hat Linux Administrator &amp; Engineer — Practical Masterbook</h1>
+<p><strong>Reference platform:</strong> RHEL 9 (validate version-specific commands against your installed release).
+<strong>Audience:</strong> RHCSA, RHCE, Linux L2/L3 and senior infrastructure engineering.
+<strong>Language:</strong> English with simple explanations.</p>
+<blockquote>
+<p>Safety: Run destructive storage, networking, and firewall exercises only in disposable virtual machines with console access and snapshots.</p>
+</blockquote>
+<h2 id="table-of-contents">Table of contents</h2>
+<ol>
+<li><a href="#chapter-1-rhel-architecture-and-installation">Chapter 1: RHEL Architecture and Installation</a></li>
+<li><a href="#chapter-2-shell-and-core-utilities">Chapter 2: Shell and Core Utilities</a></li>
+<li><a href="#chapter-3-users-groups-and-permissions">Chapter 3: Users, Groups and Permissions</a></li>
+<li><a href="#chapter-4-processes-cpu-and-memory">Chapter 4: Processes, CPU and Memory</a></li>
+<li><a href="#chapter-5-systemd-and-boot-troubleshooting">Chapter 5: Systemd and Boot Troubleshooting</a></li>
+<li><a href="#chapter-6-storage-lvm-raid-and-filesystems">Chapter 6: Storage, LVM, RAID and Filesystems</a></li>
+<li><a href="#chapter-7-networking-and-troubleshooting">Chapter 7: Networking and Troubleshooting</a></li>
+<li><a href="#chapter-8-software-management">Chapter 8: Software Management</a></li>
+<li><a href="#chapter-9-selinux-and-host-security">Chapter 9: SELinux and Host Security</a></li>
+<li><a href="#chapter-10-ssh-pki-and-tls">Chapter 10: SSH, PKI and TLS</a></li>
+<li><a href="#chapter-11-services-web-proxy-and-dns">Chapter 11: Services: Web, Proxy and DNS</a></li>
+<li><a href="#chapter-12-file-sharing-and-automation">Chapter 12: File Sharing and Automation</a></li>
+<li><a href="#chapter-13-containers-and-virtualization">Chapter 13: Containers and Virtualization</a></li>
+<li><a href="#chapter-14-observability-and-performance">Chapter 14: Observability and Performance</a></li>
+<li><a href="#chapter-15-backup-recovery-and-high-availability">Chapter 15: Backup, Recovery and High Availability</a></li>
+<li><a href="#chapter-16-rhcsa-practical-examination-labs">Chapter 16: RHCSA Practical Examination Labs</a></li>
+<li><a href="#chapter-17-rhce-engineering-with-ansible">Chapter 17: RHCE Engineering with Ansible</a></li>
+<li><a href="#chapter-18-production-engineering-and-incident-response">Chapter 18: Production Engineering and Incident Response</a></li>
+<li><a href="#chapter-19-senior-linux-interview-preparation">Chapter 19: Senior Linux Interview Preparation</a></li>
+<li><a href="#advanced-edition--deep-dive-companion-chapters">Advanced chapters 20–28 and subject index</a></li>
+</ol>
+<hr/>
+<h2 id="chapter-1-rhel-architecture-and-installation">Chapter 1: RHEL Architecture and Installation</h2>
+<h3 id="learning-objectives-and-theory">Learning objectives and theory</h3>
+<p>This chapter covers <strong>boot chain, firmware, GRUB2, kernel, initramfs, systemd; installation and subscription</strong>. Think in layers: user request → user-space process → system call → Linux kernel → hardware or remote service. Observe the actual system state before changing configuration.</p>
+<h3 id="guided-laboratory">Guided laboratory</h3>
+<p><strong>Lab environment:</strong> Two RHEL 9 VMs (<code>rhel-a</code>, <code>rhel-b</code>) with sudo-enabled user; take a snapshot first.</p>
+<ol>
+<li>Record a baseline and save evidence.</li>
+</ol>
+<pre><code class="language-bash">cat /etc/redhat-release
+uname -r
+hostnamectl
+uptime
+free -h
+df -hT
+ip -br addr
+systemctl --failed
+journalctl -p err -b --no-pager | tail -30
+</code></pre>
+<ol start="2">
+<li>Choose a component in the chapter scope. Inspect its configuration, runtime state, and logs.</li>
+<li>Reproduce a controlled failure in a disposable VM, identify the symptom, recover, and document verification.</li>
+</ol>
+<h3 id="troubleshooting-workflow">Troubleshooting workflow</h3>
+<ol>
+<li>Define expected behavior and observed behavior, including timestamps.</li>
+<li>Separate resource saturation, misconfiguration, access control, dependencies, and connectivity.</li>
+<li>Correlate process/service state with journal and relevant subsystem evidence.</li>
+<li>Make the smallest reversible change, validate the result, and document rollback.</li>
+</ol>
+<h3 id="interview-questions">Interview questions</h3>
+<p><strong>Q1. What would you inspect first when a production issue involves rhel architecture and installation?</strong><br/>
+A: State the symptom and blast radius, collect read-only evidence, identify the affected layer, then test one hypothesis at a time.</p>
+<p><strong>Q2. How do you distinguish root cause from a correlated symptom?</strong><br/>
+A: Compare timeline, dependencies, metrics, logs, and a repeatable test; avoid treating a single error line as proof.</p>
+<p><strong>Q3. What makes a change production-safe?</strong><br/>
+A: Baseline, peer review, backups, rollback plan, maintenance window where needed, and post-change checks.</p>
+<hr/>
+<h2 id="chapter-2-shell-and-core-utilities">Chapter 2: Shell and Core Utilities</h2>
+<h3 id="learning-objectives-and-theory-1">Learning objectives and theory</h3>
+<p>This chapter covers <strong>Bash expansion, pipelines, redirection, grep, sed, awk, find, tar</strong>. Think in layers: user request → user-space process → system call → Linux kernel → hardware or remote service. Observe the actual system state before changing configuration.</p>
+<h3 id="guided-laboratory-1">Guided laboratory</h3>
+<p><strong>Lab environment:</strong> Two RHEL 9 VMs (<code>rhel-a</code>, <code>rhel-b</code>) with sudo-enabled user; take a snapshot first.</p>
+<ol>
+<li>Record a baseline and save evidence.</li>
+</ol>
+<pre><code class="language-bash">cat /etc/redhat-release
+uname -r
+hostnamectl
+uptime
+free -h
+df -hT
+ip -br addr
+systemctl --failed
+journalctl -p err -b --no-pager | tail -30
+</code></pre>
+<ol start="2">
+<li>Choose a component in the chapter scope. Inspect its configuration, runtime state, and logs.</li>
+<li>Reproduce a controlled failure in a disposable VM, identify the symptom, recover, and document verification.</li>
+</ol>
+<h3 id="troubleshooting-workflow-1">Troubleshooting workflow</h3>
+<ol>
+<li>Define expected behavior and observed behavior, including timestamps.</li>
+<li>Separate resource saturation, misconfiguration, access control, dependencies, and connectivity.</li>
+<li>Correlate process/service state with journal and relevant subsystem evidence.</li>
+<li>Make the smallest reversible change, validate the result, and document rollback.</li>
+</ol>
+<h3 id="interview-questions-1">Interview questions</h3>
+<p><strong>Q1. What would you inspect first when a production issue involves shell and core utilities?</strong><br/>
+A: State the symptom and blast radius, collect read-only evidence, identify the affected layer, then test one hypothesis at a time.</p>
+<p><strong>Q2. How do you distinguish root cause from a correlated symptom?</strong><br/>
+A: Compare timeline, dependencies, metrics, logs, and a repeatable test; avoid treating a single error line as proof.</p>
+<p><strong>Q3. What makes a change production-safe?</strong><br/>
+A: Baseline, peer review, backups, rollback plan, maintenance window where needed, and post-change checks.</p>
+<hr/>
+<h2 id="chapter-3-users-groups-and-permissions">Chapter 3: Users, Groups and Permissions</h2>
+<h3 id="learning-objectives-and-theory-2">Learning objectives and theory</h3>
+<p>This chapter covers <strong>UID/GID, PAM, sudo, ACL, umask, SUID/SGID, sticky bit</strong>. Think in layers: user request → user-space process → system call → Linux kernel → hardware or remote service. Observe the actual system state before changing configuration.</p>
+<h3 id="guided-laboratory-2">Guided laboratory</h3>
+<p><strong>Lab environment:</strong> Two RHEL 9 VMs (<code>rhel-a</code>, <code>rhel-b</code>) with sudo-enabled user; take a snapshot first.</p>
+<ol>
+<li>Record a baseline and save evidence.</li>
+</ol>
+<pre><code class="language-bash">cat /etc/redhat-release
+uname -r
+hostnamectl
+uptime
+free -h
+df -hT
+ip -br addr
+systemctl --failed
+journalctl -p err -b --no-pager | tail -30
+</code></pre>
+<ol start="2">
+<li>Choose a component in the chapter scope. Inspect its configuration, runtime state, and logs.</li>
+<li>Reproduce a controlled failure in a disposable VM, identify the symptom, recover, and document verification.</li>
+</ol>
+<h3 id="troubleshooting-workflow-2">Troubleshooting workflow</h3>
+<ol>
+<li>Define expected behavior and observed behavior, including timestamps.</li>
+<li>Separate resource saturation, misconfiguration, access control, dependencies, and connectivity.</li>
+<li>Correlate process/service state with journal and relevant subsystem evidence.</li>
+<li>Make the smallest reversible change, validate the result, and document rollback.</li>
+</ol>
+<h3 id="interview-questions-2">Interview questions</h3>
+<p><strong>Q1. What would you inspect first when a production issue involves users, groups and permissions?</strong><br/>
+A: State the symptom and blast radius, collect read-only evidence, identify the affected layer, then test one hypothesis at a time.</p>
+<p><strong>Q2. How do you distinguish root cause from a correlated symptom?</strong><br/>
+A: Compare timeline, dependencies, metrics, logs, and a repeatable test; avoid treating a single error line as proof.</p>
+<p><strong>Q3. What makes a change production-safe?</strong><br/>
+A: Baseline, peer review, backups, rollback plan, maintenance window where needed, and post-change checks.</p>
+<hr/>
+<h2 id="chapter-4-processes-cpu-and-memory">Chapter 4: Processes, CPU and Memory</h2>
+<h3 id="learning-objectives-and-theory-3">Learning objectives and theory</h3>
+<p>This chapter covers <strong>scheduler, load average, CPU utilization, RSS, VSZ, page cache, swap, OOM</strong>. Think in layers: user request → user-space process → system call → Linux kernel → hardware or remote service. Observe the actual system state before changing configuration.</p>
+<h3 id="guided-laboratory-3">Guided laboratory</h3>
+<p><strong>Lab environment:</strong> Two RHEL 9 VMs (<code>rhel-a</code>, <code>rhel-b</code>) with sudo-enabled user; take a snapshot first.</p>
+<ol>
+<li>Record a baseline and save evidence.</li>
+</ol>
+<pre><code class="language-bash">cat /etc/redhat-release
+uname -r
+hostnamectl
+uptime
+free -h
+df -hT
+ip -br addr
+systemctl --failed
+journalctl -p err -b --no-pager | tail -30
+</code></pre>
+<ol start="2">
+<li>Choose a component in the chapter scope. Inspect its configuration, runtime state, and logs.</li>
+<li>Reproduce a controlled failure in a disposable VM, identify the symptom, recover, and document verification.</li>
+</ol>
+<h3 id="troubleshooting-workflow-3">Troubleshooting workflow</h3>
+<ol>
+<li>Define expected behavior and observed behavior, including timestamps.</li>
+<li>Separate resource saturation, misconfiguration, access control, dependencies, and connectivity.</li>
+<li>Correlate process/service state with journal and relevant subsystem evidence.</li>
+<li>Make the smallest reversible change, validate the result, and document rollback.</li>
+</ol>
+<h3 id="interview-questions-3">Interview questions</h3>
+<p><strong>Q1. What would you inspect first when a production issue involves processes, cpu and memory?</strong><br/>
+A: State the symptom and blast radius, collect read-only evidence, identify the affected layer, then test one hypothesis at a time.</p>
+<p><strong>Q2. How do you distinguish root cause from a correlated symptom?</strong><br/>
+A: Compare timeline, dependencies, metrics, logs, and a repeatable test; avoid treating a single error line as proof.</p>
+<p><strong>Q3. What makes a change production-safe?</strong><br/>
+A: Baseline, peer review, backups, rollback plan, maintenance window where needed, and post-change checks.</p>
+<hr/>
+<h2 id="chapter-5-systemd-and-boot-troubleshooting">Chapter 5: Systemd and Boot Troubleshooting</h2>
+<h3 id="learning-objectives-and-theory-4">Learning objectives and theory</h3>
+<p>This chapter covers <strong>units, targets, dependencies, journal, rescue and emergency modes</strong>. Think in layers: user request → user-space process → system call → Linux kernel → hardware or remote service. Observe the actual system state before changing configuration.</p>
+<h3 id="guided-laboratory-4">Guided laboratory</h3>
+<p><strong>Lab environment:</strong> Two RHEL 9 VMs (<code>rhel-a</code>, <code>rhel-b</code>) with sudo-enabled user; take a snapshot first.</p>
+<ol>
+<li>Record a baseline and save evidence.</li>
+</ol>
+<pre><code class="language-bash">cat /etc/redhat-release
+uname -r
+hostnamectl
+uptime
+free -h
+df -hT
+ip -br addr
+systemctl --failed
+journalctl -p err -b --no-pager | tail -30
+</code></pre>
+<ol start="2">
+<li>Choose a component in the chapter scope. Inspect its configuration, runtime state, and logs.</li>
+<li>Reproduce a controlled failure in a disposable VM, identify the symptom, recover, and document verification.</li>
+</ol>
+<h3 id="troubleshooting-workflow-4">Troubleshooting workflow</h3>
+<ol>
+<li>Define expected behavior and observed behavior, including timestamps.</li>
+<li>Separate resource saturation, misconfiguration, access control, dependencies, and connectivity.</li>
+<li>Correlate process/service state with journal and relevant subsystem evidence.</li>
+<li>Make the smallest reversible change, validate the result, and document rollback.</li>
+</ol>
+<h3 id="interview-questions-4">Interview questions</h3>
+<p><strong>Q1. What would you inspect first when a production issue involves systemd and boot troubleshooting?</strong><br/>
+A: State the symptom and blast radius, collect read-only evidence, identify the affected layer, then test one hypothesis at a time.</p>
+<p><strong>Q2. How do you distinguish root cause from a correlated symptom?</strong><br/>
+A: Compare timeline, dependencies, metrics, logs, and a repeatable test; avoid treating a single error line as proof.</p>
+<p><strong>Q3. What makes a change production-safe?</strong><br/>
+A: Baseline, peer review, backups, rollback plan, maintenance window where needed, and post-change checks.</p>
+<hr/>
+<h2 id="chapter-6-storage-lvm-raid-and-filesystems">Chapter 6: Storage, LVM, RAID and Filesystems</h2>
+<h3 id="learning-objectives-and-theory-5">Learning objectives and theory</h3>
+<p>This chapter covers <strong>partitioning, XFS, ext4, LVM, RAID, fstab, UUID, quotas</strong>. Think in layers: user request → user-space process → system call → Linux kernel → hardware or remote service. Observe the actual system state before changing configuration.</p>
+<h3 id="guided-laboratory-5">Guided laboratory</h3>
+<p><strong>Lab environment:</strong> Two RHEL 9 VMs (<code>rhel-a</code>, <code>rhel-b</code>) with sudo-enabled user; take a snapshot first.</p>
+<ol>
+<li>Record a baseline and save evidence.</li>
+</ol>
+<pre><code class="language-bash">cat /etc/redhat-release
+uname -r
+hostnamectl
+uptime
+free -h
+df -hT
+ip -br addr
+systemctl --failed
+journalctl -p err -b --no-pager | tail -30
+</code></pre>
+<ol start="2">
+<li>Choose a component in the chapter scope. Inspect its configuration, runtime state, and logs.</li>
+<li>Reproduce a controlled failure in a disposable VM, identify the symptom, recover, and document verification.</li>
+</ol>
+<h3 id="troubleshooting-workflow-5">Troubleshooting workflow</h3>
+<ol>
+<li>Define expected behavior and observed behavior, including timestamps.</li>
+<li>Separate resource saturation, misconfiguration, access control, dependencies, and connectivity.</li>
+<li>Correlate process/service state with journal and relevant subsystem evidence.</li>
+<li>Make the smallest reversible change, validate the result, and document rollback.</li>
+</ol>
+<h3 id="interview-questions-5">Interview questions</h3>
+<p><strong>Q1. What would you inspect first when a production issue involves storage, lvm, raid and filesystems?</strong><br/>
+A: State the symptom and blast radius, collect read-only evidence, identify the affected layer, then test one hypothesis at a time.</p>
+<p><strong>Q2. How do you distinguish root cause from a correlated symptom?</strong><br/>
+A: Compare timeline, dependencies, metrics, logs, and a repeatable test; avoid treating a single error line as proof.</p>
+<p><strong>Q3. What makes a change production-safe?</strong><br/>
+A: Baseline, peer review, backups, rollback plan, maintenance window where needed, and post-change checks.</p>
+<hr/>
+<h2 id="chapter-7-networking-and-troubleshooting">Chapter 7: Networking and Troubleshooting</h2>
+<h3 id="learning-objectives-and-theory-6">Learning objectives and theory</h3>
+<p>This chapter covers <strong>NetworkManager, nmcli, IP routing, DNS, bonds, VLANs, bridges</strong>. Think in layers: user request → user-space process → system call → Linux kernel → hardware or remote service. Observe the actual system state before changing configuration.</p>
+<h3 id="guided-laboratory-6">Guided laboratory</h3>
+<p><strong>Lab environment:</strong> Two RHEL 9 VMs (<code>rhel-a</code>, <code>rhel-b</code>) with sudo-enabled user; take a snapshot first.</p>
+<ol>
+<li>Record a baseline and save evidence.</li>
+</ol>
+<pre><code class="language-bash">cat /etc/redhat-release
+uname -r
+hostnamectl
+uptime
+free -h
+df -hT
+ip -br addr
+systemctl --failed
+journalctl -p err -b --no-pager | tail -30
+</code></pre>
+<ol start="2">
+<li>Choose a component in the chapter scope. Inspect its configuration, runtime state, and logs.</li>
+<li>Reproduce a controlled failure in a disposable VM, identify the symptom, recover, and document verification.</li>
+</ol>
+<h3 id="troubleshooting-workflow-6">Troubleshooting workflow</h3>
+<ol>
+<li>Define expected behavior and observed behavior, including timestamps.</li>
+<li>Separate resource saturation, misconfiguration, access control, dependencies, and connectivity.</li>
+<li>Correlate process/service state with journal and relevant subsystem evidence.</li>
+<li>Make the smallest reversible change, validate the result, and document rollback.</li>
+</ol>
+<h3 id="interview-questions-6">Interview questions</h3>
+<p><strong>Q1. What would you inspect first when a production issue involves networking and troubleshooting?</strong><br/>
+A: State the symptom and blast radius, collect read-only evidence, identify the affected layer, then test one hypothesis at a time.</p>
+<p><strong>Q2. How do you distinguish root cause from a correlated symptom?</strong><br/>
+A: Compare timeline, dependencies, metrics, logs, and a repeatable test; avoid treating a single error line as proof.</p>
+<p><strong>Q3. What makes a change production-safe?</strong><br/>
+A: Baseline, peer review, backups, rollback plan, maintenance window where needed, and post-change checks.</p>
+<hr/>
+<h2 id="chapter-8-software-management">Chapter 8: Software Management</h2>
+<h3 id="learning-objectives-and-theory-7">Learning objectives and theory</h3>
+<p>This chapter covers <strong>dnf, rpm, repositories, modularity, package verification</strong>. Think in layers: user request → user-space process → system call → Linux kernel → hardware or remote service. Observe the actual system state before changing configuration.</p>
+<h3 id="guided-laboratory-7">Guided laboratory</h3>
+<p><strong>Lab environment:</strong> Two RHEL 9 VMs (<code>rhel-a</code>, <code>rhel-b</code>) with sudo-enabled user; take a snapshot first.</p>
+<ol>
+<li>Record a baseline and save evidence.</li>
+</ol>
+<pre><code class="language-bash">cat /etc/redhat-release
+uname -r
+hostnamectl
+uptime
+free -h
+df -hT
+ip -br addr
+systemctl --failed
+journalctl -p err -b --no-pager | tail -30
+</code></pre>
+<ol start="2">
+<li>Choose a component in the chapter scope. Inspect its configuration, runtime state, and logs.</li>
+<li>Reproduce a controlled failure in a disposable VM, identify the symptom, recover, and document verification.</li>
+</ol>
+<h3 id="troubleshooting-workflow-7">Troubleshooting workflow</h3>
+<ol>
+<li>Define expected behavior and observed behavior, including timestamps.</li>
+<li>Separate resource saturation, misconfiguration, access control, dependencies, and connectivity.</li>
+<li>Correlate process/service state with journal and relevant subsystem evidence.</li>
+<li>Make the smallest reversible change, validate the result, and document rollback.</li>
+</ol>
+<h3 id="interview-questions-7">Interview questions</h3>
+<p><strong>Q1. What would you inspect first when a production issue involves software management?</strong><br/>
+A: State the symptom and blast radius, collect read-only evidence, identify the affected layer, then test one hypothesis at a time.</p>
+<p><strong>Q2. How do you distinguish root cause from a correlated symptom?</strong><br/>
+A: Compare timeline, dependencies, metrics, logs, and a repeatable test; avoid treating a single error line as proof.</p>
+<p><strong>Q3. What makes a change production-safe?</strong><br/>
+A: Baseline, peer review, backups, rollback plan, maintenance window where needed, and post-change checks.</p>
+<hr/>
+<h2 id="chapter-9-selinux-and-host-security">Chapter 9: SELinux and Host Security</h2>
+<h3 id="learning-objectives-and-theory-8">Learning objectives and theory</h3>
+<p>This chapter covers <strong>contexts, modes, booleans, AVC, semanage, firewalld, auditd</strong>. Think in layers: user request → user-space process → system call → Linux kernel → hardware or remote service. Observe the actual system state before changing configuration.</p>
+<h3 id="guided-laboratory-8">Guided laboratory</h3>
+<p><strong>Lab environment:</strong> Two RHEL 9 VMs (<code>rhel-a</code>, <code>rhel-b</code>) with sudo-enabled user; take a snapshot first.</p>
+<ol>
+<li>Record a baseline and save evidence.</li>
+</ol>
+<pre><code class="language-bash">cat /etc/redhat-release
+uname -r
+hostnamectl
+uptime
+free -h
+df -hT
+ip -br addr
+systemctl --failed
+journalctl -p err -b --no-pager | tail -30
+</code></pre>
+<ol start="2">
+<li>Choose a component in the chapter scope. Inspect its configuration, runtime state, and logs.</li>
+<li>Reproduce a controlled failure in a disposable VM, identify the symptom, recover, and document verification.</li>
+</ol>
+<h3 id="troubleshooting-workflow-8">Troubleshooting workflow</h3>
+<ol>
+<li>Define expected behavior and observed behavior, including timestamps.</li>
+<li>Separate resource saturation, misconfiguration, access control, dependencies, and connectivity.</li>
+<li>Correlate process/service state with journal and relevant subsystem evidence.</li>
+<li>Make the smallest reversible change, validate the result, and document rollback.</li>
+</ol>
+<h3 id="interview-questions-8">Interview questions</h3>
+<p><strong>Q1. What would you inspect first when a production issue involves selinux and host security?</strong><br/>
+A: State the symptom and blast radius, collect read-only evidence, identify the affected layer, then test one hypothesis at a time.</p>
+<p><strong>Q2. How do you distinguish root cause from a correlated symptom?</strong><br/>
+A: Compare timeline, dependencies, metrics, logs, and a repeatable test; avoid treating a single error line as proof.</p>
+<p><strong>Q3. What makes a change production-safe?</strong><br/>
+A: Baseline, peer review, backups, rollback plan, maintenance window where needed, and post-change checks.</p>
+<hr/>
+<h2 id="chapter-10-ssh-pki-and-tls">Chapter 10: SSH, PKI and TLS</h2>
+<h3 id="learning-objectives-and-theory-9">Learning objectives and theory</h3>
+<p>This chapter covers <strong>sshd hardening, keys, certificate chains, openssl</strong>. Think in layers: user request → user-space process → system call → Linux kernel → hardware or remote service. Observe the actual system state before changing configuration.</p>
+<h3 id="guided-laboratory-9">Guided laboratory</h3>
+<p><strong>Lab environment:</strong> Two RHEL 9 VMs (<code>rhel-a</code>, <code>rhel-b</code>) with sudo-enabled user; take a snapshot first.</p>
+<ol>
+<li>Record a baseline and save evidence.</li>
+</ol>
+<pre><code class="language-bash">cat /etc/redhat-release
+uname -r
+hostnamectl
+uptime
+free -h
+df -hT
+ip -br addr
+systemctl --failed
+journalctl -p err -b --no-pager | tail -30
+</code></pre>
+<ol start="2">
+<li>Choose a component in the chapter scope. Inspect its configuration, runtime state, and logs.</li>
+<li>Reproduce a controlled failure in a disposable VM, identify the symptom, recover, and document verification.</li>
+</ol>
+<h3 id="troubleshooting-workflow-9">Troubleshooting workflow</h3>
+<ol>
+<li>Define expected behavior and observed behavior, including timestamps.</li>
+<li>Separate resource saturation, misconfiguration, access control, dependencies, and connectivity.</li>
+<li>Correlate process/service state with journal and relevant subsystem evidence.</li>
+<li>Make the smallest reversible change, validate the result, and document rollback.</li>
+</ol>
+<h3 id="interview-questions-9">Interview questions</h3>
+<p><strong>Q1. What would you inspect first when a production issue involves ssh, pki and tls?</strong><br/>
+A: State the symptom and blast radius, collect read-only evidence, identify the affected layer, then test one hypothesis at a time.</p>
+<p><strong>Q2. How do you distinguish root cause from a correlated symptom?</strong><br/>
+A: Compare timeline, dependencies, metrics, logs, and a repeatable test; avoid treating a single error line as proof.</p>
+<p><strong>Q3. What makes a change production-safe?</strong><br/>
+A: Baseline, peer review, backups, rollback plan, maintenance window where needed, and post-change checks.</p>
+<hr/>
+<h2 id="chapter-11-services-web-proxy-and-dns">Chapter 11: Services: Web, Proxy and DNS</h2>
+<h3 id="learning-objectives-and-theory-10">Learning objectives and theory</h3>
+<p>This chapter covers <strong>Apache, Nginx, HAProxy, BIND and troubleshooting</strong>. Think in layers: user request → user-space process → system call → Linux kernel → hardware or remote service. Observe the actual system state before changing configuration.</p>
+<h3 id="guided-laboratory-10">Guided laboratory</h3>
+<p><strong>Lab environment:</strong> Two RHEL 9 VMs (<code>rhel-a</code>, <code>rhel-b</code>) with sudo-enabled user; take a snapshot first.</p>
+<ol>
+<li>Record a baseline and save evidence.</li>
+</ol>
+<pre><code class="language-bash">cat /etc/redhat-release
+uname -r
+hostnamectl
+uptime
+free -h
+df -hT
+ip -br addr
+systemctl --failed
+journalctl -p err -b --no-pager | tail -30
+</code></pre>
+<ol start="2">
+<li>Choose a component in the chapter scope. Inspect its configuration, runtime state, and logs.</li>
+<li>Reproduce a controlled failure in a disposable VM, identify the symptom, recover, and document verification.</li>
+</ol>
+<h3 id="troubleshooting-workflow-10">Troubleshooting workflow</h3>
+<ol>
+<li>Define expected behavior and observed behavior, including timestamps.</li>
+<li>Separate resource saturation, misconfiguration, access control, dependencies, and connectivity.</li>
+<li>Correlate process/service state with journal and relevant subsystem evidence.</li>
+<li>Make the smallest reversible change, validate the result, and document rollback.</li>
+</ol>
+<h3 id="interview-questions-10">Interview questions</h3>
+<p><strong>Q1. What would you inspect first when a production issue involves services: web, proxy and dns?</strong><br/>
+A: State the symptom and blast radius, collect read-only evidence, identify the affected layer, then test one hypothesis at a time.</p>
+<p><strong>Q2. How do you distinguish root cause from a correlated symptom?</strong><br/>
+A: Compare timeline, dependencies, metrics, logs, and a repeatable test; avoid treating a single error line as proof.</p>
+<p><strong>Q3. What makes a change production-safe?</strong><br/>
+A: Baseline, peer review, backups, rollback plan, maintenance window where needed, and post-change checks.</p>
+<hr/>
+<h2 id="chapter-12-file-sharing-and-automation">Chapter 12: File Sharing and Automation</h2>
+<h3 id="learning-objectives-and-theory-11">Learning objectives and theory</h3>
+<p>This chapter covers <strong>NFS, Samba, autofs, cron, timers, Bash and Ansible</strong>. Think in layers: user request → user-space process → system call → Linux kernel → hardware or remote service. Observe the actual system state before changing configuration.</p>
+<h3 id="guided-laboratory-11">Guided laboratory</h3>
+<p><strong>Lab environment:</strong> Two RHEL 9 VMs (<code>rhel-a</code>, <code>rhel-b</code>) with sudo-enabled user; take a snapshot first.</p>
+<ol>
+<li>Record a baseline and save evidence.</li>
+</ol>
+<pre><code class="language-bash">cat /etc/redhat-release
+uname -r
+hostnamectl
+uptime
+free -h
+df -hT
+ip -br addr
+systemctl --failed
+journalctl -p err -b --no-pager | tail -30
+</code></pre>
+<ol start="2">
+<li>Choose a component in the chapter scope. Inspect its configuration, runtime state, and logs.</li>
+<li>Reproduce a controlled failure in a disposable VM, identify the symptom, recover, and document verification.</li>
+</ol>
+<h3 id="troubleshooting-workflow-11">Troubleshooting workflow</h3>
+<ol>
+<li>Define expected behavior and observed behavior, including timestamps.</li>
+<li>Separate resource saturation, misconfiguration, access control, dependencies, and connectivity.</li>
+<li>Correlate process/service state with journal and relevant subsystem evidence.</li>
+<li>Make the smallest reversible change, validate the result, and document rollback.</li>
+</ol>
+<h3 id="interview-questions-11">Interview questions</h3>
+<p><strong>Q1. What would you inspect first when a production issue involves file sharing and automation?</strong><br/>
+A: State the symptom and blast radius, collect read-only evidence, identify the affected layer, then test one hypothesis at a time.</p>
+<p><strong>Q2. How do you distinguish root cause from a correlated symptom?</strong><br/>
+A: Compare timeline, dependencies, metrics, logs, and a repeatable test; avoid treating a single error line as proof.</p>
+<p><strong>Q3. What makes a change production-safe?</strong><br/>
+A: Baseline, peer review, backups, rollback plan, maintenance window where needed, and post-change checks.</p>
+<hr/>
+<h2 id="chapter-13-containers-and-virtualization">Chapter 13: Containers and Virtualization</h2>
+<h3 id="learning-objectives-and-theory-12">Learning objectives and theory</h3>
+<p>This chapter covers <strong>Podman, images, rootless containers, KVM/libvirt</strong>. Think in layers: user request → user-space process → system call → Linux kernel → hardware or remote service. Observe the actual system state before changing configuration.</p>
+<h3 id="guided-laboratory-12">Guided laboratory</h3>
+<p><strong>Lab environment:</strong> Two RHEL 9 VMs (<code>rhel-a</code>, <code>rhel-b</code>) with sudo-enabled user; take a snapshot first.</p>
+<ol>
+<li>Record a baseline and save evidence.</li>
+</ol>
+<pre><code class="language-bash">cat /etc/redhat-release
+uname -r
+hostnamectl
+uptime
+free -h
+df -hT
+ip -br addr
+systemctl --failed
+journalctl -p err -b --no-pager | tail -30
+</code></pre>
+<ol start="2">
+<li>Choose a component in the chapter scope. Inspect its configuration, runtime state, and logs.</li>
+<li>Reproduce a controlled failure in a disposable VM, identify the symptom, recover, and document verification.</li>
+</ol>
+<h3 id="troubleshooting-workflow-12">Troubleshooting workflow</h3>
+<ol>
+<li>Define expected behavior and observed behavior, including timestamps.</li>
+<li>Separate resource saturation, misconfiguration, access control, dependencies, and connectivity.</li>
+<li>Correlate process/service state with journal and relevant subsystem evidence.</li>
+<li>Make the smallest reversible change, validate the result, and document rollback.</li>
+</ol>
+<h3 id="interview-questions-12">Interview questions</h3>
+<p><strong>Q1. What would you inspect first when a production issue involves containers and virtualization?</strong><br/>
+A: State the symptom and blast radius, collect read-only evidence, identify the affected layer, then test one hypothesis at a time.</p>
+<p><strong>Q2. How do you distinguish root cause from a correlated symptom?</strong><br/>
+A: Compare timeline, dependencies, metrics, logs, and a repeatable test; avoid treating a single error line as proof.</p>
+<p><strong>Q3. What makes a change production-safe?</strong><br/>
+A: Baseline, peer review, backups, rollback plan, maintenance window where needed, and post-change checks.</p>
+<hr/>
+<h2 id="chapter-14-observability-and-performance">Chapter 14: Observability and Performance</h2>
+<h3 id="learning-objectives-and-theory-13">Learning objectives and theory</h3>
+<p>This chapter covers <strong>sar, vmstat, iostat, pidstat, perf, logs, bottleneck diagnosis</strong>. Think in layers: user request → user-space process → system call → Linux kernel → hardware or remote service. Observe the actual system state before changing configuration.</p>
+<h3 id="guided-laboratory-13">Guided laboratory</h3>
+<p><strong>Lab environment:</strong> Two RHEL 9 VMs (<code>rhel-a</code>, <code>rhel-b</code>) with sudo-enabled user; take a snapshot first.</p>
+<ol>
+<li>Record a baseline and save evidence.</li>
+</ol>
+<pre><code class="language-bash">cat /etc/redhat-release
+uname -r
+hostnamectl
+uptime
+free -h
+df -hT
+ip -br addr
+systemctl --failed
+journalctl -p err -b --no-pager | tail -30
+</code></pre>
+<ol start="2">
+<li>Choose a component in the chapter scope. Inspect its configuration, runtime state, and logs.</li>
+<li>Reproduce a controlled failure in a disposable VM, identify the symptom, recover, and document verification.</li>
+</ol>
+<h3 id="troubleshooting-workflow-13">Troubleshooting workflow</h3>
+<ol>
+<li>Define expected behavior and observed behavior, including timestamps.</li>
+<li>Separate resource saturation, misconfiguration, access control, dependencies, and connectivity.</li>
+<li>Correlate process/service state with journal and relevant subsystem evidence.</li>
+<li>Make the smallest reversible change, validate the result, and document rollback.</li>
+</ol>
+<h3 id="interview-questions-13">Interview questions</h3>
+<p><strong>Q1. What would you inspect first when a production issue involves observability and performance?</strong><br/>
+A: State the symptom and blast radius, collect read-only evidence, identify the affected layer, then test one hypothesis at a time.</p>
+<p><strong>Q2. How do you distinguish root cause from a correlated symptom?</strong><br/>
+A: Compare timeline, dependencies, metrics, logs, and a repeatable test; avoid treating a single error line as proof.</p>
+<p><strong>Q3. What makes a change production-safe?</strong><br/>
+A: Baseline, peer review, backups, rollback plan, maintenance window where needed, and post-change checks.</p>
+<hr/>
+<h2 id="chapter-15-backup-recovery-and-high-availability">Chapter 15: Backup, Recovery and High Availability</h2>
+<h3 id="learning-objectives-and-theory-14">Learning objectives and theory</h3>
+<p>This chapter covers <strong>rsync, snapshots, restore drills, Pacemaker overview</strong>. Think in layers: user request → user-space process → system call → Linux kernel → hardware or remote service. Observe the actual system state before changing configuration.</p>
+<h3 id="guided-laboratory-14">Guided laboratory</h3>
+<p><strong>Lab environment:</strong> Two RHEL 9 VMs (<code>rhel-a</code>, <code>rhel-b</code>) with sudo-enabled user; take a snapshot first.</p>
+<ol>
+<li>Record a baseline and save evidence.</li>
+</ol>
+<pre><code class="language-bash">cat /etc/redhat-release
+uname -r
+hostnamectl
+uptime
+free -h
+df -hT
+ip -br addr
+systemctl --failed
+journalctl -p err -b --no-pager | tail -30
+</code></pre>
+<ol start="2">
+<li>Choose a component in the chapter scope. Inspect its configuration, runtime state, and logs.</li>
+<li>Reproduce a controlled failure in a disposable VM, identify the symptom, recover, and document verification.</li>
+</ol>
+<h3 id="troubleshooting-workflow-14">Troubleshooting workflow</h3>
+<ol>
+<li>Define expected behavior and observed behavior, including timestamps.</li>
+<li>Separate resource saturation, misconfiguration, access control, dependencies, and connectivity.</li>
+<li>Correlate process/service state with journal and relevant subsystem evidence.</li>
+<li>Make the smallest reversible change, validate the result, and document rollback.</li>
+</ol>
+<h3 id="interview-questions-14">Interview questions</h3>
+<p><strong>Q1. What would you inspect first when a production issue involves backup, recovery and high availability?</strong><br/>
+A: State the symptom and blast radius, collect read-only evidence, identify the affected layer, then test one hypothesis at a time.</p>
+<p><strong>Q2. How do you distinguish root cause from a correlated symptom?</strong><br/>
+A: Compare timeline, dependencies, metrics, logs, and a repeatable test; avoid treating a single error line as proof.</p>
+<p><strong>Q3. What makes a change production-safe?</strong><br/>
+A: Baseline, peer review, backups, rollback plan, maintenance window where needed, and post-change checks.</p>
+<hr/>
+<h2 id="chapter-16-rhcsa-practical-examination-labs">Chapter 16: RHCSA Practical Examination Labs</h2>
+<h3 id="learning-objectives-and-theory-15">Learning objectives and theory</h3>
+<p>This chapter covers <strong>hands-on admin objectives, time-boxed exercises</strong>. Think in layers: user request → user-space process → system call → Linux kernel → hardware or remote service. Observe the actual system state before changing configuration.</p>
+<h3 id="guided-laboratory-15">Guided laboratory</h3>
+<p><strong>Lab environment:</strong> Two RHEL 9 VMs (<code>rhel-a</code>, <code>rhel-b</code>) with sudo-enabled user; take a snapshot first.</p>
+<ol>
+<li>Record a baseline and save evidence.</li>
+</ol>
+<pre><code class="language-bash">cat /etc/redhat-release
+uname -r
+hostnamectl
+uptime
+free -h
+df -hT
+ip -br addr
+systemctl --failed
+journalctl -p err -b --no-pager | tail -30
+</code></pre>
+<ol start="2">
+<li>Choose a component in the chapter scope. Inspect its configuration, runtime state, and logs.</li>
+<li>Reproduce a controlled failure in a disposable VM, identify the symptom, recover, and document verification.</li>
+</ol>
+<h3 id="troubleshooting-workflow-15">Troubleshooting workflow</h3>
+<ol>
+<li>Define expected behavior and observed behavior, including timestamps.</li>
+<li>Separate resource saturation, misconfiguration, access control, dependencies, and connectivity.</li>
+<li>Correlate process/service state with journal and relevant subsystem evidence.</li>
+<li>Make the smallest reversible change, validate the result, and document rollback.</li>
+</ol>
+<h3 id="interview-questions-15">Interview questions</h3>
+<p><strong>Q1. What would you inspect first when a production issue involves rhcsa practical examination labs?</strong><br/>
+A: State the symptom and blast radius, collect read-only evidence, identify the affected layer, then test one hypothesis at a time.</p>
+<p><strong>Q2. How do you distinguish root cause from a correlated symptom?</strong><br/>
+A: Compare timeline, dependencies, metrics, logs, and a repeatable test; avoid treating a single error line as proof.</p>
+<p><strong>Q3. What makes a change production-safe?</strong><br/>
+A: Baseline, peer review, backups, rollback plan, maintenance window where needed, and post-change checks.</p>
+<hr/>
+<h2 id="chapter-17-rhce-engineering-with-ansible">Chapter 17: RHCE Engineering with Ansible</h2>
+<h3 id="learning-objectives-and-theory-16">Learning objectives and theory</h3>
+<p>This chapter covers <strong>inventory, roles, templates, handlers, vault, troubleshooting</strong>. Think in layers: user request → user-space process → system call → Linux kernel → hardware or remote service. Observe the actual system state before changing configuration.</p>
+<h3 id="guided-laboratory-16">Guided laboratory</h3>
+<p><strong>Lab environment:</strong> Two RHEL 9 VMs (<code>rhel-a</code>, <code>rhel-b</code>) with sudo-enabled user; take a snapshot first.</p>
+<ol>
+<li>Record a baseline and save evidence.</li>
+</ol>
+<pre><code class="language-bash">cat /etc/redhat-release
+uname -r
+hostnamectl
+uptime
+free -h
+df -hT
+ip -br addr
+systemctl --failed
+journalctl -p err -b --no-pager | tail -30
+</code></pre>
+<ol start="2">
+<li>Choose a component in the chapter scope. Inspect its configuration, runtime state, and logs.</li>
+<li>Reproduce a controlled failure in a disposable VM, identify the symptom, recover, and document verification.</li>
+</ol>
+<h3 id="troubleshooting-workflow-16">Troubleshooting workflow</h3>
+<ol>
+<li>Define expected behavior and observed behavior, including timestamps.</li>
+<li>Separate resource saturation, misconfiguration, access control, dependencies, and connectivity.</li>
+<li>Correlate process/service state with journal and relevant subsystem evidence.</li>
+<li>Make the smallest reversible change, validate the result, and document rollback.</li>
+</ol>
+<h3 id="interview-questions-16">Interview questions</h3>
+<p><strong>Q1. What would you inspect first when a production issue involves rhce engineering with ansible?</strong><br/>
+A: State the symptom and blast radius, collect read-only evidence, identify the affected layer, then test one hypothesis at a time.</p>
+<p><strong>Q2. How do you distinguish root cause from a correlated symptom?</strong><br/>
+A: Compare timeline, dependencies, metrics, logs, and a repeatable test; avoid treating a single error line as proof.</p>
+<p><strong>Q3. What makes a change production-safe?</strong><br/>
+A: Baseline, peer review, backups, rollback plan, maintenance window where needed, and post-change checks.</p>
+<hr/>
+<h2 id="chapter-18-production-engineering-and-incident-response">Chapter 18: Production Engineering and Incident Response</h2>
+<h3 id="learning-objectives-and-theory-17">Learning objectives and theory</h3>
+<p>This chapter covers <strong>runbooks, change control, RCA, capacity, patch strategy</strong>. Think in layers: user request → user-space process → system call → Linux kernel → hardware or remote service. Observe the actual system state before changing configuration.</p>
+<h3 id="guided-laboratory-17">Guided laboratory</h3>
+<p><strong>Lab environment:</strong> Two RHEL 9 VMs (<code>rhel-a</code>, <code>rhel-b</code>) with sudo-enabled user; take a snapshot first.</p>
+<ol>
+<li>Record a baseline and save evidence.</li>
+</ol>
+<pre><code class="language-bash">cat /etc/redhat-release
+uname -r
+hostnamectl
+uptime
+free -h
+df -hT
+ip -br addr
+systemctl --failed
+journalctl -p err -b --no-pager | tail -30
+</code></pre>
+<ol start="2">
+<li>Choose a component in the chapter scope. Inspect its configuration, runtime state, and logs.</li>
+<li>Reproduce a controlled failure in a disposable VM, identify the symptom, recover, and document verification.</li>
+</ol>
+<h3 id="troubleshooting-workflow-17">Troubleshooting workflow</h3>
+<ol>
+<li>Define expected behavior and observed behavior, including timestamps.</li>
+<li>Separate resource saturation, misconfiguration, access control, dependencies, and connectivity.</li>
+<li>Correlate process/service state with journal and relevant subsystem evidence.</li>
+<li>Make the smallest reversible change, validate the result, and document rollback.</li>
+</ol>
+<h3 id="interview-questions-17">Interview questions</h3>
+<p><strong>Q1. What would you inspect first when a production issue involves production engineering and incident response?</strong><br/>
+A: State the symptom and blast radius, collect read-only evidence, identify the affected layer, then test one hypothesis at a time.</p>
+<p><strong>Q2. How do you distinguish root cause from a correlated symptom?</strong><br/>
+A: Compare timeline, dependencies, metrics, logs, and a repeatable test; avoid treating a single error line as proof.</p>
+<p><strong>Q3. What makes a change production-safe?</strong><br/>
+A: Baseline, peer review, backups, rollback plan, maintenance window where needed, and post-change checks.</p>
+<hr/>
+<h2 id="chapter-19-senior-linux-interview-preparation">Chapter 19: Senior Linux Interview Preparation</h2>
+<h3 id="learning-objectives-and-theory-18">Learning objectives and theory</h3>
+<p>This chapter covers <strong>scenario-based questions and reasoning</strong>. Think in layers: user request → user-space process → system call → Linux kernel → hardware or remote service. Observe the actual system state before changing configuration.</p>
+<h3 id="guided-laboratory-18">Guided laboratory</h3>
+<p><strong>Lab environment:</strong> Two RHEL 9 VMs (<code>rhel-a</code>, <code>rhel-b</code>) with sudo-enabled user; take a snapshot first.</p>
+<ol>
+<li>Record a baseline and save evidence.</li>
+</ol>
+<pre><code class="language-bash">cat /etc/redhat-release
+uname -r
+hostnamectl
+uptime
+free -h
+df -hT
+ip -br addr
+systemctl --failed
+journalctl -p err -b --no-pager | tail -30
+</code></pre>
+<ol start="2">
+<li>Choose a component in the chapter scope. Inspect its configuration, runtime state, and logs.</li>
+<li>Reproduce a controlled failure in a disposable VM, identify the symptom, recover, and document verification.</li>
+</ol>
+<h3 id="troubleshooting-workflow-18">Troubleshooting workflow</h3>
+<ol>
+<li>Define expected behavior and observed behavior, including timestamps.</li>
+<li>Separate resource saturation, misconfiguration, access control, dependencies, and connectivity.</li>
+<li>Correlate process/service state with journal and relevant subsystem evidence.</li>
+<li>Make the smallest reversible change, validate the result, and document rollback.</li>
+</ol>
+<h3 id="interview-questions-18">Interview questions</h3>
+<p><strong>Q1. What would you inspect first when a production issue involves senior linux interview preparation?</strong><br/>
+A: State the symptom and blast radius, collect read-only evidence, identify the affected layer, then test one hypothesis at a time.</p>
+<p><strong>Q2. How do you distinguish root cause from a correlated symptom?</strong><br/>
+A: Compare timeline, dependencies, metrics, logs, and a repeatable test; avoid treating a single error line as proof.</p>
+<p><strong>Q3. What makes a change production-safe?</strong><br/>
+A: Baseline, peer review, backups, rollback plan, maintenance window where needed, and post-change checks.</p>
+<hr/>
+<h2 id="deep-dive-appendix-load-average-vs-cpu-utilization">Deep-dive appendix: Load average vs CPU utilization</h2>
+<p>Linux load average is the exponentially damped average number of tasks runnable or in uninterruptible sleep (typically I/O waits), sampled over 1, 5 and 15 minutes. It is <strong>not a percentage</strong>. On four logical CPUs, a load average of 4 can indicate roughly full runnable capacity, but I/O-blocked tasks can elevate load without high CPU usage.</p>
+<pre><code class="language-bash">uptime
+nproc
+top -H
+vmstat 1 5
+ps -eo pid,stat,pcpu,pmem,wchan:24,comm --sort=-pcpu | head
+</code></pre>
+<p>Interpret <code>vmstat</code> <code>r</code> (runnable queue), <code>b</code> (blocked tasks), <code>us/sy/id/wa</code> (CPU time), and <code>si/so</code> (swap activity) together. A high <code>wa</code> is not itself proof that storage is the only bottleneck.</p>
+<h2 id="deep-dive-appendix-lvm-extension-exercise">Deep-dive appendix: LVM extension exercise</h2>
+<pre><code class="language-bash">lsblk -f
+pvs; vgs; lvs
+df -hT
+sudo lvextend -r -L +1G /dev/vgdata/lvapp
+df -hT
+</code></pre>
+<p>Only execute <code>lvextend</code> if the named LV exists, has sufficient free extents, and its filesystem supports online growth. XFS cannot be shrunk.</p>
+<h2 id="deep-dive-appendix-selinux-troubleshooting">Deep-dive appendix: SELinux troubleshooting</h2>
+<pre><code class="language-bash">getenforce
+sudo ausearch -m AVC,USER_AVC -ts recent
+ls -Z /var/www/html
+sudo restorecon -Rv /var/www/html
+sudo semanage fcontext -l | grep httpd | head
+</code></pre>
+<p>Do not disable SELinux as a first response. Determine whether labels, booleans, ports or policy caused the denial.</p>
+<h2 id="glossary">Glossary</h2>
+<ul>
+<li><strong>AVC:</strong> SELinux access vector cache denial record.</li>
+<li><strong>D-state:</strong> Uninterruptible sleep, often associated with I/O.</li>
+<li><strong>initramfs:</strong> Early userspace used to prepare the real root filesystem.</li>
+<li><strong>LVM:</strong> Logical Volume Manager.</li>
+<li><strong>RSS:</strong> Resident Set Size, memory pages currently resident for a process.</li>
+<li><strong>systemd unit:</strong> Configuration describing a managed resource such as a service or mount.</li>
+<li><strong>XFS:</strong> High-performance journaling filesystem commonly used on RHEL.</li>
+</ul>
+<h2 id="references-and-verification-resources">References and verification resources</h2>
+<ul>
+<li>Red Hat Enterprise Linux 9 documentation: <a href="https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9">https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9</a></li>
+<li>Red Hat RHCSA exam objectives: <a href="https://www.redhat.com/en/services/training/ex200-red-hat-certified-system-administrator-rhcsa-exam">https://www.redhat.com/en/services/training/ex200-red-hat-certified-system-administrator-rhcsa-exam</a></li>
+<li>Red Hat RHCE exam objectives: <a href="https://www.redhat.com/en/services/training/ex294-red-hat-certified-engineer-rhce-exam">https://www.redhat.com/en/services/training/ex294-red-hat-certified-engineer-rhce-exam</a></li>
+<li>Linux manual pages: <code>man systemd</code>, <code>man lvm</code>, <code>man nmcli</code>, <code>man semanage</code>.</li>
+</ul>
+<p><strong>Editorial note:</strong> This is a structured first edition with labs and interview prompts, not yet an exhaustive chapter-by-chapter textbook. External links are reference starting points, not a claim of live verification.</p>
+<hr/>
+<h1 id="advanced-edition-deep-dive-companion-chapters">Advanced Edition — Deep-Dive Companion Chapters</h1>
+<blockquote>
+<p><strong>Lab convention:</strong> Commands are written for RHEL 9; <code>$</code> indicates an ordinary user, <code>#</code> indicates root. Outputs are <strong>illustrative</strong>, not captured from a live RHEL host. Package availability, service names, and values depend on your image and subscriptions. Storage-changing labs must run only on a disposable VM with snapshots and a spare disk. Never execute disk commands on your OS disk.</p>
+</blockquote>
+<h2 id="navigation">Navigation</h2>
+<ul>
+<li><a href="#chapter-20--linux-internals-and-process-lifecycle">Chapter 20 — Linux internals and process lifecycle</a></li>
+<li><a href="#chapter-21--load-average-internals-diagnosis-and-remediation">Chapter 21 — Load average: internals, diagnosis and remediation</a></li>
+<li><a href="#chapter-22--production-process-troubleshooting">Chapter 22 — Production process troubleshooting</a></li>
+<li><a href="#chapter-23--lvm-from-creation-to-safe-recovery">Chapter 23 — LVM from creation to safe recovery</a></li>
+<li><a href="#chapter-24--memory-swap-oom-and-reclaim">Chapter 24 — Memory, swap, OOM and reclaim</a></li>
+<li><a href="#chapter-25--storage-latency-and-filesystem-diagnostics">Chapter 25 — Storage latency and filesystem diagnostics</a></li>
+<li><a href="#chapter-26--boot-and-systemd-recovery">Chapter 26 — Boot and systemd recovery</a></li>
+<li><a href="#chapter-27--networking-incident-runbook">Chapter 27 — Networking incident runbook</a></li>
+<li><a href="#chapter-28--production-incident-simulations">Chapter 28 — Production incident simulations</a></li>
+<li><a href="#expanded-glossary">Expanded glossary</a></li>
+<li><a href="#alphabetical-subject-index">Alphabetical subject index</a></li>
+</ul>
+<h2 id="chapter-20-linux-internals-and-process-lifecycle">Chapter 20 — Linux internals and process lifecycle</h2>
+<p><img alt="Linux execution architecture" src="rhel_masterbook_assets/linux_execution.svg"/></p>
+<h3 id="20-1-how-a-linux-command-becomes-a-running-process">20.1 How a Linux command becomes a running process</h3>
+<p>A shell is a userspace program, not the kernel. When you enter <code>ls /var/log</code>, the shell parses the line, locates the executable through <code>PATH</code>, normally creates a child process with <code>fork()</code> (or a related spawn strategy), and executes the program using <code>execve()</code>. The program's library functions invoke system calls such as <code>openat()</code>, <code>getdents64()</code>, <code>write()</code>, and <code>close()</code>. The kernel checks permissions, resolves paths through the virtual filesystem, and communicates with device drivers as needed. System calls cross the userspace/kernel boundary; output is returned through file descriptors, typically stdout (fd 1). A shell built-in like <code>cd</code> generally does not need to create a child.</p>
+<p><strong>Concept:</strong> A PID identifies a process in its PID namespace. A thread has its own task ID; threads in one process normally share a virtual address space. A context switch saves/restores CPU execution state, but does not mean every context switch changes address spaces. <code>execve()</code> replaces the process image while generally retaining its PID.</p>
+<pre><code class="language-bash">$ type -a ls
+ls is /usr/bin/ls
+$ strace -f -e trace=execve,openat,write ls /tmp 2&gt;&amp;1 | head
+execve("/usr/bin/ls", ["ls", "/tmp"], ...) = 0
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+...
+$ ps -eo pid,ppid,stat,ni,pri,comm --sort=pid | head
+  PID  PPID STAT  NI PRI COMMAND
+    1     0 Ss     0  19 systemd
+</code></pre>
+<p><code>strace</code> observes system-call activity and can expose repeated failing file accesses; it adds overhead and may expose secrets in arguments. Use it selectively on approved systems. <code>STAT</code> shows process state: R runnable/running, S interruptible sleep, D uninterruptible sleep, T stopped, Z zombie; additional flags such as <code>s</code> and <code>l</code> are modifiers. A zombie has exited but its parent has not reaped its exit status; <code>kill -9</code> cannot kill an already-dead zombie.</p>
+<h3 id="20-2-scheduling-cgroups-and-namespaces">20.2 Scheduling, cgroups and namespaces</h3>
+<p>The scheduler selects runnable tasks for CPUs. Linux uses different scheduling classes; normal tasks use the fair scheduling class (recent kernels use EEVDF in place of older CFS selection behavior). <code>nice</code> adjusts weight within normal scheduling, not a hard CPU quota. CPU affinity limits eligible CPUs; cgroup CPU quotas can throttle a service even when host CPU is idle. PID, mount, network, user and other namespaces isolate resource views, whereas cgroups account for and constrain resources.</p>
+<pre><code class="language-bash">$ cat /proc/$$/status | grep -E '^(Name|Pid|PPid|Threads|VmRSS):'
+$ cat /proc/$$/cgroup
+$ systemctl show sshd -p CPUQuotaPerSecUSec -p MemoryMax
+$ taskset -pc $$
+</code></pre>
+<p><strong>Lab:</strong> Launch <code>sleep 120 &amp;</code>, record <code>$!</code>, inspect <code>/proc/$!/status</code>, <code>ps -p $! -o pid,ppid,stat,etime,cmd</code>, then <code>wait</code>. Observe S state and eventual exit. <strong>Interview:</strong> Why does <code>kill -9</code> fail for D-state tasks? Because an uninterruptible wait often must return from its kernel wait path before the task can process termination; investigate the underlying I/O or kernel dependency rather than repeatedly signaling it.</p>
+<h2 id="chapter-21-load-average-internals-diagnosis-and-remediation">Chapter 21 — Load average: internals, diagnosis and remediation</h2>
+<p><img alt="Load troubleshooting flow" src="rhel_masterbook_assets/load_triage.svg"/></p>
+<h3 id="21-1-what-load-average-measures">21.1 What load average measures</h3>
+<p>Linux load average is an exponentially smoothed estimate of tasks runnable (R) <strong>plus</strong> tasks in uninterruptible sleep (D), over roughly 1, 5 and 15 minutes. It is <strong>not a CPU utilization percentage</strong>. On an otherwise unrestricted host with four available logical CPUs, load near 4 may indicate roughly full runnable capacity; however D-state I/O waits can increase load even with idle CPU. Compare against effective CPU quota and affinity, not only <code>nproc</code>.</p>
+<pre><code class="language-bash">$ uptime
+ 18:15:00 up 10 days,  3:21,  2 users,  load average: 8.20, 6.10, 3.40
+$ nproc
+4
+$ cat /proc/loadavg
+8.20 6.10 3.40 9/840 25310
+$ vmstat 1 5
+procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+ 7  0      0 620000  70000 820000    0    0     0    18  500  820 88 10  2  0  0
+</code></pre>
+<p>The sample's <code>r=7</code> suggests CPU run-queue contention; <code>b=0</code> and low <code>wa</code> suggest no obvious blocked-I/O bottleneck in this interval. <code>vmstat</code> first line can be an average since boot; interpret subsequent samples. A high 1-minute load relative to 15-minute load suggests a rising problem; reverse ordering suggests a declining problem. Do not derive exact CPU utilization from load.</p>
+<h3 id="21-2-diagnosis-decision-tree">21.2 Diagnosis decision tree</h3>
+<ol>
+<li>Confirm scope and trend: <code>date; uptime; nproc; cat /proc/loadavg</code>; compare monitoring baseline.</li>
+<li>Check runnable/blocked tasks: <code>vmstat 1 10</code>; <code>ps -eo state,pid,ppid,wchan:24,comm | awk '$1 ~ /R|D/'</code>.</li>
+<li>Check CPU: <code>mpstat -P ALL 1 5</code>; <code>pidstat -u -t 1 5</code>; <code>top -H -p PID</code>.</li>
+<li>Check I/O: <code>iostat -xz 1 5</code>; <code>pidstat -d 1 5</code>; <code>cat /proc/pressure/io</code>.</li>
+<li>Check memory: <code>free -h</code>; <code>vmstat 1</code>; <code>cat /proc/pressure/memory</code>; <code>journalctl -k -g 'Out of memory|oom-killer'</code>.</li>
+<li>Check throttling/virtualization: <code>cat /sys/fs/cgroup/cpu.stat</code> (for relevant cgroup); look at <code>%steal</code> in <code>mpstat</code> for guest VMs.</li>
+<li>Correct the actual cause, then confirm response time, throughput, error rate, load and saturation all improve.</li>
+</ol>
+<p>Install common tools using <code>sudo dnf install -y sysstat procps-ng</code> (repository access required). <code>sysstat</code> supplies <code>mpstat</code>, <code>pidstat</code> and <code>iostat</code>.</p>
+<h3 id="21-3-contrasting-production-incidents">21.3 Contrasting production incidents</h3>
+<p><strong>Case A — CPU saturation:</strong> load 12 on 4 CPUs; <code>vmstat r=10 b=0</code>, <code>mpstat</code> user CPU ~95%. Identify CPU-heavy process, check recent deployments, thread count, cgroup quota and traffic. Mitigate with controlled concurrency, scale-out or rollback, rather than blindly adding swap.</p>
+<p><strong>Case B — Storage stalls:</strong> load 15 on 8 CPUs; <code>vmstat r=1 b=12</code>, CPU idle 65%, <code>iostat</code> reports high <code>await</code>, many tasks in D state. Trace device errors (<code>journalctl -k</code>), filesystem, network block storage and upstream storage service. A CPU upgrade would not address this root cause.</p>
+<p><strong>Case C — CPU throttling:</strong> host has 16 CPUs but container quota is 2 CPUs; load 7, host idle, <code>cpu.stat</code> <code>nr_throttled</code> grows. Investigate quota, workload demand and service latency.</p>
+<p><strong>Interview Q&amp;A:</strong> <em>If load is 8 on 4 CPUs, is CPU utilization 200%?</em> No. Load is a count-like exponentially smoothed measure of runnable plus D-state tasks; check actual CPU metrics and effective CPU limits.</p>
+<p><strong>Lab:</strong> In a disposable VM, run a controlled CPU load using <code>stress-ng --cpu 2 --timeout 30s</code> after installing <code>stress-ng</code> from an approved repository if available. Observe <code>uptime</code>, <code>vmstat 1</code>, <code>mpstat -P ALL 1</code>; note that load average lags after the test ends. Avoid stressing shared production hosts.</p>
+<h2 id="chapter-22-production-process-troubleshooting">Chapter 22 — Production process troubleshooting</h2>
+<h3 id="22-1-workflow-slow-service-apparently-high-cpu">22.1 Workflow: slow service, apparently high CPU</h3>
+<p>Start from symptoms, not a preconceived command: response latency, error rates, timestamps, affected instances. Use <code>systemctl status app.service</code>, <code>journalctl -u app.service --since '-15 min'</code>, <code>ps -eo pid,ppid,stat,%cpu,%mem,rss,etime,comm --sort=-%cpu | head</code>, and <code>top -H -p PID</code>. <code>%CPU</code> may exceed 100 for a multithreaded process in some tools; RSS is resident physical memory and includes shared pages (so summing RSS across processes can double-count). VSZ is virtual address-space size, not physical RAM consumption.</p>
+<pre><code class="language-bash">$ ps -p 4242 -o pid,ppid,stat,%cpu,%mem,rss,vsz,nlwp,etime,cmd
+  PID PPID STAT %CPU %MEM   RSS     VSZ NLWP ELAPSED CMD
+ 4242    1 Sl  182.0  8.2 683240 2140120   16   02:40 /usr/bin/python3 app.py
+$ cat /proc/4242/limits | head
+Limit                     Soft Limit           Hard Limit           Units
+Max cpu time              unlimited            unlimited            seconds
+</code></pre>
+<p>Here <code>%CPU=182</code> could indicate usage of approximately 1.82 logical CPUs over the sampling convention; <code>NLWP=16</code> is thread count. Verify with interval-based <code>pidstat -p 4242 -t 1 5</code>. Check open-file exhaustion via <code>ls /proc/4242/fd | wc -l</code>, <code>cat /proc/4242/limits</code>, <code>journalctl</code> errors such as <code>Too many open files</code>, and <code>ss -tanp</code> for socket pressure. For Python, stack diagnosis may require application-specific tracing/profiling and explicit production approval.</p>
+<h3 id="22-2-state-specific-troubleshooting">22.2 State-specific troubleshooting</h3>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+<th>Investigation</th>
+<th>Common trap</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R</td>
+<td>Running or runnable</td>
+<td>CPU, affinity, quotas, runnable backlog</td>
+<td>Treating load as utilization</td>
+</tr>
+<tr>
+<td>S</td>
+<td>Interruptible sleep</td>
+<td>Expected wait, sockets, timers</td>
+<td>Killing healthy sleeping services</td>
+</tr>
+<tr>
+<td>D</td>
+<td>Uninterruptible wait</td>
+<td><code>wchan</code>, disk/NFS/storage, kernel logs</td>
+<td>Repeated <code>kill -9</code></td>
+</tr>
+<tr>
+<td>Z</td>
+<td>Exited, unreaped child</td>
+<td>Inspect parent and wait/reaping behavior</td>
+<td>Assuming zombie consumes CPU</td>
+</tr>
+<tr>
+<td>T</td>
+<td>Stopped/traced</td>
+<td><code>SIGSTOP</code>, debugger, job control</td>
+<td>Misdiagnosing as hung I/O</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Safe incident sequence:</strong> preserve evidence → identify impact → find parent/service manager → test mitigation in staging → obtain approval for restarts/kill → verify recovery → record root cause. <code>kill -TERM PID</code> allows graceful handling; <code>kill -KILL PID</code> prevents graceful cleanup and should be last resort. <code>systemctl restart</code> can interrupt connections and must follow change procedure.</p>
+<p><strong>Lab:</strong> <code>sleep 300 &amp; pid=$!; ps -p "$pid" -o stat,wchan,cmd; kill -STOP "$pid"; ps -p "$pid" -o stat; kill -CONT "$pid"; kill -TERM "$pid"; wait "$pid"</code>. Expected: sleeping → stopped (T) → resumed → terminated. <strong>Interview:</strong> Why can an application show high latency with low CPU? Disk/network waits, locks, queueing, remote dependencies or throttling may dominate.</p>
+<h2 id="chapter-23-lvm-from-creation-to-safe-recovery">Chapter 23 — LVM from creation to safe recovery</h2>
+<p><img alt="LVM architecture" src="rhel_masterbook_assets/lvm_layers.svg"/></p>
+<h3 id="23-1-architecture-and-allocation">23.1 Architecture and allocation</h3>
+<p>A physical volume (PV) is a block device or partition initialized with LVM metadata. A volume group (VG) pools PV capacity into physical extents (PEs); logical volumes (LVs) allocate logical extents mapped to PEs. The device-mapper layer presents LVs as block devices. LVM is <strong>not</strong> a filesystem: an LV normally needs XFS/ext4 formatting and a mount. LVM snapshots are not substitutes for independently verified backups.</p>
+<h3 id="23-2-create-a-disposable-data-volume">23.2 Create a disposable data volume</h3>
+<p><strong>Prerequisites:</strong> New empty <code>/dev/vdb</code> attached to a throwaway VM, 10 GiB or larger; <code>lsblk -f</code> confirms it is not the OS disk. Confirm identifiers from <code>lsblk -o NAME,SIZE,TYPE,MOUNTPOINTS,FSTYPE</code> and <code>wipefs -n /dev/vdb</code>. If uncertain, STOP. The following commands destroy existing data on <code>/dev/vdb</code>.</p>
+<pre><code class="language-bash"># lsblk -o NAME,SIZE,TYPE,MOUNTPOINTS,FSTYPE
+NAME  SIZE TYPE MOUNTPOINTS FSTYPE
+vda    30G disk
+├─vda1   1G part /boot       xfs
+└─vda2  29G part             LVM2_member
+vdb    10G disk
+# parted -s /dev/vdb mklabel gpt mkpart primary 1MiB 100% set 1 lvm on
+# partprobe /dev/vdb
+# pvcreate /dev/vdb1
+  Physical volume "/dev/vdb1" successfully created.
+# vgcreate vgdata /dev/vdb1
+  Volume group "vgdata" successfully created
+# lvcreate -L 4G -n lvapp vgdata
+  Logical volume "lvapp" created.
+# mkfs.xfs /dev/vgdata/lvapp
+# mkdir -p /srv/appdata
+# mount /dev/vgdata/lvapp /srv/appdata
+# df -hT /srv/appdata
+Filesystem                 Type  Size  Used Avail Use% Mounted on
+/dev/mapper/vgdata-lvapp   xfs   4.0G   61M  3.9G   2% /srv/appdata
+# pvs; vgs; lvs -o lv_name,vg_name,lv_size,lv_attr,devices
+</code></pre>
+<p><code>parted</code> writes a GPT and partition, <code>pvcreate</code> writes LVM metadata, <code>vgcreate</code> makes the pool, <code>lvcreate</code> allocates capacity, <code>mkfs.xfs</code> <strong>erases any filesystem previously present</strong> on the LV, and <code>mount</code> exposes the filesystem. For persistent mounting use <code>blkid /dev/vgdata/lvapp</code> and add a carefully verified <code>UUID=... /srv/appdata xfs defaults 0 0</code> to <code>/etc/fstab</code>; test <code>findmnt --verify</code> and <code>mount -a</code> with console recovery access. Use UUID to avoid path changes.</p>
+<h3 id="23-3-grow-an-xfs-logical-volume">23.3 Grow an XFS logical volume</h3>
+<pre><code class="language-bash"># vgs vgdata -o vg_name,vg_free
+  VG     VFree
+  vgdata 5.99g
+# lvextend -L +2G /dev/vgdata/lvapp
+  Size of logical volume vgdata/lvapp changed from 4.00 GiB to 6.00 GiB.
+# xfs_growfs /srv/appdata
+# df -hT /srv/appdata
+</code></pre>
+<p><code>lvextend</code> grows the block device; <code>xfs_growfs</code> grows the <strong>mounted XFS filesystem</strong>. Alternatively, <code>lvextend -r</code> invokes filesystem resize tooling when supported. Verify <code>lvs</code>, <code>df -hT</code>, and application write tests. <strong>XFS cannot be shrunk in place</strong>; plan a backup, recreate and restore if a smaller filesystem is required. Ext4 can be shrunk offline under appropriate conditions, but reducing the LV before safely shrinking the filesystem risks irrecoverable corruption.</p>
+<h3 id="23-4-extend-vg-with-a-second-disk">23.4 Extend VG with a second disk</h3>
+<p>On another <strong>empty disposable</strong> disk <code>/dev/vdc</code>, partition and verify, then <code>pvcreate /dev/vdc1; vgextend vgdata /dev/vdc1; pvs; vgs</code>. Use <code>pvmove /dev/vdb1 /dev/vdc1</code> only when the destination has sufficient free extents and after checking supported layout; <code>vgreduce</code> removes an empty PV from the VG. Never use <code>pvremove</code> on a PV that still holds needed extents.</p>
+<h3 id="23-5-troubleshooting-decision-table">23.5 Troubleshooting decision table</h3>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Diagnostic</th>
+<th>Explanation and recovery direction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Insufficient free extents</code></td>
+<td><code>vgs -o vg_free; pvs</code></td>
+<td>Add PV capacity or choose a smaller LV</td>
+</tr>
+<tr>
+<td>LV active but no mount</td>
+<td><code>lvs -a; lsblk -f; findmnt</code></td>
+<td>Check filesystem, mountpoint, fstab, SELinux</td>
+</tr>
+<tr>
+<td>Filesystem still 4G after LV becomes 6G</td>
+<td><code>lvs; df -hT</code></td>
+<td>Run appropriate filesystem grow tool</td>
+</tr>
+<tr>
+<td>Missing PV warning</td>
+<td><code>pvs -o +pv_uuid; journalctl -k</code></td>
+<td>Restore connectivity; consult LVM metadata backups before recovery</td>
+</tr>
+<tr>
+<td>Boot failure after fstab change</td>
+<td>Emergency console; <code>findmnt --verify</code></td>
+<td>Correct UUID/options; avoid destructive formatting</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Interview:</strong> Explain the difference between <code>lvextend</code>, <code>xfs_growfs</code>, <code>vgextend</code> and <code>pvresize</code>. <code>lvextend</code> grows LV allocation; <code>xfs_growfs</code> expands an existing XFS filesystem; <code>vgextend</code> adds a PV to a VG; <code>pvresize</code> updates PV size after its underlying block device grows. <strong>Lab validation:</strong> Unmount the test filesystem, run <code>mount -a</code>, create a test file, check <code>df -hT</code>, and inspect <code>journalctl -k</code> for I/O errors. Never shrink a production LV as an experiment.</p>
+<h2 id="chapter-24-memory-swap-oom-and-reclaim">Chapter 24 — Memory, swap, OOM and reclaim</h2>
+<p>Linux uses spare RAM for reclaimable page cache, so low <code>free</code> alone does not mean an incident. <code>available</code> estimates memory that can be allocated without swapping under typical conditions. RSS reflects resident pages mapped by a process, but shared pages can appear in multiple RSS values; PSS apportions shared pages (<code>/proc/PID/smaps_rollup</code>). Swap use does not automatically prove current thrashing. Look for <strong>ongoing</strong> swap-in/out (<code>vmstat si/so</code>), memory pressure (<code>/proc/pressure/memory</code>), major faults, and latency.</p>
+<pre><code class="language-bash">$ free -h
+               total   used   free  shared  buff/cache available
+Mem:            7.5Gi  5.2Gi  310Mi  210Mi       2.0Gi     1.7Gi
+Swap:           2.0Gi  420Mi  1.6Gi
+$ vmstat 1 3
+$ cat /proc/pressure/memory
+some avg10=0.00 avg60=0.12 avg300=0.08 total=123456
+full avg10=0.00 avg60=0.00 avg300=0.00 total=4000
+$ journalctl -k --since '-1 hour' | grep -Ei 'out of memory|oom-killer|killed process'
+</code></pre>
+<p><code>some</code> PSI means at least one task stalled on memory; <code>full</code> means all non-idle tasks stalled simultaneously (with cgroup-specific interpretation). OOM can be global or cgroup-scoped. <code>systemctl show SERVICE -p MemoryMax -p MemoryCurrent</code> helps identify service constraints. Do <strong>not</strong> immediately clear caches or add swap to disguise a memory leak. Correlate process PSS, application heap behavior, page cache, swap traffic and OOM logs.</p>
+<p><strong>Scenario:</strong> Application killed at 1.5 GiB while host shows 10 GiB available: a systemd or container cgroup memory limit may be responsible. Inspect unit limits and cgroup <code>memory.events</code> (<code>oom</code>, <code>oom_kill</code>), not just <code>free</code>. <strong>Interview:</strong> Difference between virtual memory and RSS? Virtual address-space mappings are not equivalent to physically resident pages.</p>
+<h2 id="chapter-25-storage-latency-and-filesystem-diagnostics">Chapter 25 — Storage latency and filesystem diagnostics</h2>
+<p>Disk <em>capacity</em> and <em>performance</em> are separate dimensions. <code>df -h</code> measures filesystem space; <code>df -i</code> checks inode consumption. <code>du -xsh /path</code> estimates reachable directory usage; deleted but open files can keep disk blocks allocated, creating <code>df</code>/<code>du</code> disagreement. Use <code>lsof +L1</code> when available, then plan safe service handling. <code>iostat -xz 1 5</code> shows per-device utilization, request rates, throughput, average wait (<code>await</code>), and queue statistics; do not use <code>%util=100</code> alone as definitive proof of saturation on modern parallel devices.</p>
+<pre><code class="language-bash"># df -hT /var; df -i /var
+# du -xhd1 /var | sort -h
+# lsof +L1 /var
+# iostat -xz 1 5
+Device  r/s   w/s  r_await w_await aqu-sz %util
+vdb     3.0 120.0     2.1    78.2   9.70  94.0
+# journalctl -k --since '-30 min' | grep -Ei 'I/O error|timeout|reset|xfs|nvme'
+</code></pre>
+<p>The illustrative high write <code>await</code> and queue depth warrant investigation. <code>await</code> includes queue and service time; use baselines and application latency. XFS repair: capture logs and backups, <strong>unmount first</strong>, use <code>xfs_repair -n /dev/...</code> for a non-modifying assessment; any repair may risk data and should follow vendor guidance and verified backups. Never run <code>fsck.ext4</code> against mounted read-write ext4 filesystems.</p>
+<p><strong>Lab:</strong> Fill a disposable filesystem with a controlled file (<code>fallocate -l 100M /srv/appdata/test.bin</code>), compare <code>df</code> and <code>du</code>, then remove it. Avoid exhausting disk space on the root filesystem.</p>
+<h2 id="chapter-26-boot-and-systemd-recovery">Chapter 26 — Boot and systemd recovery</h2>
+<p><img alt="RHEL boot chain" src="rhel_masterbook_assets/boot_systemd.svg"/></p>
+<p>RHEL commonly boots firmware → boot manager/GRUB2 → Linux kernel and initramfs → root filesystem → systemd PID 1 → target dependencies and units. <code>systemd</code> resolves unit ordering and requirement relationships; <code>After=</code> sets order, not a dependency by itself; <code>Requires=</code> adds a requirement but does not necessarily establish ordering. <code>Wants=</code> is weaker than <code>Requires=</code>. A service may fail because a required mount, network dependency, SELinux label or executable is unavailable.</p>
+<pre><code class="language-bash"># systemctl --failed
+# systemctl status sshd.service --no-pager
+# journalctl -b -u sshd.service --no-pager -n 80
+# systemctl cat sshd.service
+# systemd-analyze critical-chain
+# systemctl show sshd -p ExecStart -p After -p Requires -p Wants
+</code></pre>
+<p><strong>Scenario:</strong> A service fails after changing <code>ExecStart</code>. First check <code>systemctl status</code>, unit overrides with <code>systemctl cat</code>, <code>journalctl -u</code>, binary path and SELinux denials. After a unit edit run <code>systemctl daemon-reload</code>; use <code>systemd-analyze verify /etc/systemd/system/name.service</code> to validate syntax. <code>systemctl restart</code> is disruptive; test in a VM before production. Boot recovery involving GRUB, LUKS or initramfs is version/boot-mode specific; secure console access and a snapshot are mandatory.</p>
+<h2 id="chapter-27-networking-incident-runbook">Chapter 27 — Networking incident runbook</h2>
+<p>Trace from link to DNS to TCP to application: <code>ip -br link; ip -br addr; ip route; nmcli connection show --active; resolvectl status</code> (if available); <code>getent hosts example.com</code>; <code>ss -lntp</code>; <code>curl -vk --connect-timeout 3 https://service.example</code> (avoid exposing secrets). On RHEL NetworkManager commonly manages persistent profiles via <code>nmcli</code>; transient <code>ip route add</code> changes do not survive restart. Inspect <code>firewall-cmd --list-all</code> and SELinux before changing access rules.</p>
+<p><strong>Failure patterns:</strong> no link/carrier → NIC or switch; no default route → routing/profile; IP works but hostname fails → DNS; TCP refused → no listener/firewall reject; TCP timeout → route/firewall/drop; TLS handshake fails → certificate, SNI, cipher or clock. Packet capture (<code>tcpdump -ni IFACE host IP and port 443</code>) requires authorization because it may contain sensitive traffic.</p>
+<p><strong>Interview:</strong> What does <code>ss -lntp</code> show? Listening TCP sockets, numeric addresses, processes (with sufficient privilege). It does not prove remote reachability.</p>
+<h2 id="chapter-28-production-incident-simulations">Chapter 28 — Production incident simulations</h2>
+<h3 id="incident-1-host-load-20-cpu-only-25">Incident 1: Host load 20, CPU only 25%</h3>
+<p><strong>Evidence:</strong> <code>uptime</code> high; <code>vmstat r=1 b=18</code>; many <code>D</code> tasks; <code>iostat</code> high latency; kernel storage timeouts. <strong>Hypothesis:</strong> blocked I/O, not CPU saturation. <strong>Response:</strong> protect data, engage storage team, identify failing mount/device, consider controlled failover. <strong>Verification:</strong> D-state backlog clears, I/O latency and service response times return to baseline. <strong>Postmortem:</strong> add storage latency, PSI and device error alerts.</p>
+<h3 id="incident-2-service-repeatedly-restarts">Incident 2: Service repeatedly restarts</h3>
+<p><strong>Evidence:</strong> <code>systemctl status</code> shows auto-restart; <code>journalctl -u</code> has permission denied. <strong>Hypotheses:</strong> filesystem permissions, SELinux denial, missing path, unit sandbox restriction. <strong>Response:</strong> inspect <code>namei -l</code>, <code>ls -Z</code>, <code>ausearch -m AVC -ts recent</code> if audit tools are present, unit sandbox options; correct least-privilege configuration. <strong>Avoid:</strong> globally disabling SELinux.</p>
+<h3 id="incident-3-lv-grown-but-application-still-reports-full-filesystem">Incident 3: LV grown but application still reports full filesystem</h3>
+<p><strong>Evidence:</strong> <code>lvs</code> reports 12 GiB; <code>df -hT</code> reports 8 GiB XFS. <strong>Root cause:</strong> filesystem was not grown. <strong>Response:</strong> verify correct LV and mount; run <code>xfs_growfs /mountpoint</code>, validate <code>df</code> and write test. <strong>Prevent:</strong> include block-device and filesystem validation in storage change checklist.</p>
+<h3 id="incident-4-high-memory-use-after-deployment">Incident 4: High memory use after deployment</h3>
+<p><strong>Evidence:</strong> RSS and memory PSI rising; <code>memory.events</code> records <code>oom_kill</code>. <strong>Hypotheses:</strong> application leak, workload increase, too-small cgroup limit. <strong>Response:</strong> collect metrics and heap evidence, compare deployment versions, mitigate via rollback or limit adjustment after capacity review. <strong>Avoid:</strong> automatically assuming page cache is the problem.</p>
+<h3 id="incident-5-full-var-but-du-looks-small">Incident 5: Full <code>/var</code> but <code>du</code> looks small</h3>
+<p><strong>Evidence:</strong> <code>df</code> reports 100%, <code>du</code> sums far less; <code>lsof +L1</code> shows deleted open log file. <strong>Root cause:</strong> open file retains blocks. <strong>Response:</strong> coordinate safe reopen/restart of writer, ensure logrotate configuration and disk alerts. <strong>Avoid:</strong> deleting arbitrary files in <code>/var/lib</code>.</p>
+<h2 id="expanded-glossary">Expanded glossary</h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Load average</td>
+<td>Exponentially smoothed runnable plus uninterruptible-task demand over 1/5/15 minutes</td>
+</tr>
+<tr>
+<td>Run queue</td>
+<td>Tasks runnable and awaiting CPU time (tool-specific scope)</td>
+</tr>
+<tr>
+<td>CPU steal</td>
+<td>Guest time lost to hypervisor scheduling of other work</td>
+</tr>
+<tr>
+<td>I/O wait</td>
+<td>CPU idle time during which outstanding I/O exists; not per-process I/O latency</td>
+</tr>
+<tr>
+<td>Context switch</td>
+<td>Switching CPU execution context between tasks</td>
+</tr>
+<tr>
+<td>PID / PPID</td>
+<td>Process identifier / parent process identifier</td>
+</tr>
+<tr>
+<td>RSS</td>
+<td>Resident set size; pages resident in RAM, including potentially shared pages</td>
+</tr>
+<tr>
+<td>PSS</td>
+<td>Proportional set size, dividing shared page cost among mappings</td>
+</tr>
+<tr>
+<td>VSZ</td>
+<td>Virtual address-space size</td>
+</tr>
+<tr>
+<td>OOM</td>
+<td>Out-of-memory condition and associated kernel/cgroup handling</td>
+</tr>
+<tr>
+<td>PSI</td>
+<td>Pressure Stall Information for CPU, memory and I/O stalls</td>
+</tr>
+<tr>
+<td>Cgroup</td>
+<td>Kernel mechanism for grouping, accounting and limiting resources</td>
+</tr>
+<tr>
+<td>Namespace</td>
+<td>Kernel isolation mechanism for process resource views</td>
+</tr>
+<tr>
+<td>PV</td>
+<td>LVM physical volume</td>
+</tr>
+<tr>
+<td>VG</td>
+<td>LVM volume group</td>
+</tr>
+<tr>
+<td>LV</td>
+<td>LVM logical volume</td>
+</tr>
+<tr>
+<td>PE</td>
+<td>Physical extent, VG allocation unit</td>
+</tr>
+<tr>
+<td>Device mapper</td>
+<td>Kernel block-device mapping infrastructure underlying LVM</td>
+</tr>
+<tr>
+<td>XFS</td>
+<td>Journaling filesystem; online growth, no in-place shrink</td>
+</tr>
+<tr>
+<td>Ext4</td>
+<td>Journaling filesystem with online growth and supported offline shrink</td>
+</tr>
+<tr>
+<td>initramfs</td>
+<td>Early userspace filesystem used during boot</td>
+</tr>
+<tr>
+<td>Unit</td>
+<td>systemd configuration object for services, mounts, targets and more</td>
+</tr>
+<tr>
+<td>AVC</td>
+<td>SELinux access vector cache denial/audit record</td>
+</tr>
+<tr>
+<td>SELinux</td>
+<td>Mandatory access control framework based on security policies and labels</td>
+</tr>
+<tr>
+<td>D-state</td>
+<td>Uninterruptible sleep, commonly waiting on I/O or kernel resource</td>
+</tr>
+<tr>
+<td>Zombie</td>
+<td>Exited child process awaiting parent reaping</td>
+</tr>
+<tr>
+<td><code>await</code></td>
+<td>Average block request time including queue and service time in iostat</td>
+</tr>
+<tr>
+<td>Inode</td>
+<td>Filesystem object metadata structure; separate capacity from bytes</td>
+</tr>
+</tbody>
+</table>
+<h2 id="alphabetical-subject-index">Alphabetical subject index</h2>
+<p><em>Note: Markdown has no stable pagination across renderers. This subject index links to chapters; page numbers should be generated when typesetting a fixed-layout PDF.</em></p>
+<ul>
+<li><strong>Boot, GRUB2, initramfs:</strong> <a href="#chapter-26--boot-and-systemd-recovery">26</a></li>
+<li><strong>Cgroups and quotas:</strong> <a href="#chapter-20--linux-internals-and-process-lifecycle">20</a>, <a href="#chapter-21--load-average-internals-diagnosis-and-remediation">21</a></li>
+<li><strong>CPU scheduling and affinity:</strong> <a href="#chapter-20--linux-internals-and-process-lifecycle">20</a>, <a href="#chapter-21--load-average-internals-diagnosis-and-remediation">21</a></li>
+<li><strong>D-state tasks:</strong> <a href="#chapter-21--load-average-internals-diagnosis-and-remediation">21</a>, <a href="#chapter-22--production-process-troubleshooting">22</a></li>
+<li><strong>Filesystem and inode exhaustion:</strong> <a href="#chapter-25--storage-latency-and-filesystem-diagnostics">25</a></li>
+<li><strong>I/O latency:</strong> <a href="#chapter-21--load-average-internals-diagnosis-and-remediation">21</a>, <a href="#chapter-25--storage-latency-and-filesystem-diagnostics">25</a></li>
+<li><strong>Load average:</strong> <a href="#chapter-21--load-average-internals-diagnosis-and-remediation">21</a></li>
+<li><strong>LVM and XFS:</strong> <a href="#chapter-23--lvm-from-creation-to-safe-recovery">23</a></li>
+<li><strong>Memory, RSS, PSS, swap:</strong> <a href="#chapter-24--memory-swap-oom-and-reclaim">24</a></li>
+<li><strong>Network diagnostics:</strong> <a href="#chapter-27--networking-incident-runbook">27</a></li>
+<li><strong>OOM killer:</strong> <a href="#chapter-24--memory-swap-oom-and-reclaim">24</a></li>
+<li><strong>Process lifecycle and signals:</strong> <a href="#chapter-20--linux-internals-and-process-lifecycle">20</a>, <a href="#chapter-22--production-process-troubleshooting">22</a></li>
+<li><strong>SELinux service failures:</strong> <a href="#chapter-26--boot-and-systemd-recovery">26</a>, <a href="#chapter-28--production-incident-simulations">28</a></li>
+<li><strong>Systemd units:</strong> <a href="#chapter-26--boot-and-systemd-recovery">26</a></li>
+<li><strong>Troubleshooting case studies:</strong> <a href="#chapter-28--production-incident-simulations">28</a></li>
+</ul>
+<h2 id="further-reading-and-technical-verification-references">Further reading and technical verification references</h2>
+<ul>
+<li>Red Hat RHEL 9 documentation: <a href="https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9">https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9</a></li>
+<li>Linux kernel documentation: <a href="https://docs.kernel.org/">https://docs.kernel.org/</a></li>
+<li>LVM2 manual pages: <code>man lvm</code>, <code>man lvextend</code>, <code>man pvcreate</code>, <code>man vgcreate</code></li>
+<li>Linux manual pages: <code>man proc</code>, <code>man proc_loadavg</code>, <code>man vmstat</code>, <code>man systemd.unit</code>, <code>man xfs_growfs</code></li>
+<li>sysstat documentation: <a href="https://github.com/sysstat/sysstat">https://github.com/sysstat/sysstat</a></li>
+</ul>
+<p>These are reference links for subsequent verification; this edition has <strong>not</strong> been comprehensively audited against every vendor page or run on a RHEL 9 VM.</p>
+</article></main><footer>ARTHA Gurukul · Source material preserved as educational notes</footer></body></html>

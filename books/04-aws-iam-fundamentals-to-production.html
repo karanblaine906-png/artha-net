@@ -1,0 +1,2743 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AWS IAM Fundamentals to Production | ARTHA Gurukul</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><a class="brand" href="../index.html">✦ ARTHA GURUKUL</a><nav><a href="../index.html#courses">All Courses</a><a href="index.html">Source Library</a></nav></header><main class="book-layout"><aside class="book-toc"><div class="eyebrow">Original material · offline copy</div><h2>AWS IAM Fundamentals to Production</h2><a href="../index.html">⌂ Course library</a><div class="toc"><a href="#chapter-4-aws-iam-from-fundamentals-to-production">CHAPTER 4 — AWS IAM FROM FUNDAMENTALS TO PRODUCTION</a><a href="#4-1-learning-objectives">4.1 Learning Objectives</a><a href="#4-2-why-iam-exists">4.2 Why IAM Exists</a><a href="#4-3-what-is-iam">4.3 What Is IAM?</a><a href="#4-4-authentication-vs-authorization">4.4 Authentication vs Authorization</a><a href="#authentication">Authentication</a><a href="#authorization">Authorization</a><a href="#4-5-iam-authorization-mental-model">4.5 IAM Authorization Mental Model</a><a href="#4-6-aws-account-root-user">4.6 AWS Account Root User</a><a href="#4-7-iam-user">4.7 IAM User</a><a href="#4-8-iam-groups">4.8 IAM Groups</a><a href="#4-9-why-groups-are-useful">4.9 Why Groups Are Useful</a><a href="#4-10-iam-role">4.10 IAM Role</a><a href="#4-11-who-can-assume-a-role">4.11 Who Can Assume a Role?</a><a href="#4-12-why-roles-are-better-for-workloads">4.12 Why Roles Are Better for Workloads</a><a href="#4-13-iam-policy">4.13 IAM Policy</a><a href="#4-14-policy-structure">4.14 Policy Structure</a><a href="#4-15-version">4.15 Version</a><a href="#4-16-statement">4.16 Statement</a><a href="#4-17-effect">4.17 Effect</a><a href="#4-18-action">4.18 Action</a><a href="#4-19-resource">4.19 Resource</a><a href="#4-20-resource-wildcard">4.20 Resource Wildcard</a><a href="#4-21-condition">4.21 Condition</a><a href="#4-22-condition-example">4.22 Condition Example</a><a href="#4-23-principal">4.23 Principal</a><a href="#4-24-identity-based-policy">4.24 Identity-Based Policy</a><a href="#4-25-resource-based-policy">4.25 Resource-Based Policy</a><a href="#4-26-s3-bucket-policy-example">4.26 S3 Bucket Policy Example</a><a href="#4-27-iam-managed-policies">4.27 IAM Managed Policies</a><a href="#4-28-inline-policies">4.28 Inline Policies</a><a href="#4-29-managed-vs-inline-policy">4.29 Managed vs Inline Policy</a><a href="#4-30-least-privilege">4.30 Least Privilege</a><a href="#4-31-why-s3-often-needs-two-arns">4.31 Why S3 Often Needs Two ARNs</a><a href="#4-32-example-s3-read-policy">4.32 Example S3 Read Policy</a><a href="#4-33-sid">4.33 Sid</a><a href="#4-34-default-deny">4.34 Default Deny</a><a href="#4-35-implicit-deny">4.35 Implicit Deny</a><a href="#4-36-explicit-deny">4.36 Explicit Deny</a><a href="#4-37-allow-deny-example">4.37 Allow + Deny Example</a><a href="#4-38-iam-policy-evaluation-simplified">4.38 IAM Policy Evaluation — Simplified</a><a href="#4-39-permissions-boundary">4.39 Permissions Boundary</a><a href="#4-40-permissions-boundary-example">4.40 Permissions Boundary Example</a><a href="#4-41-why-permissions-boundaries-are-useful">4.41 Why Permissions Boundaries Are Useful</a><a href="#4-42-service-control-policy">4.42 Service Control Policy</a><a href="#4-43-scp-example">4.43 SCP Example</a><a href="#4-44-iam-boundary-scp">4.44 IAM + Boundary + SCP</a><a href="#4-45-iam-role-components">4.45 IAM Role Components</a><a href="#4-46-trust-policy">4.46 Trust Policy</a><a href="#4-47-permissions-policy-for-the-role">4.47 Permissions Policy for the Role</a><a href="#4-48-aws-sts">4.48 AWS STS</a><a href="#4-49-why-temporary-credentials-matter">4.49 Why Temporary Credentials Matter</a><a href="#4-50-assumerole">4.50 AssumeRole</a><a href="#4-51-assumerole-requirements">4.51 AssumeRole Requirements</a><a href="#4-52-aws-cli-assumerole-example">4.52 AWS CLI AssumeRole Example</a><a href="#4-53-role-session">4.53 Role Session</a><a href="#4-54-ec2-iam-role">4.54 EC2 IAM Role</a><a href="#4-55-instance-profile">4.55 Instance Profile</a><a href="#4-56-ec2-application-credential-flow">4.56 EC2 Application Credential Flow</a><a href="#4-57-credential-provider-chain">4.57 Credential Provider Chain</a><a href="#4-58-iam-role-for-jenkins">4.58 IAM Role for Jenkins</a><a href="#4-59-jenkins-deployment-role">4.59 Jenkins Deployment Role</a><a href="#4-60-terraform-authentication">4.60 Terraform Authentication</a><a href="#4-61-better-terraform-authentication">4.61 Better Terraform Authentication</a><a href="#4-62-terraform-assumerole-example">4.62 Terraform AssumeRole Example</a><a href="#4-63-cross-account-access">4.63 Cross-Account Access</a><a href="#4-64-cross-account-trust">4.64 Cross-Account Trust</a><a href="#4-65-cross-account-flow">4.65 Cross-Account Flow</a><a href="#4-66-mfa">4.66 MFA</a><a href="#4-67-iam-identity-center">4.67 IAM Identity Center</a><a href="#4-68-federation">4.68 Federation</a><a href="#4-69-oidc-workload-identity">4.69 OIDC Workload Identity</a><a href="#4-70-kubernetes-to-aws-preview">4.70 Kubernetes-to-AWS Preview</a><a href="#4-71-policy-variables-and-conditions">4.71 Policy Variables and Conditions</a><a href="#4-72-abac">4.72 ABAC</a><a href="#4-73-rbac-vs-abac">4.73 RBAC vs ABAC</a><a href="#4-74-tag-based-access-example">4.74 Tag-Based Access Example</a><a href="#4-75-restricting-by-region">4.75 Restricting by Region</a><a href="#4-76-resource-policies-and-cross-account-access">4.76 Resource Policies and Cross-Account Access</a><a href="#4-77-kms-special-consideration">4.77 KMS Special Consideration</a><a href="#4-78-iam-access-analyzer">4.78 IAM Access Analyzer</a><a href="#4-79-iam-policy-simulator">4.79 IAM Policy Simulator</a><a href="#4-80-cloudtrail-for-iam-troubleshooting">4.80 CloudTrail for IAM Troubleshooting</a><a href="#4-81-decoding-authorization-errors">4.81 Decoding Authorization Errors</a><a href="#4-82-iam-troubleshooting-method">4.82 IAM Troubleshooting Method</a><a href="#4-83-step-1-identify-caller">4.83 Step 1 — Identify Caller</a><a href="#4-84-step-2-identify-exact-action">4.84 Step 2 — Identify Exact Action</a><a href="#4-85-step-3-identify-resources">4.85 Step 3 — Identify Resources</a><a href="#4-86-iam-passrole">4.86 iam:PassRole</a><a href="#4-87-why-iam-passrole-is-sensitive">4.87 Why iam:PassRole Is Sensitive</a><a href="#4-88-trust-policy-vs-iam-passrole">4.88 Trust Policy vs iam:PassRole</a><a href="#4-89-role-chaining">4.89 Role Chaining</a><a href="#4-90-session-policies">4.90 Session Policies</a><a href="#4-91-production-iam-architecture">4.91 Production IAM Architecture</a><a href="#4-92-human-vs-machine-identity">4.92 Human vs Machine Identity</a><a href="#4-93-production-policy-design-workflow">4.93 Production Policy Design Workflow</a><a href="#4-94-bad-iam-development-pattern">4.94 Bad IAM Development Pattern</a><a href="#4-95-better-iam-development-pattern">4.95 Better IAM Development Pattern</a><a href="#4-96-hands-on-lab-create-a-read-only-s3-policy">4.96 Hands-On Lab — Create a Read-Only S3 Policy</a><a href="#objective">Objective</a><a href="#4-97-validate-policy-logic">4.97 Validate Policy Logic</a><a href="#4-98-hands-on-lab-role-mental-model">4.98 Hands-On Lab — Role Mental Model</a><a href="#4-99-cli-lab-verify-current-principal">4.99 CLI Lab — Verify Current Principal</a><a href="#4-100-cli-lab-simulate-before-changing">4.100 CLI Lab — Simulate Before Changing</a><a href="#4-101-scenario-jenkins-cannot-upload-to-s3">4.101 Scenario — Jenkins Cannot Upload to S3</a><a href="#4-102-scenario-terraform-can-create-ec2-but-cannot-attach-role">4.102 Scenario — Terraform Can Create EC2 but Cannot Attach Role</a><a href="#4-103-scenario-assumerole-accessdenied">4.103 Scenario — AssumeRole AccessDenied</a><a href="#4-104-scenario-policy-looks-correct-but-access-still-denied">4.104 Scenario — Policy Looks Correct but Access Still Denied</a><a href="#4-105-scenario-access-worked-yesterday">4.105 Scenario — Access Worked Yesterday</a><a href="#4-106-security-anti-pattern-shared-iam-user">4.106 Security Anti-Pattern — Shared IAM User</a><a href="#4-107-security-anti-pattern-keys-in-git">4.107 Security Anti-Pattern — Keys in Git</a><a href="#4-108-security-anti-pattern-administratoraccess-everywhere">4.108 Security Anti-Pattern — AdministratorAccess Everywhere</a><a href="#4-109-separation-of-duties">4.109 Separation of Duties</a><a href="#4-110-break-glass-access">4.110 Break-Glass Access</a><a href="#4-111-credential-rotation">4.111 Credential Rotation</a><a href="#4-112-iam-monitoring">4.112 IAM Monitoring</a><a href="#4-113-iam-and-cloudtrail-workflow">4.113 IAM and CloudTrail Workflow</a><a href="#4-114-concept-clearing-user-vs-role">4.114 Concept Clearing — User vs Role</a><a href="#4-115-concept-clearing-group-vs-role">4.115 Concept Clearing — Group vs Role</a><a href="#4-116-concept-clearing-policy-vs-role">4.116 Concept Clearing — Policy vs Role</a><a href="#4-117-concept-clearing-trust-vs-permission">4.117 Concept Clearing — Trust vs Permission</a><a href="#4-118-concept-clearing-assumerole-vs-passrole">4.118 Concept Clearing — AssumeRole vs PassRole</a><a href="#4-119-concept-clearing-allow-vs-explicit-deny">4.119 Concept Clearing — Allow vs Explicit Deny</a><a href="#4-120-concept-clearing-role-credentials">4.120 Concept Clearing — Role Credentials</a><a href="#4-121-interview-questions-beginner">4.121 Interview Questions — Beginner</a><a href="#q1-what-is-iam">Q1. What is IAM?</a><a href="#q2-what-is-an-iam-user">Q2. What is an IAM user?</a><a href="#q3-what-is-an-iam-role">Q3. What is an IAM role?</a><a href="#q4-what-is-an-iam-policy">Q4. What is an IAM policy?</a><a href="#q5-what-is-least-privilege">Q5. What is least privilege?</a><a href="#4-122-interview-questions-intermediate">4.122 Interview Questions — Intermediate</a><a href="#q6-iam-user-vs-iam-role">Q6. IAM user vs IAM role?</a><a href="#q7-identity-policy-vs-resource-policy">Q7. Identity policy vs resource policy?</a><a href="#q8-what-is-sts">Q8. What is STS?</a><a href="#q9-what-is-a-trust-policy">Q9. What is a trust policy?</a><a href="#q10-what-is-iam-passrole">Q10. What is iam:PassRole ?</a><a href="#4-123-interview-questions-advanced">4.123 Interview Questions — Advanced</a><a href="#q11-iam-policy-allows-an-action-but-it-is-still-denied-why">Q11. IAM policy allows an action but it is still denied. Why?</a><a href="#q12-does-a-permissions-boundary-grant-permission">Q12. Does a permissions boundary grant permission?</a><a href="#q13-does-an-scp-grant-permission">Q13. Does an SCP grant permission?</a><a href="#q14-why-are-roles-safer-than-static-access-keys-for-workloads">Q14. Why are roles safer than static access keys for workloads?</a><a href="#4-124-senior-interview-scenario-jenkins">4.124 Senior Interview Scenario — Jenkins</a><a href="#4-125-senior-interview-scenario-terraform">4.125 Senior Interview Scenario — Terraform</a><a href="#4-126-senior-interview-scenario-privilege-escalation">4.126 Senior Interview Scenario — Privilege Escalation</a><a href="#4-127-senior-interview-scenario-cross-account">4.127 Senior Interview Scenario — Cross Account</a><a href="#4-128-iam-production-checklist">4.128 IAM Production Checklist</a><a href="#4-129-iam-troubleshooting-checklist">4.129 IAM Troubleshooting Checklist</a><a href="#4-130-complete-iam-mental-model">4.130 Complete IAM Mental Model</a><a href="#4-131-complete-role-workflow">4.131 Complete Role Workflow</a><a href="#4-132-chapter-summary">4.132 Chapter Summary</a><a href="#4-133-quick-revision">4.133 Quick Revision</a><a href="#4-134-references">4.134 References</a><a href="#next-chapter">NEXT CHAPTER</a><a href="#chapter-5-iam-policy-engineering-and-authorization-logic">CHAPTER 5 — IAM POLICY ENGINEERING AND AUTHORIZATION LOGIC</a></div></aside><article class="book-prose"><p class="source-note">Historical course notes converted into searchable offline HTML. Some content may be a draft; exercises requiring cloud accounts need credentials and may incur costs.</p><h1 id="chapter-4-aws-iam-from-fundamentals-to-production"><strong>CHAPTER 4 — AWS IAM FROM FUNDAMENTALS TO PRODUCTION</strong></h1>
+<p><strong>Page: 65–94</strong></p>
+<hr/>
+<h2 id="4-1-learning-objectives"><strong>4.1 Learning Objectives</strong></h2>
+<p>By the end of this chapter, you should understand:</p>
+<ul>
+<li>What AWS IAM solves</li>
+<li>Authentication vs authorization</li>
+<li>AWS account root user</li>
+<li>IAM users and groups</li>
+<li>IAM roles</li>
+<li>IAM policies</li>
+<li>Principals</li>
+<li>Actions</li>
+<li>Resources</li>
+<li>Conditions</li>
+<li>Identity-based policies</li>
+<li>Resource-based policies</li>
+<li>Trust policies</li>
+<li>AWS STS</li>
+<li><code>AssumeRole</code></li>
+<li>Temporary credentials</li>
+<li>EC2 instance roles</li>
+<li>Cross-account access</li>
+<li>Permissions boundaries</li>
+<li>AWS Organizations SCP interaction</li>
+<li>Explicit deny</li>
+<li>IAM policy evaluation</li>
+<li>Least privilege</li>
+<li>Jenkins-to-AWS authentication patterns</li>
+<li>Terraform-to-AWS authentication patterns</li>
+<li>IAM troubleshooting</li>
+<li>Production IAM design principles</li>
+</ul>
+<hr/>
+<h1 id="4-2-why-iam-exists"><strong>4.2 Why IAM Exists</strong></h1>
+<p>Imagine an AWS account containing:</p>
+<pre><code class="language-text">EC2 Instances
+S3 Buckets
+RDS Databases
+VPCs
+Secrets
+KMS Keys
+CloudWatch Logs
+Production Applications
+</code></pre>
+<p>Now imagine every engineer has unrestricted access.</p>
+<pre><code class="language-text">Engineer
+   |
+   v
+AdministratorAccess
+   |
+   +--&gt; Production
+   +--&gt; Development
+   +--&gt; Databases
+   +--&gt; Security
+   +--&gt; Billing
+</code></pre>
+<p>This creates unnecessary risk.</p>
+<p>AWS needs a mechanism to answer:</p>
+<pre><code class="language-text">WHO
+ |
+ v
+can perform
+ |
+ v
+WHAT ACTION
+ |
+ v
+on WHICH RESOURCE
+ |
+ v
+under WHAT CONDITIONS?
+</code></pre>
+<p>That mechanism is IAM.</p>
+<hr/>
+<h1 id="4-3-what-is-iam"><strong>4.3 What Is IAM?</strong></h1>
+<p>IAM means:</p>
+<blockquote>
+<p><strong>Identity and Access Management</strong></p>
+</blockquote>
+<p>IAM controls access to AWS resources and APIs.</p>
+<p>A useful mental model is:</p>
+<pre><code class="language-text">Principal
+   |
+   v
+Authentication
+   |
+   v
+Authorization
+   |
+   v
+AWS Resource/API
+</code></pre>
+<p>IAM is primarily concerned with:</p>
+<pre><code class="language-text">Identities
+Permissions
+Roles
+Policies
+Authentication
+Authorization
+Access control
+</code></pre>
+<hr/>
+<h1 id="4-4-authentication-vs-authorization"><strong>4.4 Authentication vs Authorization</strong></h1>
+<p>These two concepts must be separated.</p>
+<h2 id="authentication">Authentication</h2>
+<p>Authentication asks:</p>
+<blockquote>
+<p><strong>Who are you?</strong></p>
+</blockquote>
+<p>Examples:</p>
+<pre><code class="language-text">Password
+MFA
+Access credentials
+Federated sign-in
+Workload identity
+</code></pre>
+<h2 id="authorization">Authorization</h2>
+<p>Authorization asks:</p>
+<blockquote>
+<p><strong>What are you allowed to do?</strong></p>
+</blockquote>
+<p>Example:</p>
+<pre><code class="language-text">Can this identity execute:
+
+s3:GetObject
+
+against:
+
+arn:aws:s3:::company-reports/*
+</code></pre>
+<hr/>
+<h1 id="4-5-iam-authorization-mental-model"><strong>4.5 IAM Authorization Mental Model</strong></h1>
+<pre><code class="language-text">Principal
+   |
+   v
+Makes Request
+   |
+   v
+AWS Authorization
+   |
+   +--&gt; Identity Policy
+   |
+   +--&gt; Resource Policy
+   |
+   +--&gt; Permissions Boundary
+   |
+   +--&gt; SCP
+   |
+   +--&gt; Session Policy
+   |
+   +--&gt; Other applicable controls
+   |
+   v
+ALLOW or DENY
+</code></pre>
+<p>The complete evaluation logic depends on the request and policy types involved.</p>
+<hr/>
+<h1 id="4-6-aws-account-root-user"><strong>4.6 AWS Account Root User</strong></h1>
+<p>The AWS account root user is created with the AWS account.</p>
+<p>It has extremely powerful access.</p>
+<p>Examples of operations that may require or involve root credentials include certain account-level tasks.</p>
+<p>Production principle:</p>
+<blockquote>
+<p><strong>Do not use the root user for everyday administration.</strong></p>
+</blockquote>
+<p>Protect it carefully.</p>
+<p>Recommended controls include:</p>
+<pre><code class="language-text">Strong unique password
+MFA
+No routine use
+Secure recovery mechanisms
+Monitoring
+No root access keys unless absolutely required
+</code></pre>
+<hr/>
+<h1 id="4-7-iam-user"><strong>4.7 IAM User</strong></h1>
+<p>An IAM user represents an identity inside an AWS account.</p>
+<p>Concept:</p>
+<pre><code class="language-text">AWS Account
+    |
+    +--&gt; IAM User: Alice
+    |
+    +--&gt; IAM User: Bob
+</code></pre>
+<p>An IAM user can have credentials for supported access methods.</p>
+<p>However, modern enterprise environments increasingly prefer:</p>
+<pre><code class="language-text">Federation
+IAM Identity Center
+Roles
+Temporary credentials
+</code></pre>
+<p>over creating large numbers of long-lived IAM users.</p>
+<hr/>
+<h1 id="4-8-iam-groups"><strong>4.8 IAM Groups</strong></h1>
+<p>An IAM group is a collection of IAM users.</p>
+<p>Example:</p>
+<pre><code class="language-text">Developers Group
+       |
+       +--&gt; Alice
+       +--&gt; Bob
+       +--&gt; Charlie
+</code></pre>
+<p>Permissions can be attached to the group.</p>
+<pre><code class="language-text">Developers Group
+       |
+       v
+Developer Policy
+       |
+       v
+Users inherit group permissions
+</code></pre>
+<p>Important:</p>
+<blockquote>
+<p>IAM groups contain users, not IAM roles.</p>
+</blockquote>
+<hr/>
+<h1 id="4-9-why-groups-are-useful"><strong>4.9 Why Groups Are Useful</strong></h1>
+<p>Without groups:</p>
+<pre><code class="language-text">Alice --&gt; Policy
+Bob --&gt; Policy
+Charlie --&gt; Policy
+David --&gt; Policy
+</code></pre>
+<p>With a group:</p>
+<pre><code class="language-text">          Developers
+         /    |    \
+        /     |     \
+     Alice   Bob   Charlie
+          |
+          v
+       Policies
+</code></pre>
+<p>This can simplify permission administration for IAM users.</p>
+<hr/>
+<h1 id="4-10-iam-role"><strong>4.10 IAM Role</strong></h1>
+<p>An IAM role is an AWS identity with permissions that can be assumed by trusted principals.</p>
+<p>Unlike a traditional IAM user, a role is designed around temporary sessions.</p>
+<p>Concept:</p>
+<pre><code class="language-text">Principal
+   |
+   | Assume Role
+   v
+IAM Role
+   |
+   v
+Temporary Credentials
+   |
+   v
+AWS Resources
+</code></pre>
+<p>Roles are fundamental to production AWS architecture.</p>
+<hr/>
+<h1 id="4-11-who-can-assume-a-role"><strong>4.11 Who Can Assume a Role?</strong></h1>
+<p>Depending on configuration, trusted principals can include:</p>
+<pre><code class="language-text">AWS services
+IAM identities
+Other AWS accounts
+Federated users
+Applications/workloads
+OIDC identities
+SAML identities
+</code></pre>
+<p>Trust is controlled through the role's trust policy and related authorization requirements.</p>
+<hr/>
+<h1 id="4-12-why-roles-are-better-for-workloads"><strong>4.12 Why Roles Are Better for Workloads</strong></h1>
+<p>Bad architecture:</p>
+<pre><code class="language-text">EC2 Application
+      |
+      v
+Hardcoded Access Key
+      |
+      v
+AWS API
+</code></pre>
+<p>Problems include:</p>
+<pre><code class="language-text">Long-lived credential
+Secret storage
+Credential rotation
+Accidental exposure
+Git leakage
+Operational overhead
+</code></pre>
+<p>Better:</p>
+<pre><code class="language-text">EC2 Instance
+      |
+      v
+IAM Role
+      |
+      v
+Temporary Credentials
+      |
+      v
+AWS API
+</code></pre>
+<hr/>
+<h1 id="4-13-iam-policy"><strong>4.13 IAM Policy</strong></h1>
+<p>An IAM policy is a JSON document describing permissions or access-control rules.</p>
+<p>Example:</p>
+<pre><code class="language-json">{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::example-bucket/reports/*"
+    }
+  ]
+}
+</code></pre>
+<hr/>
+<h1 id="4-14-policy-structure"><strong>4.14 Policy Structure</strong></h1>
+<p>Common elements include:</p>
+<pre><code class="language-text">Version
+Statement
+Effect
+Action
+Resource
+Condition
+Principal
+</code></pre>
+<p>Not every element appears in every policy type.</p>
+<hr/>
+<h1 id="4-15-version"><strong>4.15 Version</strong></h1>
+<p>Example:</p>
+<pre><code class="language-json">"Version": "2012-10-17"
+</code></pre>
+<p>This is the IAM policy language version.</p>
+<p>It is <strong>not</strong> the date when your policy was created.</p>
+<p>That distinction is frequently asked in interviews.</p>
+<hr/>
+<h1 id="4-16-statement"><strong>4.16 Statement</strong></h1>
+<p>A policy can contain one or more statements.</p>
+<p>Example:</p>
+<pre><code class="language-json">{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::example-bucket/*"
+    }
+  ]
+}
+</code></pre>
+<p>The array:</p>
+<pre><code class="language-text">Statement
+</code></pre>
+<p>contains permission statements.</p>
+<hr/>
+<h1 id="4-17-effect"><strong>4.17 Effect</strong></h1>
+<p>Common values:</p>
+<pre><code class="language-text">Allow
+Deny
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-json">"Effect": "Allow"
+</code></pre>
+<p>means the statement grants the specified access if the rest of the statement matches and no overriding deny applies.</p>
+<hr/>
+<h1 id="4-18-action"><strong>4.18 Action</strong></h1>
+<p><code>Action</code> describes AWS API operations.</p>
+<p>Example:</p>
+<pre><code class="language-json">"Action": "s3:GetObject"
+</code></pre>
+<p>Another:</p>
+<pre><code class="language-json">"Action": [
+  "s3:GetObject",
+  "s3:PutObject"
+]
+</code></pre>
+<p>Wildcards can broaden permissions:</p>
+<pre><code class="language-json">"Action": "s3:*"
+</code></pre>
+<p>This means all actions matching the S3 action namespace and should be used only when justified.</p>
+<hr/>
+<h1 id="4-19-resource"><strong>4.19 Resource</strong></h1>
+<p><code>Resource</code> identifies the AWS resource or resources to which the statement applies.</p>
+<p>Example:</p>
+<pre><code class="language-json">"Resource": "arn:aws:s3:::example-bucket/reports/*"
+</code></pre>
+<p>This refers to objects under:</p>
+<pre><code class="language-text">example-bucket/reports/
+</code></pre>
+<hr/>
+<h1 id="4-20-resource-wildcard"><strong>4.20 Resource Wildcard</strong></h1>
+<p>Example:</p>
+<pre><code class="language-json">"Resource": "*"
+</code></pre>
+<p>means all resources applicable to that action.</p>
+<p>Sometimes AWS APIs require:</p>
+<pre><code class="language-text">"*"
+</code></pre>
+<p>because they do not support resource-level permissions.</p>
+<p>But never assume <code>*</code> is necessary.</p>
+<p>Check the service authorization documentation.</p>
+<hr/>
+<h1 id="4-21-condition"><strong>4.21 Condition</strong></h1>
+<p>Conditions allow permissions to depend on request context.</p>
+<p>Concept:</p>
+<pre><code class="language-text">Allow Action
+     |
+     v
+Only if Condition Matches
+</code></pre>
+<p>Examples of conditions may inspect:</p>
+<pre><code class="language-text">Source IP
+Requested Region
+Principal tags
+Resource tags
+MFA context
+TLS usage
+VPC endpoint
+Organization ID
+</code></pre>
+<p>Exact supported condition keys depend on the service and request.</p>
+<hr/>
+<h1 id="4-22-condition-example"><strong>4.22 Condition Example</strong></h1>
+<p>Example concept:</p>
+<pre><code class="language-json">{
+  "Effect": "Allow",
+  "Action": "s3:GetObject",
+  "Resource": "arn:aws:s3:::example-bucket/*",
+  "Condition": {
+    "Bool": {
+      "aws:SecureTransport": "true"
+    }
+  }
+}
+</code></pre>
+<p>This statement allows matching access when the request uses secure transport.</p>
+<p>For strict enforcement, organizations commonly design an explicit deny for insecure transport because an allow statement alone does not necessarily block access granted elsewhere.</p>
+<hr/>
+<h1 id="4-23-principal"><strong>4.23 Principal</strong></h1>
+<p><code>Principal</code> identifies who is allowed or denied by resource-based or trust policies.</p>
+<p>Example:</p>
+<pre><code class="language-json">"Principal": {
+  "AWS": "arn:aws:iam::111122223333:role/DeploymentRole"
+}
+</code></pre>
+<p>You normally do <strong>not</strong> place <code>Principal</code> in a standard IAM identity-based permissions policy.</p>
+<p>The identity to which that policy is attached is already the principal context.</p>
+<hr/>
+<h1 id="4-24-identity-based-policy"><strong>4.24 Identity-Based Policy</strong></h1>
+<p>An identity-based policy is attached to:</p>
+<pre><code class="language-text">IAM User
+IAM Group
+IAM Role
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-text">IAM Role
+   |
+   v
+Permissions Policy
+   |
+   v
+S3 Read Permission
+</code></pre>
+<p>Example JSON:</p>
+<pre><code class="language-json">{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::example-bucket/*"
+    }
+  ]
+}
+</code></pre>
+<hr/>
+<h1 id="4-25-resource-based-policy"><strong>4.25 Resource-Based Policy</strong></h1>
+<p>A resource-based policy is attached directly to a supported resource.</p>
+<p>Examples include:</p>
+<pre><code class="language-text">S3 bucket policy
+KMS key policy
+SQS queue policy
+SNS topic policy
+IAM role trust policy
+</code></pre>
+<p>Concept:</p>
+<pre><code class="language-text">Resource
+   |
+   v
+Resource Policy
+   |
+   v
+Who may access it?
+</code></pre>
+<hr/>
+<h1 id="4-26-s3-bucket-policy-example"><strong>4.26 S3 Bucket Policy Example</strong></h1>
+<pre><code class="language-json">{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::111122223333:role/AnalyticsRole"
+      },
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::company-data/*"
+    }
+  ]
+}
+</code></pre>
+<p>The policy answers:</p>
+<pre><code class="language-text">WHO?
+AnalyticsRole
+
+CAN DO WHAT?
+s3:GetObject
+
+ON WHAT?
+company-data objects
+</code></pre>
+<hr/>
+<h1 id="4-27-iam-managed-policies"><strong>4.27 IAM Managed Policies</strong></h1>
+<p>Managed policies exist as reusable policy objects.</p>
+<p>Two broad categories are:</p>
+<pre><code class="language-text">AWS managed policies
+
+Customer managed policies
+</code></pre>
+<p>AWS managed policies are created and maintained by AWS.</p>
+<p>Customer managed policies are created and controlled by your organization.</p>
+<hr/>
+<h1 id="4-28-inline-policies"><strong>4.28 Inline Policies</strong></h1>
+<p>An inline policy is embedded directly in a single IAM identity.</p>
+<p>Concept:</p>
+<pre><code class="language-text">IAM Role
+   |
+   +--&gt; Inline Policy
+</code></pre>
+<p>It has a one-to-one relationship with that identity.</p>
+<p>Managed policies are usually easier to reuse and centrally manage.</p>
+<hr/>
+<h1 id="4-29-managed-vs-inline-policy"><strong>4.29 Managed vs Inline Policy</strong></h1>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Managed Policy</th>
+<th>Inline Policy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Separate policy object</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Reusable</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Can attach to multiple identities</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Lifecycle tied directly to one identity</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Central management</td>
+<td>Easier</td>
+<td>More limited</td>
+</tr>
+</tbody>
+</table>
+<p>Inline policies still have legitimate use cases, but should be chosen intentionally.</p>
+<hr/>
+<h1 id="4-30-least-privilege"><strong>4.30 Least Privilege</strong></h1>
+<p>Least privilege means:</p>
+<blockquote>
+<p>Give only the permissions required to perform the intended task.</p>
+</blockquote>
+<p>Bad:</p>
+<pre><code class="language-json">{
+  "Effect": "Allow",
+  "Action": "*",
+  "Resource": "*"
+}
+</code></pre>
+<p>Better:</p>
+<pre><code class="language-json">{
+  "Effect": "Allow",
+  "Action": [
+    "s3:GetObject",
+    "s3:ListBucket"
+  ],
+  "Resource": [
+    "arn:aws:s3:::company-reports",
+    "arn:aws:s3:::company-reports/*"
+  ]
+}
+</code></pre>
+<hr/>
+<h1 id="4-31-why-s3-often-needs-two-arns"><strong>4.31 Why S3 Often Needs Two ARNs</strong></h1>
+<p>Consider:</p>
+<pre><code class="language-text">s3:ListBucket
+</code></pre>
+<p>This applies to the bucket:</p>
+<pre><code class="language-text">arn:aws:s3:::company-reports
+</code></pre>
+<p>Whereas:</p>
+<pre><code class="language-text">s3:GetObject
+</code></pre>
+<p>applies to objects:</p>
+<pre><code class="language-text">arn:aws:s3:::company-reports/*
+</code></pre>
+<p>Therefore policies frequently contain both.</p>
+<hr/>
+<h1 id="4-32-example-s3-read-policy"><strong>4.32 Example S3 Read Policy</strong></h1>
+<pre><code class="language-json">{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ListBucket",
+      "Effect": "Allow",
+      "Action": "s3:ListBucket",
+      "Resource": "arn:aws:s3:::company-reports"
+    },
+    {
+      "Sid": "ReadObjects",
+      "Effect": "Allow",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::company-reports/*"
+    }
+  ]
+}
+</code></pre>
+<hr/>
+<h1 id="4-33-sid"><strong>4.33 <code>Sid</code></strong></h1>
+<p><code>Sid</code> means:</p>
+<blockquote>
+<p><strong>Statement ID</strong></p>
+</blockquote>
+<p>Example:</p>
+<pre><code class="language-json">"Sid": "ReadObjects"
+</code></pre>
+<p>It can make policies easier to understand and troubleshoot.</p>
+<p>It does not itself grant permission.</p>
+<hr/>
+<h1 id="4-34-default-deny"><strong>4.34 Default Deny</strong></h1>
+<p>AWS authorization begins conceptually with:</p>
+<pre><code class="language-text">DENY
+</code></pre>
+<p>If no applicable permission allows the request:</p>
+<pre><code class="language-text">Request denied
+</code></pre>
+<p>This is often called:</p>
+<blockquote>
+<p><strong>Implicit Deny</strong></p>
+</blockquote>
+<hr/>
+<h1 id="4-35-implicit-deny"><strong>4.35 Implicit Deny</strong></h1>
+<p>Suppose a user has no permission for:</p>
+<pre><code class="language-text">ec2:TerminateInstances
+</code></pre>
+<p>The result is:</p>
+<pre><code class="language-text">Denied
+</code></pre>
+<p>because no matching allow exists.</p>
+<p>Concept:</p>
+<pre><code class="language-text">No Allow
+   |
+   v
+Implicit Deny
+</code></pre>
+<hr/>
+<h1 id="4-36-explicit-deny"><strong>4.36 Explicit Deny</strong></h1>
+<p>A policy can explicitly deny an action.</p>
+<p>Example:</p>
+<pre><code class="language-json">{
+  "Effect": "Deny",
+  "Action": "s3:DeleteObject",
+  "Resource": "arn:aws:s3:::company-data/*"
+}
+</code></pre>
+<p>An applicable explicit deny generally overrides an allow.</p>
+<p>Mental rule:</p>
+<pre><code class="language-text">Explicit Deny
+     |
+     v
+   WINS
+</code></pre>
+<p>within the relevant AWS authorization evaluation.</p>
+<hr/>
+<h1 id="4-37-allow-deny-example"><strong>4.37 Allow + Deny Example</strong></h1>
+<p>Policy A:</p>
+<pre><code class="language-json">{
+  "Effect": "Allow",
+  "Action": "s3:*",
+  "Resource": "*"
+}
+</code></pre>
+<p>Policy B:</p>
+<pre><code class="language-json">{
+  "Effect": "Deny",
+  "Action": "s3:DeleteObject",
+  "Resource": "*"
+}
+</code></pre>
+<p>For:</p>
+<pre><code class="language-text">s3:GetObject
+</code></pre>
+<p>the allow may apply.</p>
+<p>For:</p>
+<pre><code class="language-text">s3:DeleteObject
+</code></pre>
+<p>the explicit deny applies.</p>
+<hr/>
+<h1 id="4-38-iam-policy-evaluation-simplified"><strong>4.38 IAM Policy Evaluation — Simplified</strong></h1>
+<p>A useful beginner model:</p>
+<pre><code class="language-text">Request
+   |
+   v
+Is there an applicable explicit deny?
+   |
+   +--&gt; YES --&gt; DENY
+   |
+   v
+Is there an applicable allow?
+   |
+   +--&gt; YES --&gt; ALLOW
+   |
+   v
+DENY
+</code></pre>
+<p>Real AWS policy evaluation is more detailed because several policy types can intersect.</p>
+<hr/>
+<h1 id="4-39-permissions-boundary"><strong>4.39 Permissions Boundary</strong></h1>
+<p>A permissions boundary sets the maximum permissions that an IAM user or role can receive through identity-based policies.</p>
+<p>Think of it as a ceiling.</p>
+<pre><code class="language-text">Identity Policy
+      |
+      v
+Possible Permissions
+
+      AND
+
+Permissions Boundary
+      |
+      v
+
+Effective Identity Permissions
+</code></pre>
+<p>A boundary does not grant permissions by itself.</p>
+<hr/>
+<h1 id="4-40-permissions-boundary-example"><strong>4.40 Permissions Boundary Example</strong></h1>
+<p>Identity policy allows:</p>
+<pre><code class="language-text">EC2
+S3
+RDS
+IAM
+</code></pre>
+<p>Boundary permits only:</p>
+<pre><code class="language-text">EC2
+S3
+</code></pre>
+<p>Then identity-based permissions are limited by the boundary.</p>
+<p>Conceptually:</p>
+<pre><code class="language-text">Identity Policy:
+
+EC2 + S3 + RDS + IAM
+
+Boundary:
+
+EC2 + S3
+
+Result:
+
+EC2 + S3
+</code></pre>
+<p>subject to other applicable controls and denies.</p>
+<hr/>
+<h1 id="4-41-why-permissions-boundaries-are-useful"><strong>4.41 Why Permissions Boundaries Are Useful</strong></h1>
+<p>Suppose developers are allowed to create IAM roles.</p>
+<p>Without guardrails, they might create roles with excessive permissions.</p>
+<p>A permissions boundary can constrain delegated IAM administration.</p>
+<p>Example:</p>
+<pre><code class="language-text">Platform Team
+     |
+     v
+Defines Boundary
+     |
+     v
+Developer-Created Roles
+     |
+     v
+Cannot exceed approved permission ceiling
+</code></pre>
+<hr/>
+<h1 id="4-42-service-control-policy"><strong>4.42 Service Control Policy</strong></h1>
+<p>SCP means:</p>
+<blockquote>
+<p><strong>Service Control Policy</strong></p>
+</blockquote>
+<p>SCPs are used with AWS Organizations.</p>
+<p>They define permission guardrails for affected accounts or organizational units.</p>
+<p>Important:</p>
+<blockquote>
+<p><strong>An SCP does not grant permission.</strong></p>
+</blockquote>
+<hr/>
+<h1 id="4-43-scp-example"><strong>4.43 SCP Example</strong></h1>
+<p>Suppose IAM policy allows:</p>
+<pre><code class="language-text">EC2
+S3
+RDS
+</code></pre>
+<p>SCP allows the account to use only:</p>
+<pre><code class="language-text">EC2
+S3
+</code></pre>
+<p>Conceptually:</p>
+<pre><code class="language-text">IAM Permission
+     INTERSECTION
+SCP Guardrail
+     =
+Available Permission
+</code></pre>
+<p>Other policy types and explicit denies can further restrict access.</p>
+<hr/>
+<h1 id="4-44-iam-boundary-scp"><strong>4.44 IAM + Boundary + SCP</strong></h1>
+<p>A simplified mental model:</p>
+<pre><code class="language-text">Identity-Based Permissions
+          |
+          v
+Permissions Boundary
+          |
+          v
+SCP
+          |
+          v
+Other Applicable Controls
+          |
+          v
+Effective Access
+</code></pre>
+<p>Do not treat any one policy as the entire authorization decision.</p>
+<hr/>
+<h1 id="4-45-iam-role-components"><strong>4.45 IAM Role Components</strong></h1>
+<p>An IAM role commonly has two important policy concepts:</p>
+<pre><code class="language-text">IAM Role
+   |
+   +--&gt; Trust Policy
+   |
+   +--&gt; Permissions Policies
+</code></pre>
+<p>Trust policy:</p>
+<pre><code class="language-text">Who can assume this role?
+</code></pre>
+<p>Permissions policy:</p>
+<pre><code class="language-text">What can the role session do after assumption?
+</code></pre>
+<p>This distinction is critical.</p>
+<hr/>
+<h1 id="4-46-trust-policy"><strong>4.46 Trust Policy</strong></h1>
+<p>Example:</p>
+<pre><code class="language-json">{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+</code></pre>
+<p>This trusts the EC2 service principal to assume the role in the relevant service-role workflow.</p>
+<hr/>
+<h1 id="4-47-permissions-policy-for-the-role"><strong>4.47 Permissions Policy for the Role</strong></h1>
+<p>Example:</p>
+<pre><code class="language-json">{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::application-data/*"
+    }
+  ]
+}
+</code></pre>
+<p>Now separate the two ideas:</p>
+<pre><code class="language-text">Trust Policy
+=
+EC2 can assume role
+
+Permissions Policy
+=
+Role can read application-data objects
+</code></pre>
+<hr/>
+<h1 id="4-48-aws-sts"><strong>4.48 AWS STS</strong></h1>
+<p>STS means:</p>
+<blockquote>
+<p><strong>AWS Security Token Service</strong></p>
+</blockquote>
+<p>STS provides temporary security credentials.</p>
+<p>Temporary credentials typically contain:</p>
+<pre><code class="language-text">Access Key ID
+Secret Access Key
+Session Token
+Expiration
+</code></pre>
+<hr/>
+<h1 id="4-49-why-temporary-credentials-matter"><strong>4.49 Why Temporary Credentials Matter</strong></h1>
+<p>Long-lived credentials:</p>
+<pre><code class="language-text">Created
+  |
+  v
+Remain valid until rotated/disabled
+</code></pre>
+<p>Temporary credentials:</p>
+<pre><code class="language-text">Issued
+  |
+  v
+Used
+  |
+  v
+Expire
+</code></pre>
+<p>Temporary credentials reduce the lifetime of exposed credentials.</p>
+<p>They do not eliminate the need for secure handling.</p>
+<hr/>
+<h1 id="4-50-assumerole"><strong>4.50 AssumeRole</strong></h1>
+<p>One of the most important STS operations is:</p>
+<pre><code class="language-text">AssumeRole
+</code></pre>
+<p>Workflow:</p>
+<pre><code class="language-text">Principal
+   |
+   | sts:AssumeRole
+   v
+IAM Role
+   |
+   v
+STS
+   |
+   v
+Temporary Role Session
+   |
+   v
+AWS API
+</code></pre>
+<hr/>
+<h1 id="4-51-assumerole-requirements"><strong>4.51 AssumeRole Requirements</strong></h1>
+<p>A successful role assumption generally requires the appropriate trust and authorization relationship.</p>
+<p>Conceptually:</p>
+<pre><code class="language-text">Caller
+  |
+  | permission to request AssumeRole where required
+  v
+Role
+  |
+  | trust policy accepts caller/context
+  v
+STS
+  |
+  v
+Temporary Session
+</code></pre>
+<p>Cross-account and same-account details can differ depending on policy configuration.</p>
+<hr/>
+<h1 id="4-52-aws-cli-assumerole-example"><strong>4.52 AWS CLI AssumeRole Example</strong></h1>
+<p>Example:</p>
+<pre><code class="language-bash">aws sts assume-role \
+  --role-arn arn:aws:iam::123456789012:role/DeploymentRole \
+  --role-session-name deployment-session
+</code></pre>
+<p>The response includes temporary credentials.</p>
+<p>Never publish real credential values.</p>
+<hr/>
+<h1 id="4-53-role-session"><strong>4.53 Role Session</strong></h1>
+<p>When a role is assumed, AWS creates a role session.</p>
+<p>Concept:</p>
+<pre><code class="language-text">IAM Role
+   |
+   v
+Assumed Role Session
+   |
+   v
+Temporary Credentials
+</code></pre>
+<p>CloudTrail may show an assumed-role principal rather than the base IAM role ARN alone.</p>
+<p>This is important during investigations.</p>
+<hr/>
+<h1 id="4-54-ec2-iam-role"><strong>4.54 EC2 IAM Role</strong></h1>
+<p>An application running on EC2 often needs AWS API access.</p>
+<p>Bad:</p>
+<pre><code class="language-text">EC2
+ |
+ v
+Static Access Keys in File
+ |
+ v
+S3
+</code></pre>
+<p>Better:</p>
+<pre><code class="language-text">EC2
+ |
+ v
+IAM Role
+ |
+ v
+Temporary Credentials
+ |
+ v
+S3
+</code></pre>
+<hr/>
+<h1 id="4-55-instance-profile"><strong>4.55 Instance Profile</strong></h1>
+<p>For EC2, an IAM role is associated with an instance through an instance profile.</p>
+<p>Conceptually:</p>
+<pre><code class="language-text">EC2 Instance
+      |
+      v
+Instance Profile
+      |
+      v
+IAM Role
+      |
+      v
+Temporary Credentials
+</code></pre>
+<p>The AWS console can hide some of this complexity, so understand the underlying concept.</p>
+<hr/>
+<h1 id="4-56-ec2-application-credential-flow"><strong>4.56 EC2 Application Credential Flow</strong></h1>
+<p>Simplified:</p>
+<pre><code class="language-text">Application
+     |
+     v
+AWS SDK Credential Provider Chain
+     |
+     v
+EC2 Role Credentials
+     |
+     v
+Temporary Credentials
+     |
+     v
+AWS API
+</code></pre>
+<p>The application should normally let the SDK obtain credentials through the supported provider chain rather than hardcoding keys.</p>
+<hr/>
+<h1 id="4-57-credential-provider-chain"><strong>4.57 Credential Provider Chain</strong></h1>
+<p>AWS SDKs and tools can search several credential sources.</p>
+<p>Depending on the SDK/tool, sources may include:</p>
+<pre><code class="language-text">Explicit configuration
+Environment variables
+Shared credential/config files
+Web identity
+Container credentials
+EC2 instance metadata credentials
+</code></pre>
+<p>Exact order and behavior depend on the SDK or CLI version.</p>
+<p>Production rule:</p>
+<blockquote>
+<p>Understand where your application is actually obtaining credentials.</p>
+</blockquote>
+<hr/>
+<h1 id="4-58-iam-role-for-jenkins"><strong>4.58 IAM Role for Jenkins</strong></h1>
+<p>Suppose Jenkins runs on EC2.</p>
+<p>Bad:</p>
+<pre><code class="language-text">Jenkins
+   |
+   v
+AWS_ACCESS_KEY_ID in Jenkins
+   |
+   v
+AWS_SECRET_ACCESS_KEY
+   |
+   v
+AWS
+</code></pre>
+<p>Preferred architecture when appropriate:</p>
+<pre><code class="language-text">Jenkins EC2
+     |
+     v
+Instance Role
+     |
+     v
+STS Temporary Credentials
+     |
+     v
+AWS API
+</code></pre>
+<hr/>
+<h1 id="4-59-jenkins-deployment-role"><strong>4.59 Jenkins Deployment Role</strong></h1>
+<p>A stronger separation may be:</p>
+<pre><code class="language-text">Jenkins Host Role
+      |
+      | sts:AssumeRole
+      v
+Deployment Role
+      |
+      v
+Production Resources
+</code></pre>
+<p>This separates:</p>
+<pre><code class="language-text">Jenkins infrastructure permissions
+</code></pre>
+<p>from:</p>
+<pre><code class="language-text">Production deployment permissions
+</code></pre>
+<hr/>
+<h1 id="4-60-terraform-authentication"><strong>4.60 Terraform Authentication</strong></h1>
+<p>Terraform AWS Provider needs AWS credentials.</p>
+<p>Avoid:</p>
+<pre><code class="language-hcl">provider "aws" {
+  access_key = "REAL_KEY"
+  secret_key = "REAL_SECRET"
+}
+</code></pre>
+<p>Never commit static credentials to Terraform configuration.</p>
+<hr/>
+<h1 id="4-61-better-terraform-authentication"><strong>4.61 Better Terraform Authentication</strong></h1>
+<p>Possible approaches include:</p>
+<pre><code class="language-text">AWS CLI/SDK credential chain
+IAM Role
+AssumeRole
+Environment-based temporary credentials
+Federation
+Workload identity
+</code></pre>
+<p>Example provider:</p>
+<pre><code class="language-hcl">provider "aws" {
+  region = "ap-south-1"
+}
+</code></pre>
+<p>Credentials can be obtained through the supported credential chain.</p>
+<hr/>
+<h1 id="4-62-terraform-assumerole-example"><strong>4.62 Terraform AssumeRole Example</strong></h1>
+<p>Example:</p>
+<pre><code class="language-hcl">provider "aws" {
+  region = "ap-south-1"
+
+  assume_role {
+    role_arn = "arn:aws:iam::123456789012:role/TerraformRole"
+  }
+}
+</code></pre>
+<p>Concept:</p>
+<pre><code class="language-text">Terraform
+   |
+   v
+Base/Federated Identity
+   |
+   | AssumeRole
+   v
+TerraformRole
+   |
+   v
+AWS Resources
+</code></pre>
+<hr/>
+<h1 id="4-63-cross-account-access"><strong>4.63 Cross-Account Access</strong></h1>
+<p>Suppose:</p>
+<pre><code class="language-text">Account A
+=
+CI/CD Account
+
+Account B
+=
+Production Account
+</code></pre>
+<p>Jenkins in Account A needs controlled deployment access to Account B.</p>
+<p>Architecture:</p>
+<pre><code class="language-text">Account A
+----------------
+
+Jenkins Role
+     |
+     | AssumeRole
+     v
+
+Account B
+----------------
+
+ProductionDeploymentRole
+     |
+     v
+Production Resources
+</code></pre>
+<hr/>
+<h1 id="4-64-cross-account-trust"><strong>4.64 Cross-Account Trust</strong></h1>
+<p>The production role in Account B needs an appropriate trust policy.</p>
+<p>Example concept:</p>
+<pre><code class="language-json">{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::111122223333:role/JenkinsRole"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+</code></pre>
+<p>The calling identity must also have the necessary authorization to assume the role.</p>
+<hr/>
+<h1 id="4-65-cross-account-flow"><strong>4.65 Cross-Account Flow</strong></h1>
+<pre><code class="language-text">Jenkins
+   |
+   v
+Account A JenkinsRole
+   |
+   | sts:AssumeRole
+   v
+Account B DeploymentRole
+   |
+   v
+Temporary Credentials
+   |
+   v
+Production Deployment
+</code></pre>
+<p>Benefits include:</p>
+<pre><code class="language-text">No permanent production keys in Jenkins
+Short-lived sessions
+Clear role separation
+Auditable role assumptions
+Reduced credential-management burden
+</code></pre>
+<hr/>
+<h1 id="4-66-mfa"><strong>4.66 MFA</strong></h1>
+<p>MFA means:</p>
+<blockquote>
+<p><strong>Multi-Factor Authentication</strong></p>
+</blockquote>
+<p>It combines multiple authentication factors.</p>
+<p>Example:</p>
+<pre><code class="language-text">Something you know
++
+Something you possess
+</code></pre>
+<p>Privileged human identities should use strong MFA according to organizational policy and AWS best practices.</p>
+<hr/>
+<h1 id="4-67-iam-identity-center"><strong>4.67 IAM Identity Center</strong></h1>
+<p>For workforce access across AWS accounts, organizations often use:</p>
+<blockquote>
+<p><strong>AWS IAM Identity Center</strong></p>
+</blockquote>
+<p>Concept:</p>
+<pre><code class="language-text">Employee
+   |
+   v
+Identity Provider / IAM Identity Center
+   |
+   v
+Permission Set
+   |
+   v
+AWS Account Role
+   |
+   v
+Temporary Session
+</code></pre>
+<p>This is generally preferable to creating separate IAM users for every employee in every AWS account.</p>
+<hr/>
+<h1 id="4-68-federation"><strong>4.68 Federation</strong></h1>
+<p>Federation allows identities managed outside an AWS account to access AWS through trusted identity mechanisms.</p>
+<p>Examples can include:</p>
+<pre><code class="language-text">Corporate identity provider
+SAML
+OIDC
+IAM Identity Center
+</code></pre>
+<p>Concept:</p>
+<pre><code class="language-text">Corporate Identity
+      |
+      v
+Identity Provider
+      |
+      v
+Federation
+      |
+      v
+AWS Role Session
+</code></pre>
+<hr/>
+<h1 id="4-69-oidc-workload-identity"><strong>4.69 OIDC Workload Identity</strong></h1>
+<p>OIDC means:</p>
+<blockquote>
+<p><strong>OpenID Connect</strong></p>
+</blockquote>
+<p>Modern CI/CD systems and Kubernetes platforms can use OIDC-based federation.</p>
+<p>Concept:</p>
+<pre><code class="language-text">Workload
+   |
+   v
+OIDC Token
+   |
+   v
+AWS STS
+   |
+   v
+IAM Role
+   |
+   v
+Temporary AWS Credentials
+</code></pre>
+<p>This can remove the need for permanent AWS access keys.</p>
+<hr/>
+<h1 id="4-70-kubernetes-to-aws-preview"><strong>4.70 Kubernetes-to-AWS Preview</strong></h1>
+<p>On supported AWS/Kubernetes architectures, Pods can receive AWS permissions through workload identity mechanisms rather than sharing node credentials.</p>
+<p>Concept:</p>
+<pre><code class="language-text">Pod
+ |
+ v
+Service Account / Workload Identity
+ |
+ v
+AWS IAM Role
+ |
+ v
+Temporary Credentials
+ |
+ v
+AWS API
+</code></pre>
+<p>We will revisit this during Kubernetes and EKS architecture.</p>
+<hr/>
+<h1 id="4-71-policy-variables-and-conditions"><strong>4.71 Policy Variables and Conditions</strong></h1>
+<p>IAM supports advanced authorization patterns using:</p>
+<pre><code class="language-text">Condition keys
+Principal tags
+Resource tags
+Request tags
+Policy variables
+</code></pre>
+<p>This enables patterns such as:</p>
+<pre><code class="language-text">ABAC
+</code></pre>
+<hr/>
+<h1 id="4-72-abac"><strong>4.72 ABAC</strong></h1>
+<p>ABAC means:</p>
+<blockquote>
+<p><strong>Attribute-Based Access Control</strong></p>
+</blockquote>
+<p>Example:</p>
+<pre><code class="language-text">Principal Tag:
+
+Project = Phoenix
+
+Resource Tag:
+
+Project = Phoenix
+</code></pre>
+<p>Policy logic can allow access when the attributes match.</p>
+<p>Concept:</p>
+<pre><code class="language-text">Principal Attribute
+        |
+        v
+Policy Condition
+        |
+        v
+Resource Attribute
+        |
+        v
+ALLOW
+</code></pre>
+<hr/>
+<h1 id="4-73-rbac-vs-abac"><strong>4.73 RBAC vs ABAC</strong></h1>
+<p>RBAC:</p>
+<blockquote>
+<p><strong>Role-Based Access Control</strong></p>
+</blockquote>
+<pre><code class="language-text">User
+ |
+ v
+Role
+ |
+ v
+Permissions
+</code></pre>
+<p>ABAC:</p>
+<blockquote>
+<p><strong>Attribute-Based Access Control</strong></p>
+</blockquote>
+<pre><code class="language-text">Identity Attributes
+       +
+Resource Attributes
+       +
+Request Context
+       |
+       v
+Authorization
+</code></pre>
+<p>AWS environments can use both patterns.</p>
+<hr/>
+<h1 id="4-74-tag-based-access-example"><strong>4.74 Tag-Based Access Example</strong></h1>
+<p>Conceptual policy:</p>
+<pre><code class="language-json">{
+  "Effect": "Allow",
+  "Action": "ec2:StartInstances",
+  "Resource": "*",
+  "Condition": {
+    "StringEquals": {
+      "aws:ResourceTag/Environment": "development"
+    }
+  }
+}
+</code></pre>
+<p>This illustrates authorization based on a resource tag.</p>
+<p>Always verify whether the target AWS action supports the intended resource and condition controls.</p>
+<hr/>
+<h1 id="4-75-restricting-by-region"><strong>4.75 Restricting by Region</strong></h1>
+<p>Conceptual example:</p>
+<pre><code class="language-json">{
+  "Effect": "Allow",
+  "Action": "ec2:*",
+  "Resource": "*",
+  "Condition": {
+    "StringEquals": {
+      "aws:RequestedRegion": "ap-south-1"
+    }
+  }
+}
+</code></pre>
+<p>Conditions can add context-aware restrictions.</p>
+<p>Be careful: global services and service-specific behavior require thoughtful policy design.</p>
+<hr/>
+<h1 id="4-76-resource-policies-and-cross-account-access"><strong>4.76 Resource Policies and Cross-Account Access</strong></h1>
+<p>Some AWS services allow direct cross-account access through resource policies.</p>
+<p>Example:</p>
+<pre><code class="language-text">Account A Principal
+       |
+       v
+Account B Resource Policy
+       |
+       v
+Resource
+</code></pre>
+<p>Other architectures use:</p>
+<pre><code class="language-text">AssumeRole
+</code></pre>
+<p>The correct pattern depends on the service and security requirements.</p>
+<hr/>
+<h1 id="4-77-kms-special-consideration"><strong>4.77 KMS Special Consideration</strong></h1>
+<p>AWS KMS authorization can involve:</p>
+<pre><code class="language-text">Key policy
+IAM policy
+Grants
+SCP
+Other applicable controls
+</code></pre>
+<p>This is why:</p>
+<pre><code class="language-text">"I have AdministratorAccess"
+</code></pre>
+<p>does not automatically explain every KMS authorization result.</p>
+<p>Always inspect the key policy and relevant context.</p>
+<hr/>
+<h1 id="4-78-iam-access-analyzer"><strong>4.78 IAM Access Analyzer</strong></h1>
+<p>IAM Access Analyzer helps analyze access to supported resources and IAM configurations.</p>
+<p>It can assist with tasks such as:</p>
+<pre><code class="language-text">Identifying external access
+Policy validation
+Policy generation workflows
+Access analysis
+</code></pre>
+<p>It is useful for reducing overly broad permissions.</p>
+<hr/>
+<h1 id="4-79-iam-policy-simulator"><strong>4.79 IAM Policy Simulator</strong></h1>
+<p>AWS provides policy simulation capabilities for testing how policies evaluate requests.</p>
+<p>Concept:</p>
+<pre><code class="language-text">Principal
+   +
+Action
+   +
+Resource
+   |
+   v
+Policy Simulation
+   |
+   v
+Allowed / Denied
+</code></pre>
+<p>This can help troubleshoot IAM without blindly changing policies.</p>
+<hr/>
+<h1 id="4-80-cloudtrail-for-iam-troubleshooting"><strong>4.80 CloudTrail for IAM Troubleshooting</strong></h1>
+<p>Suppose:</p>
+<pre><code class="language-text">Jenkins deployment suddenly fails.
+</code></pre>
+<p>Error:</p>
+<pre><code class="language-text">AccessDenied
+</code></pre>
+<p>CloudTrail can help identify:</p>
+<pre><code class="language-text">Principal
+API action
+Resource
+Region
+Request parameters
+Error code
+Event time
+</code></pre>
+<p>This is far better than randomly attaching <code>AdministratorAccess</code>.</p>
+<hr/>
+<h1 id="4-81-decoding-authorization-errors"><strong>4.81 Decoding Authorization Errors</strong></h1>
+<p>Some AWS authorization failures include encoded authorization messages.</p>
+<p>When permitted, AWS STS can decode supported messages using:</p>
+<pre><code class="language-bash">aws sts decode-authorization-message \
+  --encoded-message '&lt;encoded-message&gt;'
+</code></pre>
+<p>The caller needs permission for:</p>
+<pre><code class="language-text">sts:DecodeAuthorizationMessage
+</code></pre>
+<p>The decoded data can reveal authorization context.</p>
+<hr/>
+<h1 id="4-82-iam-troubleshooting-method"><strong>4.82 IAM Troubleshooting Method</strong></h1>
+<p>When you see:</p>
+<pre><code class="language-text">AccessDenied
+</code></pre>
+<p>use this workflow:</p>
+<pre><code class="language-text">1. Identify caller
+      |
+      v
+2. Identify exact action
+      |
+      v
+3. Identify resource
+      |
+      v
+4. Check identity policy
+      |
+      v
+5. Check resource policy
+      |
+      v
+6. Check trust policy if role assumption
+      |
+      v
+7. Check permissions boundary
+      |
+      v
+8. Check SCP
+      |
+      v
+9. Check session policy
+      |
+      v
+10. Check conditions
+      |
+      v
+11. Check CloudTrail
+</code></pre>
+<hr/>
+<h1 id="4-83-step-1-identify-caller"><strong>4.83 Step 1 — Identify Caller</strong></h1>
+<p>Run:</p>
+<pre><code class="language-bash">aws sts get-caller-identity
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-json">{
+  "UserId": "...",
+  "Account": "123456789012",
+  "Arn": "arn:aws:sts::123456789012:assumed-role/DeploymentRole/session"
+}
+</code></pre>
+<p>Never troubleshoot IAM without first knowing:</p>
+<pre><code class="language-text">WHO IS MAKING THE REQUEST?
+</code></pre>
+<hr/>
+<h1 id="4-84-step-2-identify-exact-action"><strong>4.84 Step 2 — Identify Exact Action</strong></h1>
+<p>Error:</p>
+<pre><code class="language-text">not authorized to perform: ec2:RunInstances
+</code></pre>
+<p>Write down:</p>
+<pre><code class="language-text">Action = ec2:RunInstances
+</code></pre>
+<p>Do not guess:</p>
+<pre><code class="language-text">Maybe EC2 permission?
+</code></pre>
+<p>Use the exact API action.</p>
+<hr/>
+<h1 id="4-85-step-3-identify-resources"><strong>4.85 Step 3 — Identify Resources</strong></h1>
+<p>Some AWS actions involve multiple resources.</p>
+<p>For example, launching EC2 may involve authorization around:</p>
+<pre><code class="language-text">AMI
+Instance
+Subnet
+Security Group
+Volume
+Network Interface
+IAM Role / PassRole
+</code></pre>
+<p>A single missing permission can cause failure.</p>
+<hr/>
+<h1 id="4-86-iam-passrole"><strong>4.86 <code>iam:PassRole</code></strong></h1>
+<p>This is a very important interview and production concept.</p>
+<p>Suppose a user launches an EC2 instance and attaches:</p>
+<pre><code class="language-text">ApplicationRole
+</code></pre>
+<p>The user may need permission to pass that role to the AWS service.</p>
+<p>Concept:</p>
+<pre><code class="language-text">Engineer
+   |
+   | iam:PassRole
+   v
+AWS Service
+   |
+   v
+ApplicationRole
+</code></pre>
+<p>Without proper control, <code>iam:PassRole</code> can become a privilege-escalation path.</p>
+<hr/>
+<h1 id="4-87-why-iam-passrole-is-sensitive"><strong>4.87 Why <code>iam:PassRole</code> Is Sensitive</strong></h1>
+<p>Imagine:</p>
+<pre><code class="language-text">User has limited permissions
+</code></pre>
+<p>but can pass:</p>
+<pre><code class="language-text">AdministratorRole
+</code></pre>
+<p>to a workload they control.</p>
+<p>That could allow indirect privilege escalation.</p>
+<p>Therefore restrict:</p>
+<pre><code class="language-text">Which roles can be passed
+</code></pre>
+<p>and where appropriate:</p>
+<pre><code class="language-text">Which services can receive them
+</code></pre>
+<hr/>
+<h1 id="4-88-trust-policy-vs-iam-passrole"><strong>4.88 Trust Policy vs <code>iam:PassRole</code></strong></h1>
+<p>These are different.</p>
+<p>Trust policy:</p>
+<pre><code class="language-text">Who/service can assume the role?
+</code></pre>
+<p><code>iam:PassRole</code>:</p>
+<pre><code class="language-text">Can this principal pass a role to an AWS service?
+</code></pre>
+<p>Do not confuse them.</p>
+<hr/>
+<h1 id="4-89-role-chaining"><strong>4.89 Role Chaining</strong></h1>
+<p>Role chaining occurs when a role session assumes another role.</p>
+<p>Example:</p>
+<pre><code class="language-text">User
+ |
+ v
+Role A
+ |
+ v
+Role B
+</code></pre>
+<p>Role chaining has session-duration and operational implications.</p>
+<p>Use deliberate role architecture instead of creating unnecessary chains.</p>
+<hr/>
+<h1 id="4-90-session-policies"><strong>4.90 Session Policies</strong></h1>
+<p>When creating some temporary sessions, additional session policies can restrict permissions.</p>
+<p>Concept:</p>
+<pre><code class="language-text">Role Permissions
+      |
+      INTERSECTION
+      |
+Session Policy
+      |
+      v
+Session Permissions
+</code></pre>
+<p>A session policy does not expand the role's permissions beyond what the role already allows.</p>
+<hr/>
+<h1 id="4-91-production-iam-architecture"><strong>4.91 Production IAM Architecture</strong></h1>
+<p>A mature environment may look like:</p>
+<pre><code class="language-text">                     Workforce Identity
+                            |
+                            v
+                   IAM Identity Center
+                            |
+               +------------+------------+
+               |                         |
+               v                         v
+          Dev Account               Prod Account
+               |                         |
+          DeveloperRole             ReadOnlyRole
+                                         |
+                                         v
+                                  DeploymentRole
+</code></pre>
+<p>Workloads separately use:</p>
+<pre><code class="language-text">EC2 Role
+ECS Task Role
+Lambda Execution Role
+Kubernetes Workload Role
+CI/CD Role
+</code></pre>
+<hr/>
+<h1 id="4-92-human-vs-machine-identity"><strong>4.92 Human vs Machine Identity</strong></h1>
+<p>Separate:</p>
+<pre><code class="language-text">Human Identity
+</code></pre>
+<p>from:</p>
+<pre><code class="language-text">Machine/Workload Identity
+</code></pre>
+<p>Humans:</p>
+<pre><code class="language-text">SSO
+MFA
+Federation
+Short-lived sessions
+</code></pre>
+<p>Workloads:</p>
+<pre><code class="language-text">IAM roles
+Workload identity
+Temporary credentials
+Service-specific identity mechanisms
+</code></pre>
+<p>Avoid sharing credentials between people and applications.</p>
+<hr/>
+<h1 id="4-93-production-policy-design-workflow"><strong>4.93 Production Policy Design Workflow</strong></h1>
+<p>Do not begin with:</p>
+<pre><code class="language-json">"Action": "*"
+</code></pre>
+<p>Use:</p>
+<pre><code class="language-text">1. Understand application requirement
+2. Identify AWS APIs required
+3. Identify exact resources
+4. Identify required conditions
+5. Build narrow policy
+6. Test
+7. Observe denied calls
+8. Refine
+9. Validate
+10. Review periodically
+</code></pre>
+<hr/>
+<h1 id="4-94-bad-iam-development-pattern"><strong>4.94 Bad IAM Development Pattern</strong></h1>
+<pre><code class="language-text">Application fails
+      |
+      v
+Attach AdministratorAccess
+      |
+      v
+Application works
+      |
+      v
+Leave admin forever
+</code></pre>
+<p>This is not production IAM engineering.</p>
+<hr/>
+<h1 id="4-95-better-iam-development-pattern"><strong>4.95 Better IAM Development Pattern</strong></h1>
+<pre><code class="language-text">Application fails
+      |
+      v
+Read exact AccessDenied
+      |
+      v
+Inspect CloudTrail
+      |
+      v
+Identify API requirement
+      |
+      v
+Add minimum permission
+      |
+      v
+Test
+      |
+      v
+Validate
+</code></pre>
+<hr/>
+<h1 id="4-96-hands-on-lab-create-a-read-only-s3-policy"><strong>4.96 Hands-On Lab — Create a Read-Only S3 Policy</strong></h1>
+<h2 id="objective">Objective</h2>
+<p>Understand:</p>
+<pre><code class="language-text">Action
+Resource
+Effect
+Policy attachment
+Testing
+</code></pre>
+<p>Use a lab account only.</p>
+<p>Create a policy document:</p>
+<pre><code class="language-json">{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ListSpecificBucket",
+      "Effect": "Allow",
+      "Action": "s3:ListBucket",
+      "Resource": "arn:aws:s3:::YOUR-LAB-BUCKET"
+    },
+    {
+      "Sid": "ReadObjects",
+      "Effect": "Allow",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::YOUR-LAB-BUCKET/*"
+    }
+  ]
+}
+</code></pre>
+<p>Replace:</p>
+<pre><code class="language-text">YOUR-LAB-BUCKET
+</code></pre>
+<p>with your authorized lab bucket.</p>
+<hr/>
+<h1 id="4-97-validate-policy-logic"><strong>4.97 Validate Policy Logic</strong></h1>
+<p>Ask:</p>
+<pre><code class="language-text">Can identity list bucket?
+YES
+
+Can identity read objects?
+YES
+
+Can identity upload objects?
+NO
+
+Can identity delete objects?
+NO
+</code></pre>
+<p>Why?</p>
+<p>Because no matching allow exists for:</p>
+<pre><code class="language-text">s3:PutObject
+s3:DeleteObject
+</code></pre>
+<hr/>
+<h1 id="4-98-hands-on-lab-role-mental-model"><strong>4.98 Hands-On Lab — Role Mental Model</strong></h1>
+<p>Create the architecture mentally before using the console:</p>
+<pre><code class="language-text">EC2
+ |
+ v
+ApplicationRole
+ |
+ v
+Policy
+ |
+ v
+s3:GetObject
+ |
+ v
+Lab Bucket
+</code></pre>
+<p>Trust relationship:</p>
+<pre><code class="language-text">EC2 Service
+    |
+    | AssumeRole
+    v
+ApplicationRole
+</code></pre>
+<p>Permission relationship:</p>
+<pre><code class="language-text">ApplicationRole
+    |
+    | s3:GetObject
+    v
+Lab Bucket Objects
+</code></pre>
+<p>These are separate.</p>
+<hr/>
+<h1 id="4-99-cli-lab-verify-current-principal"><strong>4.99 CLI Lab — Verify Current Principal</strong></h1>
+<p>Run:</p>
+<pre><code class="language-bash">aws sts get-caller-identity
+</code></pre>
+<p>Record:</p>
+<pre><code class="language-text">Account:
+ARN:
+Principal type:
+</code></pre>
+<p>Ask yourself:</p>
+<pre><code class="language-text">IAM user?
+
+Assumed role?
+
+Federated session?
+
+Service role?
+</code></pre>
+<hr/>
+<h1 id="4-100-cli-lab-simulate-before-changing"><strong>4.100 CLI Lab — Simulate Before Changing</strong></h1>
+<p>Where supported and authorized, use AWS IAM policy simulation tools to test intended permissions before broadening access.</p>
+<p>Production mindset:</p>
+<pre><code class="language-text">TEST
+ |
+ v
+UNDERSTAND
+ |
+ v
+CHANGE
+</code></pre>
+<p>not:</p>
+<pre><code class="language-text">CHANGE RANDOMLY
+ |
+ v
+HOPE
+</code></pre>
+<hr/>
+<h1 id="4-101-scenario-jenkins-cannot-upload-to-s3"><strong>4.101 Scenario — Jenkins Cannot Upload to S3</strong></h1>
+<p>Error:</p>
+<pre><code class="language-text">AccessDenied: s3:PutObject
+</code></pre>
+<p>Do not immediately attach:</p>
+<pre><code class="language-text">AmazonS3FullAccess
+</code></pre>
+<p>Troubleshoot:</p>
+<pre><code class="language-text">Which Jenkins identity?
+       |
+       v
+aws sts get-caller-identity
+       |
+       v
+Which bucket/object ARN?
+       |
+       v
+Does role allow s3:PutObject?
+       |
+       v
+Does bucket policy deny?
+       |
+       v
+Does SCP deny?
+       |
+       v
+Does permissions boundary restrict?
+       |
+       v
+Does KMS encryption require additional permission?
+</code></pre>
+<hr/>
+<h1 id="4-102-scenario-terraform-can-create-ec2-but-cannot-attach-role"><strong>4.102 Scenario — Terraform Can Create EC2 but Cannot Attach Role</strong></h1>
+<p>Terraform successfully creates:</p>
+<pre><code class="language-text">EC2
+Subnet
+Security Group
+</code></pre>
+<p>but fails when attaching an IAM role.</p>
+<p>Possible missing permission:</p>
+<pre><code class="language-text">iam:PassRole
+</code></pre>
+<p>Investigate the exact error and role ARN.</p>
+<p>Do not automatically grant:</p>
+<pre><code class="language-text">iam:*
+</code></pre>
+<hr/>
+<h1 id="4-103-scenario-assumerole-accessdenied"><strong>4.103 Scenario — AssumeRole AccessDenied</strong></h1>
+<p>Architecture:</p>
+<pre><code class="language-text">Account A Role
+     |
+     X
+Account B DeploymentRole
+</code></pre>
+<p>Check both sides.</p>
+<p>Caller side:</p>
+<pre><code class="language-text">Does the caller have appropriate sts:AssumeRole authorization?
+</code></pre>
+<p>Target role:</p>
+<pre><code class="language-text">Does the trust policy trust the caller/context?
+</code></pre>
+<p>Also inspect:</p>
+<pre><code class="language-text">SCP
+Boundary
+Session policy
+Conditions
+External ID if used
+MFA requirement if configured
+</code></pre>
+<hr/>
+<h1 id="4-104-scenario-policy-looks-correct-but-access-still-denied"><strong>4.104 Scenario — Policy Looks Correct but Access Still Denied</strong></h1>
+<p>Identity policy:</p>
+<pre><code class="language-text">Allow s3:GetObject
+</code></pre>
+<p>Yet request fails.</p>
+<p>Possible reasons:</p>
+<pre><code class="language-text">Wrong object ARN
+Explicit deny
+Bucket policy
+SCP
+Permissions boundary
+Session policy
+KMS permissions
+Condition mismatch
+Wrong AWS account
+Wrong assumed role
+</code></pre>
+<p>IAM troubleshooting requires evaluating the complete request context.</p>
+<hr/>
+<h1 id="4-105-scenario-access-worked-yesterday"><strong>4.105 Scenario — Access Worked Yesterday</strong></h1>
+<p>Ask:</p>
+<pre><code class="language-text">What changed?
+</code></pre>
+<p>Check:</p>
+<pre><code class="language-text">Role policy change
+Trust policy change
+SCP change
+Boundary change
+Bucket policy change
+KMS key policy change
+Session expiration
+Credential rotation
+Resource ARN change
+Organization change
+</code></pre>
+<p>Then inspect CloudTrail.</p>
+<hr/>
+<h1 id="4-106-security-anti-pattern-shared-iam-user"><strong>4.106 Security Anti-Pattern — Shared IAM User</strong></h1>
+<p>Bad:</p>
+<pre><code class="language-text">devops-user
+   |
+   +--&gt; Alice
+   +--&gt; Bob
+   +--&gt; Charlie
+</code></pre>
+<p>Problems:</p>
+<pre><code class="language-text">Poor attribution
+Shared password/key
+Difficult offboarding
+Weak accountability
+Credential exposure
+</code></pre>
+<p>Each human should have an individually attributable identity/session.</p>
+<hr/>
+<h1 id="4-107-security-anti-pattern-keys-in-git"><strong>4.107 Security Anti-Pattern — Keys in Git</strong></h1>
+<p>Never commit:</p>
+<pre><code class="language-text">AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY
+Session token
+Private keys
+Passwords
+</code></pre>
+<p>If credentials are exposed:</p>
+<pre><code class="language-text">1. Treat them as compromised
+2. Revoke/disable/rotate as appropriate
+3. Investigate usage
+4. Review CloudTrail
+5. Remove secret from systems/history as appropriate
+6. Identify root cause
+7. Improve secret-scanning and identity design
+</code></pre>
+<p>Simply deleting the visible Git line is not sufficient.</p>
+<hr/>
+<h1 id="4-108-security-anti-pattern-administratoraccess-everywhere"><strong>4.108 Security Anti-Pattern — <code>AdministratorAccess</code> Everywhere</strong></h1>
+<p>Broad administrative access increases blast radius.</p>
+<p>Instead:</p>
+<pre><code class="language-text">Developer
+   |
+   v
+Developer Permissions
+
+Auditor
+   |
+   v
+Read-Only / Audit Permissions
+
+CI/CD
+   |
+   v
+Deployment Permissions
+
+Application
+   |
+   v
+Application-Specific Permissions
+</code></pre>
+<hr/>
+<h1 id="4-109-separation-of-duties"><strong>4.109 Separation of Duties</strong></h1>
+<p>Sensitive production environments may separate responsibilities.</p>
+<p>Example:</p>
+<pre><code class="language-text">Developer
+   |
+   v
+Build Application
+
+Platform Engineer
+   |
+   v
+Operate Infrastructure
+
+Security Team
+   |
+   v
+Security Governance
+
+Deployment System
+   |
+   v
+Controlled Production Deployment
+</code></pre>
+<p>No single human necessarily requires unlimited access to everything.</p>
+<hr/>
+<h1 id="4-110-break-glass-access"><strong>4.110 Break-Glass Access</strong></h1>
+<p>Organizations may maintain emergency privileged access.</p>
+<p>Concept:</p>
+<pre><code class="language-text">Normal Operations
+      |
+      v
+Least Privilege
+
+Emergency
+      |
+      v
+Break-Glass Process
+      |
+      v
+Strong Authentication
+      |
+      v
+Logging + Approval + Review
+</code></pre>
+<p>Break-glass access should not become normal daily access.</p>
+<hr/>
+<h1 id="4-111-credential-rotation"><strong>4.111 Credential Rotation</strong></h1>
+<p>If long-term credentials must exist, organizations need lifecycle controls:</p>
+<pre><code class="language-text">Creation
+   |
+   v
+Secure Storage
+   |
+   v
+Usage Monitoring
+   |
+   v
+Rotation
+   |
+   v
+Revocation
+</code></pre>
+<p>Better architecture often reduces the number of long-lived credentials entirely.</p>
+<hr/>
+<h1 id="4-112-iam-monitoring"><strong>4.112 IAM Monitoring</strong></h1>
+<p>Monitor important identity events such as:</p>
+<pre><code class="language-text">Root activity
+Policy changes
+Role changes
+Trust-policy changes
+Access-key creation
+Console-login events
+MFA changes
+Failed authorization patterns
+Cross-account role assumption
+</code></pre>
+<p>CloudTrail is central to this visibility.</p>
+<hr/>
+<h1 id="4-113-iam-and-cloudtrail-workflow"><strong>4.113 IAM and CloudTrail Workflow</strong></h1>
+<pre><code class="language-text">Principal
+   |
+   v
+AWS API Request
+   |
+   v
+IAM Authorization
+   |
+   +--&gt; Allowed
+   |      |
+   |      v
+   |   API executes
+   |
+   +--&gt; Denied
+          |
+          v
+       Error
+
+CloudTrail
+   |
+   v
+Investigation Evidence
+</code></pre>
+<hr/>
+<h1 id="4-114-concept-clearing-user-vs-role"><strong>4.114 Concept Clearing — User vs Role</strong></h1>
+<p>IAM User:</p>
+<pre><code class="language-text">Long-lived identity object
+May have long-term credentials
+</code></pre>
+<p>IAM Role:</p>
+<pre><code class="language-text">Assumable identity
+Designed around temporary sessions
+</code></pre>
+<p>For workloads and cross-account access:</p>
+<pre><code class="language-text">Prefer roles
+</code></pre>
+<p>when supported.</p>
+<hr/>
+<h1 id="4-115-concept-clearing-group-vs-role"><strong>4.115 Concept Clearing — Group vs Role</strong></h1>
+<p>Group:</p>
+<pre><code class="language-text">Collection of IAM users
+</code></pre>
+<p>Role:</p>
+<pre><code class="language-text">Assumable IAM identity
+</code></pre>
+<p>A group is not assumed.</p>
+<p>A role is not a collection of users.</p>
+<hr/>
+<h1 id="4-116-concept-clearing-policy-vs-role"><strong>4.116 Concept Clearing — Policy vs Role</strong></h1>
+<p>Policy:</p>
+<pre><code class="language-text">Defines permissions/rules
+</code></pre>
+<p>Role:</p>
+<pre><code class="language-text">Identity that can be assumed
+</code></pre>
+<p>A role can have permissions policies attached.</p>
+<hr/>
+<h1 id="4-117-concept-clearing-trust-vs-permission"><strong>4.117 Concept Clearing — Trust vs Permission</strong></h1>
+<p>Trust policy:</p>
+<pre><code class="language-text">Who can assume the role?
+</code></pre>
+<p>Permissions policy:</p>
+<pre><code class="language-text">What can the resulting role session do?
+</code></pre>
+<p>Both may need to be correct for a workflow to succeed.</p>
+<hr/>
+<h1 id="4-118-concept-clearing-assumerole-vs-passrole"><strong>4.118 Concept Clearing — <code>AssumeRole</code> vs <code>PassRole</code></strong></h1>
+<p><code>AssumeRole</code>:</p>
+<pre><code class="language-text">Principal
+   |
+   v
+Becomes role session
+</code></pre>
+<p><code>PassRole</code>:</p>
+<pre><code class="language-text">Principal
+   |
+   v
+Passes role to AWS service
+</code></pre>
+<p>These are completely different operations.</p>
+<hr/>
+<h1 id="4-119-concept-clearing-allow-vs-explicit-deny"><strong>4.119 Concept Clearing — Allow vs Explicit Deny</strong></h1>
+<p>Suppose:</p>
+<pre><code class="language-text">Policy A = Allow S3
+Policy B = Deny DeleteObject
+</code></pre>
+<p>Result:</p>
+<pre><code class="language-text">GetObject -&gt; potentially allowed
+DeleteObject -&gt; denied
+</code></pre>
+<p>An applicable explicit deny overrides an allow.</p>
+<hr/>
+<h1 id="4-120-concept-clearing-role-credentials"><strong>4.120 Concept Clearing — Role Credentials</strong></h1>
+<p>An IAM role does not require you to manually create permanent access keys for the role.</p>
+<p>Instead:</p>
+<pre><code class="language-text">Assume Role
+    |
+    v
+STS
+    |
+    v
+Temporary Credentials
+</code></pre>
+<p>This is one of the most important AWS security concepts.</p>
+<hr/>
+<h1 id="4-121-interview-questions-beginner"><strong>4.121 Interview Questions — Beginner</strong></h1>
+<h2 id="q1-what-is-iam"><strong>Q1. What is IAM?</strong></h2>
+<p>IAM is AWS Identity and Access Management. It controls identities and authorization to AWS resources and APIs.</p>
+<h2 id="q2-what-is-an-iam-user"><strong>Q2. What is an IAM user?</strong></h2>
+<p>An IAM user is an identity defined within an AWS account.</p>
+<h2 id="q3-what-is-an-iam-role"><strong>Q3. What is an IAM role?</strong></h2>
+<p>An IAM role is an assumable AWS identity that provides temporary role sessions with permissions.</p>
+<h2 id="q4-what-is-an-iam-policy"><strong>Q4. What is an IAM policy?</strong></h2>
+<p>An IAM policy is a JSON policy document defining permissions or access-control rules.</p>
+<h2 id="q5-what-is-least-privilege"><strong>Q5. What is least privilege?</strong></h2>
+<p>Grant only the permissions required for the intended task.</p>
+<hr/>
+<h1 id="4-122-interview-questions-intermediate"><strong>4.122 Interview Questions — Intermediate</strong></h1>
+<h2 id="q6-iam-user-vs-iam-role"><strong>Q6. IAM user vs IAM role?</strong></h2>
+<p>IAM users can represent long-lived account identities.</p>
+<p>IAM roles are assumed and normally provide temporary credentials.</p>
+<p>Roles are preferred for many workload, federation and cross-account use cases.</p>
+<h2 id="q7-identity-policy-vs-resource-policy"><strong>Q7. Identity policy vs resource policy?</strong></h2>
+<p>Identity policy:</p>
+<pre><code class="language-text">Attached to identity
+</code></pre>
+<p>Resource policy:</p>
+<pre><code class="language-text">Attached to supported resource
+</code></pre>
+<p>Resource policies commonly contain a <code>Principal</code>.</p>
+<h2 id="q8-what-is-sts"><strong>Q8. What is STS?</strong></h2>
+<p>AWS Security Token Service issues temporary security credentials and supports operations such as <code>AssumeRole</code>.</p>
+<h2 id="q9-what-is-a-trust-policy"><strong>Q9. What is a trust policy?</strong></h2>
+<p>A trust policy defines which principals or services can assume an IAM role under specified conditions.</p>
+<h2 id="q10-what-is-iam-passrole"><strong>Q10. What is <code>iam:PassRole</code>?</strong></h2>
+<p>It controls whether a principal can pass an IAM role to an AWS service.</p>
+<hr/>
+<h1 id="4-123-interview-questions-advanced"><strong>4.123 Interview Questions — Advanced</strong></h1>
+<h2 id="q11-iam-policy-allows-an-action-but-it-is-still-denied-why"><strong>Q11. IAM policy allows an action but it is still denied. Why?</strong></h2>
+<p>Possible reasons:</p>
+<pre><code class="language-text">Explicit deny
+SCP
+Permissions boundary
+Session policy
+Resource policy
+Trust policy
+Condition mismatch
+KMS key policy
+Wrong principal
+Wrong resource ARN
+</code></pre>
+<h2 id="q12-does-a-permissions-boundary-grant-permission"><strong>Q12. Does a permissions boundary grant permission?</strong></h2>
+<p>No.</p>
+<p>It defines a maximum permission boundary for identity-based permissions.</p>
+<h2 id="q13-does-an-scp-grant-permission"><strong>Q13. Does an SCP grant permission?</strong></h2>
+<p>No.</p>
+<p>An SCP is an organization-level permission guardrail.</p>
+<h2 id="q14-why-are-roles-safer-than-static-access-keys-for-workloads"><strong>Q14. Why are roles safer than static access keys for workloads?</strong></h2>
+<p>Roles provide temporary credentials and avoid distributing permanent credentials to workloads.</p>
+<hr/>
+<h1 id="4-124-senior-interview-scenario-jenkins"><strong>4.124 Senior Interview Scenario — Jenkins</strong></h1>
+<p>Question:</p>
+<blockquote>
+<p>Jenkins in a tooling account must deploy to production. Design IAM.</p>
+</blockquote>
+<p>Possible architecture:</p>
+<pre><code class="language-text">Tooling Account
+----------------
+
+Jenkins Workload Identity
+        |
+        | sts:AssumeRole
+        v
+
+Production Account
+------------------
+
+DeploymentRole
+        |
+        v
+Only Required Deployment Permissions
+</code></pre>
+<p>Add:</p>
+<pre><code class="language-text">Short-lived credentials
+CloudTrail auditing
+Restricted trust
+Least privilege
+Controlled PassRole
+SCP guardrails
+MFA/federation for humans
+</code></pre>
+<hr/>
+<h1 id="4-125-senior-interview-scenario-terraform"><strong>4.125 Senior Interview Scenario — Terraform</strong></h1>
+<p>Question:</p>
+<blockquote>
+<p>Terraform manages production AWS. How would you authenticate it?</p>
+</blockquote>
+<p>Preferred direction:</p>
+<pre><code class="language-text">Avoid hardcoded access keys.
+</code></pre>
+<p>Use an appropriate short-lived identity mechanism.</p>
+<p>Example:</p>
+<pre><code class="language-text">CI Runner
+   |
+   v
+Workload/Federated Identity
+   |
+   v
+TerraformRole
+   |
+   v
+Temporary Credentials
+   |
+   v
+AWS Provider
+</code></pre>
+<p>Separate roles by environment where appropriate.</p>
+<hr/>
+<h1 id="4-126-senior-interview-scenario-privilege-escalation"><strong>4.126 Senior Interview Scenario — Privilege Escalation</strong></h1>
+<p>Question:</p>
+<blockquote>
+<p>A developer cannot attach AdministratorAccess, but can create Lambda functions and pass any role. Is that safe?</p>
+</blockquote>
+<p>No.</p>
+<p>If the developer can:</p>
+<pre><code class="language-text">Pass a highly privileged role
+</code></pre>
+<p>to:</p>
+<pre><code class="language-text">A workload they control
+</code></pre>
+<p>they may gain indirect access to privileged capabilities.</p>
+<p>Therefore tightly restrict:</p>
+<pre><code class="language-text">iam:PassRole
+Role creation
+Trust-policy modification
+Policy attachment
+Workload creation
+</code></pre>
+<p>as part of privilege-escalation analysis.</p>
+<hr/>
+<h1 id="4-127-senior-interview-scenario-cross-account"><strong>4.127 Senior Interview Scenario — Cross Account</strong></h1>
+<p>Question:</p>
+<blockquote>
+<p>Account A needs access to Account B without sharing permanent keys.</p>
+</blockquote>
+<p>Answer:</p>
+<pre><code class="language-text">Use cross-account role assumption.
+</code></pre>
+<p>Architecture:</p>
+<pre><code class="language-text">Account A Principal
+       |
+       | sts:AssumeRole
+       v
+Account B Role
+       |
+       v
+Temporary Credentials
+       |
+       v
+Authorized Resources
+</code></pre>
+<p>Configure:</p>
+<pre><code class="language-text">Caller authorization
+Target role trust
+Least-privilege role permissions
+Conditions where appropriate
+Audit logging
+</code></pre>
+<hr/>
+<h1 id="4-128-iam-production-checklist"><strong>4.128 IAM Production Checklist</strong></h1>
+<pre><code class="language-text">[ ] Root user protected?
+
+[ ] Root MFA configured?
+
+[ ] Root access keys absent unless absolutely required?
+
+[ ] Workforce using federation/SSO where appropriate?
+
+[ ] MFA enforced for privileged humans?
+
+[ ] Workloads using roles?
+
+[ ] Static credentials minimized?
+
+[ ] Least privilege implemented?
+
+[ ] AdministratorAccess limited?
+
+[ ] iam:PassRole restricted?
+
+[ ] Trust policies restricted?
+
+[ ] Cross-account access reviewed?
+
+[ ] SCPs considered?
+
+[ ] Permissions boundaries used where delegation requires them?
+
+[ ] CloudTrail enabled/configured appropriately?
+
+[ ] IAM changes monitored?
+
+[ ] Access reviewed periodically?
+
+[ ] Unused credentials removed?
+
+[ ] Secrets excluded from Git?
+
+[ ] Role sessions attributable?
+
+[ ] Emergency access controlled?
+</code></pre>
+<hr/>
+<h1 id="4-129-iam-troubleshooting-checklist"><strong>4.129 IAM Troubleshooting Checklist</strong></h1>
+<p>When access fails:</p>
+<pre><code class="language-text">[ ] Who is the caller?
+
+[ ] Correct AWS account?
+
+[ ] Correct assumed role?
+
+[ ] Session expired?
+
+[ ] Exact API action?
+
+[ ] Exact resource ARN?
+
+[ ] Identity policy allows?
+
+[ ] Resource policy allows/restricts?
+
+[ ] Trust policy correct?
+
+[ ] Explicit deny exists?
+
+[ ] Permissions boundary restricting?
+
+[ ] SCP restricting?
+
+[ ] Session policy restricting?
+
+[ ] Condition matching?
+
+[ ] iam:PassRole required?
+
+[ ] KMS permission required?
+
+[ ] CloudTrail checked?
+</code></pre>
+<hr/>
+<h1 id="4-130-complete-iam-mental-model"><strong>4.130 Complete IAM Mental Model</strong></h1>
+<pre><code class="language-text">                    AWS REQUEST
+                         |
+                         v
+                     PRINCIPAL
+                         |
+                         v
+                  AUTHENTICATION
+                         |
+                         v
+                  AUTHORIZATION
+                         |
+        +----------------+----------------+
+        |                |                |
+        v                v                v
+ Identity Policy   Resource Policy   Trust Policy
+        |                |                |
+        +----------------+----------------+
+                         |
+             +-----------+-----------+
+             |                       |
+             v                       v
+     Permissions Boundary           SCP
+             |                       |
+             +-----------+-----------+
+                         |
+                         v
+                   CONDITIONS
+                         |
+                         v
+               EXPLICIT DENY?
+                  /           \
+                YES            NO
+                 |              |
+                 v              v
+               DENY       MATCHING ALLOW?
+                              /      \
+                            YES       NO
+                             |         |
+                             v         v
+                           ALLOW      DENY
+</code></pre>
+<p>This is intentionally simplified, but it is an excellent troubleshooting starting point.</p>
+<hr/>
+<h1 id="4-131-complete-role-workflow"><strong>4.131 Complete Role Workflow</strong></h1>
+<pre><code class="language-text">Principal
+   |
+   | Authentication
+   v
+Existing Identity
+   |
+   | sts:AssumeRole
+   v
+Role Trust Policy
+   |
+   v
+STS
+   |
+   v
+Temporary Credentials
+   |
+   v
+Role Session
+   |
+   v
+Permissions Evaluation
+   |
+   v
+AWS Resource
+</code></pre>
+<hr/>
+<h1 id="4-132-chapter-summary"><strong>4.132 Chapter Summary</strong></h1>
+<p>In this chapter you learned:</p>
+<pre><code class="language-text">IAM Users
+IAM Groups
+IAM Roles
+IAM Policies
+Identity Policies
+Resource Policies
+Trust Policies
+Managed Policies
+Inline Policies
+Principals
+Actions
+Resources
+Conditions
+Implicit Deny
+Explicit Deny
+Permissions Boundaries
+SCPs
+STS
+AssumeRole
+Temporary Credentials
+Instance Profiles
+Cross-Account Access
+iam:PassRole
+Federation
+IAM Identity Center
+OIDC
+ABAC
+IAM Troubleshooting
+CloudTrail Investigation
+</code></pre>
+<p>The most important production rule is:</p>
+<pre><code class="language-text">DO NOT ASK:
+
+"How do I give this application AWS access?"
+
+ASK:
+
+"What is the minimum access this workload requires,
+which identity should receive it,
+how can it obtain temporary credentials,
+and how will we audit that access?"
+</code></pre>
+<hr/>
+<h1 id="4-133-quick-revision"><strong>4.133 Quick Revision</strong></h1>
+<pre><code class="language-text">IAM
+=
+Identity and Access Management
+
+AUTHENTICATION
+=
+Who are you?
+
+AUTHORIZATION
+=
+What can you do?
+
+IAM USER
+=
+Account identity
+
+IAM GROUP
+=
+Collection of IAM users
+
+IAM ROLE
+=
+Assumable identity
+
+POLICY
+=
+Permission/access-control document
+
+TRUST POLICY
+=
+Who can assume a role?
+
+PERMISSIONS POLICY
+=
+What can identity/session do?
+
+STS
+=
+Temporary credential service
+
+ASSUME ROLE
+=
+Obtain temporary role session
+
+PASS ROLE
+=
+Allow role to be passed to AWS service
+
+PERMISSIONS BOUNDARY
+=
+Maximum identity-based permission boundary
+
+SCP
+=
+Organization-level permission guardrail
+
+EXPLICIT DENY
+=
+Overrides matching allow
+
+LEAST PRIVILEGE
+=
+Only required access
+</code></pre>
+<hr/>
+<h1 id="4-134-references"><strong>4.134 References</strong></h1>
+<p>For production implementation and current service behavior, consult official documentation:</p>
+<ol>
+<li>AWS IAM User Guide</li>
+<li>AWS IAM Policy Reference</li>
+<li>AWS Security Token Service documentation</li>
+<li>AWS IAM Identity Center documentation</li>
+<li>AWS Organizations and SCP documentation</li>
+<li>AWS IAM Access Analyzer documentation</li>
+<li>AWS CloudTrail documentation</li>
+<li>AWS EC2 IAM Roles documentation</li>
+<li>AWS Security Best Practices</li>
+<li>AWS Well-Architected Security Pillar</li>
+</ol>
+<hr/>
+<p><strong>End of Chapter 4</strong></p>
+<p><strong>Page: 65–94</strong></p>
+<hr/>
+<h1 id="next-chapter"><strong>NEXT CHAPTER</strong></h1>
+<h2 id="chapter-5-iam-policy-engineering-and-authorization-logic"><strong>CHAPTER 5 — IAM POLICY ENGINEERING AND AUTHORIZATION LOGIC</strong></h2>
+<p>Chapter 5 will move from IAM fundamentals into deep policy engineering:</p>
+<pre><code class="language-text">IAM Policy Evaluation
+        |
+        +--&gt; Identity Policies
+        |
+        +--&gt; Resource Policies
+        |
+        +--&gt; SCPs
+        |
+        +--&gt; Permissions Boundaries
+        |
+        +--&gt; Session Policies
+        |
+        +--&gt; Explicit Deny
+        |
+        +--&gt; Condition Operators
+        |
+        +--&gt; Global Condition Keys
+        |
+        +--&gt; Resource-Level Permissions
+        |
+        +--&gt; ARN Matching
+        |
+        +--&gt; Wildcards
+        |
+        +--&gt; ABAC
+        |
+        +--&gt; Principal Tags
+        |
+        +--&gt; Resource Tags
+        |
+        +--&gt; MFA Conditions
+        |
+        +--&gt; Source IP Conditions
+        |
+        +--&gt; VPC Endpoint Conditions
+        |
+        +--&gt; S3 Policy Engineering
+        |
+        +--&gt; KMS Policy Interaction
+        |
+        +--&gt; iam:PassRole Security
+        |
+        +--&gt; Privilege Escalation Prevention
+        |
+        +--&gt; Policy Simulation
+        |
+        +--&gt; Access Analyzer
+        |
+        +--&gt; Production IAM Labs
+</code></pre>
+</article></main><footer>ARTHA Gurukul · Source material preserved as educational notes</footer></body></html>

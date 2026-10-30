@@ -1,0 +1,1323 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DevOps &amp; Infrastructure Foundations | ARTHA Gurukul</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><a class="brand" href="../index.html">✦ ARTHA GURUKUL</a><nav><a href="../index.html#courses">All Courses</a><a href="index.html">Source Library</a></nav></header><main class="book-layout"><aside class="book-toc"><div class="eyebrow">Original material · offline copy</div><h2>DevOps &amp; Infrastructure Foundations</h2><a href="../index.html">⌂ Course library</a><div class="toc"><a href="#chapter-1-modern-infrastructure-and-devops-foundations">CHAPTER 1 — MODERN INFRASTRUCTURE AND DEVOPS FOUNDATIONS</a><a href="#1-1-learning-objectives">1.1 Learning Objectives</a><a href="#1-2-the-infrastructure-problem">1.2 The Infrastructure Problem</a><a href="#1-3-traditional-provisioning">1.3 Traditional Provisioning</a><a href="#1-4-configuration-drift">1.4 Configuration Drift</a><a href="#1-5-the-devops-problem">1.5 The DevOps Problem</a><a href="#1-6-what-is-devops">1.6 What Is DevOps?</a><a href="#1-7-devops-goals">1.7 DevOps Goals</a><a href="#1-8-physical-servers">1.8 Physical Servers</a><a href="#1-9-virtualization">1.9 Virtualization</a><a href="#1-10-virtual-machine-architecture">1.10 Virtual Machine Architecture</a><a href="#1-11-containers">1.11 Containers</a><a href="#1-12-vm-vs-container">1.12 VM vs Container</a><a href="#1-13-container-image">1.13 Container Image</a><a href="#1-14-container">1.14 Container</a><a href="#1-15-why-container-orchestration-exists">1.15 Why Container Orchestration Exists</a><a href="#1-16-kubernetes">1.16 Kubernetes</a><a href="#1-17-desired-state">1.17 Desired State</a><a href="#1-18-reconciliation">1.18 Reconciliation</a><a href="#1-19-self-healing">1.19 Self-Healing</a><a href="#1-20-openshift">1.20 OpenShift</a><a href="#1-21-infrastructure-as-code">1.21 Infrastructure as Code</a><a href="#1-22-terraform">1.22 Terraform</a><a href="#1-23-why-terraform-matters">1.23 Why Terraform Matters</a><a href="#1-24-configuration-management">1.24 Configuration Management</a><a href="#1-25-ansible">1.25 Ansible</a><a href="#1-26-ansible-architecture">1.26 Ansible Architecture</a><a href="#1-27-ci-cd">1.27 CI/CD</a><a href="#1-28-continuous-integration">1.28 Continuous Integration</a><a href="#1-29-continuous-delivery">1.29 Continuous Delivery</a><a href="#1-30-continuous-deployment">1.30 Continuous Deployment</a><a href="#1-31-jenkins">1.31 Jenkins</a><a href="#1-32-jenkins-controller-and-agents">1.32 Jenkins Controller and Agents</a><a href="#1-33-cloud-computing">1.33 Cloud Computing</a><a href="#1-34-aws">1.34 AWS</a><a href="#1-35-aws-iam">1.35 AWS IAM</a><a href="#1-36-aws-vpc">1.36 AWS VPC</a><a href="#1-37-monitoring">1.37 Monitoring</a><a href="#1-38-prometheus">1.38 Prometheus</a><a href="#1-39-grafana">1.39 Grafana</a><a href="#1-40-logging">1.40 Logging</a><a href="#1-41-elk">1.41 ELK</a><a href="#1-42-metrics-vs-logs">1.42 Metrics vs Logs</a><a href="#1-43-observability">1.43 Observability</a><a href="#1-44-devsecops">1.44 DevSecOps</a><a href="#1-45-gitops">1.45 GitOps</a><a href="#1-46-gitops-reconciliation">1.46 GitOps Reconciliation</a><a href="#1-47-complete-devops-workflow">1.47 Complete DevOps Workflow</a><a href="#1-48-production-platform-architecture">1.48 Production Platform Architecture</a><a href="#1-49-automation-layers">1.49 Automation Layers</a><a href="#1-50-troubleshooting-mindset">1.50 Troubleshooting Mindset</a><a href="#1-51-example-incident">1.51 Example Incident</a><a href="#1-52-layered-troubleshooting">1.52 Layered Troubleshooting</a><a href="#1-53-hands-on-concept-lab">1.53 Hands-On Concept Lab</a><a href="#1-54-concept-clearing">1.54 Concept Clearing</a><a href="#1-55-common-mistakes">1.55 Common Mistakes</a><a href="#1-56-interview-questions">1.56 Interview Questions</a><a href="#q1-what-is-devops">Q1. What is DevOps?</a><a href="#q2-what-is-infrastructure-as-code">Q2. What is Infrastructure as Code?</a><a href="#q3-terraform-vs-ansible">Q3. Terraform vs Ansible?</a><a href="#q4-why-kubernetes">Q4. Why Kubernetes?</a><a href="#q5-prometheus-vs-elk">Q5. Prometheus vs ELK?</a><a href="#1-57-production-scenario">1.57 Production Scenario</a><a href="#1-58-quick-revision">1.58 Quick Revision</a><a href="#1-59-chapter-summary">1.59 Chapter Summary</a><a href="#1-60-references">1.60 References</a><a href="#next-chapter">NEXT CHAPTER</a><a href="#chapter-2-linux-networking-yaml-and-json-foundations">CHAPTER 2 — LINUX, NETWORKING, YAML AND JSON FOUNDATIONS</a></div></aside><article class="book-prose"><p class="source-note">Historical course notes converted into searchable offline HTML. Some content may be a draft; exercises requiring cloud accounts need credentials and may incur costs.</p><h1 id="chapter-1-modern-infrastructure-and-devops-foundations"><strong>CHAPTER 1 — MODERN INFRASTRUCTURE AND DEVOPS FOUNDATIONS</strong></h1>
+<p><strong>Page: 1–18</strong></p>
+<hr/>
+<h2 id="1-1-learning-objectives"><strong>1.1 Learning Objectives</strong></h2>
+<p>By the end of this chapter, you should understand:</p>
+<ul>
+<li>Why DevOps emerged</li>
+<li>Traditional infrastructure problems</li>
+<li>Configuration drift</li>
+<li>Infrastructure provisioning</li>
+<li>Deployment and release concepts</li>
+<li>DevOps culture and lifecycle</li>
+<li>Physical servers, virtual machines and containers</li>
+<li>Container images and runtime containers</li>
+<li>Why orchestration is required</li>
+<li>Kubernetes and desired state</li>
+<li>OpenShift</li>
+<li>Infrastructure as Code</li>
+<li>Terraform</li>
+<li>Configuration management</li>
+<li>Ansible</li>
+<li>CI/CD</li>
+<li>Jenkins</li>
+<li>AWS cloud foundations</li>
+<li>IAM and VPC</li>
+<li>Monitoring and logging</li>
+<li>Prometheus and Grafana</li>
+<li>ELK</li>
+<li>Observability</li>
+<li>DevSecOps</li>
+<li>GitOps</li>
+<li>Production troubleshooting mindset</li>
+<li>How the technologies in this book fit together</li>
+</ul>
+<hr/>
+<h1 id="1-2-the-infrastructure-problem"><strong>1.2 The Infrastructure Problem</strong></h1>
+<p>Applications require infrastructure.</p>
+<p>A simple application may need:</p>
+<pre><code class="language-text">Application
+    |
+    +--&gt; Compute
+    +--&gt; Operating System
+    +--&gt; Network
+    +--&gt; Storage
+    +--&gt; Database
+    +--&gt; Security
+    +--&gt; Monitoring
+</code></pre>
+<p>At small scale, an administrator can configure these components manually.</p>
+<p>At production scale, manual administration becomes difficult.</p>
+<hr/>
+<h1 id="1-3-traditional-provisioning"><strong>1.3 Traditional Provisioning</strong></h1>
+<p>A traditional infrastructure workflow might look like:</p>
+<pre><code class="language-text">Business Requirement
+        |
+        v
+Purchase Server
+        |
+        v
+Rack Server
+        |
+        v
+Configure Network
+        |
+        v
+Install OS
+        |
+        v
+Install Packages
+        |
+        v
+Configure Application
+        |
+        v
+Deploy
+</code></pre>
+<p>Problems include:</p>
+<pre><code class="language-text">Slow provisioning
+Manual errors
+Different configurations
+Poor repeatability
+Difficult scaling
+Difficult recovery
+</code></pre>
+<hr/>
+<h1 id="1-4-configuration-drift"><strong>1.4 Configuration Drift</strong></h1>
+<p>Suppose three servers should be identical:</p>
+<pre><code class="language-text">web01
+web02
+web03
+</code></pre>
+<p>Initially:</p>
+<pre><code class="language-text">Apache 2.x
+Same configuration
+Same application
+</code></pre>
+<p>After several months:</p>
+<pre><code class="language-text">web01 -&gt; package manually upgraded
+web02 -&gt; configuration manually edited
+web03 -&gt; firewall rule manually changed
+</code></pre>
+<p>The servers are no longer identical.</p>
+<p>This is:</p>
+<blockquote>
+<p><strong>Configuration Drift</strong></p>
+</blockquote>
+<p>Automation and configuration management reduce this problem.</p>
+<hr/>
+<h1 id="1-5-the-devops-problem"><strong>1.5 The DevOps Problem</strong></h1>
+<p>Traditional organizations often separate:</p>
+<pre><code class="language-text">Development
+</code></pre>
+<p>and:</p>
+<pre><code class="language-text">Operations
+</code></pre>
+<p>Developers may say:</p>
+<pre><code class="language-text">"It works on my machine."
+</code></pre>
+<p>Operations may say:</p>
+<pre><code class="language-text">"It does not work in production."
+</code></pre>
+<p>The deeper problem is often:</p>
+<pre><code class="language-text">Different environments
+Manual handoffs
+Slow feedback
+Unclear ownership
+Poor automation
+</code></pre>
+<hr/>
+<h1 id="1-6-what-is-devops"><strong>1.6 What Is DevOps?</strong></h1>
+<p>DevOps is not one tool.</p>
+<p>DevOps combines:</p>
+<pre><code class="language-text">Culture
+Processes
+Automation
+Collaboration
+Continuous feedback
+Engineering practices
+</code></pre>
+<p>A simplified lifecycle:</p>
+<pre><code class="language-text">PLAN
+  |
+  v
+CODE
+  |
+  v
+BUILD
+  |
+  v
+TEST
+  |
+  v
+RELEASE
+  |
+  v
+DEPLOY
+  |
+  v
+OPERATE
+  |
+  v
+MONITOR
+  |
+  +----------&gt; FEEDBACK
+</code></pre>
+<hr/>
+<h1 id="1-7-devops-goals"><strong>1.7 DevOps Goals</strong></h1>
+<p>Common goals include:</p>
+<pre><code class="language-text">Faster delivery
+Repeatable deployment
+Reduced manual errors
+Better reliability
+Shorter feedback loops
+Infrastructure automation
+Improved observability
+Security integration
+</code></pre>
+<hr/>
+<h1 id="1-8-physical-servers"><strong>1.8 Physical Servers</strong></h1>
+<p>Traditional model:</p>
+<pre><code class="language-text">Physical Server
+      |
+      v
+Operating System
+      |
+      v
+Application
+</code></pre>
+<p>One physical server may be underutilized.</p>
+<p>Example:</p>
+<pre><code class="language-text">CPU capacity = 32 cores
+Application uses = 4 cores
+</code></pre>
+<p>Virtualization improves hardware utilization.</p>
+<hr/>
+<h1 id="1-9-virtualization"><strong>1.9 Virtualization</strong></h1>
+<p>Virtualization allows multiple virtual machines on one physical host.</p>
+<pre><code class="language-text">Physical Server
+      |
+      v
+Hypervisor
+  /     |     \
+ v      v      v
+VM1    VM2    VM3
+</code></pre>
+<p>Each VM can contain:</p>
+<pre><code class="language-text">Guest OS
+Libraries
+Application
+</code></pre>
+<hr/>
+<h1 id="1-10-virtual-machine-architecture"><strong>1.10 Virtual Machine Architecture</strong></h1>
+<pre><code class="language-text">+-------------------------+
+| Application             |
++-------------------------+
+| Guest Operating System  |
++-------------------------+
+| Virtual Hardware        |
++-------------------------+
+| Hypervisor              |
++-------------------------+
+| Physical Hardware       |
++-------------------------+
+</code></pre>
+<p>VMs provide strong isolation but include a complete guest OS.</p>
+<hr/>
+<h1 id="1-11-containers"><strong>1.11 Containers</strong></h1>
+<p>Containers package applications and their dependencies while sharing the host kernel.</p>
+<p>Simplified:</p>
+<pre><code class="language-text">Physical / Virtual Host
+        |
+        v
+Host Operating System
+        |
+        v
+Container Runtime
+   /       |       \
+  v        v        v
+App A    App B    App C
+</code></pre>
+<hr/>
+<h1 id="1-12-vm-vs-container"><strong>1.12 VM vs Container</strong></h1>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Virtual Machine</th>
+<th>Container</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Guest OS</td>
+<td>Usually yes</td>
+<td>Shares host kernel</td>
+</tr>
+<tr>
+<td>Startup</td>
+<td>Usually slower</td>
+<td>Usually faster</td>
+</tr>
+<tr>
+<td>Image size</td>
+<td>Larger</td>
+<td>Often smaller</td>
+</tr>
+<tr>
+<td>Isolation</td>
+<td>VM boundary</td>
+<td>OS/container boundary</td>
+</tr>
+<tr>
+<td>Portability</td>
+<td>Good</td>
+<td>Excellent for application packaging</td>
+</tr>
+</tbody>
+</table>
+<p>Containers and VMs are complementary technologies.</p>
+<hr/>
+<h1 id="1-13-container-image"><strong>1.13 Container Image</strong></h1>
+<p>An image is a packaged filesystem and metadata used to create containers.</p>
+<p>Concept:</p>
+<pre><code class="language-text">Dockerfile
+    |
+    v
+Build
+    |
+    v
+Container Image
+    |
+    v
+Registry
+</code></pre>
+<hr/>
+<h1 id="1-14-container"><strong>1.14 Container</strong></h1>
+<p>A container is a running instance of an image.</p>
+<pre><code class="language-text">Image
+  |
+  +--&gt; Container 1
+  +--&gt; Container 2
+  +--&gt; Container 3
+</code></pre>
+<p>Important:</p>
+<pre><code class="language-text">IMAGE
+=
+Template
+
+CONTAINER
+=
+Running instance
+</code></pre>
+<hr/>
+<h1 id="1-15-why-container-orchestration-exists"><strong>1.15 Why Container Orchestration Exists</strong></h1>
+<p>Imagine:</p>
+<pre><code class="language-text">10 applications
+50 containers
+10 servers
+</code></pre>
+<p>Questions appear:</p>
+<pre><code class="language-text">Where should each container run?
+What if a container crashes?
+What if a server fails?
+How do we scale?
+How do services find each other?
+How do we expose applications?
+How do we update safely?
+</code></pre>
+<p>Container orchestration solves these problems.</p>
+<hr/>
+<h1 id="1-16-kubernetes"><strong>1.16 Kubernetes</strong></h1>
+<p>Kubernetes is a container orchestration platform.</p>
+<p>It manages:</p>
+<pre><code class="language-text">Scheduling
+Scaling
+Self-healing
+Networking
+Service discovery
+Configuration
+Secrets
+Storage orchestration
+Rolling updates
+</code></pre>
+<p>Simplified:</p>
+<pre><code class="language-text">User
+ |
+ v
+Kubernetes API
+ |
+ v
+Desired State
+ |
+ v
+Controllers
+ |
+ v
+Cluster Resources
+</code></pre>
+<hr/>
+<h1 id="1-17-desired-state"><strong>1.17 Desired State</strong></h1>
+<p>Suppose you declare:</p>
+<pre><code class="language-text">I want 3 application replicas.
+</code></pre>
+<p>Current state:</p>
+<pre><code class="language-text">2 replicas
+</code></pre>
+<p>Kubernetes detects the difference.</p>
+<pre><code class="language-text">Desired = 3
+Current = 2
+Difference = 1
+</code></pre>
+<p>Controller action:</p>
+<pre><code class="language-text">Create another replica
+</code></pre>
+<hr/>
+<h1 id="1-18-reconciliation"><strong>1.18 Reconciliation</strong></h1>
+<p>Kubernetes continuously compares:</p>
+<pre><code class="language-text">Desired State
+</code></pre>
+<p>with:</p>
+<pre><code class="language-text">Current State
+</code></pre>
+<p>Workflow:</p>
+<pre><code class="language-text">Desired State
+      |
+      v
+Controller
+      |
+      v
+Observe Current State
+      |
+      v
+Difference?
+  /       \
+YES       NO
+ |         |
+ v         v
+Act       Wait
+</code></pre>
+<p>This process is called:</p>
+<blockquote>
+<p><strong>Reconciliation</strong></p>
+</blockquote>
+<hr/>
+<h1 id="1-19-self-healing"><strong>1.19 Self-Healing</strong></h1>
+<p>Suppose:</p>
+<pre><code class="language-text">Desired replicas = 3
+</code></pre>
+<p>One Pod fails:</p>
+<pre><code class="language-text">Running = 2
+</code></pre>
+<p>Kubernetes works to restore:</p>
+<pre><code class="language-text">Running = 3
+</code></pre>
+<p>This is one example of self-healing behavior.</p>
+<hr/>
+<h1 id="1-20-openshift"><strong>1.20 OpenShift</strong></h1>
+<p>OpenShift is Red Hat's enterprise Kubernetes platform.</p>
+<p>Conceptually:</p>
+<pre><code class="language-text">Kubernetes
+    +
+Enterprise Platform Features
+    +
+Red Hat Ecosystem
+    =
+OpenShift
+</code></pre>
+<p>Important OpenShift concepts later include:</p>
+<pre><code class="language-text">Operators
+Routes
+Security Context Constraints
+ImageStreams
+BuildConfigs
+MachineConfig Operator
+Cluster Version Operator
+</code></pre>
+<hr/>
+<h1 id="1-21-infrastructure-as-code"><strong>1.21 Infrastructure as Code</strong></h1>
+<p>Infrastructure as Code means infrastructure is described using version-controlled configuration/code.</p>
+<p>Instead of:</p>
+<pre><code class="language-text">Open console
+Click
+Click
+Create VPC
+Click
+Create subnet
+</code></pre>
+<p>use:</p>
+<pre><code class="language-text">Code
+ |
+ v
+Automation Tool
+ |
+ v
+Infrastructure
+</code></pre>
+<hr/>
+<h1 id="1-22-terraform"><strong>1.22 Terraform</strong></h1>
+<p>Terraform is an Infrastructure as Code tool.</p>
+<p>Example:</p>
+<pre><code class="language-hcl">resource "aws_vpc" "main" {
+  cidr_block = "10.0.0.0/16"
+}
+</code></pre>
+<p>Workflow:</p>
+<pre><code class="language-text">Terraform Configuration
+        |
+        v
+terraform init
+        |
+        v
+terraform plan
+        |
+        v
+terraform apply
+        |
+        v
+AWS Infrastructure
+</code></pre>
+<hr/>
+<h1 id="1-23-why-terraform-matters"><strong>1.23 Why Terraform Matters</strong></h1>
+<p>Benefits include:</p>
+<pre><code class="language-text">Repeatability
+Version control
+Peer review
+Automation
+Reusable modules
+Infrastructure consistency
+Change planning
+</code></pre>
+<hr/>
+<h1 id="1-24-configuration-management"><strong>1.24 Configuration Management</strong></h1>
+<p>Infrastructure creation and server configuration are different concerns.</p>
+<p>Example:</p>
+<pre><code class="language-text">Terraform
+   |
+   v
+Create VM
+</code></pre>
+<p>Then:</p>
+<pre><code class="language-text">Ansible
+   |
+   v
+Install packages
+Configure service
+Deploy configuration
+</code></pre>
+<hr/>
+<h1 id="1-25-ansible"><strong>1.25 Ansible</strong></h1>
+<p>Ansible automates system configuration and operational tasks.</p>
+<p>Example:</p>
+<pre><code class="language-yaml">- name: Install nginx
+  hosts: webservers
+  become: true
+
+  tasks:
+    - name: Install nginx package
+      ansible.builtin.package:
+        name: nginx
+        state: present
+</code></pre>
+<hr/>
+<h1 id="1-26-ansible-architecture"><strong>1.26 Ansible Architecture</strong></h1>
+<p>Simplified:</p>
+<pre><code class="language-text">Control Node
+    |
+    | SSH
+    v
+Managed Node 1
+
+    |
+    +-------&gt; Managed Node 2
+
+    |
+    +-------&gt; Managed Node 3
+</code></pre>
+<p>Ansible is commonly agentless for Linux management over SSH.</p>
+<hr/>
+<h1 id="1-27-ci-cd"><strong>1.27 CI/CD</strong></h1>
+<p>CI/CD commonly refers to:</p>
+<pre><code class="language-text">Continuous Integration
+Continuous Delivery
+Continuous Deployment
+</code></pre>
+<p>A simplified pipeline:</p>
+<pre><code class="language-text">Developer
+   |
+   v
+Git Push
+   |
+   v
+Build
+   |
+   v
+Test
+   |
+   v
+Security Checks
+   |
+   v
+Package
+   |
+   v
+Deploy
+</code></pre>
+<hr/>
+<h1 id="1-28-continuous-integration"><strong>1.28 Continuous Integration</strong></h1>
+<p>Continuous Integration focuses on integrating code changes frequently and validating them automatically.</p>
+<p>Example:</p>
+<pre><code class="language-text">Git Push
+   |
+   v
+Compile / Build
+   |
+   v
+Unit Tests
+   |
+   v
+Static Analysis
+   |
+   v
+Artifact
+</code></pre>
+<hr/>
+<h1 id="1-29-continuous-delivery"><strong>1.29 Continuous Delivery</strong></h1>
+<p>Continuous Delivery means software remains deployable through an automated release process, commonly with a controlled production decision.</p>
+<pre><code class="language-text">Pipeline
+   |
+   v
+Validated Artifact
+   |
+   v
+Ready for Production
+   |
+   v
+Approval / Release
+</code></pre>
+<hr/>
+<h1 id="1-30-continuous-deployment"><strong>1.30 Continuous Deployment</strong></h1>
+<p>Continuous Deployment can automatically deploy qualifying changes to production after pipeline requirements pass.</p>
+<p>The appropriate model depends on:</p>
+<pre><code class="language-text">Business risk
+Compliance
+Testing maturity
+Release strategy
+Operational maturity
+</code></pre>
+<hr/>
+<h1 id="1-31-jenkins"><strong>1.31 Jenkins</strong></h1>
+<p>Jenkins is an automation server widely used for CI/CD.</p>
+<p>Simplified:</p>
+<pre><code class="language-text">Git Repository
+      |
+      v
+Jenkins
+      |
+      +--&gt; Build
+      +--&gt; Test
+      +--&gt; Scan
+      +--&gt; Package
+      +--&gt; Deploy
+</code></pre>
+<hr/>
+<h1 id="1-32-jenkins-controller-and-agents"><strong>1.32 Jenkins Controller and Agents</strong></h1>
+<p>Concept:</p>
+<pre><code class="language-text">Jenkins Controller
+        |
+        +--&gt; Agent 1
+        |
+        +--&gt; Agent 2
+        |
+        +--&gt; Kubernetes Agent
+</code></pre>
+<p>The controller coordinates jobs while agents execute workloads.</p>
+<hr/>
+<h1 id="1-33-cloud-computing"><strong>1.33 Cloud Computing</strong></h1>
+<p>Cloud computing provides infrastructure and managed services through programmable platforms.</p>
+<p>Instead of buying every physical resource:</p>
+<pre><code class="language-text">API Request
+    |
+    v
+Cloud Provider
+    |
+    v
+Infrastructure Resource
+</code></pre>
+<hr/>
+<h1 id="1-34-aws"><strong>1.34 AWS</strong></h1>
+<p>AWS provides services such as:</p>
+<pre><code class="language-text">EC2
+S3
+VPC
+IAM
+RDS
+ELB
+CloudWatch
+Route 53
+EKS
+</code></pre>
+<p>This book begins AWS with:</p>
+<pre><code class="language-text">IAM
+</code></pre>
+<p>and:</p>
+<pre><code class="language-text">VPC
+</code></pre>
+<p>because identity and networking are foundational.</p>
+<hr/>
+<h1 id="1-35-aws-iam"><strong>1.35 AWS IAM</strong></h1>
+<p>IAM means:</p>
+<blockquote>
+<p><strong>Identity and Access Management</strong></p>
+</blockquote>
+<p>IAM answers:</p>
+<pre><code class="language-text">WHO
+can perform
+WHAT ACTION
+on WHICH RESOURCE
+under WHAT CONDITIONS?
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-text">JenkinsRole
+    |
+    v
+Can push image
+    |
+    v
+Specific ECR repository
+</code></pre>
+<hr/>
+<h1 id="1-36-aws-vpc"><strong>1.36 AWS VPC</strong></h1>
+<p>VPC means:</p>
+<blockquote>
+<p><strong>Virtual Private Cloud</strong></p>
+</blockquote>
+<p>A VPC is a logically isolated network in AWS.</p>
+<p>Example:</p>
+<pre><code class="language-text">VPC 10.0.0.0/16
+       |
+       +--&gt; Public Subnet
+       |
+       +--&gt; Private Subnet
+       |
+       +--&gt; Route Tables
+       |
+       +--&gt; Security Groups
+</code></pre>
+<hr/>
+<h1 id="1-37-monitoring"><strong>1.37 Monitoring</strong></h1>
+<p>Monitoring helps answer:</p>
+<pre><code class="language-text">Is the system healthy?
+</code></pre>
+<p>Typical signals:</p>
+<pre><code class="language-text">CPU
+Memory
+Disk
+Latency
+Request rate
+Error rate
+Availability
+</code></pre>
+<hr/>
+<h1 id="1-38-prometheus"><strong>1.38 Prometheus</strong></h1>
+<p>Prometheus is a monitoring and metrics system.</p>
+<p>Simplified:</p>
+<pre><code class="language-text">Application / Exporter
+        ^
+        |
+        | Scrape
+        |
+    Prometheus
+        |
+        v
+      PromQL
+</code></pre>
+<hr/>
+<h1 id="1-39-grafana"><strong>1.39 Grafana</strong></h1>
+<p>Grafana visualizes data from supported data sources.</p>
+<p>Example:</p>
+<pre><code class="language-text">Prometheus
+    |
+    v
+Grafana
+    |
+    v
+Dashboard
+</code></pre>
+<p>Dashboard examples:</p>
+<pre><code class="language-text">CPU usage
+Memory usage
+Pod health
+HTTP latency
+Error rate
+Request throughput
+</code></pre>
+<hr/>
+<h1 id="1-40-logging"><strong>1.40 Logging</strong></h1>
+<p>Metrics answer questions such as:</p>
+<pre><code class="language-text">How much?
+How often?
+How fast?
+</code></pre>
+<p>Logs answer:</p>
+<pre><code class="language-text">What happened?
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-text">2026-10-05T10:30:00 ERROR database connection failed
+</code></pre>
+<hr/>
+<h1 id="1-41-elk"><strong>1.41 ELK</strong></h1>
+<p>ELK commonly refers to:</p>
+<pre><code class="language-text">Elasticsearch
+Logstash
+Kibana
+</code></pre>
+<p>Typical flow:</p>
+<pre><code class="language-text">Application Logs
+      |
+      v
+Logstash / Collector
+      |
+      v
+Elasticsearch
+      |
+      v
+Kibana
+</code></pre>
+<hr/>
+<h1 id="1-42-metrics-vs-logs"><strong>1.42 Metrics vs Logs</strong></h1>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Metric</td>
+<td>CPU = 92%</td>
+</tr>
+<tr>
+<td>Log</td>
+<td>Database connection timeout</td>
+</tr>
+<tr>
+<td>Trace</td>
+<td>Request path across services</td>
+</tr>
+</tbody>
+</table>
+<p>A production observability system may use all three.</p>
+<hr/>
+<h1 id="1-43-observability"><strong>1.43 Observability</strong></h1>
+<p>Observability helps engineers understand internal system behavior from emitted signals.</p>
+<p>Three common pillars:</p>
+<pre><code class="language-text">Metrics
+Logs
+Traces
+</code></pre>
+<p>Questions:</p>
+<pre><code class="language-text">What failed?
+Where?
+When?
+Why?
+Who was affected?
+</code></pre>
+<hr/>
+<h1 id="1-44-devsecops"><strong>1.44 DevSecOps</strong></h1>
+<p>DevSecOps integrates security throughout engineering workflows.</p>
+<p>Instead of:</p>
+<pre><code class="language-text">Build
+Deploy
+Then Security Review
+</code></pre>
+<p>use:</p>
+<pre><code class="language-text">Code
+ |
+ v
+Security Checks
+ |
+ v
+Build
+ |
+ v
+Dependency Scan
+ |
+ v
+Image Scan
+ |
+ v
+Deploy
+ |
+ v
+Runtime Monitoring
+</code></pre>
+<p>Security becomes part of delivery.</p>
+<hr/>
+<h1 id="1-45-gitops"><strong>1.45 GitOps</strong></h1>
+<p>GitOps uses Git as a source of declared desired state for automated systems.</p>
+<p>Concept:</p>
+<pre><code class="language-text">Engineer
+   |
+   v
+Git
+   |
+   v
+GitOps Controller
+   |
+   v
+Kubernetes
+</code></pre>
+<p>Example controller:</p>
+<pre><code class="language-text">Argo CD
+</code></pre>
+<hr/>
+<h1 id="1-46-gitops-reconciliation"><strong>1.46 GitOps Reconciliation</strong></h1>
+<pre><code class="language-text">Git Desired State
+       |
+       v
+GitOps Controller
+       |
+       v
+Cluster Current State
+       |
+       v
+Difference?
+       |
+       v
+Reconcile
+</code></pre>
+<p>This resembles Kubernetes' desired-state philosophy.</p>
+<hr/>
+<h1 id="1-47-complete-devops-workflow"><strong>1.47 Complete DevOps Workflow</strong></h1>
+<p>A production workflow might look like:</p>
+<pre><code class="language-text">Developer
+   |
+   v
+Git
+   |
+   v
+Jenkins
+   |
+   +--&gt; Test
+   +--&gt; Security Scan
+   +--&gt; Build Image
+   |
+   v
+Container Registry
+   |
+   v
+GitOps Repository
+   |
+   v
+Argo CD
+   |
+   v
+Kubernetes / OpenShift
+   |
+   +--&gt; Prometheus
+   +--&gt; Grafana
+   +--&gt; ELK
+</code></pre>
+<p>Infrastructure underneath:</p>
+<pre><code class="language-text">Terraform
+   |
+   v
+AWS
+</code></pre>
+<p>Configuration:</p>
+<pre><code class="language-text">Ansible
+</code></pre>
+<hr/>
+<h1 id="1-48-production-platform-architecture"><strong>1.48 Production Platform Architecture</strong></h1>
+<pre><code class="language-text">                        USERS
+                          |
+                          v
+                    Load Balancer
+                          |
+                          v
+                Kubernetes/OpenShift
+                   /      |      \
+                  /       |       \
+                 v        v        v
+              App A     App B    App C
+                 |
+                 v
+              Database
+
+CI/CD
+-----
+Git -&gt; Jenkins -&gt; Registry -&gt; GitOps -&gt; Cluster
+
+Infrastructure
+--------------
+Terraform -&gt; AWS
+
+Configuration
+-------------
+Ansible -&gt; Servers
+
+Observability
+-------------
+Prometheus -&gt; Grafana
+Logs -&gt; ELK
+</code></pre>
+<hr/>
+<h1 id="1-49-automation-layers"><strong>1.49 Automation Layers</strong></h1>
+<p>Think in layers:</p>
+<pre><code class="language-text">Layer 1
+Cloud Infrastructure
+Terraform
+
+Layer 2
+Operating System Configuration
+Ansible
+
+Layer 3
+Application Build
+Jenkins
+
+Layer 4
+Container Orchestration
+Kubernetes / OpenShift
+
+Layer 5
+Observability
+Prometheus / Grafana / ELK
+</code></pre>
+<p>The boundaries can overlap, but this model helps beginners.</p>
+<hr/>
+<h1 id="1-50-troubleshooting-mindset"><strong>1.50 Troubleshooting Mindset</strong></h1>
+<p>Do not randomly change configurations.</p>
+<p>Use:</p>
+<pre><code class="language-text">SYMPTOM
+   |
+   v
+SCOPE
+   |
+   v
+EVIDENCE
+   |
+   v
+HYPOTHESIS
+   |
+   v
+TEST
+   |
+   v
+ROOT CAUSE
+   |
+   v
+FIX
+   |
+   v
+VERIFY
+</code></pre>
+<hr/>
+<h1 id="1-51-example-incident"><strong>1.51 Example Incident</strong></h1>
+<p>User reports:</p>
+<pre><code class="language-text">Website is down.
+</code></pre>
+<p>Do not immediately restart everything.</p>
+<p>Investigate:</p>
+<pre><code class="language-text">DNS?
+Load balancer?
+Network?
+Ingress?
+Service?
+Pod?
+Application?
+Database?
+External dependency?
+</code></pre>
+<p>Start with evidence.</p>
+<hr/>
+<h1 id="1-52-layered-troubleshooting"><strong>1.52 Layered Troubleshooting</strong></h1>
+<pre><code class="language-text">User
+ |
+ v
+DNS
+ |
+ v
+Load Balancer
+ |
+ v
+Firewall
+ |
+ v
+Ingress
+ |
+ v
+Service
+ |
+ v
+Pod
+ |
+ v
+Application
+ |
+ v
+Database
+</code></pre>
+<p>Find the first broken layer.</p>
+<hr/>
+<h1 id="1-53-hands-on-concept-lab"><strong>1.53 Hands-On Concept Lab</strong></h1>
+<p>Draw this architecture yourself:</p>
+<pre><code class="language-text">GitHub
+  |
+  v
+Jenkins
+  |
+  v
+Docker Image
+  |
+  v
+Registry
+  |
+  v
+Kubernetes
+  |
+  +--&gt; Application Pods
+  |
+  +--&gt; Service
+  |
+  +--&gt; Ingress
+
+Prometheus
+  |
+  v
+Grafana
+
+Logs
+  |
+  v
+Elasticsearch
+  |
+  v
+Kibana
+</code></pre>
+<p>Then answer:</p>
+<pre><code class="language-text">Who builds the application?
+Who deploys it?
+Who schedules containers?
+Who monitors it?
+Who stores logs?
+</code></pre>
+<hr/>
+<h1 id="1-54-concept-clearing"><strong>1.54 Concept Clearing</strong></h1>
+<pre><code class="language-text">Terraform
+=
+Creates/manages infrastructure
+</code></pre>
+<pre><code class="language-text">Ansible
+=
+Configures systems
+</code></pre>
+<pre><code class="language-text">Jenkins
+=
+Automates CI/CD workflows
+</code></pre>
+<pre><code class="language-text">Kubernetes
+=
+Orchestrates containers
+</code></pre>
+<pre><code class="language-text">OpenShift
+=
+Enterprise Kubernetes platform
+</code></pre>
+<pre><code class="language-text">Prometheus
+=
+Metrics monitoring
+</code></pre>
+<pre><code class="language-text">Grafana
+=
+Visualization
+</code></pre>
+<pre><code class="language-text">ELK
+=
+Centralized log processing/search/visualization
+</code></pre>
+<hr/>
+<h1 id="1-55-common-mistakes"><strong>1.55 Common Mistakes</strong></h1>
+<ol>
+<li>Thinking DevOps means only Jenkins.</li>
+<li>Thinking Kubernetes replaces Linux.</li>
+<li>Thinking Terraform replaces Ansible in every case.</li>
+<li>Treating production like a manual lab.</li>
+<li>Deploying without monitoring.</li>
+<li>Monitoring without alerting.</li>
+<li>Logging without retention planning.</li>
+<li>Giving CI/CD administrator permissions.</li>
+<li>Storing secrets in Git.</li>
+<li>Changing production manually without recording the change.</li>
+<li>Restarting services before understanding the incident.</li>
+<li>Learning tools without understanding networking and Linux.</li>
+</ol>
+<hr/>
+<h1 id="1-56-interview-questions"><strong>1.56 Interview Questions</strong></h1>
+<h2 id="q1-what-is-devops"><strong>Q1. What is DevOps?</strong></h2>
+<p>DevOps is a combination of culture, processes and engineering practices that improves collaboration and automates software delivery and operations.</p>
+<h2 id="q2-what-is-infrastructure-as-code"><strong>Q2. What is Infrastructure as Code?</strong></h2>
+<p>Infrastructure as Code describes and manages infrastructure using version-controlled configuration/code.</p>
+<h2 id="q3-terraform-vs-ansible"><strong>Q3. Terraform vs Ansible?</strong></h2>
+<p>Terraform is commonly used to provision and manage infrastructure resources.</p>
+<p>Ansible is commonly used for configuration management and operational automation.</p>
+<p>They can work together.</p>
+<h2 id="q4-why-kubernetes"><strong>Q4. Why Kubernetes?</strong></h2>
+<p>Kubernetes automates scheduling, scaling, service discovery, self-healing and lifecycle management for containerized workloads.</p>
+<h2 id="q5-prometheus-vs-elk"><strong>Q5. Prometheus vs ELK?</strong></h2>
+<p>Prometheus primarily focuses on metrics.</p>
+<p>ELK primarily focuses on log ingestion, search and visualization.</p>
+<hr/>
+<h1 id="1-57-production-scenario"><strong>1.57 Production Scenario</strong></h1>
+<p>Requirement:</p>
+<pre><code class="language-text">Deploy a Python application to AWS.
+</code></pre>
+<p>Possible architecture:</p>
+<pre><code class="language-text">Terraform
+   |
+   v
+AWS Infrastructure
+
+Ansible
+   |
+   v
+Server/Platform Configuration
+
+Jenkins
+   |
+   v
+Build + Test + Image
+
+Kubernetes/OpenShift
+   |
+   v
+Run Application
+
+Prometheus
+   |
+   v
+Metrics
+
+Grafana
+   |
+   v
+Dashboards
+
+ELK
+   |
+   v
+Logs
+</code></pre>
+<p>The exact architecture depends on requirements.</p>
+<hr/>
+<h1 id="1-58-quick-revision"><strong>1.58 Quick Revision</strong></h1>
+<pre><code class="language-text">DEVOPS
+=
+Culture + Automation + Collaboration + Feedback
+
+CONTAINER
+=
+Running instance of image
+
+KUBERNETES
+=
+Container orchestration
+
+OPENSHIFT
+=
+Enterprise Kubernetes platform
+
+TERRAFORM
+=
+Infrastructure as Code
+
+ANSIBLE
+=
+Configuration management and automation
+
+JENKINS
+=
+CI/CD automation
+
+IAM
+=
+AWS identity and access
+
+VPC
+=
+AWS virtual network
+
+PROMETHEUS
+=
+Metrics
+
+GRAFANA
+=
+Visualization
+
+ELK
+=
+Centralized logging
+
+GITOPS
+=
+Git-driven desired-state operations
+</code></pre>
+<hr/>
+<h1 id="1-59-chapter-summary"><strong>1.59 Chapter Summary</strong></h1>
+<p>This chapter established the complete mental model for the book.</p>
+<p>The central workflow is:</p>
+<pre><code class="language-text">CODE
+ |
+ v
+CI/CD
+ |
+ v
+ARTIFACT
+ |
+ v
+DEPLOYMENT PLATFORM
+ |
+ v
+APPLICATION
+ |
+ v
+OBSERVABILITY
+</code></pre>
+<p>Infrastructure underneath is automated through tools such as:</p>
+<pre><code class="language-text">Terraform
+Ansible
+AWS
+</code></pre>
+<p>Applications can run through:</p>
+<pre><code class="language-text">Kubernetes
+OpenShift
+</code></pre>
+<p>Operational visibility comes from:</p>
+<pre><code class="language-text">Prometheus
+Grafana
+ELK
+</code></pre>
+<hr/>
+<h1 id="1-60-references"><strong>1.60 References</strong></h1>
+<p>Consult current official documentation throughout the book:</p>
+<ol>
+<li>Kubernetes Documentation</li>
+<li>Red Hat OpenShift Documentation</li>
+<li>Jenkins Documentation</li>
+<li>Red Hat Ansible Documentation</li>
+<li>HashiCorp Terraform Documentation</li>
+<li>AWS Documentation</li>
+<li>Prometheus Documentation</li>
+<li>Grafana Documentation</li>
+<li>Elastic Documentation</li>
+</ol>
+<hr/>
+<p><strong>End of Chapter 1</strong></p>
+<p><strong>Page: 1–18</strong></p>
+<hr/>
+<h1 id="next-chapter"><strong>NEXT CHAPTER</strong></h1>
+<h2 id="chapter-2-linux-networking-yaml-and-json-foundations"><strong>CHAPTER 2 — LINUX, NETWORKING, YAML AND JSON FOUNDATIONS</strong></h2>
+</article></main><footer>ARTHA Gurukul · Source material preserved as educational notes</footer></body></html>

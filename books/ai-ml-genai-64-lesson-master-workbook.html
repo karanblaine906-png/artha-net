@@ -1,0 +1,789 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AI/ML/GenAI — 64 Lesson Master Workbook | ARTHA Gurukul</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><a class="brand" href="../index.html">✦ ARTHA GURUKUL</a><nav><a href="../index.html#courses">All Courses</a><a href="index.html">Source Library</a></nav></header><main class="book-layout"><aside class="book-toc"><div class="eyebrow">Original material · offline copy</div><h2>AI/ML/GenAI — 64 Lesson Master Workbook</h2><a href="../index.html">⌂ Course library</a><div class="toc"><a href="#artha-ai-ml-genai-master-academy-64-lesson-workbook">ARTHA AI/ML/GenAI Master Academy — 64-Lesson Workbook</a><a href="#module-1-neural-networks-deep-learning">Module 1: Neural Networks &amp; Deep Learning</a><a href="#module-2-pytorch-tensorflow">Module 2: PyTorch &amp; TensorFlow</a><a href="#module-3-transformers-attention-llms">Module 3: Transformers, Attention &amp; LLMs</a><a href="#module-4-hugging-face-fine-tuning">Module 4: Hugging Face &amp; Fine-tuning</a><a href="#module-5-rag-vector-databases">Module 5: RAG &amp; Vector Databases</a><a href="#module-6-langchain-langgraph">Module 6: LangChain &amp; LangGraph</a><a href="#module-7-ai-agents-mcp-tool-calling">Module 7: AI Agents, MCP &amp; Tool Calling</a><a href="#module-8-mlops-model-deployment">Module 8: MLOps &amp; Model Deployment</a></div></aside><article class="book-prose"><p class="source-note">Historical course notes converted into searchable offline HTML. Some content may be a draft; exercises requiring cloud accounts need credentials and may incur costs.</p><h1 id="artha-ai-ml-genai-master-academy-64-lesson-workbook">ARTHA AI/ML/GenAI Master Academy — 64-Lesson Workbook</h1>
+<p>Original learning guide, version 2.0. These lessons are authored study notes, not proof of runtime execution.
+Requires local model for interactive chat; offline notes/lab scripts work independently.
+Start with Python basics, basic algebra and a 64-bit Debian environment.
+Every exercise is intended to run locally or be adapted conceptually on an 8GB machine; modern LLM training is not feasible on that hardware.</p>
+<h2 id="module-1-neural-networks-deep-learning">Module 1: Neural Networks &amp; Deep Learning</h2>
+<h3 id="conceptual-workflow">Conceptual workflow</h3>
+<pre><code class="language-mermaid">flowchart TD
+  A[Input features] --&gt; B[Linear layer]
+  B --&gt; C[Activation]
+  C --&gt; D[Loss]
+  D --&gt; E[Backpropagation]
+  E --&gt; F[Weight update]
+</code></pre>
+<p><strong>Official/primary learning reference:</strong> <a href="https://www.deeplearningbook.org/">https://www.deeplearningbook.org/</a></p>
+<h3 id="ai-day-01-python-and-mathematical-foundations">AI Day 01 — Python and mathematical foundations</h3>
+<p><strong>Module:</strong> Neural Networks &amp; Deep Learning | <strong>Level:</strong> Foundation</p>
+<p><strong>Learning outcomes:</strong> vectors, matrices, shapes, dot product, mean and variance.</p>
+<p><strong>Core explanation:</strong> For a batch X with shape (N,D), weights W of shape (D,H) produce XW of shape (N,H).</p>
+<p><strong>Practice (Debian/8GB):</strong> Use Python lists to write a dot product and check its dimensions.</p>
+<p><strong>Validation / evidence required:</strong> Mismatched input dimensions should raise a helpful error.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/01_neuron_numpy.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://www.deeplearningbook.org/">https://www.deeplearningbook.org/</a></p>
+<h3 id="ai-day-02-perceptrons-and-activation-functions">AI Day 02 — Perceptrons and activation functions</h3>
+<p><strong>Module:</strong> Neural Networks &amp; Deep Learning | <strong>Level:</strong> Foundation</p>
+<p><strong>Learning outcomes:</strong> weighted sums, bias, sigmoid, ReLU and decision boundaries.</p>
+<p><strong>Core explanation:</strong> A neuron computes z = w·x + b; a nonlinearity such as ReLU(z) lets stacked layers express nonlinear functions.</p>
+<p><strong>Practice (Debian/8GB):</strong> Implement AND and OR perceptrons; explain why a single linear neuron cannot solve XOR.</p>
+<p><strong>Validation / evidence required:</strong> Check all four binary-input combinations.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/01_neuron_numpy.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://www.deeplearningbook.org/">https://www.deeplearningbook.org/</a></p>
+<h3 id="ai-day-03-loss-functions-and-gradient-descent">AI Day 03 — Loss functions and gradient descent</h3>
+<p><strong>Module:</strong> Neural Networks &amp; Deep Learning | <strong>Level:</strong> Foundation</p>
+<p><strong>Learning outcomes:</strong> MSE, cross entropy, learning rate and optimization.</p>
+<p><strong>Core explanation:</strong> A loss measures prediction error; gradient descent updates parameters as w &lt;- w - learning_rate * gradient.</p>
+<p><strong>Practice (Debian/8GB):</strong> Fit y=2x+1 with numerical gradients and record loss over 100 steps.</p>
+<p><strong>Validation / evidence required:</strong> Loss must decrease; inspect overshooting at large learning rates.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/01_neuron_numpy.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://www.deeplearningbook.org/">https://www.deeplearningbook.org/</a></p>
+<h3 id="ai-day-04-chain-rule-and-backpropagation">AI Day 04 — Chain rule and backpropagation</h3>
+<p><strong>Module:</strong> Neural Networks &amp; Deep Learning | <strong>Level:</strong> Intermediate</p>
+<p><strong>Learning outcomes:</strong> computational graphs, partial derivatives, gradient checks.</p>
+<p><strong>Core explanation:</strong> For f(g(x)), derivative df/dx = (df/dg)*(dg/dx); backprop propagates gradients from output to inputs.</p>
+<p><strong>Practice (Debian/8GB):</strong> Differentiate a two-operation graph by hand; verify against finite differences.</p>
+<p><strong>Validation / evidence required:</strong> Compare gradients within a stated numerical tolerance.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/01_neuron_numpy.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://www.deeplearningbook.org/">https://www.deeplearningbook.org/</a></p>
+<h3 id="ai-day-05-multilayer-perceptrons-and-xor">AI Day 05 — Multilayer perceptrons and XOR</h3>
+<p><strong>Module:</strong> Neural Networks &amp; Deep Learning | <strong>Level:</strong> Intermediate</p>
+<p><strong>Learning outcomes:</strong> hidden layers, nonlinear separability, initialization.</p>
+<p><strong>Core explanation:</strong> Two layers with nonlinear activations can represent XOR, unlike a single linear decision boundary.</p>
+<p><strong>Practice (Debian/8GB):</strong> Draw a 2-2-1 network; train a tiny XOR network with the optional PyTorch lab.</p>
+<p><strong>Validation / evidence required:</strong> Evaluate every XOR case; describe seed sensitivity.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/01_neuron_numpy.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://www.deeplearningbook.org/">https://www.deeplearningbook.org/</a></p>
+<h3 id="ai-day-06-generalization-and-regularization">AI Day 06 — Generalization and regularization</h3>
+<p><strong>Module:</strong> Neural Networks &amp; Deep Learning | <strong>Level:</strong> Intermediate</p>
+<p><strong>Learning outcomes:</strong> train/validation/test split, leakage, L1/L2, dropout, early stopping.</p>
+<p><strong>Core explanation:</strong> Training score alone is insufficient; validation estimates generalization and tuning on test data leaks information.</p>
+<p><strong>Practice (Debian/8GB):</strong> Create a data-splitting protocol and compare training versus validation loss.</p>
+<p><strong>Validation / evidence required:</strong> Confirm that no duplicate sample crosses splits.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/01_neuron_numpy.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://www.deeplearningbook.org/">https://www.deeplearningbook.org/</a></p>
+<h3 id="ai-day-07-cnns-rnns-and-sequence-modeling">AI Day 07 — CNNs, RNNs and sequence modeling</h3>
+<p><strong>Module:</strong> Neural Networks &amp; Deep Learning | <strong>Level:</strong> Advanced</p>
+<p><strong>Learning outcomes:</strong> convolution kernels, spatial inductive bias, recurrent hidden state, vanishing gradients.</p>
+<p><strong>Core explanation:</strong> Convolutions share local filters; recurrent models carry state across timesteps; both have tradeoffs against attention.</p>
+<p><strong>Practice (Debian/8GB):</strong> Calculate a 1D convolution on paper, then sketch an RNN unrolled for four steps.</p>
+<p><strong>Validation / evidence required:</strong> Check output dimensions and parameter-sharing rationale.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/01_neuron_numpy.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://www.deeplearningbook.org/">https://www.deeplearningbook.org/</a></p>
+<h3 id="ai-day-08-deep-learning-capstone-evaluation">AI Day 08 — Deep learning capstone: evaluation</h3>
+<p><strong>Module:</strong> Neural Networks &amp; Deep Learning | <strong>Level:</strong> Advanced</p>
+<p><strong>Learning outcomes:</strong> architecture selection, reproducibility, error analysis, calibration.</p>
+<p><strong>Core explanation:</strong> A credible model includes a baseline, fixed splits, metrics, run metadata and failure analysis—not only high accuracy.</p>
+<p><strong>Practice (Debian/8GB):</strong> Build a small tabular classifier plan with seed, confusion matrix and model card.</p>
+<p><strong>Validation / evidence required:</strong> Deliver a model card with limitations, repeatability plan and failure cases.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/01_neuron_numpy.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://www.deeplearningbook.org/">https://www.deeplearningbook.org/</a></p>
+<h3 id="end-of-module-checkpoint">End-of-module checkpoint</h3>
+<ul>
+<li>Explain the system end to end from first principles.</li>
+<li>Run or critically inspect its included lab; record actual results.</li>
+<li>Submit one diagram, one failure analysis, and a reproducible README.</li>
+<li>Answer five interview questions without assistance.</li>
+</ul>
+<h2 id="module-2-pytorch-tensorflow">Module 2: PyTorch &amp; TensorFlow</h2>
+<h3 id="conceptual-workflow-1">Conceptual workflow</h3>
+<pre><code class="language-mermaid">flowchart TD
+  A[Dataset] --&gt; B[DataLoader]
+  B --&gt; C[Model forward]
+  C --&gt; D[Loss function]
+  D --&gt; E[Autograd backward]
+  E --&gt; F[Optimizer step]
+  F --&gt; G[Evaluation]
+</code></pre>
+<p><strong>Official/primary learning reference:</strong> <a href="https://docs.pytorch.org/tutorials/beginner/basics/intro.html">https://docs.pytorch.org/tutorials/beginner/basics/intro.html</a></p>
+<h3 id="ai-day-01-tensors-and-cpu-operations">AI Day 01 — Tensors and CPU operations</h3>
+<p><strong>Module:</strong> PyTorch &amp; TensorFlow | <strong>Level:</strong> Foundation</p>
+<p><strong>Learning outcomes:</strong> dtype, device, broadcasting, views, tensor dimensions.</p>
+<p><strong>Core explanation:</strong> Tensor rank and dtype drive model correctness; broadcasting adds axes according to alignment rules.</p>
+<p><strong>Practice (Debian/8GB):</strong> Create tensors of shapes (4,3) and (3,), broadcast an addition and print each shape.</p>
+<p><strong>Validation / evidence required:</strong> Verify results and demonstrate one incompatible shape failure.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/02_torch_xor.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://docs.pytorch.org/tutorials/beginner/basics/intro.html">https://docs.pytorch.org/tutorials/beginner/basics/intro.html</a></p>
+<h3 id="ai-day-02-autograd-and-computation-graphs">AI Day 02 — Autograd and computation graphs</h3>
+<p><strong>Module:</strong> PyTorch &amp; TensorFlow | <strong>Level:</strong> Foundation</p>
+<p><strong>Learning outcomes:</strong> requires_grad, backward(), gradients and no_grad.</p>
+<p><strong>Core explanation:</strong> Autograd records differentiable operations and applies the chain rule to compute parameter gradients.</p>
+<p><strong>Practice (Debian/8GB):</strong> Differentiate f(x)=x<em>x+3</em>x at x=2 using torch.autograd; compare derivative 7.</p>
+<p><strong>Validation / evidence required:</strong> Assert abs(gradient-7) &lt; 1e-6.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/02_torch_xor.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://docs.pytorch.org/tutorials/beginner/basics/intro.html">https://docs.pytorch.org/tutorials/beginner/basics/intro.html</a></p>
+<h3 id="ai-day-03-nn-module-and-optimizers">AI Day 03 — nn.Module and optimizers</h3>
+<p><strong>Module:</strong> PyTorch &amp; TensorFlow | <strong>Level:</strong> Foundation</p>
+<p><strong>Learning outcomes:</strong> parameters, forward(), zero_grad(), SGD and Adam.</p>
+<p><strong>Core explanation:</strong> nn.Module organizes parameters; every iteration resets gradients, computes loss, backpropagates and updates.</p>
+<p><strong>Practice (Debian/8GB):</strong> Run labs/02_torch_xor.py and change hidden width or optimizer learning rate.</p>
+<p><strong>Validation / evidence required:</strong> XOR predictions improve; compare train versus test carefully.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/02_torch_xor.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://docs.pytorch.org/tutorials/beginner/basics/intro.html">https://docs.pytorch.org/tutorials/beginner/basics/intro.html</a></p>
+<h3 id="ai-day-04-dataset-and-dataloader">AI Day 04 — Dataset and DataLoader</h3>
+<p><strong>Module:</strong> PyTorch &amp; TensorFlow | <strong>Level:</strong> Intermediate</p>
+<p><strong>Learning outcomes:</strong> batching, shuffling, datasets, transforms.</p>
+<p><strong>Core explanation:</strong> Training uses batch iteration; shuffling reduces order artifacts while evaluation should be deterministic.</p>
+<p><strong>Practice (Debian/8GB):</strong> Create a TensorDataset of 20 rows, iterate batches of size 4 and count observations.</p>
+<p><strong>Validation / evidence required:</strong> Check all 20 samples visited per epoch.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/02_torch_xor.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://docs.pytorch.org/tutorials/beginner/basics/intro.html">https://docs.pytorch.org/tutorials/beginner/basics/intro.html</a></p>
+<h3 id="ai-day-05-tensorflow-and-keras-foundations">AI Day 05 — TensorFlow and Keras foundations</h3>
+<p><strong>Module:</strong> PyTorch &amp; TensorFlow | <strong>Level:</strong> Intermediate</p>
+<p><strong>Learning outcomes:</strong> tf.Tensor, Sequential, compile, fit, evaluate.</p>
+<p><strong>Core explanation:</strong> Keras provides model construction and training loops; architecture ideas transfer between frameworks.</p>
+<p><strong>Practice (Debian/8GB):</strong> Use optional labs/03_tensorflow_xor.py to train a tiny dense network.</p>
+<p><strong>Validation / evidence required:</strong> Evaluate XOR in TensorFlow if installed; otherwise compare APIs from code.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/02_torch_xor.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://docs.pytorch.org/tutorials/beginner/basics/intro.html">https://docs.pytorch.org/tutorials/beginner/basics/intro.html</a></p>
+<h3 id="ai-day-06-metrics-and-model-persistence">AI Day 06 — Metrics and model persistence</h3>
+<p><strong>Module:</strong> PyTorch &amp; TensorFlow | <strong>Level:</strong> Intermediate</p>
+<p><strong>Learning outcomes:</strong> precision, recall, F1, state_dict, formats and safe loading.</p>
+<p><strong>Core explanation:</strong> A useful evaluation separates metrics from training and records preprocessing, code revision and model configuration.</p>
+<p><strong>Practice (Debian/8GB):</strong> Save PyTorch state_dict and load into the same explicitly defined architecture.</p>
+<p><strong>Validation / evidence required:</strong> Predictions before and after reload should match within tolerance.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/02_torch_xor.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://docs.pytorch.org/tutorials/beginner/basics/intro.html">https://docs.pytorch.org/tutorials/beginner/basics/intro.html</a></p>
+<h3 id="ai-day-07-reproducibility-and-performance">AI Day 07 — Reproducibility and performance</h3>
+<p><strong>Module:</strong> PyTorch &amp; TensorFlow | <strong>Level:</strong> Advanced</p>
+<p><strong>Learning outcomes:</strong> seeds, deterministic settings, profiling, mixed precision concepts.</p>
+<p><strong>Core explanation:</strong> A fixed seed helps repeatability but cannot guarantee bitwise determinism across all devices and versions.</p>
+<p><strong>Practice (Debian/8GB):</strong> Measure elapsed CPU time for 10 versus 100 training steps with a fixed seed.</p>
+<p><strong>Validation / evidence required:</strong> Report environment, dataset size and timing units.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/02_torch_xor.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://docs.pytorch.org/tutorials/beginner/basics/intro.html">https://docs.pytorch.org/tutorials/beginner/basics/intro.html</a></p>
+<h3 id="ai-day-08-framework-comparison-capstone">AI Day 08 — Framework comparison capstone</h3>
+<p><strong>Module:</strong> PyTorch &amp; TensorFlow | <strong>Level:</strong> Advanced</p>
+<p><strong>Learning outcomes:</strong> pytorch versus tensorflow, tooling, export and deployment.</p>
+<p><strong>Core explanation:</strong> Select a framework based on ecosystem, team needs and deployment constraints, not popularity alone.</p>
+<p><strong>Practice (Debian/8GB):</strong> Compare two XOR implementations on parameter count, clarity, CPU time and output.</p>
+<p><strong>Validation / evidence required:</strong> Write a reproducible comparison sheet with versions and limitations.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/02_torch_xor.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://docs.pytorch.org/tutorials/beginner/basics/intro.html">https://docs.pytorch.org/tutorials/beginner/basics/intro.html</a></p>
+<h3 id="end-of-module-checkpoint-1">End-of-module checkpoint</h3>
+<ul>
+<li>Explain the system end to end from first principles.</li>
+<li>Run or critically inspect its included lab; record actual results.</li>
+<li>Submit one diagram, one failure analysis, and a reproducible README.</li>
+<li>Answer five interview questions without assistance.</li>
+</ul>
+<h2 id="module-3-transformers-attention-llms">Module 3: Transformers, Attention &amp; LLMs</h2>
+<h3 id="conceptual-workflow-2">Conceptual workflow</h3>
+<pre><code class="language-mermaid">flowchart TD
+  A[Token IDs] --&gt; B[Embeddings and positions]
+  B --&gt; C[Q K V projections]
+  C --&gt; D[Scaled dot-product attention]
+  D --&gt; E[Feedforward blocks]
+  E --&gt; F[Output logits]
+  F --&gt; G[Decoding]
+</code></pre>
+<p><strong>Official/primary learning reference:</strong> <a href="https://huggingface.co/docs/transformers/quicktour">https://huggingface.co/docs/transformers/quicktour</a></p>
+<h3 id="ai-day-01-tokenization-and-embeddings">AI Day 01 — Tokenization and embeddings</h3>
+<p><strong>Module:</strong> Transformers, Attention &amp; LLMs | <strong>Level:</strong> Foundation</p>
+<p><strong>Learning outcomes:</strong> subword tokens, vocabulary, token IDs, embedding matrix.</p>
+<p><strong>Core explanation:</strong> A tokenizer converts text to discrete IDs; learned embeddings map IDs to dense vectors. Token count differs from word count.</p>
+<p><strong>Practice (Debian/8GB):</strong> Manually tokenize a five-word sentence using a toy vocabulary with an UNK token.</p>
+<p><strong>Validation / evidence required:</strong> Test unknown words, empty input and repeated tokens.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/04_attention_numpy.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://huggingface.co/docs/transformers/quicktour">https://huggingface.co/docs/transformers/quicktour</a></p>
+<h3 id="ai-day-02-attention-from-scratch">AI Day 02 — Attention from scratch</h3>
+<p><strong>Module:</strong> Transformers, Attention &amp; LLMs | <strong>Level:</strong> Foundation</p>
+<p><strong>Learning outcomes:</strong> query, key, value, scaled dot product, softmax.</p>
+<p><strong>Core explanation:</strong> Attention(Q,K,V) = softmax(QK^T / sqrt(d_k))V; scores weight relevant value vectors.</p>
+<p><strong>Practice (Debian/8GB):</strong> Run labs/04_attention_numpy.py on a three-token example; inspect attention row sums.</p>
+<p><strong>Validation / evidence required:</strong> Each row of attention probabilities sums to 1 within tolerance.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/04_attention_numpy.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://huggingface.co/docs/transformers/quicktour">https://huggingface.co/docs/transformers/quicktour</a></p>
+<h3 id="ai-day-03-multi-head-attention-and-positions">AI Day 03 — Multi-head attention and positions</h3>
+<p><strong>Module:</strong> Transformers, Attention &amp; LLMs | <strong>Level:</strong> Foundation</p>
+<p><strong>Learning outcomes:</strong> heads, projection dimensions, positional encodings.</p>
+<p><strong>Core explanation:</strong> Multiple attention heads learn different feature subspaces; positions provide ordering signals not inherent in bag-of-token attention.</p>
+<p><strong>Practice (Debian/8GB):</strong> Draw a 4-head attention block where d_model=32; compute d_head.</p>
+<p><strong>Validation / evidence required:</strong> Assert 4*8=32 and shapes are consistent.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/04_attention_numpy.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://huggingface.co/docs/transformers/quicktour">https://huggingface.co/docs/transformers/quicktour</a></p>
+<h3 id="ai-day-04-transformer-blocks">AI Day 04 — Transformer blocks</h3>
+<p><strong>Module:</strong> Transformers, Attention &amp; LLMs | <strong>Level:</strong> Intermediate</p>
+<p><strong>Learning outcomes:</strong> layer norm, residuals, feed-forward network, causal mask.</p>
+<p><strong>Core explanation:</strong> Residual paths and normalization stabilize stacked blocks; causal masks prevent future-token access in autoregressive decoding.</p>
+<p><strong>Practice (Debian/8GB):</strong> Write pseudocode for pre-norm transformer block and a 4x4 causal mask.</p>
+<p><strong>Validation / evidence required:</strong> All future-token score entries must be masked.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/04_attention_numpy.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://huggingface.co/docs/transformers/quicktour">https://huggingface.co/docs/transformers/quicktour</a></p>
+<h3 id="ai-day-05-encoder-decoder-and-llm-families">AI Day 05 — Encoder, decoder and LLM families</h3>
+<p><strong>Module:</strong> Transformers, Attention &amp; LLMs | <strong>Level:</strong> Intermediate</p>
+<p><strong>Learning outcomes:</strong> bidirectional encoding, autoregression, encoder-decoder attention.</p>
+<p><strong>Core explanation:</strong> Encoders are useful for understanding tasks; decoders predict future tokens; encoder-decoder models transform sequences.</p>
+<p><strong>Practice (Debian/8GB):</strong> Match classification, chat generation, and translation to architecture patterns.</p>
+<p><strong>Validation / evidence required:</strong> Explain why training and inference masking differ.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/04_attention_numpy.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://huggingface.co/docs/transformers/quicktour">https://huggingface.co/docs/transformers/quicktour</a></p>
+<h3 id="ai-day-06-language-model-training-and-loss">AI Day 06 — Language-model training and loss</h3>
+<p><strong>Module:</strong> Transformers, Attention &amp; LLMs | <strong>Level:</strong> Intermediate</p>
+<p><strong>Learning outcomes:</strong> next-token objective, teacher forcing, cross entropy and perplexity.</p>
+<p><strong>Core explanation:</strong> A decoder predicts next tokens using previous context; training computes cross-entropy over valid target positions.</p>
+<p><strong>Practice (Debian/8GB):</strong> Calculate a tiny two-token cross entropy using supplied probabilities.</p>
+<p><strong>Validation / evidence required:</strong> Check that increasing true-token probability decreases loss.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/04_attention_numpy.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://huggingface.co/docs/transformers/quicktour">https://huggingface.co/docs/transformers/quicktour</a></p>
+<h3 id="ai-day-07-inference-optimization-and-limits">AI Day 07 — Inference optimization and limits</h3>
+<p><strong>Module:</strong> Transformers, Attention &amp; LLMs | <strong>Level:</strong> Advanced</p>
+<p><strong>Learning outcomes:</strong> temperature, top-p, KV cache, context, quantization.</p>
+<p><strong>Core explanation:</strong> Sampling alters output distribution, not factual reliability; KV caching avoids recomputing past attention projections during autoregressive inference.</p>
+<p><strong>Practice (Debian/8GB):</strong> Diagram a 4-step decoding loop with and without a KV cache.</p>
+<p><strong>Validation / evidence required:</strong> Estimate relative memory and latency tradeoffs qualitatively.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/04_attention_numpy.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://huggingface.co/docs/transformers/quicktour">https://huggingface.co/docs/transformers/quicktour</a></p>
+<h3 id="ai-day-08-llm-architecture-capstone">AI Day 08 — LLM architecture capstone</h3>
+<p><strong>Module:</strong> Transformers, Attention &amp; LLMs | <strong>Level:</strong> Advanced</p>
+<p><strong>Learning outcomes:</strong> evaluation, hallucination, safety, memory budgets and benchmarking.</p>
+<p><strong>Core explanation:</strong> A trustworthy system reports task-specific accuracy, latency, memory, cost, prompt version and abstentions on unknown questions.</p>
+<p><strong>Practice (Debian/8GB):</strong> Design a local 3B-model evaluation suite with 20 verified questions and a refusal test.</p>
+<p><strong>Validation / evidence required:</strong> Separate model-generated answers from externally verified ground truth.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/04_attention_numpy.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://huggingface.co/docs/transformers/quicktour">https://huggingface.co/docs/transformers/quicktour</a></p>
+<h3 id="end-of-module-checkpoint-2">End-of-module checkpoint</h3>
+<ul>
+<li>Explain the system end to end from first principles.</li>
+<li>Run or critically inspect its included lab; record actual results.</li>
+<li>Submit one diagram, one failure analysis, and a reproducible README.</li>
+<li>Answer five interview questions without assistance.</li>
+</ul>
+<h2 id="module-4-hugging-face-fine-tuning">Module 4: Hugging Face &amp; Fine-tuning</h2>
+<h3 id="conceptual-workflow-3">Conceptual workflow</h3>
+<pre><code class="language-mermaid">flowchart TD
+  A[Approved dataset] --&gt; B[Clean and split]
+  B --&gt; C[Tokenizer]
+  C --&gt; D[Base model]
+  D --&gt; E[LoRA adapters]
+  E --&gt; F[Evaluation]
+  F --&gt; G[Versioned release]
+</code></pre>
+<p><strong>Official/primary learning reference:</strong> <a href="https://huggingface.co/docs/transformers/quicktour">https://huggingface.co/docs/transformers/quicktour</a></p>
+<h3 id="ai-day-01-hugging-face-ecosystem">AI Day 01 — Hugging Face ecosystem</h3>
+<p><strong>Module:</strong> Hugging Face &amp; Fine-tuning | <strong>Level:</strong> Foundation</p>
+<p><strong>Learning outcomes:</strong> Hub, model cards, datasets, revisions, local caches.</p>
+<p><strong>Core explanation:</strong> Models and datasets include licenses, revisions and provenance; a model card describes intended use and limitations.</p>
+<p><strong>Practice (Debian/8GB):</strong> Evaluate license, trust and model size before selecting a tiny text classifier.</p>
+<p><strong>Validation / evidence required:</strong> Document license, revision ID and required RAM.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/05_hf_inference_optional.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://huggingface.co/docs/transformers/quicktour">https://huggingface.co/docs/transformers/quicktour</a></p>
+<h3 id="ai-day-02-pipelines-and-auto-classes">AI Day 02 — Pipelines and Auto classes</h3>
+<p><strong>Module:</strong> Hugging Face &amp; Fine-tuning | <strong>Level:</strong> Foundation</p>
+<p><strong>Learning outcomes:</strong> pipeline(), AutoTokenizer, AutoModel, inference.</p>
+<p><strong>Core explanation:</strong> Pipelines wrap preprocessing, model inference and postprocessing; Auto classes map checkpoint metadata to classes.</p>
+<p><strong>Practice (Debian/8GB):</strong> Inspect labs/05_hf_inference_optional.py; run only after explicitly approving a model download.</p>
+<p><strong>Validation / evidence required:</strong> Log the exact revision and avoid claiming any inference without local weights.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/05_hf_inference_optional.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://huggingface.co/docs/transformers/quicktour">https://huggingface.co/docs/transformers/quicktour</a></p>
+<h3 id="ai-day-03-dataset-preparation-and-splits">AI Day 03 — Dataset preparation and splits</h3>
+<p><strong>Module:</strong> Hugging Face &amp; Fine-tuning | <strong>Level:</strong> Foundation</p>
+<p><strong>Learning outcomes:</strong> deduplication, data contracts, tokenization, collators.</p>
+<p><strong>Core explanation:</strong> Cleaning and consistent preprocessing matter as much as the architecture; duplicates across splits inflate scores.</p>
+<p><strong>Practice (Debian/8GB):</strong> Make a 12-row synthetic classification dataset with 8/2/2 train/validation/test split.</p>
+<p><strong>Validation / evidence required:</strong> Verify no duplicate hash appears across partitions.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/05_hf_inference_optional.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://huggingface.co/docs/transformers/quicktour">https://huggingface.co/docs/transformers/quicktour</a></p>
+<h3 id="ai-day-04-trainer-and-fine-tuning-loops">AI Day 04 — Trainer and fine-tuning loops</h3>
+<p><strong>Module:</strong> Hugging Face &amp; Fine-tuning | <strong>Level:</strong> Intermediate</p>
+<p><strong>Learning outcomes:</strong> training arguments, optimizer schedules, evaluation strategy.</p>
+<p><strong>Core explanation:</strong> Fine-tuning updates selected model weights on task data, unlike inference-only prompting or retrieval.</p>
+<p><strong>Practice (Debian/8GB):</strong> Create a training plan for a tiny classifier and specify batch size, steps and baseline.</p>
+<p><strong>Validation / evidence required:</strong> List exactly which metrics must be compared to pretrained baseline.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/05_hf_inference_optional.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://huggingface.co/docs/transformers/quicktour">https://huggingface.co/docs/transformers/quicktour</a></p>
+<h3 id="ai-day-05-lora-peft-and-qlora">AI Day 05 — LoRA, PEFT and QLoRA</h3>
+<p><strong>Module:</strong> Hugging Face &amp; Fine-tuning | <strong>Level:</strong> Intermediate</p>
+<p><strong>Learning outcomes:</strong> low-rank adapters, rank r, frozen base weights, memory.</p>
+<p><strong>Core explanation:</strong> LoRA learns low-rank update matrices while usually keeping base model weights frozen; QLoRA combines adapters with low-bit base weights.</p>
+<p><strong>Practice (Debian/8GB):</strong> Compute trainable parameters for rank r=4 update of a 64x64 weight matrix.</p>
+<p><strong>Validation / evidence required:</strong> Compare 2<em>64</em>4 versus 64*64 parameters (ignoring bias).</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/05_hf_inference_optional.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://huggingface.co/docs/transformers/quicktour">https://huggingface.co/docs/transformers/quicktour</a></p>
+<h3 id="ai-day-06-compute-and-memory-planning">AI Day 06 — Compute and memory planning</h3>
+<p><strong>Module:</strong> Hugging Face &amp; Fine-tuning | <strong>Level:</strong> Intermediate</p>
+<p><strong>Learning outcomes:</strong> optimizer states, sequence length, batch size, CPU limits.</p>
+<p><strong>Core explanation:</strong> A model that fits for inference may not fit for training because gradients and optimizer states consume memory.</p>
+<p><strong>Practice (Debian/8GB):</strong> Prepare memory budget for 8GB laptop; choose toy adapter demo or theory-only study.</p>
+<p><strong>Validation / evidence required:</strong> Reject any plan that silently assumes a powerful GPU.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/05_hf_inference_optional.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://huggingface.co/docs/transformers/quicktour">https://huggingface.co/docs/transformers/quicktour</a></p>
+<h3 id="ai-day-07-evaluation-and-responsible-releases">AI Day 07 — Evaluation and responsible releases</h3>
+<p><strong>Module:</strong> Hugging Face &amp; Fine-tuning | <strong>Level:</strong> Advanced</p>
+<p><strong>Learning outcomes:</strong> overfitting, leakage, bias, license compatibility, red-teaming.</p>
+<p><strong>Core explanation:</strong> Report per-class metrics, data lineage and known failure modes; never ship checkpoint files without checking licensing.</p>
+<p><strong>Practice (Debian/8GB):</strong> Draft a model card with dataset sources, evaluation, restrictions and rollback.</p>
+<p><strong>Validation / evidence required:</strong> Identify one domain shift and one leakage failure scenario.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/05_hf_inference_optional.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://huggingface.co/docs/transformers/quicktour">https://huggingface.co/docs/transformers/quicktour</a></p>
+<h3 id="ai-day-08-fine-tuning-project-blueprint">AI Day 08 — Fine-tuning project blueprint</h3>
+<p><strong>Module:</strong> Hugging Face &amp; Fine-tuning | <strong>Level:</strong> Advanced</p>
+<p><strong>Learning outcomes:</strong> dataset curation, PEFT settings, repeatability and release gates.</p>
+<p><strong>Core explanation:</strong> Production fine-tuning is a controlled experiment involving evidence, compute, versioning and a revert plan.</p>
+<p><strong>Practice (Debian/8GB):</strong> Design a helpdesk classifier adaptation with 200 consented labels and baseline comparison.</p>
+<p><strong>Validation / evidence required:</strong> Produce train/validation/test protocol and a reject-if-no-improvement rule.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/05_hf_inference_optional.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://huggingface.co/docs/transformers/quicktour">https://huggingface.co/docs/transformers/quicktour</a></p>
+<h3 id="end-of-module-checkpoint-3">End-of-module checkpoint</h3>
+<ul>
+<li>Explain the system end to end from first principles.</li>
+<li>Run or critically inspect its included lab; record actual results.</li>
+<li>Submit one diagram, one failure analysis, and a reproducible README.</li>
+<li>Answer five interview questions without assistance.</li>
+</ul>
+<h2 id="module-5-rag-vector-databases">Module 5: RAG &amp; Vector Databases</h2>
+<h3 id="conceptual-workflow-4">Conceptual workflow</h3>
+<pre><code class="language-mermaid">flowchart TD
+  A[Documents] --&gt; B[Clean and chunk]
+  B --&gt; C[Embed/index]
+  D[User query] --&gt; E[Retrieve]
+  C --&gt; E
+  E --&gt; F[Context with citations]
+  F --&gt; G[LLM answer or abstain]
+</code></pre>
+<p><strong>Official/primary learning reference:</strong> <a href="https://docs.langchain.com/oss/python/langchain/overview">https://docs.langchain.com/oss/python/langchain/overview</a></p>
+<h3 id="ai-day-01-rag-fundamentals">AI Day 01 — RAG fundamentals</h3>
+<p><strong>Module:</strong> RAG &amp; Vector Databases | <strong>Level:</strong> Foundation</p>
+<p><strong>Learning outcomes:</strong> retrieval versus generation, knowledge freshness, grounding.</p>
+<p><strong>Core explanation:</strong> RAG fetches relevant source passages at query time; it does not train base model weights.</p>
+<p><strong>Practice (Debian/8GB):</strong> Draw the retrieval-to-answer pipeline with an explicit no-evidence abstention.</p>
+<p><strong>Validation / evidence required:</strong> Citations must point to actual retrieved passages.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/06_local_rag.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://docs.langchain.com/oss/python/langchain/overview">https://docs.langchain.com/oss/python/langchain/overview</a></p>
+<h3 id="ai-day-02-text-cleaning-and-chunking">AI Day 02 — Text cleaning and chunking</h3>
+<p><strong>Module:</strong> RAG &amp; Vector Databases | <strong>Level:</strong> Foundation</p>
+<p><strong>Learning outcomes:</strong> source IDs, overlap, document metadata, chunk size.</p>
+<p><strong>Core explanation:</strong> Chunking balances semantic coherence and context limits; metadata links a chunk back to its source.</p>
+<p><strong>Practice (Debian/8GB):</strong> Split three short study notes into labelled chunks without separating code blocks.</p>
+<p><strong>Validation / evidence required:</strong> Rebuild exact source references from chunk IDs.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/06_local_rag.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://docs.langchain.com/oss/python/langchain/overview">https://docs.langchain.com/oss/python/langchain/overview</a></p>
+<h3 id="ai-day-03-embeddings-and-similarity">AI Day 03 — Embeddings and similarity</h3>
+<p><strong>Module:</strong> RAG &amp; Vector Databases | <strong>Level:</strong> Foundation</p>
+<p><strong>Learning outcomes:</strong> dense embeddings, cosine similarity, normalization, TF-IDF baseline.</p>
+<p><strong>Core explanation:</strong> Cosine similarity measures vector direction; embedding relevance is not proof of factual correctness.</p>
+<p><strong>Practice (Debian/8GB):</strong> Run labs/06_local_rag.py to compare a small TF-IDF-based retrieval baseline.</p>
+<p><strong>Validation / evidence required:</strong> Retrieve a relevant source for a known question; abstain on an absent fact.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/06_local_rag.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://docs.langchain.com/oss/python/langchain/overview">https://docs.langchain.com/oss/python/langchain/overview</a></p>
+<h3 id="ai-day-04-vector-storage-and-indexing">AI Day 04 — Vector storage and indexing</h3>
+<p><strong>Module:</strong> RAG &amp; Vector Databases | <strong>Level:</strong> Intermediate</p>
+<p><strong>Learning outcomes:</strong> FAISS, Chroma, pgvector, Qdrant, ANN indexes.</p>
+<p><strong>Core explanation:</strong> Vector stores support nearest-neighbor retrieval and metadata filters; each index trades speed, recall and resource consumption.</p>
+<p><strong>Practice (Debian/8GB):</strong> Compare in-memory cosine search versus an ANN service using conceptual latency/recall tradeoffs.</p>
+<p><strong>Validation / evidence required:</strong> Design a filter that prevents access across document owners.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/06_local_rag.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://docs.langchain.com/oss/python/langchain/overview">https://docs.langchain.com/oss/python/langchain/overview</a></p>
+<h3 id="ai-day-05-hybrid-search-and-reranking">AI Day 05 — Hybrid search and reranking</h3>
+<p><strong>Module:</strong> RAG &amp; Vector Databases | <strong>Level:</strong> Intermediate</p>
+<p><strong>Learning outcomes:</strong> BM25, embeddings, reciprocal rank fusion, cross-encoder.</p>
+<p><strong>Core explanation:</strong> Lexical matches handle exact terms; semantic retrieval captures paraphrases; reranking can improve final context quality.</p>
+<p><strong>Practice (Debian/8GB):</strong> Propose hybrid ranking for an acronym-heavy Kubernetes runbook.</p>
+<p><strong>Validation / evidence required:</strong> Record recall@5 for both lexical and semantic baselines.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/06_local_rag.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://docs.langchain.com/oss/python/langchain/overview">https://docs.langchain.com/oss/python/langchain/overview</a></p>
+<h3 id="ai-day-06-grounded-generation-and-citations">AI Day 06 — Grounded generation and citations</h3>
+<p><strong>Module:</strong> RAG &amp; Vector Databases | <strong>Level:</strong> Intermediate</p>
+<p><strong>Learning outcomes:</strong> context windows, refusal, prompt injection, provenance.</p>
+<p><strong>Core explanation:</strong> Retrieved text is untrusted data; external documents must never override governing instructions or trigger tools.</p>
+<p><strong>Practice (Debian/8GB):</strong> Insert a malicious instruction into a synthetic document and write a safe handling policy.</p>
+<p><strong>Validation / evidence required:</strong> Agent must ignore embedded system-instruction claims.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/06_local_rag.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://docs.langchain.com/oss/python/langchain/overview">https://docs.langchain.com/oss/python/langchain/overview</a></p>
+<h3 id="ai-day-07-rag-evaluation-and-monitoring">AI Day 07 — RAG evaluation and monitoring</h3>
+<p><strong>Module:</strong> RAG &amp; Vector Databases | <strong>Level:</strong> Advanced</p>
+<p><strong>Learning outcomes:</strong> recall@k, MRR, faithfulness, answer relevance and latency.</p>
+<p><strong>Core explanation:</strong> Measure retrieval and answer quality separately using curated expected sources and fact-based checks.</p>
+<p><strong>Practice (Debian/8GB):</strong> Create 10 queries with gold passage IDs, plus 3 answer-not-present cases.</p>
+<p><strong>Validation / evidence required:</strong> Compute recall@3 and log abstention accuracy.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/06_local_rag.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://docs.langchain.com/oss/python/langchain/overview">https://docs.langchain.com/oss/python/langchain/overview</a></p>
+<h3 id="ai-day-08-rag-capstone-private-documentation-tutor">AI Day 08 — RAG capstone: private documentation tutor</h3>
+<p><strong>Module:</strong> RAG &amp; Vector Databases | <strong>Level:</strong> Advanced</p>
+<p><strong>Learning outcomes:</strong> ingestion, indexing, query API, citations, update policy.</p>
+<p><strong>Core explanation:</strong> A useful document tutor tracks access controls, document revisions and citations with no fabricated sources.</p>
+<p><strong>Practice (Debian/8GB):</strong> Design a private PDF-to-RAG deployment; implement retrieval before adding document parsers.</p>
+<p><strong>Validation / evidence required:</strong> Deliver threat model, deletion plan and data handling policy.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/06_local_rag.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://docs.langchain.com/oss/python/langchain/overview">https://docs.langchain.com/oss/python/langchain/overview</a></p>
+<h3 id="end-of-module-checkpoint-4">End-of-module checkpoint</h3>
+<ul>
+<li>Explain the system end to end from first principles.</li>
+<li>Run or critically inspect its included lab; record actual results.</li>
+<li>Submit one diagram, one failure analysis, and a reproducible README.</li>
+<li>Answer five interview questions without assistance.</li>
+</ul>
+<h2 id="module-6-langchain-langgraph">Module 6: LangChain &amp; LangGraph</h2>
+<h3 id="conceptual-workflow-5">Conceptual workflow</h3>
+<pre><code class="language-mermaid">flowchart TD
+  A[User query] --&gt; B[Classify intent]
+  B --&gt; C[Retrieve evidence]
+  C --&gt; D[Assess sufficiency]
+  D --&gt; E[Answer]
+  D --&gt; F[Abstain]
+  E --&gt; G[Human feedback]
+</code></pre>
+<p><strong>Official/primary learning reference:</strong> <a href="https://docs.langchain.com/oss/python/langgraph/overview">https://docs.langchain.com/oss/python/langgraph/overview</a></p>
+<h3 id="ai-day-01-runnable-pipelines-and-composition">AI Day 01 — Runnable pipelines and composition</h3>
+<p><strong>Module:</strong> LangChain &amp; LangGraph | <strong>Level:</strong> Foundation</p>
+<p><strong>Learning outcomes:</strong> prompts, models, parsers, runnables and observability.</p>
+<p><strong>Core explanation:</strong> LangChain composes input transformations, model calls and outputs; abstracting a call does not itself ensure correctness.</p>
+<p><strong>Practice (Debian/8GB):</strong> Diagram a prompt -&gt; model -&gt; validator pipeline and write unit-test stubs.</p>
+<p><strong>Validation / evidence required:</strong> Validator must reject missing required output fields.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/07_graph_fallback.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://docs.langchain.com/oss/python/langgraph/overview">https://docs.langchain.com/oss/python/langgraph/overview</a></p>
+<h3 id="ai-day-02-documents-retrievers-and-rag-chains">AI Day 02 — Documents, retrievers and RAG chains</h3>
+<p><strong>Module:</strong> LangChain &amp; LangGraph | <strong>Level:</strong> Foundation</p>
+<p><strong>Learning outcomes:</strong> document schema, metadata, retrieval adapters and citations.</p>
+<p><strong>Core explanation:</strong> A retrieval chain passes grounded context into answer generation; keep source IDs in the returned object.</p>
+<p><strong>Practice (Debian/8GB):</strong> Write a retrieval interface that returns text and source IDs for a fixed test corpus.</p>
+<p><strong>Validation / evidence required:</strong> Assert that an answer cannot cite a missing source.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/07_graph_fallback.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://docs.langchain.com/oss/python/langgraph/overview">https://docs.langchain.com/oss/python/langgraph/overview</a></p>
+<h3 id="ai-day-03-tool-calling-and-json-schemas">AI Day 03 — Tool calling and JSON schemas</h3>
+<p><strong>Module:</strong> LangChain &amp; LangGraph | <strong>Level:</strong> Foundation</p>
+<p><strong>Learning outcomes:</strong> structured arguments, parsing, tool errors, least privilege.</p>
+<p><strong>Core explanation:</strong> Models propose tool calls, but application code validates schemas, enforces permissions and executes only approved functions.</p>
+<p><strong>Practice (Debian/8GB):</strong> Define a read-only cluster_status tool and validate its arguments without connecting to a cluster.</p>
+<p><strong>Validation / evidence required:</strong> Reject unauthorized namespaces and malformed JSON.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/07_graph_fallback.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://docs.langchain.com/oss/python/langgraph/overview">https://docs.langchain.com/oss/python/langgraph/overview</a></p>
+<h3 id="ai-day-04-langgraph-stategraph-fundamentals">AI Day 04 — LangGraph StateGraph fundamentals</h3>
+<p><strong>Module:</strong> LangChain &amp; LangGraph | <strong>Level:</strong> Intermediate</p>
+<p><strong>Learning outcomes:</strong> nodes, edges, START/END and state updates.</p>
+<p><strong>Core explanation:</strong> A graph defines controlled state transitions; nodes should return explicit state updates and terminate deterministically.</p>
+<p><strong>Practice (Debian/8GB):</strong> Run dependency-free labs/07_graph_fallback.py; optionally port it to LangGraph.</p>
+<p><strong>Validation / evidence required:</strong> Verify expected decision route for known versus unknown topic.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/07_graph_fallback.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://docs.langchain.com/oss/python/langgraph/overview">https://docs.langchain.com/oss/python/langgraph/overview</a></p>
+<h3 id="ai-day-05-conditional-edges-and-retries">AI Day 05 — Conditional edges and retries</h3>
+<p><strong>Module:</strong> LangChain &amp; LangGraph | <strong>Level:</strong> Intermediate</p>
+<p><strong>Learning outcomes:</strong> routing, guards, idempotence and maximum steps.</p>
+<p><strong>Core explanation:</strong> Condition-based graph routing prevents unbounded loops; retries need budgets and duplicate-action protection.</p>
+<p><strong>Practice (Debian/8GB):</strong> Design a graph with retrieve, verify, answer, abstain and maximum two retries.</p>
+<p><strong>Validation / evidence required:</strong> Test empty retrieval and timeout branches.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/07_graph_fallback.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://docs.langchain.com/oss/python/langgraph/overview">https://docs.langchain.com/oss/python/langgraph/overview</a></p>
+<h3 id="ai-day-06-memory-persistence-and-human-approval">AI Day 06 — Memory, persistence and human approval</h3>
+<p><strong>Module:</strong> LangChain &amp; LangGraph | <strong>Level:</strong> Intermediate</p>
+<p><strong>Learning outcomes:</strong> checkpoints, conversation memory, state privacy and HITL.</p>
+<p><strong>Core explanation:</strong> Durable graph state helps resume workflows but can retain sensitive context and requires deletion and scope controls.</p>
+<p><strong>Practice (Debian/8GB):</strong> Add a human approval node before a hypothetical publish step.</p>
+<p><strong>Validation / evidence required:</strong> Confirm no write action occurs without explicit approval.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/07_graph_fallback.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://docs.langchain.com/oss/python/langgraph/overview">https://docs.langchain.com/oss/python/langgraph/overview</a></p>
+<h3 id="ai-day-07-testing-and-tracing-agent-graphs">AI Day 07 — Testing and tracing agent graphs</h3>
+<p><strong>Module:</strong> LangChain &amp; LangGraph | <strong>Level:</strong> Advanced</p>
+<p><strong>Learning outcomes:</strong> deterministic node tests, fixtures, trace spans and failures.</p>
+<p><strong>Core explanation:</strong> Test each node independent of the model and exercise full branching paths with fixed stubs.</p>
+<p><strong>Practice (Debian/8GB):</strong> Write table-driven cases for empty, good and malicious retrieved context.</p>
+<p><strong>Validation / evidence required:</strong> All branches must terminate with an auditable state.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/07_graph_fallback.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://docs.langchain.com/oss/python/langgraph/overview">https://docs.langchain.com/oss/python/langgraph/overview</a></p>
+<h3 id="ai-day-08-capstone-research-tutor-workflow">AI Day 08 — Capstone: research tutor workflow</h3>
+<p><strong>Module:</strong> LangChain &amp; LangGraph | <strong>Level:</strong> Advanced</p>
+<p><strong>Learning outcomes:</strong> retrieval, evidence assessment, teacher response and follow-up.</p>
+<p><strong>Core explanation:</strong> Separate research, generation and evaluation so answers can be checked before publication.</p>
+<p><strong>Practice (Debian/8GB):</strong> Blueprint a tutor with quiz mode, knowledge base and human-visible evidence trail.</p>
+<p><strong>Validation / evidence required:</strong> Present one failure trace and a safe retry rule.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/07_graph_fallback.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://docs.langchain.com/oss/python/langgraph/overview">https://docs.langchain.com/oss/python/langgraph/overview</a></p>
+<h3 id="end-of-module-checkpoint-5">End-of-module checkpoint</h3>
+<ul>
+<li>Explain the system end to end from first principles.</li>
+<li>Run or critically inspect its included lab; record actual results.</li>
+<li>Submit one diagram, one failure analysis, and a reproducible README.</li>
+<li>Answer five interview questions without assistance.</li>
+</ul>
+<h2 id="module-7-ai-agents-mcp-tool-calling">Module 7: AI Agents, MCP &amp; Tool Calling</h2>
+<h3 id="conceptual-workflow-6">Conceptual workflow</h3>
+<pre><code class="language-mermaid">flowchart TD
+  A[User request] --&gt; B[Agent planner]
+  B --&gt; C[Tool schema check]
+  C --&gt; D[Permission gate]
+  D --&gt; E[Execute allowed tool]
+  E --&gt; F[Verify result]
+  F --&gt; G[Report with evidence]
+</code></pre>
+<p><strong>Official/primary learning reference:</strong> <a href="https://modelcontextprotocol.io/docs/getting-started/intro">https://modelcontextprotocol.io/docs/getting-started/intro</a></p>
+<h3 id="ai-day-01-what-makes-an-agent">AI Day 01 — What makes an agent</h3>
+<p><strong>Module:</strong> AI Agents, MCP &amp; Tool Calling | <strong>Level:</strong> Foundation</p>
+<p><strong>Learning outcomes:</strong> goals, memory, planning, action, observation and stop rules.</p>
+<p><strong>Core explanation:</strong> A tool-using agent chooses bounded actions based on observations; a chat persona alone does not execute tools.</p>
+<p><strong>Practice (Debian/8GB):</strong> Design a read-only log analysis agent with explicit stop conditions.</p>
+<p><strong>Validation / evidence required:</strong> List every side effect and its permission requirement.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/08_tool_approval.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://modelcontextprotocol.io/docs/getting-started/intro">https://modelcontextprotocol.io/docs/getting-started/intro</a></p>
+<h3 id="ai-day-02-tool-schemas-and-function-calling">AI Day 02 — Tool schemas and function calling</h3>
+<p><strong>Module:</strong> AI Agents, MCP &amp; Tool Calling | <strong>Level:</strong> Foundation</p>
+<p><strong>Learning outcomes:</strong> JSON Schema arguments, type checking, tool results, timeouts.</p>
+<p><strong>Core explanation:</strong> Function calls are suggestions from a model; the host validates and invokes tools with scoped credentials.</p>
+<p><strong>Practice (Debian/8GB):</strong> Run labs/08_tool_approval.py and inspect whitelist validation for tool requests.</p>
+<p><strong>Validation / evidence required:</strong> Unauthorized tools must never execute.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/08_tool_approval.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://modelcontextprotocol.io/docs/getting-started/intro">https://modelcontextprotocol.io/docs/getting-started/intro</a></p>
+<h3 id="ai-day-03-mcp-architecture-and-transport">AI Day 03 — MCP architecture and transport</h3>
+<p><strong>Module:</strong> AI Agents, MCP &amp; Tool Calling | <strong>Level:</strong> Foundation</p>
+<p><strong>Learning outcomes:</strong> MCP client, host, server, tools, resources and prompts.</p>
+<p><strong>Core explanation:</strong> MCP standardizes discovery and invocation interfaces; it does not automatically grant permissions or safe execution.</p>
+<p><strong>Practice (Debian/8GB):</strong> Draw Host -&gt; Client -&gt; Server -&gt; Tool flow and identify trust boundaries.</p>
+<p><strong>Validation / evidence required:</strong> Explain difference between model instructions and server-returned data.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/08_tool_approval.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://modelcontextprotocol.io/docs/getting-started/intro">https://modelcontextprotocol.io/docs/getting-started/intro</a></p>
+<h3 id="ai-day-04-local-mcp-server-design">AI Day 04 — Local MCP server design</h3>
+<p><strong>Module:</strong> AI Agents, MCP &amp; Tool Calling | <strong>Level:</strong> Intermediate</p>
+<p><strong>Learning outcomes:</strong> FastMCP, stdio, tool descriptions and error contracts.</p>
+<p><strong>Core explanation:</strong> A local stdio server can expose carefully bounded tools; avoid combining arbitrary shell commands with model authority.</p>
+<p><strong>Practice (Debian/8GB):</strong> Read the optional labs/09_mcp_server_optional.py and add a pure arithmetic tool.</p>
+<p><strong>Validation / evidence required:</strong> Validate inputs and verify no external connections occur.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/08_tool_approval.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://modelcontextprotocol.io/docs/getting-started/intro">https://modelcontextprotocol.io/docs/getting-started/intro</a></p>
+<h3 id="ai-day-05-approval-gates-and-execution-logging">AI Day 05 — Approval gates and execution logging</h3>
+<p><strong>Module:</strong> AI Agents, MCP &amp; Tool Calling | <strong>Level:</strong> Intermediate</p>
+<p><strong>Learning outcomes:</strong> explicit consent, scoped duration, audit trail and dry-run.</p>
+<p><strong>Core explanation:</strong> All network, payments, contract, publishing, production and mutation actions require founder approval; default deny.</p>
+<p><strong>Practice (Debian/8GB):</strong> Design JSON audit entries including who, what, when, destination and result.</p>
+<p><strong>Validation / evidence required:</strong> Verify denied actions produce a refusal without side effects.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/08_tool_approval.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://modelcontextprotocol.io/docs/getting-started/intro">https://modelcontextprotocol.io/docs/getting-started/intro</a></p>
+<h3 id="ai-day-06-multi-agent-orchestration">AI Day 06 — Multi-agent orchestration</h3>
+<p><strong>Module:</strong> AI Agents, MCP &amp; Tool Calling | <strong>Level:</strong> Intermediate</p>
+<p><strong>Learning outcomes:</strong> delegation, context isolation, shared state and conflict resolution.</p>
+<p><strong>Core explanation:</strong> Delegation is useful only when roles and evidence responsibilities are clear; agent proliferation adds errors and overhead.</p>
+<p><strong>Practice (Debian/8GB):</strong> Sketch a Finch architect -&gt; ARTHA Mentor teacher -&gt; Supriya verifier -&gt; founder gate workflow.</p>
+<p><strong>Validation / evidence required:</strong> Ensure simulated agent outputs are labelled simulated.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/08_tool_approval.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://modelcontextprotocol.io/docs/getting-started/intro">https://modelcontextprotocol.io/docs/getting-started/intro</a></p>
+<h3 id="ai-day-07-agent-security-and-prompt-injection">AI Day 07 — Agent security and prompt injection</h3>
+<p><strong>Module:</strong> AI Agents, MCP &amp; Tool Calling | <strong>Level:</strong> Advanced</p>
+<p><strong>Learning outcomes:</strong> untrusted tool output, secret exfiltration, URL checks and sandboxing.</p>
+<p><strong>Core explanation:</strong> Documents, webpages and tool outputs can contain malicious instructions and must remain lower-trust than host policy.</p>
+<p><strong>Practice (Debian/8GB):</strong> Test a prompt injection asking a read-only agent to reveal secrets.</p>
+<p><strong>Validation / evidence required:</strong> Fail safely; keep token and key values out of logs.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/08_tool_approval.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://modelcontextprotocol.io/docs/getting-started/intro">https://modelcontextprotocol.io/docs/getting-started/intro</a></p>
+<h3 id="ai-day-08-capstone-founder-controlled-tool-tutor">AI Day 08 — Capstone: founder-controlled tool tutor</h3>
+<p><strong>Module:</strong> AI Agents, MCP &amp; Tool Calling | <strong>Level:</strong> Advanced</p>
+<p><strong>Learning outcomes:</strong> MCP adapter, tests, tools inventory and policy enforcement.</p>
+<p><strong>Core explanation:</strong> A working agent requires implemented adapters, validation tests, permissions, audit and failure recovery, not only persona prompts.</p>
+<p><strong>Practice (Debian/8GB):</strong> Build a design with mock cluster inspection and mock PDF search under a deny-by-default policy.</p>
+<p><strong>Validation / evidence required:</strong> Demonstrate denied unsafe actions and evidence-backed completed read-only actions.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/08_tool_approval.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://modelcontextprotocol.io/docs/getting-started/intro">https://modelcontextprotocol.io/docs/getting-started/intro</a></p>
+<h3 id="end-of-module-checkpoint-6">End-of-module checkpoint</h3>
+<ul>
+<li>Explain the system end to end from first principles.</li>
+<li>Run or critically inspect its included lab; record actual results.</li>
+<li>Submit one diagram, one failure analysis, and a reproducible README.</li>
+<li>Answer five interview questions without assistance.</li>
+</ul>
+<h2 id="module-8-mlops-model-deployment">Module 8: MLOps &amp; Model Deployment</h2>
+<h3 id="conceptual-workflow-7">Conceptual workflow</h3>
+<pre><code class="language-mermaid">flowchart TD
+  A[Versioned data] --&gt; B[Reproducible training]
+  B --&gt; C[Evaluation gate]
+  C --&gt; D[Model registry]
+  D --&gt; E[API deployment]
+  E --&gt; F[Latency quality drift]
+  F --&gt; G[Rollback decision]
+</code></pre>
+<p><strong>Official/primary learning reference:</strong> <a href="https://mlflow.org/docs/latest/ml/tracking/quickstart">https://mlflow.org/docs/latest/ml/tracking/quickstart</a></p>
+<h3 id="ai-day-01-ml-lifecycle-and-reproducibility">AI Day 01 — ML lifecycle and reproducibility</h3>
+<p><strong>Module:</strong> MLOps &amp; Model Deployment | <strong>Level:</strong> Foundation</p>
+<p><strong>Learning outcomes:</strong> datasets, code commits, environments, artifacts, lineage.</p>
+<p><strong>Core explanation:</strong> An ML lifecycle ties each model to the data, code, parameters and evaluation that created it.</p>
+<p><strong>Practice (Debian/8GB):</strong> Define an experiment manifest with dataset hash, seed, versions, metrics and artifacts.</p>
+<p><strong>Validation / evidence required:</strong> Recompute and match a SHA-256 hash of an unchanged local file.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/10_mlops_metrics.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://mlflow.org/docs/latest/ml/tracking/quickstart">https://mlflow.org/docs/latest/ml/tracking/quickstart</a></p>
+<h3 id="ai-day-02-mlflow-experiment-tracking">AI Day 02 — MLflow experiment tracking</h3>
+<p><strong>Module:</strong> MLOps &amp; Model Deployment | <strong>Level:</strong> Foundation</p>
+<p><strong>Learning outcomes:</strong> runs, parameters, metrics and artifacts.</p>
+<p><strong>Core explanation:</strong> MLflow Tracking stores experiment metadata and metrics; logging a run is different from running a production inference service.</p>
+<p><strong>Practice (Debian/8GB):</strong> Run labs/10_mlops_metrics.py then optionally implement equivalent MLflow logging.</p>
+<p><strong>Validation / evidence required:</strong> Check a local run includes timestamp, loss and model configuration.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/10_mlops_metrics.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://mlflow.org/docs/latest/ml/tracking/quickstart">https://mlflow.org/docs/latest/ml/tracking/quickstart</a></p>
+<h3 id="ai-day-03-data-versioning-and-pipelines">AI Day 03 — Data versioning and pipelines</h3>
+<p><strong>Module:</strong> MLOps &amp; Model Deployment | <strong>Level:</strong> Foundation</p>
+<p><strong>Learning outcomes:</strong> ETL, dataset contracts, feature drift and validation.</p>
+<p><strong>Core explanation:</strong> ML pipelines must check schema and data quality before training; silent schema changes can invalidate model performance.</p>
+<p><strong>Practice (Debian/8GB):</strong> Write a CSV schema validator rejecting missing required columns.</p>
+<p><strong>Validation / evidence required:</strong> A deliberately malformed row must fail validation.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/10_mlops_metrics.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://mlflow.org/docs/latest/ml/tracking/quickstart">https://mlflow.org/docs/latest/ml/tracking/quickstart</a></p>
+<h3 id="ai-day-04-fastapi-and-serving-contracts">AI Day 04 — FastAPI and serving contracts</h3>
+<p><strong>Module:</strong> MLOps &amp; Model Deployment | <strong>Level:</strong> Intermediate</p>
+<p><strong>Learning outcomes:</strong> /healthz, /predict, request validation, concurrency and errors.</p>
+<p><strong>Core explanation:</strong> An inference API validates inputs and separates readiness from business predictions; version responses and monitor latency.</p>
+<p><strong>Practice (Debian/8GB):</strong> Study optional labs/11_fastapi_infer_optional.py, then send valid and invalid JSON locally.</p>
+<p><strong>Validation / evidence required:</strong> Invalid payload returns a controlled 4xx, never a stack trace.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/10_mlops_metrics.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://mlflow.org/docs/latest/ml/tracking/quickstart">https://mlflow.org/docs/latest/ml/tracking/quickstart</a></p>
+<h3 id="ai-day-05-containers-kubernetes-and-model-deployment">AI Day 05 — Containers, Kubernetes and model deployment</h3>
+<p><strong>Module:</strong> MLOps &amp; Model Deployment | <strong>Level:</strong> Intermediate</p>
+<p><strong>Learning outcomes:</strong> Docker images, CPU limits, readiness probes, secrets and rollouts.</p>
+<p><strong>Core explanation:</strong> Model images should be reproducible, non-root and resource-bounded; scheduling requires accounting for model plus runtime memory.</p>
+<p><strong>Practice (Debian/8GB):</strong> Draft a Kubernetes Deployment with resources, probes and restricted permissions.</p>
+<p><strong>Validation / evidence required:</strong> Explain rollback if readiness checks fail.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/10_mlops_metrics.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://mlflow.org/docs/latest/ml/tracking/quickstart">https://mlflow.org/docs/latest/ml/tracking/quickstart</a></p>
+<h3 id="ai-day-06-monitoring-and-slos">AI Day 06 — Monitoring and SLOs</h3>
+<p><strong>Module:</strong> MLOps &amp; Model Deployment | <strong>Level:</strong> Intermediate</p>
+<p><strong>Learning outcomes:</strong> P95 latency, request failure rate, quality drift, observability.</p>
+<p><strong>Core explanation:</strong> Operations needs both service metrics and statistical model-quality checks; low latency alone does not prove useful predictions.</p>
+<p><strong>Practice (Debian/8GB):</strong> Compute p95 from 100 synthetic latencies and define a reliability SLO.</p>
+<p><strong>Validation / evidence required:</strong> Check metrics calculation independently with a test.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/10_mlops_metrics.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://mlflow.org/docs/latest/ml/tracking/quickstart">https://mlflow.org/docs/latest/ml/tracking/quickstart</a></p>
+<h3 id="ai-day-07-security-governance-and-cost">AI Day 07 — Security, governance and cost</h3>
+<p><strong>Module:</strong> MLOps &amp; Model Deployment | <strong>Level:</strong> Advanced</p>
+<p><strong>Learning outcomes:</strong> PII handling, audit, rate limits, prompt safety, cost budgets.</p>
+<p><strong>Core explanation:</strong> Protect model inputs and outputs, control network egress and external costs, and keep explicit approval gates for production changes.</p>
+<p><strong>Practice (Debian/8GB):</strong> Threat model a document-upload prediction endpoint with a privacy retention plan.</p>
+<p><strong>Validation / evidence required:</strong> List three abuse cases and matching mitigations.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/10_mlops_metrics.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://mlflow.org/docs/latest/ml/tracking/quickstart">https://mlflow.org/docs/latest/ml/tracking/quickstart</a></p>
+<h3 id="ai-day-08-capstone-release-and-rollback">AI Day 08 — Capstone: release and rollback</h3>
+<p><strong>Module:</strong> MLOps &amp; Model Deployment | <strong>Level:</strong> Advanced</p>
+<p><strong>Learning outcomes:</strong> CI test gates, canary, shadow traffic, rollback and incident response.</p>
+<p><strong>Core explanation:</strong> A model release is safe only when an evaluation gate, rollback trigger, monitoring and ownership are explicit.</p>
+<p><strong>Practice (Debian/8GB):</strong> Draft a release pipeline with pre-deploy evaluation, manual approval and an abort criterion.</p>
+<p><strong>Validation / evidence required:</strong> Prove failed quality gate cannot reach production.</p>
+<p><strong>Self-check:</strong> Explain the mechanism without reading, identify one failure condition, and show a test or calculation.</p>
+<p><strong>Related runnable lab:</strong> <code>labs/10_mlops_metrics.py</code> (see prerequisites; some are optional).</p>
+<p><strong>Mentor routine:</strong> Ask for a Hinglish explanation, a diagram, a local lab, a 5-question quiz, and interview Q&amp;A. Keep execution as a user-controlled step. Distinguish illustrative from verified output.</p>
+<p><strong>Reference documentation:</strong> <a href="https://mlflow.org/docs/latest/ml/tracking/quickstart">https://mlflow.org/docs/latest/ml/tracking/quickstart</a></p>
+<h3 id="end-of-module-checkpoint-7">End-of-module checkpoint</h3>
+<ul>
+<li>Explain the system end to end from first principles.</li>
+<li>Run or critically inspect its included lab; record actual results.</li>
+<li>Submit one diagram, one failure analysis, and a reproducible README.</li>
+<li>Answer five interview questions without assistance.</li>
+</ul>
+</article></main><footer>ARTHA Gurukul · Source material preserved as educational notes</footer></body></html>

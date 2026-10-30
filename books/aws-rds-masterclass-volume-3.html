@@ -1,0 +1,420 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AWS RDS Masterclass — Volume 3 | ARTHA Gurukul</title><link rel="stylesheet" href="../assets/style.css"></head><body><header class="top"><a class="brand" href="../index.html">✦ ARTHA GURUKUL</a><nav><a href="../index.html#courses">All Courses</a><a href="index.html">Source Library</a></nav></header><main class="book-layout"><aside class="book-toc"><div class="eyebrow">Original material · offline copy</div><h2>AWS RDS Masterclass — Volume 3</h2><a href="../index.html">⌂ Course library</a><div class="toc"><a href="#aws-rds-masterclass-volume-3">AWS RDS Masterclass — Volume 3</a><a href="#secure-networking-identity-encryption-proxies-auditing-and-production-defense">Secure Networking, Identity, Encryption, Proxies, Auditing, and Production Defense</a><a href="#table-of-contents">Table of contents</a><a href="#conventions-and-prerequisites">Conventions and prerequisites</a><a href="#chapter-16-vpc-fundamentals-and-packet-paths">Chapter 16 — VPC fundamentals and packet paths</a><a href="#chapter-17-private-rds-access-and-network-security">Chapter 17 — Private RDS access and network security</a><a href="#chapter-18-tls-iam-db-authentication-and-credentials">Chapter 18 — TLS, IAM DB authentication, and credentials</a><a href="#chapter-19-secrets-manager-kms-and-rotation">Chapter 19 — Secrets Manager, KMS, and rotation</a><a href="#chapter-20-rds-proxy-and-connection-management">Chapter 20 — RDS Proxy and connection management</a><a href="#chapter-21-auditing-hardening-and-incident-response">Chapter 21 — Auditing, hardening, and incident response</a><a href="#terraform-private-rds-lab">Terraform private RDS lab</a><a href="#production-troubleshooting-runbooks">Production troubleshooting runbooks</a><a href="#senior-software-engineer-interview-bank">Senior software engineer interview bank</a><a href="#glossary-index-and-references">Glossary, index, and references</a></div></aside><article class="book-prose"><p class="source-note">Historical course notes converted into searchable offline HTML. Some content may be a draft; exercises requiring cloud accounts need credentials and may incur costs.</p><h1 id="aws-rds-masterclass-volume-3">AWS RDS Masterclass — Volume 3</h1>
+<h2 id="secure-networking-identity-encryption-proxies-auditing-and-production-defense">Secure Networking, Identity, Encryption, Proxies, Auditing, and Production Defense</h2>
+<p><strong>Edition:</strong> October 2026 | <strong>Level:</strong> Beginner refresher → Senior Software Engineer / Cloud Architect | <strong>Reference engine:</strong> Amazon RDS for PostgreSQL | <strong>Chapters:</strong> 16–21</p>
+<blockquote>
+<p><strong>Important:</strong> Commands and outputs are instructional and have <strong>not</strong> been executed in your AWS account. AWS pricing, API defaults, regional availability, IAM behavior, engine support and certificate rotation may change. Confirm the current <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html">AWS RDS documentation</a> before deployment. The labs can incur charges; remove resources at the end. Keep databases private. Never copy credentials into Git or terminal history.</p>
+</blockquote>
+<h3 id="who-this-book-is-for">Who this book is for</h3>
+<p>Developers building FastAPI, Spring Boot or Node.js services on RDS; DevOps/SRE engineers owning networking and reliability; security engineers auditing database access; senior engineers defending designs in architecture reviews and interviews.</p>
+<h3 id="learning-outcomes">Learning outcomes</h3>
+<p>You will be able to explain and troubleshoot VPC reachability; design private RDS networks; distinguish transport TLS from at-rest encryption; apply IAM database authentication safely; rotate secrets; select and tune RDS Proxy; capture audit evidence; build least-privilege Terraform modules; and perform incident-response drills without publicly exposing a database.</p>
+<h2 id="table-of-contents">Table of contents</h2>
+<ol>
+<li><a href="#chapter-16--vpc-fundamentals-and-packet-paths">Chapter 16 — VPC fundamentals and packet paths</a></li>
+<li><a href="#chapter-17--private-rds-access-and-network-security">Chapter 17 — Private RDS access and network security</a></li>
+<li><a href="#chapter-18--tls-iam-db-authentication-and-credentials">Chapter 18 — TLS, IAM DB authentication, and credentials</a></li>
+<li><a href="#chapter-19--secrets-manager-kms-and-rotation">Chapter 19 — Secrets Manager, KMS, and rotation</a></li>
+<li><a href="#chapter-20--rds-proxy-and-connection-management">Chapter 20 — RDS Proxy and connection management</a></li>
+<li><a href="#chapter-21--auditing-hardening-and-incident-response">Chapter 21 — Auditing, hardening, and incident response</a></li>
+<li><a href="#integrated-capstone-and-acceptance-tests">Integrated capstone and acceptance tests</a></li>
+<li><a href="#production-troubleshooting-runbooks">Production troubleshooting runbooks</a></li>
+<li><a href="#senior-interview-bank">Senior interview bank</a></li>
+<li><a href="#glossary-index-and-references">Glossary, index, and references</a></li>
+</ol>
+<h2 id="conventions-and-prerequisites">Conventions and prerequisites</h2>
+<ul>
+<li><strong>Run location</strong> is specified for each lab: workstation, EC2 host in private VPC, or <code>psql</code> session.</li>
+<li>Examples use <code>us-east-1</code>, <code>10.40.0.0/16</code>, and placeholders like <code>&lt;DB_ID&gt;</code>; replace with your approved region and identifiers.</li>
+<li>IAM policies and security groups shown are templates; scope to specific resources and identities.</li>
+<li>For a private RDS endpoint, execute database tests from a permitted network path (private EC2, VPN, Direct Connect, or SSM port-forwarded tunnel).</li>
+<li>Use AWS CLI v2, Terraform 1.6+ (check provider compatibility), <code>jq</code>, <code>openssl</code>, <code>psql</code>, <code>dig</code>, <code>nc</code>, and Python 3.11+.</li>
+<li>Every output block marked <em>Example output</em> is representative, not verified against a live account.</li>
+<li>Use an AWS sandbox with budget alarms and permissions to create VPC, EC2, RDS, IAM, KMS, Secrets Manager, CloudWatch and related resources.</li>
+</ul>
+<h3 id="architectural-reference-private-three-tier-deployment">Architectural reference: private three-tier deployment</h3>
+<pre><code class="language-mermaid">flowchart TB
+    U[Client HTTPS] --&gt; ALB[Public ALB in public subnets]
+    ALB --&gt; APP[Private application nodes or ECS tasks]
+    APP --&gt;|TLS 5432| PX[RDS Proxy in VPC]
+    PX --&gt;|TLS 5432| DB[(Private RDS PostgreSQL)]
+    APP --&gt;|HTTPS via VPC endpoint or NAT| SM[Secrets Manager]
+    DB --&gt; CW[CloudWatch logs and metrics]
+    IAM[IAM roles and policies] -.authorize.-&gt; APP
+    KMS[KMS key] -.encrypt at rest.-&gt; DB
+    subgraph VPC[Amazon VPC across multiple AZs]
+      ALB
+      APP
+      PX
+      DB
+    end
+</code></pre>
+<p><strong>Trust boundaries:</strong> Internet traffic terminates at ALB; application nodes are not publicly reachable; RDS accepts only approved source security groups; secrets are retrieved through IAM-authorized API calls; TLS protects transport; KMS protects supported encrypted data at rest. <strong>TLS and KMS are not interchangeable.</strong></p>
+<h2 id="chapter-16-vpc-fundamentals-and-packet-paths">Chapter 16 — VPC fundamentals and packet paths</h2>
+<h3 id="16-1-mental-model-what-actually-happens-when-code-connects">16.1 Mental model: what actually happens when code connects</h3>
+<p>A PostgreSQL client resolves a DNS hostname to an IP address, selects a route from the source subnet, sends TCP SYN to port 5432, traverses security controls, negotiates TCP and PostgreSQL/TLS, authenticates, then issues SQL. A timeout usually means a path/filter problem; an immediate refusal means a listener/path issue; <code>password authentication failed</code> means the TCP path already worked.</p>
+<p><strong>VPC</strong> is an isolated logical IP network in an AWS Region. A <strong>subnet</strong> is a CIDR range in one Availability Zone. A <strong>route table</strong> chooses the next hop for destination prefixes. <strong>IGW</strong> is a gateway for public internet routing when instances also have appropriate public addressing. <strong>NAT gateway</strong> allows outbound connections from private IPv4 resources; it is not required for app→RDS traffic within the VPC. <strong>Security groups</strong> are stateful allow rules attached to ENIs; <strong>NACLs</strong> are stateless subnet-level allow/deny rules. A DB subnet group identifies subnets from which RDS can place database network interfaces; it is not itself a firewall.</p>
+<h3 id="16-2-packet-path-and-routing-decisions">16.2 Packet path and routing decisions</h3>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant App as App ENI 10.40.11.25
+    participant DNS as VPC Resolver
+    participant RDS as RDS ENI 10.40.21.80
+    App-&gt;&gt;DNS: Resolve mydb.abcdef.us-east-1.rds.amazonaws.com
+    DNS--&gt;&gt;App: 10.40.21.80 (example)
+    App-&gt;&gt;RDS: TCP SYN :5432 (local VPC route)
+    RDS--&gt;&gt;App: SYN ACK (SG stateful return)
+    App-&gt;&gt;RDS: TLS negotiation and startup packet
+    RDS--&gt;&gt;App: Authentication challenge/result
+</code></pre>
+<p><strong>Key nuance:</strong> RDS endpoint IPs may change during maintenance/failover. Connect using the DNS endpoint, never hard-code a current IP. For a private address inside the same VPC, the local route is used, not the NAT gateway or internet gateway.</p>
+<h3 id="16-3-design-choices-and-tradeoffs">16.3 Design choices and tradeoffs</h3>
+<table>
+<thead>
+<tr>
+<th>Design</th>
+<th>Advantages</th>
+<th>Costs/risks</th>
+<th>Use when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Private DB + private app</td>
+<td>Small attack surface</td>
+<td>Requires private administration path</td>
+<td>Production default</td>
+</tr>
+<tr>
+<td>Private DB + public ALB</td>
+<td>Public API without public DB</td>
+<td>Must harden ALB/app</td>
+<td>Typical web services</td>
+</tr>
+<tr>
+<td>Public DB (lab only)</td>
+<td>Easy connectivity</td>
+<td>Broad exposure, poor production posture</td>
+<td>Prefer avoiding entirely</td>
+</tr>
+<tr>
+<td>Peering / Transit Gateway</td>
+<td>Private cross-VPC paths</td>
+<td>Routing and CIDR complexity</td>
+<td>Multi-account platforms</td>
+</tr>
+<tr>
+<td>VPN / Direct Connect</td>
+<td>On-prem access</td>
+<td>Operational and network dependencies</td>
+<td>Enterprise hybrid</td>
+</tr>
+</tbody>
+</table>
+<h3 id="16-4-lab-inspect-an-existing-vpc-workstation">16.4 Lab: inspect an existing VPC (workstation)</h3>
+<pre><code class="language-bash">aws sts get-caller-identity
+aws ec2 describe-vpcs --query 'Vpcs[].{ID:VpcId,CIDR:CidrBlock}' --output table
+aws ec2 describe-subnets --filters Name=vpc-id,Values=&lt;VPC_ID&gt; \
+  --query 'Subnets[].{ID:SubnetId,AZ:AvailabilityZone,CIDR:CidrBlock}' --output table
+aws ec2 describe-route-tables --filters Name=vpc-id,Values=&lt;VPC_ID&gt; \
+  --query 'RouteTables[].{ID:RouteTableId,Routes:Routes}' --output json
+</code></pre>
+<p><strong>Line by line:</strong> <code>sts get-caller-identity</code> validates the active principal; <code>describe-vpcs</code> finds address space; <code>describe-subnets</code> confirms AZ and CIDR; <code>describe-route-tables</code> reveals local/IGW/NAT/peering/TGW destinations. <code>--filters</code> narrows API results; <code>--query</code> formats JMESPath output; <code>--output</code> selects representation.</p>
+<p><strong>Example output:</strong> <code>10.40.0.0/16</code> VPC, private subnets <code>10.40.11.0/24</code> in AZ A and <code>10.40.21.0/24</code> in AZ B, each with local route <code>10.40.0.0/16 → local</code>.</p>
+<h3 id="16-5-senior-interview">16.5 Senior interview</h3>
+<p><strong>Q: Does a private subnet mean no internet connectivity?</strong> A: No. A private subnet generally lacks a direct route to an internet gateway for instances with public addresses; it may still have outbound access through NAT, IPv6 egress-only internet gateway, or private service endpoints. Define the exact path.</p>
+<p><strong>Q: Why does RDS failover break IP-based allowlisting?</strong> A: Endpoint DNS may resolve to a new IP after failover. Prefer stable DNS names and SG-to-SG references within supported network arrangements.</p>
+<h2 id="chapter-17-private-rds-access-and-network-security">Chapter 17 — Private RDS access and network security</h2>
+<h3 id="17-1-security-groups-vs-nacls">17.1 Security groups vs NACLs</h3>
+<p>Security groups allow traffic and track established connection state. NACLs evaluate ingress and egress separately, support explicit deny, and must account for ephemeral response ports. For ordinary same-VPC app-to-RDS traffic, SG references are clearer and safer than allowing an entire VPC CIDR. SGs do not support arbitrary DNS names as sources.</p>
+<h3 id="17-2-network-isolation-blueprint">17.2 Network isolation blueprint</h3>
+<pre><code class="language-mermaid">flowchart LR
+  Internet --&gt;|443| ALBSG[ALB SG]
+  ALBSG --&gt;|8080| AppSG[Application SG]
+  AppSG --&gt;|5432| DBSG[Database SG]
+  Operator[Operator workstation] --&gt;|SSM authenticated session| EC2[Private admin EC2]
+  EC2 --&gt;|5432| DBSG
+  DBSG --&gt; RDS[(RDS)]
+</code></pre>
+<p>Restrict <code>DBSG</code> inbound 5432 to <code>AppSG</code> (and an explicitly controlled administration SG when needed). Outbound SG rules on application nodes must permit the connection. Keep <code>PubliclyAccessible=false</code>. Place the DB in a subnet group spanning at least two AZs for normal RDS designs.</p>
+<h3 id="17-3-lab-create-db-sg-and-rule-workstation">17.3 Lab: create DB SG and rule (workstation)</h3>
+<pre><code class="language-bash">export AWS_REGION=us-east-1
+export VPC_ID=vpc-REPLACE
+export APP_SG=sg-REPLACE
+DB_SG=$(aws ec2 create-security-group --region "$AWS_REGION" \
+  --group-name rds-vol3-db --description 'RDS access from application only' \
+  --vpc-id "$VPC_ID" --query GroupId --output text)
+aws ec2 authorize-security-group-ingress --region "$AWS_REGION" \
+  --group-id "$DB_SG" --protocol tcp --port 5432 --source-group "$APP_SG"
+aws ec2 describe-security-groups --group-ids "$DB_SG" --region "$AWS_REGION"
+</code></pre>
+<p><strong>Explain:</strong> <code>create-security-group</code> creates a VPC-scoped filter; <code>--query GroupId --output text</code> captures its ID; <code>authorize-security-group-ingress</code> adds exactly TCP/5432 sourced from application SG; the final command checks effective rules. A source SG reference identifies traffic from ENIs with that SG, not a human user's identity. If this SG is already attached to a DB, do not delete it during cleanup.</p>
+<h3 id="17-4-lab-prove-rds-private-posture">17.4 Lab: prove RDS private posture</h3>
+<pre><code class="language-bash">aws rds describe-db-instances --db-instance-identifier &lt;DB_ID&gt; \
+ --query 'DBInstances[0].{Endpoint:Endpoint.Address,Public:PubliclyAccessible,SG:VpcSecurityGroups,SubnetGroup:DBSubnetGroup.DBSubnetGroupName}'
+# Run on an approved EC2 node inside VPC:
+getent hosts &lt;RDS_ENDPOINT&gt;
+nc -vz -w 5 &lt;RDS_ENDPOINT&gt; 5432
+</code></pre>
+<p><strong>Example output:</strong> <code>Public: false</code>; <code>Connection to ... 5432 port [tcp/postgresql] succeeded!</code> only from authorized source. <code>nc</code> success proves TCP reachability, <strong>not</strong> TLS correctness or authentication.</p>
+<h3 id="17-5-safe-private-administration-ssm-port-forwarding">17.5 Safe private administration: SSM port forwarding</h3>
+<p>On a workstation with Session Manager plugin and permissions, tunnel through an SSM-managed EC2 instance in the VPC:</p>
+<pre><code class="language-bash">aws ssm start-session --target i-REPLACE \
+  --document-name AWS-StartPortForwardingSessionToRemoteHost \
+  --parameters '{"host":["&lt;RDS_ENDPOINT&gt;"],"portNumber":["5432"],"localPortNumber":["15432"]}'
+</code></pre>
+<p>In a <strong>second terminal</strong>, use <code>psql</code> to <code>127.0.0.1:15432</code>. <strong>TLS hostname validation nuance:</strong> <code>sslmode=verify-full</code> compares the certificate name with the host supplied by the client. With an ordinary localhost tunnel, set <code>host=&lt;RDS_ENDPOINT&gt; hostaddr=127.0.0.1 port=15432</code> in libpq so TCP uses localhost but the server hostname remains the verified RDS DNS name. Confirm the RDS CA bundle is present and <code>sslrootcert</code> points to it. The SSM target needs permission to reach the DB and SSM network connectivity; IAM permissions for Session Manager are separate from DB authentication.</p>
+<h3 id="17-6-troubleshooting-decision-tree">17.6 Troubleshooting decision tree</h3>
+<pre><code class="language-mermaid">flowchart TD
+  A[Connection failed] --&gt; B{DNS resolves?}
+  B -- No --&gt; C[Check endpoint, resolver, VPC DNS, split-horizon]
+  B -- Yes --&gt; D{TCP 5432 reachable?}
+  D -- No --&gt; E[Check SG both ends, NACL, routes, endpoint status]
+  D -- Yes --&gt; F{TLS verifies?}
+  F -- No --&gt; G[Check CA bundle, hostname, sslmode, clock]
+  F -- Yes --&gt; H{DB login succeeds?}
+  H -- No --&gt; I[Check role, secret, pg_hba managed behavior, IAM token]
+  H -- Yes --&gt; J[Check query permissions and app configuration]
+</code></pre>
+<p><strong>Q: Can I ping RDS to test it?</strong> A: ICMP is not a reliable RDS reachability test; test TCP/5432 and a real TLS-authenticated DB session.</p>
+<p><strong>Q: Why can an EC2 instance reach RDS while a laptop cannot?</strong> A: The laptop may lack any routed private path into the VPC; SG permission alone cannot create routing.</p>
+<h2 id="chapter-18-tls-iam-db-authentication-and-credentials">Chapter 18 — TLS, IAM DB authentication, and credentials</h2>
+<h3 id="18-1-three-different-protections">18.1 Three different protections</h3>
+<ul>
+<li><strong>TLS in transit:</strong> encryption, integrity, and server identity verification for a client↔DB connection.</li>
+<li><strong>KMS-backed encryption at rest:</strong> storage/snapshot/log protection under supported RDS encryption features; does not replace TLS or SQL permissions.</li>
+<li><strong>Database authentication/authorization:</strong> proves who may connect and which SQL operations they can perform. IAM authentication is a way to authenticate; it does not automatically grant SQL privileges.</li>
+</ul>
+<h3 id="18-2-tls-handshake-mental-model">18.2 TLS handshake mental model</h3>
+<pre><code class="language-mermaid">sequenceDiagram
+  participant Client
+  participant RDS
+  Client-&gt;&gt;RDS: TCP connection and PostgreSQL SSLRequest
+  RDS--&gt;&gt;Client: TLS supported
+  Client-&gt;&gt;RDS: ClientHello
+  RDS--&gt;&gt;Client: Certificate chain + TLS handshake
+  Client-&gt;&gt;Client: Validate trust anchor and RDS hostname
+  Client-&gt;&gt;RDS: PostgreSQL startup/authentication over TLS
+</code></pre>
+<p><code>sslmode=require</code> encrypts transport but does <strong>not</strong> guarantee hostname verification. Prefer <code>sslmode=verify-full</code> with a trusted current RDS CA bundle. Certificate verification requires the actual RDS endpoint name. Certificate rotations must be rehearsed before expiration.</p>
+<h3 id="18-3-lab-tls-verification-authorized-ec2-or-ssm-tunnel">18.3 Lab: TLS verification (authorized EC2 or SSM tunnel)</h3>
+<p>Download the current region/global RDS trust bundle <strong>from AWS's official RDS certificate page</strong> and verify its provenance; do not disable validation to make a broken connection work.</p>
+<pre><code class="language-bash">export PGHOST='&lt;RDS_ENDPOINT&gt;'
+export PGPORT=5432
+export PGDATABASE='appdb'
+export PGUSER='app_user'
+export PGSSLMODE='verify-full'
+export PGSSLROOTCERT="$HOME/.postgresql/rds-ca-bundle.pem"
+psql -c 'select current_user, current_database();'
+psql -c 'select ssl, version, cipher from pg_stat_ssl where pid=pg_backend_pid();'
+</code></pre>
+<p><strong>Line by line:</strong> <code>PGHOST</code> is the DNS identity to verify; <code>PGPORT</code> is TCP listener; <code>PGDATABASE</code> and <code>PGUSER</code> identify the logical database and role; <code>PGSSLMODE=verify-full</code> checks chain and hostname; <code>PGSSLROOTCERT</code> specifies CA file; first query proves SQL login; second proves TLS and negotiated cipher. Supply password securely (e.g. managed secret injected at runtime), not as a command-line argument.</p>
+<p><strong>Example output:</strong> <code>ssl | version | cipher</code> → <code>t | TLSv1.3 | TLS_AES_256_GCM_SHA384</code> (negotiation varies).</p>
+<h3 id="18-4-iam-database-authentication">18.4 IAM database authentication</h3>
+<p>For supported RDS engines/configurations, IAM DB authentication replaces a static DB password at connection time with a short-lived authentication token. The <strong>token validity window is 15 minutes for establishing the connection</strong>, not a hard lifetime for an already established DB session. Tokens are generated client-side; a token is not a general AWS credential and should never be logged. Verify engine and proxy compatibility before enabling. IAM authentication has scaling and memory tradeoffs; evaluate RDS Proxy for connection-heavy workloads.</p>
+<p><strong>Two permissions must align:</strong> IAM principal needs <code>rds-db:connect</code> on the <strong>DB resource ID</strong> ARN (not ordinary <code>rds</code> DB instance ARN); PostgreSQL DB role must exist and be granted <code>rds_iam</code> appropriately. In PostgreSQL, granting <code>rds_iam</code> changes authentication behavior; test password fallback expectations before rollout.</p>
+<h3 id="18-5-lab-postgresql-iam-auth-workstation-and-authorized-db-session">18.5 Lab: PostgreSQL IAM auth (workstation and authorized DB session)</h3>
+<p><strong>1. Enable feature (workstation; maintenance/change approval required):</strong></p>
+<pre><code class="language-bash">aws rds modify-db-instance --db-instance-identifier &lt;DB_ID&gt; \
+  --enable-iam-database-authentication --apply-immediately
+aws rds wait db-instance-available --db-instance-identifier &lt;DB_ID&gt;
+aws rds describe-db-instances --db-instance-identifier &lt;DB_ID&gt; \
+  --query 'DBInstances[0].IAMDatabaseAuthenticationEnabled'
+</code></pre>
+<p><code>--apply-immediately</code> may cause operational effects depending on pending modifications; use a change window and inspect pending changes. <code>wait</code> confirms an instance state, not that the application works.</p>
+<p><strong>2. DB admin <code>psql</code> session:</strong></p>
+<pre><code class="language-sql">CREATE ROLE app_iam LOGIN;
+GRANT rds_iam TO app_iam;
+GRANT CONNECT ON DATABASE appdb TO app_iam;
+-- Inside appdb, grant only required schema/table privileges:
+GRANT USAGE ON SCHEMA public TO app_iam;
+GRANT SELECT ON TABLE public.orders TO app_iam;
+</code></pre>
+<p>Do not grant <code>rds_iam</code> to an existing password-authenticated production role without testing authentication precedence and a rollback.</p>
+<p><strong>3. IAM permission template:</strong></p>
+<pre><code class="language-json">{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Effect": "Allow",
+    "Action": "rds-db:connect",
+    "Resource": "arn:aws:rds-db:us-east-1:123456789012:dbuser:db-RESOURCEID/app_iam"
+  }]
+}
+</code></pre>
+<p><code>db-RESOURCEID</code> is the RDS database resource ID returned in DB metadata; replace account, region, and role. For proxy-based IAM authentication, the relevant resource identity and policy requirements differ; use the proxy resource ID as documented for that mode.</p>
+<p><strong>4. Generate token and connect from approved private path:</strong></p>
+<pre><code class="language-bash">export RDSHOST='&lt;RDS_ENDPOINT&gt;'
+export DBTOKEN="$(aws rds generate-db-auth-token --hostname "$RDSHOST" --port 5432 --region us-east-1 --username app_iam)"
+PGPASSWORD="$DBTOKEN" psql "host=$RDSHOST port=5432 dbname=appdb user=app_iam sslmode=verify-full sslrootcert=$HOME/.postgresql/rds-ca-bundle.pem" \
+  -c 'select current_user;'
+unset DBTOKEN
+</code></pre>
+<p><code>generate-db-auth-token</code> signs an auth request with the current AWS identity; <code>PGPASSWORD</code> is supplied only to the child command environment rather than pasted into the shell command; <code>unset</code> removes the shell variable (not a guarantee of forensic erasure). Prefer workload roles and short-lived credentials. Ensure application connection pools regenerate tokens for <strong>new physical connections</strong> rather than reusing expired tokens.</p>
+<h3 id="18-6-senior-interview">18.6 Senior interview</h3>
+<p><strong>Q: Can IAM database authentication replace authorization?</strong> No. IAM decides whether the caller may authenticate as a role; PostgreSQL grants still control SQL privileges.</p>
+<p><strong>Q: Why does an IAM token work for 15 minutes but a query run for an hour?</strong> The token is validated at connection establishment. The established session can continue subject to normal server/session constraints.</p>
+<h2 id="chapter-19-secrets-manager-kms-and-rotation">Chapter 19 — Secrets Manager, KMS, and rotation</h2>
+<p>Secrets Manager securely stores database credentials; KMS protects encryption keys. Use least privilege, managed master password where appropriate, rotation with validation, and cache refresh.</p>
+<pre><code class="language-bash">aws secretsmanager describe-secret --secret-id &lt;SECRET_ARN&gt;
+aws kms describe-key --key-id &lt;KMS_KEY_ARN&gt;
+</code></pre>
+<p><strong>Interview:</strong> Does at-rest encryption prevent SQL access from stolen credentials? No. SQL authorization is separate.</p>
+<h2 id="chapter-20-rds-proxy-and-connection-management">Chapter 20 — RDS Proxy and connection management</h2>
+<p>RDS Proxy pools database connections. It helps connection churn but cannot optimize SQL. Session pinning and long transactions reduce multiplexing.</p>
+<pre><code class="language-mermaid">flowchart LR
+ A[App] --&gt; P[RDS Proxy] --&gt; D[(RDS)]
+</code></pre>
+<pre><code class="language-bash">aws rds describe-db-proxies
+aws rds describe-db-proxy-targets --db-proxy-name &lt;PROXY_NAME&gt;
+</code></pre>
+<p><strong>Troubleshooting:</strong> Check target health, borrow latency, DB CPU, long transactions, and pinning. <strong>Interview:</strong> Proxy is not a query cache.</p>
+<h2 id="chapter-21-auditing-hardening-and-incident-response">Chapter 21 — Auditing, hardening, and incident response</h2>
+<p>CloudTrail covers supported AWS API events; DB logs cover configured SQL/authentication events; VPC Flow Logs provide network metadata, not SQL text.</p>
+<pre><code class="language-bash">aws rds describe-db-log-files --db-instance-identifier &lt;DB_ID&gt;
+aws logs describe-log-groups --log-group-name-prefix /aws/rds/instance/
+</code></pre>
+<p>Use least-privilege SQL roles, redacted logs, incident evidence preservation, credential rotation, containment and postmortems.</p>
+<pre><code class="language-sql">CREATE ROLE reader NOLOGIN;
+GRANT CONNECT ON DATABASE appdb TO reader;
+GRANT USAGE ON SCHEMA public TO reader;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO reader;
+</code></pre>
+<h2 id="terraform-private-rds-lab">Terraform private RDS lab</h2>
+<p>This minimal template is an educational starting point. Supply VPC, subnet IDs in two AZs, a restricted app security group, and supported engine class. Never commit state or secrets.</p>
+<pre><code class="language-hcl">resource "aws_db_subnet_group" "private" {
+ name = "rds-v3-private"
+ subnet_ids = var.private_db_subnet_ids
+}
+resource "aws_security_group" "db" {
+ vpc_id = var.vpc_id
+ ingress {
+  from_port = 5432
+  to_port = 5432
+  protocol = "tcp"
+  security_groups = [var.app_security_group_id]
+ }
+}
+resource "aws_db_instance" "db" {
+ identifier = "rds-v3-lab"
+ engine = "postgres"
+ instance_class = var.db_class
+ allocated_storage = 20
+ db_subnet_group_name = aws_db_subnet_group.private.name
+ vpc_security_group_ids = [aws_security_group.db.id]
+ publicly_accessible = false
+ storage_encrypted = true
+ username = "dbadmin"
+ manage_master_user_password = true
+ backup_retention_period = 7
+ deletion_protection = true
+ skip_final_snapshot = false
+ final_snapshot_identifier = "rds-v3-final-unique"
+}
+</code></pre>
+<p><strong>Line by line:</strong> subnet group selects private AZ subnets; security group limits TCP 5432 to app SG; RDS resource configures PostgreSQL, encrypted storage, managed master secret, backups and deletion protection. Check regional engine class and storage compatibility, define <code>var</code> inputs, and configure a secure Terraform backend. No application host, proxy, or access path is created here.</p>
+<pre><code class="language-bash">terraform fmt
+terraform init
+terraform validate
+terraform plan -out=tfplan
+terraform show tfplan
+terraform apply tfplan
+</code></pre>
+<p><strong>Representative result:</strong> a private RDS DNS endpoint after provisioning. These commands were not executed. Review charges before apply. To destroy a lab, disable deletion protection via approved apply; final snapshots continue billing.</p>
+<h2 id="production-troubleshooting-runbooks">Production troubleshooting runbooks</h2>
+<ol>
+<li><strong>Timeout:</strong> DNS, route, SG, NACL, RDS status; <code>nc -vz -w 5 &lt;RDS_ENDPOINT&gt; 5432</code> from permitted host.</li>
+<li><strong>TLS error:</strong> CA bundle, exact endpoint, verify-full, client library and certificate rotation.</li>
+<li><strong>IAM error:</strong> <code>rds-db:connect</code> resource ID, <code>rds_iam</code>, token age, AWS identity, TLS.</li>
+<li><strong>Rotation outage:</strong> secret staging, DB password state, app cache and connection pool refresh.</li>
+<li><strong>Proxy borrow timeout:</strong> target health, pinned sessions, long transactions, backend capacity.</li>
+<li><strong>Suspicious login:</strong> preserve CloudTrail and DB logs, revoke credentials, contain, validate and document.</li>
+</ol>
+<h2 id="senior-software-engineer-interview-bank">Senior software engineer interview bank</h2>
+<p><strong>Q1: SG vs NACL?</strong></p>
+<p><strong>Answer:</strong> SG is stateful ENI allow filtering; NACL is stateless subnet ordered allow/deny.</p>
+<p><strong>Follow-up:</strong> Name a validation command and a failure signal.</p>
+<p><strong>Q2: Why private RDS?</strong></p>
+<p><strong>Answer:</strong> Only the app tier needs database access; public ALB serves HTTPS.</p>
+<p><strong>Follow-up:</strong> Name a validation command and a failure signal.</p>
+<p><strong>Q3: Why endpoint DNS?</strong></p>
+<p><strong>Answer:</strong> Failover can change IP.</p>
+<p><strong>Follow-up:</strong> Name a validation command and a failure signal.</p>
+<p><strong>Q4: Need NAT for same VPC DB?</strong></p>
+<p><strong>Answer:</strong> No, local VPC routing is used.</p>
+<p><strong>Follow-up:</strong> Name a validation command and a failure signal.</p>
+<p><strong>Q5: Why TLS verify-full?</strong></p>
+<p><strong>Answer:</strong> Validates server certificate trust and hostname.</p>
+<p><strong>Follow-up:</strong> Name a validation command and a failure signal.</p>
+<p><strong>Q6: IAM DB auth expiry?</strong></p>
+<p><strong>Answer:</strong> Token validity applies to initial connection, not existing session lifetime.</p>
+<p><strong>Follow-up:</strong> Name a validation command and a failure signal.</p>
+<p><strong>Q7: IAM vs SQL permissions?</strong></p>
+<p><strong>Answer:</strong> IAM authenticates; SQL grants authorize data operations.</p>
+<p><strong>Follow-up:</strong> Name a validation command and a failure signal.</p>
+<p><strong>Q8: KMS vs TLS?</strong></p>
+<p><strong>Answer:</strong> KMS protects at-rest encryption; TLS protects transport.</p>
+<p><strong>Follow-up:</strong> Name a validation command and a failure signal.</p>
+<p><strong>Q9: Secrets rotation failure?</strong></p>
+<p><strong>Answer:</strong> Reconcile DB credential and secret staging; refresh application pools.</p>
+<p><strong>Follow-up:</strong> Name a validation command and a failure signal.</p>
+<p><strong>Q10: Proxy pinning?</strong></p>
+<p><strong>Answer:</strong> Session state binds client to backend, reducing reuse.</p>
+<p><strong>Follow-up:</strong> Name a validation command and a failure signal.</p>
+<p><strong>Q11: Proxy and slow queries?</strong></p>
+<p><strong>Answer:</strong> Proxy does not fix missing indexes or slow execution plans.</p>
+<p><strong>Follow-up:</strong> Name a validation command and a failure signal.</p>
+<p><strong>Q12: CloudTrail SQL visibility?</strong></p>
+<p><strong>Answer:</strong> CloudTrail logs AWS APIs, not arbitrary SQL.</p>
+<p><strong>Follow-up:</strong> Name a validation command and a failure signal.</p>
+<p><strong>Q13: Flow Logs SQL visibility?</strong></p>
+<p><strong>Answer:</strong> Flow Logs contain network metadata, not SQL.</p>
+<p><strong>Follow-up:</strong> Name a validation command and a failure signal.</p>
+<p><strong>Q14: RDS SG open to internet?</strong></p>
+<p><strong>Answer:</strong> Restrict source to approved app/admin SG.</p>
+<p><strong>Follow-up:</strong> Name a validation command and a failure signal.</p>
+<p><strong>Q15: SSM tunnel TLS hostname?</strong></p>
+<p><strong>Answer:</strong> Use libpq host endpoint plus hostaddr localhost.</p>
+<p><strong>Follow-up:</strong> Name a validation command and a failure signal.</p>
+<p><strong>Q16: Terraform secrets?</strong></p>
+<p><strong>Answer:</strong> Sensitive variables can still persist in state.</p>
+<p><strong>Follow-up:</strong> Name a validation command and a failure signal.</p>
+<p><strong>Q17: KMS key disabled?</strong></p>
+<p><strong>Answer:</strong> Encrypted resources may become inaccessible.</p>
+<p><strong>Follow-up:</strong> Name a validation command and a failure signal.</p>
+<p><strong>Q18: RDS audit strategy?</strong></p>
+<p><strong>Answer:</strong> Combine CloudTrail, engine logs, metrics and protected retention.</p>
+<p><strong>Follow-up:</strong> Name a validation command and a failure signal.</p>
+<p><strong>Q19: DB subnet group?</strong></p>
+<p><strong>Answer:</strong> Placement subnets, not firewall.</p>
+<p><strong>Follow-up:</strong> Name a validation command and a failure signal.</p>
+<p><strong>Q20: TCP works but login fails?</strong></p>
+<p><strong>Answer:</strong> Check TLS, DB authentication, role privileges.</p>
+<p><strong>Follow-up:</strong> Name a validation command and a failure signal.</p>
+<p><strong>Q21: Proxy cutover?</strong></p>
+<p><strong>Answer:</strong> Canary, monitor, verify targets, have rollback.</p>
+<p><strong>Follow-up:</strong> Name a validation command and a failure signal.</p>
+<p><strong>Q22: Cross VPC access?</strong></p>
+<p><strong>Answer:</strong> Needs routing plus compatible security rules.</p>
+<p><strong>Follow-up:</strong> Name a validation command and a failure signal.</p>
+<p><strong>Q23: Least privilege?</strong></p>
+<p><strong>Answer:</strong> Separate AWS IAM and SQL grants.</p>
+<p><strong>Follow-up:</strong> Name a validation command and a failure signal.</p>
+<p><strong>Q24: Certificate rotation?</strong></p>
+<p><strong>Answer:</strong> Stage trust bundles, test, roll and monitor.</p>
+<p><strong>Follow-up:</strong> Name a validation command and a failure signal.</p>
+<p><strong>Q25: Security incident?</strong></p>
+<p><strong>Answer:</strong> Preserve evidence, contain, rotate, restore, postmortem.</p>
+<p><strong>Follow-up:</strong> Name a validation command and a failure signal.</p>
+<h2 id="glossary-index-and-references">Glossary, index, and references</h2>
+<p><strong>Glossary:</strong> VPC—virtual network; SG—stateful ENI filter; NACL—stateless subnet filter; IAM—AWS identity; KMS—key management; TLS—transport encryption; RDS Proxy—managed connection pool proxy; CloudTrail—AWS API activity; RTO—recovery time objective; RPO—recovery point objective.</p>
+<p><strong>Index:</strong> VPC 16; SG/NACL 17; TLS/IAM 18; Secrets/KMS 19; Proxy 20; Auditing 21; Terraform capstone; runbooks; interviews.</p>
+<p><strong>Official references:</strong></p>
+<ul>
+<li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html">https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html</a></li>
+<li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.html">https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.html</a></li>
+<li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html">https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html</a></li>
+<li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.html">https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.html</a></li>
+<li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-proxy.html">https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-proxy.html</a></li>
+<li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html">https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html</a></li>
+<li><a href="https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html">https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html</a></li>
+<li><a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance</a></li>
+</ul>
+</article></main><footer>ARTHA Gurukul · Source material preserved as educational notes</footer></body></html>
